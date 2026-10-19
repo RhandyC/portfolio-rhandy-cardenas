@@ -4,7 +4,7 @@ import { siteConfig } from "../config";
 
 <div
   id="hero"
-  class="relative min-h-screen bg-[#0a0f1e] flex items-center justify-center px-6 py-24"
+  class="relative  bg-[#0a0f1e] flex items-center justify-center px-6 pt-24 pb-12 md:pt-28 md:pb-14"
 >
   <!-- Subtle grid background -->
   <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px); background-size: 50px 50px;"></div>
@@ -12,10 +12,10 @@ import { siteConfig } from "../config";
   <!-- Gradient glow -->
   <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#3b82f6] opacity-10 blur-[120px] rounded-full"></div>
 
-  <div class="relative max-w-4xl mx-auto text-center space-y-8">
+  <div class="relative max-w-4xl mx-auto text-center space-y-5">
     <!-- Profile Photo -->
-    <div class="flex justify-center mb-8">
-      <div class="w-32 h-32 rounded-full overflow-hidden ring-2 ring-[#334155] shadow-2xl">
+    <div class="flex justify-center mb-5">
+      <div class="w-24 h-24 rounded-full overflow-hidden ring-2 ring-[#334155] shadow-2xl">
         <img
           src="/profile.png"
           alt={siteConfig.name}
@@ -26,18 +26,19 @@ import { siteConfig } from "../config";
     </div>
 
     <!-- Name -->
-    <h1 class="text-5xl md:text-7xl font-bold text-[#e2e8f0] tracking-tight">
+    <h1 class="text-4xl md:text-5xl font-bold text-[#e2e8f0] tracking-tight">
       {siteConfig.name}
     </h1>
 
     <!-- Title -->
-    <p class="text-xl md:text-2xl text-[#60a5fa] font-medium">
+    <p class="text-lg md:text-xl text-[#60a5fa] font-medium">
       {siteConfig.title}
     </p>
 
+
     <!-- Affiliation -->
     <div class="flex flex-col items-center gap-2 text-[#94a3b8]">
-      <div class="flex items-center gap-3 text-sm md:text-base">
+      <div class="flex flex-wrap justify-center items-center gap-3 text-sm">
         <span>Groupe Renault</span>
         <span class="text-[#334155]">×</span>
         <span>Université de Technologie de Compiègne</span>
@@ -47,26 +48,10 @@ import { siteConfig } from "../config";
       </div>
     </div>
 
-    <!-- Quick stats -->
-    <div class="flex justify-center gap-8 pt-4 text-[#94a3b8]">
-      <div class="flex flex-col items-center">
-        <div class="text-2xl font-bold text-[#60a5fa]">IEEE TIV</div>
-        <div class="text-xs">Published</div>
-      </div>
-      <div class="h-12 w-px bg-[#334155]"></div>
-      <div class="flex flex-col items-center">
-        <div class="text-2xl font-bold text-[#60a5fa]">2026</div>
-        <div class="text-xs">Expected PhD</div>
-      </div>
-      <div class="h-12 w-px bg-[#334155]"></div>
-      <div class="flex flex-col items-center">
-        <div class="text-2xl font-bold text-[#60a5fa]">ADAS</div>
-        <div class="text-xs">Research</div>
-      </div>
-    </div>
+    <p class="text-xs text-[#94a3b8]">PhD defense scheduled for December 2026</p>
 
     <!-- Social links -->
-    <div class="flex justify-center gap-6 pt-8">
+    <div class="flex flex-wrap justify-center gap-3 pt-3">
       {
         siteConfig.social?.email && (
           <a
@@ -148,7 +133,7 @@ import { siteConfig } from "../config";
     </div>
 
     <!-- Scroll indicator -->
-    <div class="pt-16 animate-bounce">
+    <div class="pt-5">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"

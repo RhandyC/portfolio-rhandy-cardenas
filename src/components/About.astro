@@ -1,40 +1,22 @@
 ---
-import { siteConfig } from "../config";
+const groups = [
+  {title: "AI & Decision-Making", items: "MDP / POMDP · POMCP / Monte Carlo Tree Search · Dynamic Programming · Deep RL: DQN, Policy Gradients, Actor-Critic · Machine Learning & Deep Learning"},
+  {title: "Robotics & Validation", items: "ROS 2 · IPG CarMaker · CARLA · Gazebo · MATLAB/Simulink · SIL / VIL · Prototype-vehicle testing"},
+  {title: "Programming & Frameworks", items: "Python · C++ · PyTorch · Keras · scikit-learn · Git · Linux · Visual Studio"},
+  {title: "Engineering & Embedded Systems", items: "Catia V5 · SolidWorks · STM32 · Arduino · LabVIEW"},
+];
 ---
-
-<section id="about" class="p-8 sm:p-12 md:p-16 lg:p-24">
-  <div>
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-      <div class="lg:col-span-4">
-        <h2
-          class="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-bold text-[#e2e8f0]"
-        >
-          About Me
-        </h2>
-        <div
-          class="w-[75px] h-[5px] mt-2 rounded-full"
-          style={`background-color: ${siteConfig.accentColor}`}
-        >
+<section id="about" class="px-6 py-16 md:py-20 bg-[#0f1729] scroll-mt-20">
+  <div class="max-w-6xl mx-auto">
+    <p class="text-xs uppercase tracking-[0.2em] text-[#60a5fa] mb-3">Technical toolkit</p>
+    <h2 class="text-3xl md:text-4xl font-bold mb-8">Core competencies</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      {groups.map((group) => (
+        <div class="border-t border-[#334155] pt-5">
+          <h3 class="text-base font-semibold mb-3">{group.title}</h3>
+          <p class="text-sm leading-loose text-[#94a3b8]">{group.items}</p>
         </div>
-      </div>
-
-      <div class="lg:col-span-8 space-y-8">
-        <p class="text-lg sm:text-xl md:text-2xl leading-relaxed text-[#cbd5e1]">
-          {siteConfig.aboutMe}
-        </p>
-
-        <div class="pt-4">
-          <div class="flex flex-wrap gap-3">
-            {
-              siteConfig.skills.map((skill) => (
-                <span class="px-3 sm:px-4 py-1.5 sm:py-2 bg-[#1a1f2e] border border-[#334155] text-[#cbd5e1] rounded-full text-sm sm:text-base md:text-lg font-medium hover:bg-[#334155] transition-colors duration-200">
-                  {skill}
-                </span>
-              ))
-            }
-          </div>
-        </div>
-      </div>
+      ))}
     </div>
   </div>
 </section>

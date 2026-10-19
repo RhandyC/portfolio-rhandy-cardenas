@@ -5,42 +5,27 @@ const hasPublications = siteConfig.publications && siteConfig.publications.lengt
 
 {
   hasPublications && (
-    <section id="publications" class="py-24 px-6 bg-[#0a0f1e]">
+    <section id="publications" class="py-16 md:py-20 px-6 bg-[#0a0f1e]">
       <div class="max-w-5xl mx-auto">
         <!-- Section header -->
-        <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold text-[#e2e8f0] mb-4">
+        <div class="mb-10">
+          <h2 class="text-3xl md:text-4xl font-bold text-[#e2e8f0] mb-4">
             Publications
           </h2>
-          <div class="w-24 h-1 bg-[#3b82f6] mx-auto rounded-full" />
+          <div class="w-24 h-1 bg-[#3b82f6] rounded-full" />
         </div>
 
         <!-- Publications list -->
         <div class="space-y-6">
-          {siteConfig.publications.map((pub, index) => {
-            const Component = pub.link ? "a" : "div";
-            const linkProps = pub.link
-              ? {
-                  href: pub.link,
-                  target: "_blank",
-                  rel: "noopener noreferrer",
-                }
-              : {};
-
+          {siteConfig.publications.map((pub) => {
             return (
-              <Component
-                {...linkProps}
-                class={`group block relative p-8 bg-[#1a1f2e] border border-[#334155] rounded-xl transition-all duration-300 ${
+              <article
+                class={`group relative p-5 sm:p-6 bg-[#141824] border border-[#334155] rounded-xl transition-all duration-300 ${
                   pub.link
-                    ? "hover:border-[#3b82f6] hover:shadow-lg hover:shadow-[#3b82f6]/10 cursor-pointer"
+                    ? "hover:border-[#3b82f6] hover:shadow-lg hover:shadow-[#3b82f6]/10"
                     : ""
                 }`}
               >
-                {/* Number badge */}
-                <div class="absolute -left-3 -top-3 w-10 h-10 flex items-center justify-center bg-[#3b82f6] rounded-lg text-[#0a0f1e] font-bold text-lg shadow-lg">
-                  {String(index + 1).padStart(2, '0')}
-                </div>
-
                 {/* Link icon */}
                 {pub.link && (
                   <div class="absolute top-6 right-6 text-[#64748b] group-hover:text-[#60a5fa] transition-colors">
@@ -62,14 +47,22 @@ const hasPublications = siteConfig.publications && siteConfig.publications.lengt
                   </div>
                 )}
 
-                <div class="space-y-4">
+                <div class="grid sm:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[280px_minmax(0,1fr)] gap-6 lg:gap-8 items-center">
+                  <figure class="w-full max-w-[320px] sm:max-w-none">
+                    <a href={'videoUrl' in pub && pub.videoUrl ? pub.videoUrl : pub.thumbnail} target="_blank" rel="noopener noreferrer" aria-label={'videoUrl' in pub && pub.videoUrl ? `Watch video: ${pub.title}` : `Enlarge figure: ${pub.title}`} class:list={["relative block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]", 'videoUrl' in pub && pub.videoUrl ? 'overflow-hidden rounded-lg border border-[#334155]' : 'py-2']}>
+                      <img src={pub.thumbnail} alt={pub.thumbnailAlt} loading="lazy" class:list={["w-full h-auto", 'videoUrl' in pub && pub.videoUrl ? 'aspect-video object-contain' : 'max-h-[240px] object-contain']} />
+                      {'videoUrl' in pub && pub.videoUrl && <span class="absolute inset-0 flex items-center justify-center bg-black/20"><span class="flex h-11 w-11 items-center justify-center rounded-full bg-[#0a0f1e]/90 text-white"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg></span></span>}
+                    </a>
+                    <figcaption class="mt-3 text-xs leading-relaxed text-[#94a3b8]">{pub.figureLabel}</figcaption>
+                  </figure>
+                  <div class="space-y-4 min-w-0">
                   {/* Title */}
-                  <h3 class="text-2xl font-bold text-[#e2e8f0] pr-8 group-hover:text-[#60a5fa] transition-colors">
-                    {pub.title}
+                  <h3 class="text-lg md:text-xl font-semibold text-[#e2e8f0] pr-5 group-hover:text-[#60a5fa] transition-colors">
+                    <a href={pub.link} target="_blank" rel="noopener noreferrer" class="hover:underline focus-visible:outline-2 focus-visible:outline-[#60a5fa]">{pub.title}</a>
                   </h3>
 
                   {/* Authors and Venue */}
-                  <p class="text-[#94a3b8] leading-relaxed">
+                  <p class="text-sm text-[#94a3b8] leading-relaxed">
                     <strong>{pub.authors}</strong>,<br />
                     {pub.venue}
                   </p>
@@ -84,8 +77,18 @@ const hasPublications = siteConfig.publications && siteConfig.publications.lengt
                       ))}
                     </div>
                   )}
+                  <div class="flex flex-wrap gap-3 pt-2">
+                    <a href={pub.link} target="_blank" rel="noopener noreferrer" aria-label={`Read paper: ${pub.title}`} class="inline-flex items-center rounded-md border border-[#334155] px-4 py-2 text-sm text-[#cbd5e1] hover:border-[#60a5fa] hover:text-[#60a5fa] transition-colors">Read paper ↗</a>
+                    {'videoUrl' in pub && pub.videoUrl && (
+                      <a href={pub.videoUrl} target="_blank" rel="noopener noreferrer" aria-label={`Watch video: ${pub.title}`} class="inline-flex items-center gap-2 rounded-md border border-[#3b82f6]/50 bg-[#3b82f6]/10 px-4 py-2 text-sm text-[#60a5fa] hover:bg-[#3b82f6]/20 transition-colors">
+                        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                        Watch video ↗
+                      </a>
+                    )}
+                  </div>
+                  </div>
                 </div>
-              </Component>
+              </article>
             );
           })}
         </div>

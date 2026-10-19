@@ -2,3 +2,8 @@ node_modules/
 dist/
 .astro/
 .DS_Store
+
+# Local dependency cache and design previews
+.pnpm-store/
+artifacts/
+pnpm-workspace.yaml

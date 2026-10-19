@@ -1,0 +1,55 @@
+---
+import { siteConfig } from "../config";
+---
+
+<section id="presentations" class="scroll-mt-24" aria-labelledby="presentations-heading">
+  <div class="max-w-5xl mx-auto">
+    <div class="mb-5">
+      <p class="text-xs uppercase tracking-[0.2em] text-[#60a5fa] mb-3">Inside my research</p>
+      <h2 id="presentations-heading" class="text-lg font-semibold text-[#e2e8f0]">Meet the researcher</h2>
+      <p class="mt-2 text-sm text-[#94a3b8] leading-relaxed">Two perspectives on my work.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-1 gap-5">
+      {siteConfig.presentationVideos.map((video) => (
+        <article class="overflow-hidden rounded-xl border border-[#334155] bg-[#141824]">
+          <div class="aspect-video relative bg-[#0a0f1e]" data-video-player>
+            <button type="button" data-video-id={video.youtubeId} data-video-title={video.title} aria-label={`Play ${video.title}`} class="group relative h-full w-full cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-[#60a5fa]">
+              <img src={`https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" class="h-full w-full object-cover opacity-70 group-hover:opacity-90 transition-opacity" />
+              <span class="absolute inset-0 flex items-center justify-center">
+                <span class="flex items-center justify-center w-14 h-14 rounded-full border border-white/40 bg-[#0a0f1e]/80 text-white group-hover:bg-[#2563eb] transition-colors">
+                  <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                </span>
+              </span>
+              <span class="absolute bottom-4 left-4 text-xs text-white">Watch presentation</span>
+            </button>
+          </div>
+          <div class="p-4">
+            <p class="text-xs uppercase tracking-wider text-[#60a5fa] mb-2">{video.organization}</p>
+            <h3 class="text-sm font-semibold text-[#e2e8f0]">{video.title}</h3>
+            <a href={`https://www.youtube.com/watch?v=${video.youtubeId}`} target="_blank" rel="noopener noreferrer" class="inline-block mt-3 text-xs text-[#60a5fa] hover:underline">Open on YouTube ↗</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-video-id]').forEach((button) => {
+    button.addEventListener('click', () => {
+      // Keep only one player active, so two presentations cannot speak at once.
+      document.querySelectorAll<HTMLIFrameElement>('[data-video-player] iframe').forEach((frame) => {
+        frame.src = frame.src.replace('autoplay=1', 'autoplay=0');
+      });
+      const frame = document.createElement('iframe');
+      frame.src = `https://www.youtube-nocookie.com/embed/${button.dataset.videoId}?autoplay=1&rel=0`;
+      frame.title = button.dataset.videoTitle || 'Research presentation';
+      frame.className = 'h-full w-full';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      button.replaceWith(frame);
+      frame.focus();
+    });
+  });
+</script>
