@@ -1,0 +1,53 @@
+---
+import { siteConfig } from "../config";
+---
+
+<div class="pt-3">
+  <a
+    id="download-cv"
+    href={siteConfig.cv.url}
+    download={siteConfig.cv.filename}
+    data-notification-endpoint={siteConfig.cv.notificationEndpoint}
+    class="inline-flex items-center justify-center gap-3 rounded-lg bg-[#3b82f6] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-950/30 transition-colors hover:bg-[#2563eb] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]"
+  >
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v12m-5-5 5 5 5-5M5 16v4h14v-4" />
+    </svg>
+    Download CV
+    <span class="border-l border-white/30 pl-3 text-xs font-normal text-blue-100">PDF · English</span>
+  </a>
+</div>
+
+<script>
+  const link = document.querySelector<HTMLAnchorElement>('#download-cv');
+  let lastNotification = 0;
+
+  link?.addEventListener('click', () => {
+    // Leave the native PDF download independent of the notification service.
+    // Local previews never send emails, and repeated rapid clicks send one event.
+    if (['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) return;
+    const endpoint = link.dataset.notificationEndpoint;
+    const now = Date.now();
+    if (!endpoint || now - lastNotification < 60_000) return;
+    lastNotification = now;
+
+    void fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({
+        _subject: 'Portfolio — CV download requested',
+        _template: 'table',
+        _captcha: 'false',
+        message: 'Someone clicked Download CV on your portfolio. This records the request, not confirmation that the file was saved.',
+        document: 'Rhandy-Cardenas-CV.pdf (English)',
+        website: location.origin,
+        time: new Date(now).toISOString(),
+      }),
+    }).then((response) => {
+      if (!response.ok) lastNotification = 0;
+    }).catch(() => {
+      lastNotification = 0;
+    });
+  });
+</script>

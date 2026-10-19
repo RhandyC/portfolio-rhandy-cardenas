@@ -3,6 +3,11 @@ export const siteConfig = {
   title: "Industrial PhD Researcher · AI & Autonomous Driving",
   description: "Industrial PhD researcher specializing in autonomous-driving decision-making, planning under uncertainty, and safe autonomous systems at Renault Group and UTC/Heudiasyc.",
   accentColor: "#3b82f6",
+  cv: {
+    url: "/documents/Rhandy-Cardenas-CV.pdf",
+    filename: "Rhandy-Cardenas-CV.pdf",
+    notificationEndpoint: "https://formsubmit.co/ajax/rhandy.cardenas-curo@hds.utc.fr",
+  },
   presentationVideos: [
   {
     "youtubeId": "O8JKeqDw87I",

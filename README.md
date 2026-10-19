@@ -25,6 +25,14 @@ public/
 └── favicon.svg        # Ícono del sitio
 ```
 
+## CV y avisos por correo
+
+El botón `Download CV` descarga `public/documents/Rhandy-Cardenas-CV.pdf` directamente. Para actualizarlo, reemplaza ese PDF. La URL y el endpoint de avisos se configuran en `src/config.ts` (`cv`).
+
+Los avisos usan FormSubmit: https://formsubmit.co/. La primera solicitud dispara un correo de activación al destinatario; hay que confirmarlo para recibir los siguientes avisos. El endpoint público no requiere claves en el navegador. Los avisos dependen de la disponibilidad del servicio y pueden verse bloqueados por el navegador; la descarga sigue funcionando.
+
+Se envía un evento de clic con el nombre del documento, el dominio y la hora UTC, sin pedir datos al visitante. Esto indica una solicitud de descarga, no que el archivo se haya guardado. No se envían avisos desde localhost y los clics repetidos durante un minuto se agrupan. Para desactivarlos, deja `cv.notificationEndpoint` vacío.
+
 ## Desarrollo local
 
 ```bash
