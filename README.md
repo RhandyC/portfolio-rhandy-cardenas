@@ -33,6 +33,12 @@ npm run dev      # http://localhost:4321
 npm run build    # Generar sitio estático
 ```
 
+## Publicar cambios
+
+Cada push a `main` se publica solo: el workflow `.github/workflows/deploy.yml` hace el build y lo sube a la rama `gh-pages`, que es la que sirve GitHub Pages en [rhandycardenas.lat](https://rhandycardenas.lat). Tarda un par de minutos; el avance se ve en la pestaña **Actions**.
+
+No borres `public/CNAME`: es el archivo que conecta el dominio con el sitio.
+
 ---
 
 <p align="center">
