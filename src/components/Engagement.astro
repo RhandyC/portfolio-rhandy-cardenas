@@ -1,0 +1,25 @@
+---
+import { siteConfig } from "../config";
+const event = siteConfig.engagement;
+---
+
+<section id="engagement" class="px-6 py-12 bg-[#0f1729]" aria-labelledby="engagement-heading">
+  <div class="max-w-5xl mx-auto">
+    <h2 id="engagement-heading" class="text-2xl font-semibold mb-6">Academic activities</h2>
+    <article class="grid sm:grid-cols-[180px_minmax(0,1fr)] gap-5 sm:gap-7 items-center rounded-xl border border-[#334155] bg-[#141824] p-5 sm:p-6">
+      <figure class="w-full max-w-[220px] sm:max-w-none">
+        <a href={event.image} target="_blank" rel="noopener noreferrer" aria-label="View the full roundtable photograph" class="block overflow-hidden rounded-xl border border-[#334155] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]">
+          <img src={event.image} alt={event.imageAlt} width="1280" height="852" loading="lazy" class="block w-full h-auto" />
+        </a>
+      </figure>
+      <div class="space-y-3">
+        <h3 class="text-lg font-semibold leading-snug">{event.title}</h3>
+        <p class="text-xs text-[#94a3b8]">{event.date} · UTC, Compiègne</p>
+        <p class="text-sm leading-relaxed text-[#b8c5d8]">{event.description}</p>
+        <div class="text-sm">
+          <a href={event.postUrl} target="_blank" rel="noopener noreferrer" class="text-[#60a5fa] hover:underline">Philippe Baptiste’s LinkedIn post ↗</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

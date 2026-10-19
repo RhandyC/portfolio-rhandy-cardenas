@@ -88,16 +88,22 @@ export const siteConfig = {
   ],
   academicProjects: [
 {"name": "Quadruped Robot for Underground Mine Exploration", "description": "Technical Supervisor · National University of Engineering, Peru · Feb–Dec 2025. Developed and supervised ROS 2 and Gazebo simulation workflows for autonomous underground mine exploration. Mentored student teams on integration, route planning, and decision-making.", "link": "", "skills": ["ROS 2", "Gazebo", "Route Planning", "Technical Supervision"]},
-{"name": "IEEE VAMS 2025 · Organizing Committee", "description": "CNAM, Paris · August 2025. Organizing committee member for the 2nd IEEE International Symposium on Verification of Autonomous Mobile Systems. Developed the registration website and coordinated speaker and attendee activities during autonomous shuttle demonstrations.", "link": "https://vams2025.fr/", "skills": ["Autonomous Systems", "Web Development", "Event Organization"]},
+{"name": "IEEE VAMS 2025 · Organizing Committee", "images": [{ "src": "/images/projects/vams-2025-shuttles.png", "alt": "VAMS participants gathered beside two autonomous shuttles during demonstrations in Paris.", "caption": "IEEE VAMS 2025 · Autonomous shuttle demonstrations, Paris", "width": 1600, "height": 1199 }], "description": "CNAM, Paris · August 2025. Organizing committee member for the 2nd IEEE International Symposium on Verification of Autonomous Mobile Systems. Developed the registration website and coordinated speaker and attendee activities during autonomous shuttle demonstrations.", "link": "https://vams2025.fr/", "skills": ["Autonomous Systems", "Web Development", "Event Organization"]},
     {
       name: "UTAC Challenge 2024",
+      images: [
+        { src: "/images/projects/utac-challenge-2024.png", alt: "The UTC team celebrating with its trophies at the UTAC Challenge 2024.", caption: "UTC team · UTAC Challenge 2024", width: 1280, height: 960 },
+      ],
       description:
         "Mentored the UTC student team during the UTAC Challenge 2024, the first European competition in a real-world environment dedicated to autonomous and connected mobility. Supervised the development of the 'UTonome On Demand' (UTOD) system using CARLA and MATLAB for simulation. Results: 2nd place (Open Category) and Best School Award.",
       link: "https://www.utc.fr/breves-actualites/lutc-remporte-deux-prix-dont-celui-de-la-meilleure-ecole-a-lutac-challenge-2024/",
       skills: ["CARLA", "MATLAB", "Autonomous Driving", "Mentoring"],
     },
     {
-      name: "National IUT Robotics Competition",
+      name: "National IUT Robotics Competition · Cachan",
+      images: [
+        { src: "/images/projects/iut-cachan-robot.jpg", alt: "The autonomous tennis robot with its mechanical arm and a tennis ball at the Festival de Robotique de Cachan.", caption: "Autonomous tennis robot · IUT competition, Cachan", width: 1600, height: 1200 },
+      ],
       description:
         "Designed and developed an autonomous robotic platform capable of simulating a tennis match at IUT Nice Côte d’Azur (Oct 2018–Apr 2019). Contributed to mechanical design, embedded electronics, and software development.",
       link: "",
@@ -105,12 +111,25 @@ export const siteConfig = {
     },
     {
       name: "Fuzzy System for CARLA",
+      images: [
+        { src: "/images/projects/fuzzy-system-carla.png", alt: "Overview of the CARLA fuzzy decision-making system, with perception, environment inputs, maneuver outputs, and an HMI module.", caption: "Fuzzy decision-making framework · CARLA & Python", width: 2222, height: 1230 },
+      ],
       description:
         "Tactical driving of vehicles using a fuzzy logic system for decision-making in the CARLA autonomous driving simulator. Open-source implementation.",
       link: "https://github.com/RhandyC/FuzzySystemCarla",
       skills: ["Python", "Fuzzy Logic", "CARLA", "Decision-Making"],
     },
   ],
+  engagement: {
+    title: "Roundtable at UTC",
+    date: "21 April 2026",
+    location: "Université de Technologie de Compiègne",
+    description: "Participation in a discussion on international talent and research in France with fellow doctoral researchers, during Philippe Baptiste’s visit to UTC.",
+    image: "/images/engagement/utc-roundtable-philippe-baptiste.png",
+    imageAlt: "A group photograph at UTC during Philippe Baptiste’s visit, following the roundtable on international talent and research.",
+    postUrl: "https://www.linkedin.com/feed/update/urn:li:ugcPost:7452396192048746496/",
+    sourceUrl: "https://www.enseignementsup-recherche.gouv.fr/fr/lancement-de-la-strategie-choose-france-higher-education-101347",
+  },
   experience: [
   {
     "company": "Université de Technologie de Compiègne",
