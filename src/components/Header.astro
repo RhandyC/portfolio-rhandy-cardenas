@@ -15,20 +15,63 @@ const links = [
   <nav aria-label="Main navigation" class="relative max-w-6xl mx-auto px-6 py-4">
     <ul class="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 md:gap-x-8 text-xs md:text-sm">
       {links.map((link) => <li>{link.label === 'Projects' ? (
-        <details data-project-menu>
-          <summary class="flex cursor-pointer list-none items-center gap-2 text-[#cbd5e1] hover:text-[#60a5fa] focus-visible:outline-2 focus-visible:outline-[#60a5fa] [&::-webkit-details-marker]:hidden">Projects <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="m3 6 5 5 5-5" stroke="currentColor" stroke-width="1.5" /></svg></summary>
-          <div class="absolute top-full left-4 right-4 sm:left-auto sm:right-6 sm:w-96 max-h-[65vh] overflow-y-auto rounded-xl border border-[#334155] bg-[#141824] p-2 shadow-2xl">
-            <a href={`${home}#academic-projects`} class="block rounded-lg px-4 py-3 font-semibold text-[#60a5fa] hover:bg-[#1e293b]">All projects →</a>
-            <ul class="border-t border-[#334155] pt-1">{projectDetails.map(project => <li><a href={`/projects/${project.slug}/`} aria-current={Astro.url.pathname.replace(/\/$/, '') === `/projects/${project.slug}` ? 'page' : undefined} class="block rounded-lg px-4 py-3 leading-relaxed text-[#cbd5e1] hover:bg-[#1e293b] hover:text-[#60a5fa] aria-[current=page]:bg-[#1e293b] aria-[current=page]:text-[#60a5fa]">{project.name}</a></li>)}</ul>
+        <details data-project-menu class="project-menu">
+          <summary class="flex cursor-pointer list-none items-center gap-2 text-[#cbd5e1] hover:text-[#60a5fa] focus-visible:outline-2 focus-visible:outline-[#60a5fa] [&::-webkit-details-marker]:hidden">Projects <svg class="project-chevron" aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="m3 6 5 5 5-5" stroke="currentColor" stroke-width="1.5" /></svg></summary>
+          <div class="project-panel">
+            <a href={`${home}#academic-projects`} class="project-overview">Explore all projects <span aria-hidden="true">→</span></a>
+            <ul class="project-list">{projectDetails.map(project => <li><a href={`/projects/${project.slug}/`} aria-current={Astro.url.pathname.replace(/\/$/, '') === `/projects/${project.slug}` ? 'page' : undefined} class="project-option"><span><span class="project-name">{project.name}</span><span class="project-category">{project.category}</span></span><span class="project-arrow" aria-hidden="true">↗</span></a></li>)}</ul>
           </div>
         </details>
       ) : <a href={`${home}${link.href}`} class="text-[#cbd5e1] hover:text-[#60a5fa] transition-colors">{link.label}</a>}</li>)}
     </ul>
   </nav>
 </header>
+<style>
+  .project-menu { position: relative; }
+  .project-chevron { transition: transform 180ms ease; }
+  .project-menu[open] .project-chevron { transform: rotate(180deg); }
+  .project-menu[open] summary { color: #60a5fa; }
+  .project-panel {
+    position: absolute;
+    top: calc(100% + 16px);
+    left: var(--panel-offset, 0px);
+    width: min(24rem, calc(100vw - 2rem));
+    max-height: min(70vh, 36rem);
+    overflow-y: auto;
+    padding: 12px;
+    border: 1px solid #334155;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #182238, #101827);
+    box-shadow: 0 24px 64px #0009, 0 0 30px #3b82f60d;
+    transform-origin: top left;
+  }
+  .project-menu[open] .project-panel { animation: reveal-projects 200ms ease-out; }
+  .project-overview { display: flex; justify-content: space-between; padding: 12px; color: #60a5fa; font-weight: 600; border-radius: 10px; }
+  .project-overview:hover, .project-overview:focus-visible { background: #3b82f61a; }
+  .project-list { border-top: 1px solid #334155; margin-top: 8px; padding: 10px 3px 3px; display: grid; gap: 5px; }
+  .project-option { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 12px; border: 1px solid transparent; border-radius: 12px; color: #cbd5e1; transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+  .project-name { display: block; line-height: 1.5; font-weight: 500; }
+  .project-category { display: block; margin-top: 5px; font-size: 10px; line-height: 1.5; color: #94a3b8; }
+  .project-arrow { color: #60a5fa; opacity: 0; transform: translate(-4px, 4px); transition: opacity 180ms ease, transform 180ms ease; }
+  .project-option:hover, .project-option:focus-visible { transform: scale(1.025); background: #203453; border-color: #3b82f666; box-shadow: 0 6px 18px #0003; color: #e2e8f0; outline: none; }
+  .project-option:hover .project-arrow, .project-option:focus-visible .project-arrow { opacity: 1; transform: translate(0, 0); }
+  .project-option[aria-current="page"] { background: #3b82f61a; border-color: #3b82f650; }
+  @keyframes reveal-projects { from { opacity: 0; transform: translateY(-8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .project-menu[open] .project-panel { animation: none; } .project-option, .project-arrow, .project-chevron { transition: none; } .project-option:hover, .project-option:focus-visible { transform: none; } }
+</style>
 <script>
   const menu = document.querySelector<HTMLDetailsElement>('[data-project-menu]');
   if (menu) {
+    const positionPanel = () => {
+      const panel = menu.querySelector<HTMLElement>('.project-panel');
+      if (!menu.open || !panel) return;
+      const anchor = menu.getBoundingClientRect();
+      const left = Math.max(16, Math.min(anchor.left, document.documentElement.clientWidth - panel.offsetWidth - 16));
+      menu.style.setProperty('--panel-offset', `${left - anchor.left}px`);
+      panel.style.maxHeight = `${Math.max(80, Math.min(window.innerHeight * .7, window.innerHeight - anchor.bottom - 32))}px`;
+    };
+    menu.addEventListener('toggle', positionPanel);
+    window.addEventListener('resize', positionPanel);
     document.addEventListener('click', (event) => {
       if (event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
       if (event.target instanceof Element && event.target.closest('[data-project-menu] a')) menu.open = false;
