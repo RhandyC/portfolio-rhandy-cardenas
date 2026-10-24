@@ -3,9 +3,12 @@ import { siteConfig } from "../config";
 const event = siteConfig.engagement;
 ---
 
-<section id="engagement" class="px-6 py-12 bg-[#0f1729]" aria-labelledby="engagement-heading">
+<section id="engagement" class="px-6 py-16 md:py-20 bg-[#0f1729]" aria-labelledby="engagement-heading">
   <div class="max-w-5xl mx-auto">
-    <h2 id="engagement-heading" class="text-2xl font-semibold mb-6">Academic activities</h2>
+    <div class="mb-10">
+      <h2 id="engagement-heading" class="text-3xl md:text-4xl font-bold text-[#e2e8f0] mb-4">Engagement & Outreach</h2>
+      <div class="w-24 h-1 bg-[#3b82f6] rounded-full" />
+    </div>
     <article class="grid sm:grid-cols-[180px_minmax(0,1fr)] gap-5 sm:gap-7 items-center rounded-xl border border-[#334155] bg-[#141824] p-5 sm:p-6">
       <figure class="w-full max-w-[220px] sm:max-w-none">
         <a href={event.image} target="_blank" rel="noopener noreferrer" aria-label="View the full roundtable photograph" class="block overflow-hidden rounded-xl border border-[#334155] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]">

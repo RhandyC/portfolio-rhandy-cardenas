@@ -1,8 +1,12 @@
 ---
 import { siteConfig } from "../config";
+import { projectDetails } from "../data/projectDetails";
 type ProjectImage = { src: string; alt: string; caption: string; width: number; height: number };
-type Project = { name: string; description: string; link: string; skills: string[]; images?: ProjectImage[] };
-const projects: Project[] = siteConfig.academicProjects;
+type Project = { name: string; description: string; link: string; skills: string[]; images?: ProjectImage[]; detailUrl?: string };
+const projects: Project[] = siteConfig.academicProjects.map(project => {
+  const detail = projectDetails.find(detail => detail.name === project.name);
+  return { ...project, detailUrl: detail ? `/projects/${detail.slug}/` : undefined };
+});
 const illustrated = projects.filter((project) => project.images?.length);
 const remaining = projects.filter((project) => !project.images?.length);
 ---
@@ -13,10 +17,11 @@ const remaining = projects.filter((project) => !project.images?.length);
       <div class="mb-10">
         <h2 id="projects-heading" class="text-3xl md:text-4xl font-bold text-[#e2e8f0] mb-4">Projects & Leadership</h2>
         <div class="w-24 h-1 bg-[#3b82f6] rounded-full" />
+        <p class="mt-5 max-w-2xl text-sm leading-relaxed text-[#94a3b8]">Explore selected projects, my contributions, and the work behind them.</p>
       </div>
       <div class="space-y-5">
         {[...illustrated, ...remaining].map((project) => (
-          <article class:list={["group relative grid gap-5 sm:gap-7 items-center p-5 sm:p-6 bg-[#141824] border border-[#334155] rounded-xl transition-all duration-300", project.link && "hover:border-[#3b82f6] hover:shadow-lg hover:shadow-[#3b82f6]/10 focus-within:border-[#60a5fa]", project.images?.length ? 'sm:grid-cols-[180px_minmax(0,1fr)] lg:grid-cols-[220px_minmax(0,1fr)]' : 'grid-cols-1']}>
+          <article class:list={["group relative grid gap-5 sm:gap-7 items-center p-5 sm:p-6 bg-[#141824] border border-[#334155] rounded-xl transition-all duration-300", (project.detailUrl || project.link) && "hover:border-[#3b82f6] hover:shadow-lg hover:shadow-[#3b82f6]/10 focus-within:border-[#60a5fa]", project.images?.length ? 'sm:grid-cols-[180px_minmax(0,1fr)] lg:grid-cols-[220px_minmax(0,1fr)]' : 'grid-cols-1']}>
             {project.images?.length && <div class="space-y-4 max-w-[220px] w-full">
             {project.images?.map((photo) => (
               <figure>
@@ -28,16 +33,16 @@ const remaining = projects.filter((project) => !project.images?.length);
             ))}
             </div>}
             <div class="min-w-0 flex flex-col gap-4">
-              <h3 class:list={["text-xl font-semibold text-[#e2e8f0] leading-snug transition-colors", project.link && "group-hover:text-[#60a5fa]"]}>
-                {project.link ? (
-                  <a href={project.link} target="_blank" rel="noopener noreferrer" class="after:absolute after:inset-0 after:rounded-xl hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]">{project.name}</a>
+              <h3 class:list={["text-xl font-semibold text-[#e2e8f0] leading-snug transition-colors", (project.detailUrl || project.link) && "group-hover:text-[#60a5fa]"]}>
+                {project.detailUrl || project.link ? (
+                  <a href={project.detailUrl || project.link} target={project.detailUrl ? undefined : "_blank"} rel={project.detailUrl ? undefined : "noopener noreferrer"} class="after:absolute after:inset-0 after:rounded-xl hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]">{project.name}</a>
                 ) : project.name}
               </h3>
               <p class="text-sm text-[#b8c5d8] leading-relaxed">{project.description}</p>
               <ul aria-label="Skills used" class="flex flex-wrap gap-2 mt-auto pt-1">
                 {project.skills.map((skill) => <li class="px-2.5 py-1 border border-[#334155] text-[#94a3b8] rounded-md text-xs">{skill}</li>)}
               </ul>
-              {project.link && <a href={project.link} target="_blank" rel="noopener noreferrer" aria-label={`Learn more about ${project.name}`} class="relative z-10 self-start text-sm text-[#60a5fa] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]">{project.link.includes('github.com') ? 'View on GitHub' : 'Explore project'} ↗</a>}
+              {(project.detailUrl || project.link) && <a href={project.detailUrl || project.link} target={project.detailUrl ? undefined : "_blank"} rel={project.detailUrl ? undefined : "noopener noreferrer"} aria-label={`Learn more about ${project.name}`} class="relative z-10 self-start text-sm text-[#60a5fa] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]">{project.detailUrl ? 'View project →' : 'Explore project ↗'}</a>}
             </div>
           </article>
         ))}

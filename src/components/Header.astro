@@ -1,18 +1,46 @@
 ---
+import { projectDetails } from "../data/projectDetails";
+const home = Astro.url.pathname === '/' ? '' : '/';
 const links = [
   {href: '#experience', label: 'Experience'},
   {href: '#about', label: 'Expertise'},
   {href: '#academic-projects', label: 'Projects'},
   {href: '#publications', label: 'Publications'},
-  {href: '#engagement', label: 'Activities'},
+  {href: '#engagement', label: 'Engagement'},
   {href: '#education', label: 'Education'},
   {href: '#credentials', label: 'Courses'},
 ];
 ---
 <header id="header" class="sticky top-0 z-50 border-b border-[#334155]/60 bg-[#0a0f1e]/95 backdrop-blur-md">
-  <nav aria-label="Main navigation" class="max-w-6xl mx-auto px-6 py-4 overflow-x-auto">
-    <ul class="flex items-center gap-5 md:gap-8 md:justify-center text-xs md:text-sm whitespace-nowrap">
-      {links.map((link) => <li><a href={link.href} class="text-[#cbd5e1] hover:text-[#60a5fa] transition-colors">{link.label}</a></li>)}
+  <nav aria-label="Main navigation" class="relative max-w-6xl mx-auto px-6 py-4">
+    <ul class="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 md:gap-x-8 text-xs md:text-sm">
+      {links.map((link) => <li>{link.label === 'Projects' ? (
+        <details data-project-menu>
+          <summary class="flex cursor-pointer list-none items-center gap-2 text-[#cbd5e1] hover:text-[#60a5fa] focus-visible:outline-2 focus-visible:outline-[#60a5fa] [&::-webkit-details-marker]:hidden">Projects <svg aria-hidden="true" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="m3 6 5 5 5-5" stroke="currentColor" stroke-width="1.5" /></svg></summary>
+          <div class="absolute top-full left-4 right-4 sm:left-auto sm:right-6 sm:w-96 max-h-[65vh] overflow-y-auto rounded-xl border border-[#334155] bg-[#141824] p-2 shadow-2xl">
+            <a href={`${home}#academic-projects`} class="block rounded-lg px-4 py-3 font-semibold text-[#60a5fa] hover:bg-[#1e293b]">All projects →</a>
+            <ul class="border-t border-[#334155] pt-1">{projectDetails.map(project => <li><a href={`/projects/${project.slug}/`} aria-current={Astro.url.pathname.replace(/\/$/, '') === `/projects/${project.slug}` ? 'page' : undefined} class="block rounded-lg px-4 py-3 leading-relaxed text-[#cbd5e1] hover:bg-[#1e293b] hover:text-[#60a5fa] aria-[current=page]:bg-[#1e293b] aria-[current=page]:text-[#60a5fa]">{project.name}</a></li>)}</ul>
+          </div>
+        </details>
+      ) : <a href={`${home}${link.href}`} class="text-[#cbd5e1] hover:text-[#60a5fa] transition-colors">{link.label}</a>}</li>)}
     </ul>
   </nav>
 </header>
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('[data-project-menu]');
+  if (menu) {
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
+      if (event.target instanceof Element && event.target.closest('[data-project-menu] a')) menu.open = false;
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+    menu.addEventListener('focusout', () => {
+      requestAnimationFrame(() => { if (!menu.contains(document.activeElement)) menu.open = false; });
+    });
+  }
+</script>
