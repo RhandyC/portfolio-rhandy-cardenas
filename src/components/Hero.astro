@@ -4,31 +4,17 @@ import DownloadCV from "./DownloadCV.astro";
 import ScholarIcon from "./ScholarIcon.astro";
 ---
 
-<div
+<section
   id="hero"
-  class="relative  bg-[#0a0f1e] flex items-center justify-center px-6 pt-24 pb-12 md:pt-28 md:pb-14"
+  class="hero relative isolate bg-[#0a0f1e] overflow-hidden"
+  aria-labelledby="hero-name"
 >
-  <!-- Subtle grid background -->
-  <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px); background-size: 50px 50px;"></div>
-
-  <!-- Gradient glow -->
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#3b82f6] opacity-10 blur-[120px] rounded-full"></div>
-
-  <div class="relative max-w-4xl mx-auto text-center space-y-5">
-    <!-- Profile Photo -->
-    <div class="flex justify-center mb-5">
-      <div class="w-24 h-24 rounded-full overflow-hidden ring-2 ring-[#334155] shadow-2xl">
-        <img
-          src="/profile.png"
-          alt={siteConfig.name}
-          class="w-full h-full object-cover object-top"
-          loading="eager"
-        />
-      </div>
-    </div>
-
+  <img src="/images/hero/autonomous-driving-concept.webp" alt="" aria-hidden="true" width="1672" height="941" fetchpriority="high" class="hero-background" />
+  <div class="hero-shade absolute inset-0" aria-hidden="true"></div>
+  <div class="relative max-w-6xl mx-auto px-6 py-14 md:py-20 lg:py-24 w-full">
+  <div class="hero-copy text-center md:text-left space-y-5">
     <!-- Name -->
-    <h1 class="text-4xl md:text-5xl font-bold text-[#e2e8f0] tracking-tight">
+    <h1 id="hero-name" class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#e2e8f0] tracking-tight leading-[1.1]">
       {siteConfig.name}
     </h1>
 
@@ -37,25 +23,32 @@ import ScholarIcon from "./ScholarIcon.astro";
       {siteConfig.title}
     </p>
 
+    <p class="text-sm md:text-base leading-relaxed text-[#cbd5e1]">
+      <span class="sr-only">Planning safer autonomous driving.</span>
+      <span class="typewriter" aria-hidden="true">Planning safer autonomous driving.</span>
+    </p>
 
     <!-- Affiliation -->
-    <div class="flex flex-col items-center gap-2 text-[#94a3b8]">
-      <div class="flex flex-wrap justify-center items-center gap-3 text-sm">
+    <div class="flex flex-col items-center md:items-start gap-2 text-[#b8c5d8]">
+      <div class="flex flex-wrap justify-center md:justify-start items-center gap-3 text-xs">
         <span>Groupe Renault</span>
         <span class="text-[#334155]">×</span>
         <span>Université de Technologie de Compiègne</span>
       </div>
-      <div class="text-sm text-[#64748b]">
+      <div class="text-xs text-[#94a3b8]">
         Heudiasyc UTC Laboratory
       </div>
     </div>
 
     <p class="text-xs text-[#94a3b8]">PhD defense scheduled for December 2026</p>
 
-    <DownloadCV />
+    <div class="hero-actions flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+      <a href="#academic-projects" class="inline-flex items-center justify-center gap-3 rounded-lg border border-[#60a5fa]/60 bg-[#142b48]/80 px-6 py-3 text-sm font-semibold text-[#e2e8f0] hover:bg-[#23466a] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#60a5fa]">Explore my projects <span aria-hidden="true">→</span></a>
+      <DownloadCV />
+    </div>
 
     <!-- Social links -->
-    <div class="flex flex-wrap justify-center gap-3 pt-3">
+    <div class="flex flex-wrap justify-center md:justify-start gap-2 pt-3">
       {
         siteConfig.social?.email && (
           <a
@@ -143,7 +136,7 @@ import ScholarIcon from "./ScholarIcon.astro";
     </div>
 
     <!-- Scroll indicator -->
-    <div class="pt-5">
+    <a href="#experience" aria-label="Explore my experience" class="inline-block pt-5">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -159,6 +152,23 @@ import ScholarIcon from "./ScholarIcon.astro";
         <path d="M12 5v14" />
         <path d="M19 12l-7 7-7-7" />
       </svg>
-    </div>
+    </a>
   </div>
-</div>
+  </div>
+  <p class="relative lg:absolute lg:bottom-5 lg:right-6 px-6 pb-5 lg:p-0 text-center text-[10px] text-[#94a3b8]">AI-generated conceptual illustration</p>
+</section>
+<style>
+  .hero-background { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% center; opacity: .65; }
+  .hero-shade { background: linear-gradient(180deg, #0a0f1e66, #0a0f1eaa 65%, #0a0f1e); }
+  .hero-actions :global(> div) { padding-top: 0; }
+  .typewriter { display: inline-block; max-width: 100%; animation: type-line 1.8s steps(34, end) .25s both; }
+  @keyframes type-line { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @media (prefers-reduced-motion: reduce) { .typewriter { animation: none; } }
+  @media (min-width: 768px) { .hero-copy { max-width: 640px; margin-right: auto; } }
+  @media (min-width: 1024px) {
+    .hero { min-height: 740px; display: flex; align-items: center; }
+    .hero-background { object-position: center; opacity: 1; }
+    .hero-shade { background: linear-gradient(0deg, #0a0f1e, transparent 22%), linear-gradient(90deg, #0a0f1ef5 0%, #0a0f1ec9 32%, #0a0f1e33 58%, transparent 78%); }
+    .hero-copy { width: 56%; max-width: 640px; }
+  }
+</style>
