@@ -26,6 +26,7 @@ export const siteConfig = {
     email: "rhandy.cardenas-curo@hds.utc.fr",
     linkedin: "https://linkedin.com/in/rhandy-cardenas",
     github: "https://github.com/RhandyC",
+    googleScholar: "https://scholar.google.com/citations?user=wUvoYLYAAAAJ&hl=es",
   },
   aboutMe: "Industrial PhD researcher in Control and Robotics at Renault Group and UTC/Heudiasyc, specializing in AI for autonomous-driving decision-making, planning under uncertainty, and safe autonomous systems under Operational Design Domain (ODD) constraints. I develop, integrate, and validate algorithms in Python, C++, and ROS 2, from simulation to SIL/VIL and prototype-vehicle testing. My work draws on machine learning, deep learning, and reinforcement learning. Originally from Peru, I am based in Compiègne, France. My PhD defense is scheduled for December 2026.",
   skills: [

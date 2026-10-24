@@ -1,6 +1,7 @@
 ---
 import { siteConfig } from "../config";
 import DownloadCV from "./DownloadCV.astro";
+import ScholarIcon from "./ScholarIcon.astro";
 ---
 
 <div
@@ -133,6 +134,12 @@ import DownloadCV from "./DownloadCV.astro";
           </a>
         )
       }
+    {siteConfig.social.googleScholar && (
+        <a href={siteConfig.social.googleScholar} target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1a1f2e] border border-[#334155] text-[#94a3b8] hover:border-[#3b82f6] hover:text-[#60a5fa] transition-colors">
+          <ScholarIcon size={18} />
+          <span class="text-sm font-medium">Google Scholar</span>
+        </a>
+    )}
     </div>
 
     <!-- Scroll indicator -->
