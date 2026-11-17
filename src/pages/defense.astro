@@ -120,8 +120,14 @@ const animations = [
     <main class="max-w-6xl mx-auto px-6 py-10 md:py-14">
       <p class="text-xs uppercase tracking-widest text-[#60a5fa]">PhD thesis defense</p>
       <h1 class="mt-4 text-2xl md:text-4xl font-bold leading-tight max-w-4xl">Fail-operational decision-making for intelligent vehicles</h1>
-      <p class="mt-4 text-sm text-[#94a3b8] leading-relaxed max-w-3xl">
-        The animations of the defense, played part by part. Click the animation, or press → or Space,
+      <a href="/defense/presentation/" class="talk-card mt-8">
+        <span class="talk-kicker">Final presentation</span>
+        <span class="talk-title">The full defense talk, chapter by chapter</span>
+        <span class="talk-text">The slides follow the manuscript, with the animations and the use-case videos where they belong, links between sections and backup slides, and a presenter view.</span>
+        <span class="talk-go">Open the presentation →</span>
+      </a>
+      <p class="mt-10 text-sm text-[#94a3b8] leading-relaxed max-w-3xl">
+        The animations alone, played part by part. Click the animation, use the buttons below it, or press → or Space,
         for the next part; ← goes back. Each part stops on its last frame.
       </p>
 
@@ -147,6 +153,15 @@ const animations = [
             <video id="vid" playsinline muted preload="auto" aria-label="Animation: click to play the next part"></video>
             <button type="button" class="fs-button" id="fs" aria-label="Full screen" title="Full screen (F)">
               <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" /></svg>
+            </button>
+          </div>
+          <div class="steps" aria-label="Parts of the animation">
+            <button type="button" class="step-btn" id="step-prev" aria-label="Previous part" title="Previous part (←)">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7" /></svg>
+            </button>
+            <div class="step-info"><span class="step-count" id="step-count"></span><span class="step-name" id="step-name"></span></div>
+            <button type="button" class="step-btn" id="step-next" aria-label="Next part" title="Next part (→)">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7" /></svg>
             </button>
           </div>
           <p class="mt-3 text-xs text-[#64748b]">→ / Space / click: next part · ← : back · F: full screen · 1–{animations.length}: choose an animation</p>
@@ -184,6 +199,21 @@ const animations = [
       .part-choice[aria-current="true"] { border-color: #3b82f6; background: #3b82f61a; color: #e2e8f0; }
       .part-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #60a5fa; }
       .part-name { font-size: 12px; line-height: 1.45; }
+      .talk-card { display: grid; gap: 6px; max-width: 760px; padding: 20px 24px; border: 1px solid #3b82f680; border-radius: 16px; background: linear-gradient(135deg, #0b1f3d, #141824); text-decoration: none; transition: border-color 160ms ease, transform 160ms ease; }
+      .talk-card:hover { border-color: #60a5fa; transform: translateY(-1px); }
+      .talk-card:focus-visible { outline: 2px solid #60a5fa; outline-offset: 3px; }
+      .talk-kicker { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #fbb515; font-weight: 600; }
+      .talk-title { font-size: 20px; font-weight: 600; color: #e2e8f0; }
+      .talk-text { font-size: 13px; line-height: 1.6; color: #94a3b8; }
+      .talk-go { margin-top: 4px; font-size: 13px; font-weight: 600; color: #60a5fa; }
+      .steps { margin-top: 12px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+      .step-btn { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #334155; border-radius: 12px; background: #141824; color: #e2e8f0; cursor: pointer; transition: border-color 160ms ease, background 160ms ease; }
+      .step-btn:hover:not(:disabled) { border-color: #60a5fa; background: #3b82f61a; }
+      .step-btn:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+      .step-btn:disabled { opacity: 0.35; cursor: default; }
+      .step-info { min-width: 0; display: grid; gap: 2px; text-align: center; }
+      .step-count { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #60a5fa; }
+      .step-name { font-size: 13px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     </style>
 
     <script is:inline define:vars={{ animations }}>
@@ -203,8 +233,15 @@ const animations = [
       const endOf = (i) => (i + 1 < A().parts.length ? A().parts[i + 1][0]
                                                      : (vid.duration || A().duration)) - 2 * EPS;
 
+      const stepPrev = document.getElementById("step-prev");
+      const stepNext = document.getElementById("step-next");
       function markParts() {
         partButtons.forEach((b, i) => b.setAttribute("aria-current", i === cur ? "true" : "false"));
+        const n = A().parts.length;
+        document.getElementById("step-count").textContent = cur < 0 ? `Ready · ${n} parts` : `Part ${cur + 1} / ${n}`;
+        document.getElementById("step-name").textContent = cur < 0 ? "Press → or the button to play part 1" : A().parts[cur][1];
+        stepPrev.disabled = cur < 0;
+        stepNext.disabled = cur >= n - 1 && !playing;
       }
 
       function select(k, focusList) {
@@ -243,6 +280,7 @@ const animations = [
           vid.pause();
           vid.currentTime = stopAt;
           playing = false;
+          markParts();
           return;
         }
         requestAnimationFrame(watch);
@@ -263,6 +301,7 @@ const animations = [
           playing = false;
           vid.pause();
           vid.currentTime = stopAt;
+          markParts();
           return;
         }
         if (cur + 1 < A().parts.length) playPart(cur + 1);
@@ -290,6 +329,8 @@ const animations = [
 
       choices.forEach((c, i) => c.addEventListener("click", () => { c.blur(); select(i); }));
       vid.addEventListener("click", next);
+      stepNext.addEventListener("click", () => { stepNext.blur(); next(); });
+      stepPrev.addEventListener("click", () => { stepPrev.blur(); prev(); });
       vid.addEventListener("loadeddata", () => { if (cur < 0) vid.currentTime = 0; });
       document.getElementById("fs").addEventListener("click", (e) => { e.currentTarget.blur(); fullscreen(); });
       document.addEventListener("keydown", (e) => {
