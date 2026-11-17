@@ -1,0 +1,461 @@
+/* PhD defense presentation engine.
+   - Every slide is drawn on a 1920 x 1080 canvas, scaled to the screen.
+   - Steps: video slides advance part by part (each part stops on its last frame),
+     build slides reveal their [data-step] elements one at a time.
+   - Links between slides ([data-go]) keep a return history, as Beamer's return buttons.
+   - Presenter view (P): current and next slide, notes, timer; synced with BroadcastChannel.
+   Plain script (no modules) so that the folder also runs offline from file://. */
+(function () {
+  "use strict";
+  const T = window.TALK;
+  const EPS = 1 / 60;
+  const MAIN = T.slides, BACK = T.backups;
+  const ALL = MAIN.concat(BACK);
+  const IDX = {};
+  ALL.forEach((s, i) => { IDX[s.id] = i; s.i = i; s.main = i < MAIN.length; });
+  const SEC = {};
+  T.sections.forEach((s) => { SEC[s.id] = s; });
+  const PRESENTER = /[?&]presenter\b/.test(location.search);
+  const chan = "BroadcastChannel" in window ? new BroadcastChannel("phd-defense-talk") : null;
+
+  const stage = document.getElementById("stage");
+  let cur = 0, step = 0;           // slide index, step (video: current part, -1 = before part 1)
+  let playing = false, stopAt = 0; // video part being played
+  const trail = [];                // return points for links: [{i, step}]
+
+  // ---------------------------------------------------------------- helpers
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const label = (s) => s.main ? `${s.i + 1}` : (s.type === "bindex" ? "B" : `B${s.i - MAIN.length}`);
+  const fullLabel = (s) => s.main ? `${s.i + 1} / ${MAIN.length}` : label(s);
+  const isVideo = (s) => s.type === "video";
+  const nSteps = (s) => isVideo(s) ? s.video.parts.length : (s.steps || 0);
+  const secSlides = (sec) => ALL.filter((s) => s.sec === sec && s.type !== "section");
+  const ICON = {
+    prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+    next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+    grid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>',
+  };
+
+  // ---------------------------------------------------------------- building the slides
+  function header(s) {
+    const sec = SEC[s.sec];
+    const kick = sec ? `<a data-go="${sec.page}" title="Section page">${esc(sec.kicker)}</a>` : "";
+    const sub = s.kicker ? (sec ? " · " : "") + esc(s.kicker) : "";
+    const peers = secSlides(s.sec);
+    const mini = peers.length > 1 ? `<div class="mini">${peers.map((p) =>
+      `<button type="button" data-go="${p.id}" title="${esc(fullLabel(p) + " · " + p.title)}" class="${p.i === s.i ? "on" : ""}"></button>`).join("")}</div>` : "";
+    const cs = (s.c || []).map((c) => `<a class="cbadge" data-go="contrib" title="Contribution ${c}">${c}</a>`).join("");
+    return `<div class="hdr"><div class="contrib">${cs}</div><div class="kicker">${kick}${sub}</div>` +
+      `<div class="title">${s.title}</div>${mini}</div>`;
+  }
+
+  function footer(s) {
+    const secs = T.sections.map((x) =>
+      `<button type="button" data-go="${x.page}" class="${x.id === s.sec ? "on" : ""}" title="${esc(x.n + ". " + x.title)}">${x.n}</button>`).join("") +
+      `<button type="button" class="part ${s.main ? "" : "on"}" data-go="bindex" title="Backup slides">B</button>`;
+    const ref = s.ref ? `<span class="ref" title="Section of the manuscript">${esc(s.ref)}</span>` : "";
+    const num = s.main ? `${s.i + 1}<small> / ${MAIN.length}</small>` : label(s);
+    return `<div class="ftr"><div class="secs">${secs}</div>` +
+      (s.type === "video" ? "" : `<div class="who">${esc(T.footer)}</div>`) +
+      `<div class="nav">${ref}<button type="button" class="ret" data-ret hidden title="Return (R)"></button>` +
+      `<button type="button" data-cmd="prev" title="Previous (←)" aria-label="Previous">${ICON.prev}</button>` +
+      `<button type="button" data-cmd="overview" title="All slides (O)" aria-label="All slides">${ICON.grid}</button>` +
+      `<button type="button" data-cmd="next" title="Next (→)" aria-label="Next">${ICON.next}</button>` +
+      `<span class="num">${num}</span></div></div>` +
+      (s.main ? `<div class="progress"><i style="width:${((s.i + 1) / MAIN.length * 100).toFixed(2)}%"></i></div>` : "");
+  }
+
+  function tocHTML(onSec) {
+    let html = "", part = null;
+    T.sections.forEach((x) => {
+      if (x.part && x.part !== part) { html += `<div class="part">${esc(x.part)}</div>`; }
+      part = x.part;
+      const done = onSec && T.sections.findIndex((y) => y.id === onSec) > T.sections.indexOf(x);
+      html += `<a data-go="${x.page}" class="${x.id === onSec ? "on" : (done ? "done" : "")}"><span>${x.n}</span><span>${esc(x.title)}</span></a>`;
+    });
+    return html;
+  }
+
+  function build(s) {
+    const el = document.createElement("section");
+    el.className = "slide " + (s.type || "content") + (s.dark ? " dark" : "");
+    el.dataset.i = s.i;
+    let inner = "";
+    if (s.type === "title") {
+      inner = s.html + footer(s);
+    } else if (s.type === "outline") {
+      let rows = "", part = null;
+      T.sections.forEach((x) => {
+        if (x.part && x.part !== part) rows += `<div class="part">${esc(x.part)}</div>`;
+        part = x.part;
+        const cs = (x.c || []).map((c) => `<span class="cbadge">${c}</span>`).join("");
+        rows += `<a data-go="${x.page}"><span class="n">${x.n}</span><span class="t">${esc(x.title)}<small>${esc(x.ch)}</small></span><span class="cs">${cs}</span></a>`;
+      });
+      inner = header(s) + `<div class="body"><div class="toc">${rows}</div></div>` + footer(s);
+    } else if (s.type === "section") {
+      const x = SEC[s.sec];
+      const cs = (x.c || []).map((c) => `<a class="cbadge solid" data-go="contrib">${c}</a>`).join("");
+      inner = `<div class="sec"><div class="main"><div class="k">${esc(x.part ? x.part + " · " : "")}${esc(x.ch)}</div>` +
+        `<div class="big">${esc(x.title)}</div>${x.sub ? `<div class="sub">${x.sub}</div>` : ""}` +
+        `${x.goal ? `<div class="goal">${x.goal}</div>` : ""}${cs ? `<div class="cs">${cs}</div>` : ""}</div>` +
+        `<div class="side">${tocHTML(s.sec)}</div></div>` + footer(s);
+    } else if (s.type === "video") {
+      inner = `<video muted playsinline preload="none" data-src="${esc(s.video.src)}" aria-label="${esc(s.title)}"></video>` +
+        `<div class="vstep"></div>` + footer(s);
+    } else if (s.type === "thanks" || s.type === "bindex") {
+      inner = (s.type === "bindex" ? header(s) : "") + s.html + footer(s);
+    } else {
+      const bk = (s.backups || []).map((b) => `<a data-go="${b}">Backup ${label(ALL[IDX[b]])} · ${esc(ALL[IDX[b]].title)}</a>`).join("");
+      inner = header(s) + (bk ? `<div class="bk">${bk}</div>` : "") + `<div class="body">${s.html}</div>` + footer(s);
+    }
+    el.innerHTML = inner;
+    return el;
+  }
+
+  const els = ALL.map((s) => { const el = build(s); stage.appendChild(el); applySteps(el, 0); return el; });
+
+  // header titles: shrink until they fit on one line
+  function fitTitles(root) {
+    root.querySelectorAll(".hdr .title").forEach((t) => {
+      let size = 43;
+      t.style.fontSize = size + "px";
+      while (t.scrollWidth > t.clientWidth + 1 && size > 28) { size -= 1; t.style.fontSize = size + "px"; }
+      if (t.scrollWidth > t.clientWidth + 1) { t.style.whiteSpace = "normal"; t.style.fontSize = "30px"; }
+    });
+  }
+
+  // ---------------------------------------------------------------- scaling
+  function fit() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    stage.style.left = "0px"; stage.style.top = "0px";
+    stage.style.transform = `translate(${(window.innerWidth - 1920 * s) / 2}px, ${(window.innerHeight - 1080 * s) / 2}px) scale(${s})`;
+    if (PRESENTER) fitPresenter();
+  }
+  window.addEventListener("resize", fit);
+
+  // ---------------------------------------------------------------- videos
+  const vidOf = (i) => els[i].querySelector("video");
+  function ensureSrc(i) {
+    const v = ALL[i] && isVideo(ALL[i]) ? vidOf(i) : null;
+    if (v && !v.getAttribute("src")) { v.preload = "auto"; v.src = v.dataset.src; v.load(); }
+    return v;
+  }
+  function whenReady(v, fn) {
+    if (v.readyState >= 1) fn(); else v.addEventListener("loadedmetadata", fn, { once: true });
+  }
+  const startOf = (s, k) => s.video.parts[k][0];
+  function endOf(s, k, v) {
+    const parts = s.video.parts;
+    const end = k + 1 < parts.length ? parts[k + 1][0] : (s.video.end || (v && v.duration) || s.video.duration);
+    return end - 2 * EPS;
+  }
+  function watch() {
+    const s = ALL[cur];
+    if (!playing || !isVideo(s)) return;
+    const v = vidOf(cur);
+    if (v.currentTime >= stopAt) { v.pause(); v.currentTime = stopAt; playing = false; return; }
+    requestAnimationFrame(watch);
+  }
+  function playPart(k) {
+    const s = ALL[cur], v = ensureSrc(cur);
+    step = k; playing = true;
+    whenReady(v, () => {
+      stopAt = endOf(s, k, v);
+      v.currentTime = startOf(s, k) + EPS;
+      v.play().then(() => requestAnimationFrame(watch)).catch(() => { playing = false; });
+    });
+  }
+  function showFrame(i, t) {
+    const v = ensureSrc(i);
+    whenReady(v, () => { v.pause(); v.currentTime = typeof t === "function" ? t(v) : t; });
+  }
+  function stopVideo(i) {
+    const v = ALL[i] && isVideo(ALL[i]) ? vidOf(i) : null;
+    if (v) v.pause();
+    playing = false;
+  }
+
+  // ---------------------------------------------------------------- steps on build slides
+  function applySteps(root, k) {
+    root.querySelectorAll("[data-step]").forEach((e) => e.classList.toggle("hidden", k < +e.dataset.step));
+    root.querySelectorAll("[data-dim]").forEach((e) => e.classList.toggle("dim", k >= +e.dataset.dim));
+    root.querySelectorAll("[data-until]").forEach((e) => e.classList.toggle("hidden", k >= +e.dataset.until));
+  }
+
+  // ---------------------------------------------------------------- navigation
+  function render() {
+    els.forEach((e, i) => e.classList.toggle("current", i === cur));
+    const s = ALL[cur], el = els[cur];
+    if (!isVideo(s)) applySteps(el, step);
+    else {
+      const k = Math.max(0, step);
+      el.querySelector(".vstep").textContent = `Part ${k + 1} / ${s.video.parts.length} · ${s.video.parts[k][1]}`;
+    }
+    const ret = el.querySelector("[data-ret]");
+    if (ret) {
+      ret.hidden = !trail.length;
+      if (trail.length) ret.textContent = "↩ " + label(ALL[trail[trail.length - 1].i]);
+    }
+    el.querySelectorAll("[data-cmd=prev]").forEach((b) => { b.disabled = cur === 0 && step <= 0; });
+    el.querySelectorAll("[data-cmd=next]").forEach((b) => { b.disabled = cur === ALL.length - 1 && step >= nSteps(s) - (isVideo(s) ? 1 : 0) && !playing; });
+    for (let j = cur; j <= cur + 2 && j < ALL.length; j++) if (isVideo(ALL[j])) ensureSrc(j);
+    if (history.replaceState && !PRESENTER) history.replaceState(null, "", "#/" + s.id);
+    broadcast();
+  }
+
+  // enter slide i; dir = 1 forward (start), -1 backward (end state)
+  function goTo(i, dir, link) {
+    if (i < 0 || i >= ALL.length) return;
+    if (link) trail.push({ i: cur, step: isVideo(ALL[cur]) ? -1 : step });
+    stopVideo(cur);
+    cur = i;
+    const s = ALL[cur];
+    if (isVideo(s)) {
+      if (dir < 0) {
+        step = s.video.parts.length - 1;
+        showFrame(cur, (v) => endOf(s, step, v));
+      } else if (dir === 0) {      // jump without playing: first frame of part 1
+        step = -1;
+        showFrame(cur, startOf(s, 0) + EPS);
+      } else {
+        playPart(0);
+      }
+    } else {
+      step = dir < 0 ? nSteps(s) : 0;
+    }
+    render();
+  }
+
+  function next() {
+    const s = ALL[cur];
+    if (isVideo(s)) {
+      const v = vidOf(cur);
+      if (playing) { playing = false; v.pause(); v.currentTime = stopAt; render(); return; }  // complete the part
+      if (step + 1 < s.video.parts.length) { playPart(step + 1); render(); return; }
+      goTo(cur + 1, 1); return;
+    }
+    if (step < nSteps(s)) { step++; render(); return; }
+    goTo(cur + 1, 1);
+  }
+
+  function prev() {
+    const s = ALL[cur];
+    if (isVideo(s)) {
+      if (step > 0) {              // back to the end of the previous part
+        stopVideo(cur);
+        step -= 1;
+        showFrame(cur, (v) => endOf(s, step, v));
+        render(); return;
+      }
+      goTo(cur - 1, -1); return;
+    }
+    if (step > 0) { step--; render(); return; }
+    goTo(cur - 1, -1);
+  }
+
+  function back() {
+    if (!trail.length) return;
+    const h = trail.pop();
+    stopVideo(cur);
+    cur = h.i;
+    const s = ALL[cur];
+    if (isVideo(s)) { step = -1; showFrame(cur, startOf(s, 0) + EPS); } else step = h.step;
+    render();
+  }
+
+  function go(id) {
+    if (id === "back") return back();
+    if (!(id in IDX)) return;
+    goTo(IDX[id], 0, true);
+  }
+
+  // ---------------------------------------------------------------- overview, go-to, help, blank, full screen
+  const overview = document.getElementById("overview");
+  function buildOverview() {
+    let html = `<h2>All slides</h2><div class="hint">Click a slide, or press Esc. Type a number and Enter to jump.</div>`;
+    const groups = T.sections.map((x) => ({ name: `${x.n}. ${x.title}`, items: MAIN.filter((s) => s.sec === x.id) }));
+    groups.unshift({ name: "Opening", items: MAIN.filter((s) => !s.sec) });
+    groups.push({ name: "Backup slides", items: BACK });
+    groups.forEach((g) => {
+      if (!g.items.length) return;
+      html += `<div class="grp">${esc(g.name)}</div><div class="items">` + g.items.map((s) =>
+        `<button type="button" data-ov="${s.i}"><span class="k">${label(s)}</span><span>${s.title.replace(/<[^>]+>/g, "")}` +
+        (isVideo(s) ? `<span class="v">▶ video · ${s.video.parts.length} parts</span>` : (s.ref ? `<span class="v">${esc(s.ref)}</span>` : "")) +
+        `</span></button>`).join("") + `</div>`;
+    });
+    overview.innerHTML = html;
+  }
+  function toggleOverview(open) {
+    const on = open === undefined ? !overview.classList.contains("open") : open;
+    if (on) {
+      buildOverview();
+      overview.querySelectorAll("[data-ov]").forEach((b) => b.classList.toggle("on", +b.dataset.ov === cur));
+      overview.classList.add("open");
+      const b = overview.querySelector(".on"); if (b) b.scrollIntoView({ block: "center" });
+    } else overview.classList.remove("open");
+  }
+  overview.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-ov]");
+    if (b) { toggleOverview(false); goTo(+b.dataset.ov, 0); }
+  });
+
+  const gotoBox = document.getElementById("goto");
+  let typed = "", typedTimer = 0;
+  function typeDigit(d) {
+    typed += d; gotoBox.textContent = "Go to slide " + typed; gotoBox.classList.add("open");
+    clearTimeout(typedTimer); typedTimer = setTimeout(() => { typed = ""; gotoBox.classList.remove("open"); }, 3000);
+  }
+  const helpBox = document.getElementById("help");
+  function fullscreen() {
+    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    const r = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+    if (r) Promise.resolve(r.call(document.documentElement)).catch(() => {});
+  }
+  function openPresenter() {
+    window.open(location.pathname + "?presenter#/" + ALL[cur].id, "phd-defense-presenter", "width=1400,height=860");
+  }
+
+  // ---------------------------------------------------------------- input
+  function command(c) {
+    if (PRESENTER && chan) { chan.postMessage({ type: "cmd", cmd: c }); return; }
+    if (c === "next") next(); else if (c === "prev") prev(); else if (c === "back") back();
+    else if (c === "overview") toggleOverview();
+    else if (c.startsWith("go:")) go(c.slice(3));
+    else if (c.startsWith("idx:")) goTo(+c.slice(4), 0);
+  }
+
+  document.addEventListener("click", (e) => {
+    const g = e.target.closest("[data-go]");
+    if (g) { e.preventDefault(); g.blur && g.blur(); command("go:" + g.dataset.go); return; }
+    const c = e.target.closest("[data-cmd]");
+    if (c) { c.blur(); command(c.dataset.cmd); return; }
+    if (e.target.closest("[data-ret]")) { command("back"); return; }
+    if (e.target.tagName === "VIDEO") command("next");
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const k = e.key;
+    if (helpBox.classList.contains("open")) { helpBox.classList.remove("open"); e.preventDefault(); return; }
+    if (overview.classList.contains("open") && (k === "Escape" || k === "o" || k === "O")) { toggleOverview(false); e.preventDefault(); return; }
+    if (/^[0-9]$/.test(k)) { typeDigit(k); e.preventDefault(); return; }
+    if (k === "Enter" && typed) {
+      const n = parseInt(typed, 10); typed = ""; gotoBox.classList.remove("open");
+      if (n >= 1 && n <= MAIN.length) command("idx:" + (n - 1));
+      e.preventDefault(); return;
+    }
+    const onBtn = e.target.closest && e.target.closest("button, a");
+    if (onBtn && (k === " " || k === "Enter")) return;
+    if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter", "n", "N"].includes(k)) { e.preventDefault(); command("next"); }
+    else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(k)) { e.preventDefault(); command("prev"); }
+    else if (k === "Home") { e.preventDefault(); command("idx:0"); }
+    else if (k === "End") { e.preventDefault(); command("idx:" + (MAIN.length - 1)); }
+    else if (k === "o" || k === "O") { e.preventDefault(); command("overview"); }
+    else if (k === "r" || k === "R" || k === "Backspace") { e.preventDefault(); command("back"); }
+    else if (k === "f" || k === "F" || k === "F5") { e.preventDefault(); fullscreen(); }
+    else if (k === "b" || k === "B" || k === ".") { e.preventDefault(); document.body.classList.toggle("blank"); }
+    else if ((k === "p" || k === "P") && !PRESENTER) { e.preventDefault(); openPresenter(); }
+    else if (k === "h" || k === "H" || k === "?") { e.preventDefault(); helpBox.classList.add("open"); }
+    else if (k === "Escape") { toggleOverview(false); }
+  });
+
+  // the cursor disappears when the mouse rests in full screen
+  let idleTimer = 0;
+  document.addEventListener("mousemove", () => {
+    document.body.classList.remove("idle");
+    clearTimeout(idleTimer);
+    if (document.fullscreenElement) idleTimer = setTimeout(() => document.body.classList.add("idle"), 1800);
+  });
+
+  // ---------------------------------------------------------------- presenter sync
+  function broadcast() {
+    if (chan && !PRESENTER) chan.postMessage({ type: "state", i: cur, step, playing });
+  }
+  if (chan) chan.onmessage = (m) => {
+    const d = m.data || {};
+    if (!PRESENTER) {
+      if (d.type === "cmd") command(d.cmd);
+      else if (d.type === "hello") broadcast();
+    } else if (d.type === "state") {
+      presenterShow(d.i, d.step, d.playing);
+    }
+  };
+
+  // presenter window
+  let pvStart = Date.now();
+  function fitPresenter() {
+    document.querySelectorAll("#pv .frame").forEach((f) => {
+      const box = f.parentElement; const s = box.clientWidth / 1920;
+      f.style.transform = `scale(${s})`;
+    });
+  }
+  function cloneSlide(i, k, into) {
+    into.innerHTML = "";
+    if (i < 0 || i >= ALL.length) return;
+    const frame = document.createElement("div"); frame.className = "frame";
+    const c = els[i].cloneNode(true); c.classList.add("current");
+    frame.appendChild(c); into.appendChild(frame);
+    const s = ALL[i];
+    if (isVideo(s)) {
+      const v = c.querySelector("video"); v.src = v.dataset.src; v.preload = "auto";
+      const kk = Math.max(0, k);
+      whenReady(v, () => { v.currentTime = k < 0 ? startOf(s, 0) + EPS : endOf(s, kk, v); });
+    } else applySteps(c, k);
+    fitTitles(c);
+  }
+  const fmt = (ms) => { const t = Math.max(0, Math.round(Math.abs(ms) / 1000)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`; };
+  let pvState = { i: 0, step: 0 };
+  function presenterShow(i, k, isPlaying) {
+    pvState = { i, step: k };
+    const s = ALL[i];
+    cloneSlide(i, k, document.querySelector("#pv .cur"));
+    // next view: next step of this slide, or the next slide
+    const more = isVideo(s) ? k + 1 < s.video.parts.length : k < nSteps(s);
+    if (more && !isVideo(s)) cloneSlide(i, k + 1, document.querySelector("#pv .nxt"));
+    else cloneSlide(more ? i : i + 1, more ? k + 1 : 0, document.querySelector("#pv .nxt"));
+    document.querySelector("#pv .nlab").textContent = more ? (isVideo(s) ? `Next: part ${k + 2} of this video` : "Next: next step of this slide") : "Next slide";
+    let notes = `<div class="meta">${esc(fullLabel(s))}${s.ref ? " · " + esc(s.ref) : ""}${s.time ? " · planned " + fmt(s.time * 1000) : ""}</div>`;
+    if (isVideo(s)) notes += `<p>${s.video.parts.map((p, j) => (j === k ? "<b>▶ " : "") + `${j + 1}. ${esc(p[1])}` + (j === k ? (isPlaying ? " (playing)" : "") + "</b>" : "")).join("<br>")}</p>`;
+    notes += s.notes ? `<p>${esc(s.notes)}</p>` : "";
+    document.querySelector("#pv .notes").innerHTML = notes;
+    tick();
+    fitPresenter();
+  }
+  function tick() {
+    if (!PRESENTER) return;
+    const el = Date.now() - pvStart;
+    const planned = MAIN.slice(0, Math.min(pvState.i, MAIN.length)).reduce((a, s) => a + (s.time || 0), 0) * 1000;
+    const total = MAIN.reduce((a, s) => a + (s.time || 0), 0) * 1000;
+    const d = el - planned;
+    document.querySelector("#pv .clock").textContent = fmt(el);
+    const p = document.querySelector("#pv .plan");
+    p.innerHTML = `Planned at this slide ${fmt(planned)} · <span class="${d > 30000 ? "late" : (d < -30000 ? "early" : "")}">${d >= 0 ? "+" : "−"}${fmt(d)}</span> · talk ${fmt(total)} · now ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+  }
+  function initPresenter() {
+    document.body.classList.add("presenter");
+    const pv = document.getElementById("pv");
+    pv.innerHTML = `<div class="bar"><span class="clock">0:00</span><span class="plan"></span><span style="flex:1"></span>` +
+      `<button type="button" data-pv="reset">Restart timer</button><button type="button" data-cmd="prev">← Previous</button><button type="button" data-cmd="next">Next →</button></div>` +
+      `<div class="curwrap"><div class="lab">Current</div><div class="cur"></div></div>` +
+      `<div class="right"><div class="lab nlab">Next</div><div class="nxt"></div><div class="notes"></div></div>`;
+    pv.querySelector("[data-pv=reset]").addEventListener("click", () => { pvStart = Date.now(); tick(); });
+    setInterval(tick, 1000);
+    window.addEventListener("resize", fitPresenter);
+    if (chan) chan.postMessage({ type: "hello" });
+    else document.querySelector("#pv .notes").textContent = "This browser cannot link the two windows.";
+  }
+
+  // ---------------------------------------------------------------- start
+  const start = () => {
+    fitTitles(stage);
+    fit();
+    const id = decodeURIComponent((location.hash || "").replace(/^#\/?/, ""));
+    if (PRESENTER) { initPresenter(); presenterShow(id in IDX ? IDX[id] : 0, 0, false); return; }
+    goTo(id in IDX ? IDX[id] : 0, 0);
+  };
+  window.addEventListener("hashchange", () => {
+    const id = decodeURIComponent((location.hash || "").replace(/^#\/?/, ""));
+    if (id in IDX && IDX[id] !== cur) goTo(IDX[id], 0);
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+})();
