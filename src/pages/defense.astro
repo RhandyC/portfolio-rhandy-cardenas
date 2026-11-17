@@ -1,0 +1,319 @@
+---
+import { siteConfig } from "../config";
+import Header from "../components/Header.astro";
+import "../styles/global.css";
+
+// The animations of the PhD defense, in the order of the talk. Each one is played part by
+// part: a part stops on its last frame and the next one starts on a click or a key, as in
+// a slide show. `parts` holds the start time (s) and the title of every part.
+const animations = [
+  {
+    id: "problem",
+    section: "Context and problem",
+    title: "Why the ODD must enter the decision",
+    summary: "Each decision is admissible when it is taken, yet the sequence can leave no fallback. Anticipating the loss of capability keeps one within reach.",
+    src: "/videos/defense/problem.mp4",
+    duration: 34.0,
+    parts: [
+      [0.0, "Each decision is checked when it is taken"],
+      [9.0, "Yet the sequence leaves no fallback"],
+      [16.0, "Anticipate the loss of capability"],
+      [25.5, "Fail-operational: a fallback always reachable"],
+    ],
+  },
+  {
+    id: "mce",
+    section: "Decisional capability",
+    title: "The Maneuver Capability Estimator",
+    summary: "Each maneuver relies on a graph of skills. A change of context removes only the maneuvers that need the lost skill, and every loss is traced back to it.",
+    src: "/videos/defense/mce.mp4",
+    duration: 51.5,
+    parts: [
+      [0.0, "Each maneuver relies on its own skill graph"],
+      [12.5, "A maneuver is ensured when all its skills are fulfilled"],
+      [21.0, "A change of context affects only the maneuvers that need the skill"],
+      [32.5, "A shared skill is lost: every maneuver that needs it is lost"],
+      [44.5, "Every loss is traced back to a change of context"],
+    ],
+  },
+  {
+    id: "rss",
+    section: "Decisional capability · Sense skill",
+    title: "What distance to keep behind the front vehicle",
+    summary: "The safe distance of RSS: enough to stop in time, and enough for the ACC to settle in smoothly behind a vehicle that slows down.",
+    src: "/videos/defense/rss.mp4",
+    duration: 27.6,
+    parts: [
+      [0.0, "How much distance to stop in time?"],
+      [16.91, "How much distance to settle in smoothly behind it?"],
+    ],
+  },
+  {
+    id: "window",
+    section: "Decisional capability · Sense skill",
+    title: "The lane change window closes in the fog",
+    summary: "The perception range required in three zones defines a speed window for the lane change. Fog narrows it until it closes, while keeping the lane remains ensured.",
+    src: "/videos/defense/window.mp4",
+    duration: 53.0,
+    parts: [
+      [0.0, "Required perception range: one RSS rule, three zones"],
+      [6.0, "Speed trades the rear zone against the front zones"],
+      [14.5, "Above both curves, the lane change is ensured"],
+      [18.5, "Fog shrinks the envelope: the speed window narrows"],
+      [27.0, "Too slow or too fast: a zone is no longer covered"],
+      [36.0, "Below ≈ 67 m: Keep Lane ensured, lane change not ensured"],
+      [46.5, "Uncertainty on the traffic speed: the limit rises to ≈ 81 m"],
+    ],
+  },
+  {
+    id: "search",
+    section: "ODD-constrained MDP",
+    title: "The search tree of the ODD-MDP",
+    summary: "How far to explore, where to explore once the MCE prunes what leaves the ODD, the best ensured sequence, and the search that starts again after each action.",
+    src: "/videos/defense/search.mp4",
+    duration: 46.97,
+    parts: [
+      [0.0, "Deciding means exploring possible futures"],
+      [6.5, "How far to explore: the planning horizon"],
+      [17.0, "Where to explore: pruning with the MCE"],
+      [28.5, "Among the ensured futures, the best sequence"],
+      [36.0, "Execute the first action, then explore again"],
+    ],
+  },
+  {
+    id: "pomcp",
+    section: "ODD-constrained POMDP",
+    title: "The belief and the ODD-constrained Monte Carlo search",
+    summary: "Under uncertainty the state becomes a belief over particles. An action is ensured when a share τ of them ensures it, and the search explores only ensured actions.",
+    src: "/videos/defense/pomcp.mp4",
+    duration: 74.15,
+    parts: [
+      [0.0, "Under uncertainty, the current state becomes a belief"],
+      [19.0, "An action is ensured when a share τ of the particles ensures it"],
+      [30.6, "Monte Carlo search: one simulation at a time"],
+      [46.0, "Many simulations: the tree grows where it matters"],
+      [59.37, "Execute the best ensured action, rebuild the belief, search again"],
+    ],
+  },
+];
+---
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Animations of the PhD defense of Rhandy Cardenas: fail-operational decision-making for intelligent vehicles." />
+    <title>Thesis defense · {siteConfig.name}</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <Header />
+    <div class="border-b border-[#334155]">
+      <nav aria-label="Page navigation" class="max-w-6xl mx-auto px-6 py-5 flex flex-wrap justify-between gap-4 text-sm">
+        <a href="/" class="font-semibold text-[#e2e8f0] hover:text-[#60a5fa]">Rhandy Cardenas</a>
+        <a href="/" class="text-[#60a5fa] hover:underline">← Home</a>
+      </nav>
+    </div>
+    <main class="max-w-6xl mx-auto px-6 py-10 md:py-14">
+      <p class="text-xs uppercase tracking-widest text-[#60a5fa]">PhD thesis defense</p>
+      <h1 class="mt-4 text-2xl md:text-4xl font-bold leading-tight max-w-4xl">Fail-operational decision-making for intelligent vehicles</h1>
+      <p class="mt-4 text-sm text-[#94a3b8] leading-relaxed max-w-3xl">
+        The animations of the defense, played part by part. Click the animation, or press → or Space,
+        for the next part; ← goes back. Each part stops on its last frame.
+      </p>
+
+      <div class="mt-10 grid lg:grid-cols-[260px_minmax(0,1fr)] gap-8">
+        <nav aria-label="Animations">
+          <ol class="grid sm:grid-cols-2 lg:grid-cols-1 gap-2" id="anim-list">
+            {animations.map((a, i) => (
+              <li>
+                <button type="button" class="anim-choice" data-anim={i} aria-current="false">
+                  <span class="anim-index">{i + 1}</span>
+                  <span class="min-w-0">
+                    <span class="anim-section">{a.section}</span>
+                    <span class="anim-title">{a.title}</span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <section aria-labelledby="anim-heading" class="min-w-0">
+          <div class="player" id="player">
+            <video id="vid" playsinline muted preload="auto" aria-label="Animation: click to play the next part"></video>
+            <button type="button" class="fs-button" id="fs" aria-label="Full screen" title="Full screen (F)">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" /></svg>
+            </button>
+          </div>
+          <p class="mt-3 text-xs text-[#64748b]">→ / Space / click: next part · ← : back · F: full screen · 1–{animations.length}: choose an animation</p>
+          <p class="mt-6 text-xs uppercase tracking-wider text-[#60a5fa]" id="anim-section"></p>
+          <h2 id="anim-heading" class="mt-2 text-xl md:text-2xl font-semibold"></h2>
+          <p id="anim-summary" class="mt-3 text-sm text-[#b8c5d8] leading-relaxed max-w-3xl"></p>
+          <ol class="mt-6 grid sm:grid-cols-2 xl:grid-cols-3 gap-2" id="parts" aria-label="Parts"></ol>
+        </section>
+      </div>
+    </main>
+    <footer class="border-t border-[#334155] px-6 py-8 text-center text-xs text-[#94a3b8]">{siteConfig.name} · Research, engineering & autonomous systems</footer>
+
+    <style>
+      .anim-choice { width: 100%; display: flex; gap: 12px; align-items: flex-start; text-align: left; padding: 12px; border: 1px solid #334155; border-radius: 12px; background: #141824; color: #cbd5e1; cursor: pointer; transition: border-color 160ms ease, background 160ms ease; }
+      .anim-choice:hover { border-color: #60a5fa; }
+      .anim-choice:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+      .anim-choice[aria-current="true"] { border-color: #3b82f6; background: #3b82f61a; color: #e2e8f0; }
+      .anim-index { flex: none; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 999px; border: 1px solid #334155; font-size: 12px; color: #60a5fa; }
+      .anim-choice[aria-current="true"] .anim-index { background: #2563eb; border-color: #2563eb; color: #fff; }
+      .anim-section { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; }
+      .anim-title { display: block; margin-top: 4px; font-size: 13px; line-height: 1.45; font-weight: 500; }
+      .player { position: relative; border: 1px solid #334155; border-radius: 14px; overflow: hidden; background: #0a0f1e; }
+      .player video { display: block; width: 100%; aspect-ratio: 16 / 9; background: #f3f3f3; cursor: pointer; }
+      .player:fullscreen { border: 0; border-radius: 0; background: #000; display: flex; align-items: center; justify-content: center; }
+      .player:fullscreen video { width: 100vw; height: 100vh; aspect-ratio: auto; object-fit: contain; background: #000; }
+      .player.idle, .player.idle video { cursor: none; }
+      .fs-button { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; display: grid; place-items: center; border: 0; border-radius: 10px; background: #0a0f1e99; color: #fff; cursor: pointer; opacity: 0; transition: opacity 160ms ease; }
+      .player:hover .fs-button, .fs-button:focus-visible { opacity: 1; }
+      .fs-button:focus { outline: none; }
+      .fs-button:focus-visible { outline: 2px solid #60a5fa; }
+      .player:fullscreen .fs-button { display: none; }
+      .part-choice { width: 100%; height: 100%; text-align: left; display: grid; gap: 4px; padding: 10px 12px; border: 1px solid #334155; border-radius: 10px; background: #141824; color: #cbd5e1; cursor: pointer; }
+      .part-choice:hover { border-color: #60a5fa; }
+      .part-choice:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+      .part-choice[aria-current="true"] { border-color: #3b82f6; background: #3b82f61a; color: #e2e8f0; }
+      .part-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #60a5fa; }
+      .part-name { font-size: 12px; line-height: 1.45; }
+    </style>
+
+    <script is:inline define:vars={{ animations }}>
+      const vid = document.getElementById("vid");
+      const player = document.getElementById("player");
+      const partsList = document.getElementById("parts");
+      const choices = Array.from(document.querySelectorAll("[data-anim]"));
+      const EPS = 1 / 60;
+      let anim = 0;          // selected animation
+      let cur = -1;          // current part, -1 = first frame before part 1
+      let playing = false;
+      let stopAt = 0;
+      let partButtons = [];
+
+      const A = () => animations[anim];
+      const startOf = (i) => A().parts[i][0];
+      const endOf = (i) => (i + 1 < A().parts.length ? A().parts[i + 1][0]
+                                                     : (vid.duration || A().duration)) - 2 * EPS;
+
+      function markParts() {
+        partButtons.forEach((b, i) => b.setAttribute("aria-current", i === cur ? "true" : "false"));
+      }
+
+      function select(k, focusList) {
+        if (k < 0 || k >= animations.length) return;
+        anim = k; cur = -1; playing = false;
+        vid.pause();
+        vid.src = A().src;
+        vid.load();
+        choices.forEach((c, i) => c.setAttribute("aria-current", i === k ? "true" : "false"));
+        document.getElementById("anim-section").textContent = A().section;
+        document.getElementById("anim-heading").textContent = A().title;
+        document.getElementById("anim-summary").textContent = A().summary;
+        partsList.innerHTML = "";
+        partButtons = A().parts.map(([, name], i) => {
+          const li = document.createElement("li");
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "part-choice";
+          b.innerHTML = '<span class="part-label"></span><span class="part-name"></span>';
+          b.querySelector(".part-label").textContent = "Part " + (i + 1);
+          b.querySelector(".part-name").textContent = name;
+          b.addEventListener("click", () => { b.blur(); playPart(i); });
+          li.appendChild(b);
+          partsList.appendChild(li);
+          return b;
+        });
+        markParts();
+        if (history.replaceState) history.replaceState(null, "", "#" + A().id);
+        if (focusList) choices[k].focus();
+      }
+
+      // stop exactly on the last frame of the part
+      function watch() {
+        if (!playing) return;
+        if (vid.currentTime >= stopAt) {
+          vid.pause();
+          vid.currentTime = stopAt;
+          playing = false;
+          return;
+        }
+        requestAnimationFrame(watch);
+      }
+
+      function playPart(i) {
+        if (i < 0 || i >= A().parts.length) return;
+        cur = i;
+        stopAt = endOf(i);
+        vid.currentTime = startOf(i) + EPS;
+        playing = true;
+        vid.play().then(() => requestAnimationFrame(watch)).catch(() => { playing = false; });
+        markParts();
+      }
+
+      function next() {
+        if (playing) {               // a click during a part completes it, as in a slide show
+          playing = false;
+          vid.pause();
+          vid.currentTime = stopAt;
+          return;
+        }
+        if (cur + 1 < A().parts.length) playPart(cur + 1);
+      }
+
+      // back: show at once the state before the current part
+      function prev() {
+        playing = false;
+        vid.pause();
+        if (cur <= 0) {
+          cur = -1;
+          vid.currentTime = 0;
+        } else {
+          cur -= 1;
+          vid.currentTime = endOf(cur);
+        }
+        markParts();
+      }
+
+      function fullscreen() {
+        if (document.fullscreenElement) { document.exitFullscreen(); return; }
+        const req = player.requestFullscreen || player.webkitRequestFullscreen;
+        if (req) Promise.resolve(req.call(player)).catch(() => {});
+      }
+
+      choices.forEach((c, i) => c.addEventListener("click", () => { c.blur(); select(i); }));
+      vid.addEventListener("click", next);
+      vid.addEventListener("loadeddata", () => { if (cur < 0) vid.currentTime = 0; });
+      document.getElementById("fs").addEventListener("click", (e) => { e.currentTarget.blur(); fullscreen(); });
+      document.addEventListener("keydown", (e) => {
+        if (e.altKey || e.ctrlKey || e.metaKey) return;
+        const onButton = e.target.closest && e.target.closest("button, a");
+        if (onButton && (e.key === " " || e.key === "Enter")) return;   // buttons handle their own keys
+        if (["ArrowRight", "PageDown", " ", "Enter", "ArrowDown"].includes(e.key)) { e.preventDefault(); next(); }
+        else if (["ArrowLeft", "PageUp", "ArrowUp"].includes(e.key)) { e.preventDefault(); prev(); }
+        else if (e.key === "f" || e.key === "F") { e.preventDefault(); fullscreen(); }
+        else if (/^[1-9]$/.test(e.key) && Number(e.key) <= animations.length) { e.preventDefault(); select(Number(e.key) - 1); }
+      });
+
+      // in full screen, the cursor disappears when the mouse rests
+      let idleTimer = 0;
+      const wake = () => {
+        player.classList.remove("idle");
+        clearTimeout(idleTimer);
+        if (document.fullscreenElement) idleTimer = setTimeout(() => player.classList.add("idle"), 1500);
+      };
+      player.addEventListener("mousemove", wake);
+      document.addEventListener("fullscreenchange", wake);
+
+      const fromHash = animations.findIndex((a) => "#" + a.id === location.hash);
+      select(fromHash >= 0 ? fromHash : 0);
+    </script>
+  </body>
+</html>

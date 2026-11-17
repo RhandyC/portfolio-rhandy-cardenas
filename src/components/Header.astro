@@ -1,6 +1,7 @@
 ---
 import { projectDetails } from "../data/projectDetails";
 const home = Astro.url.pathname === '/' ? '' : '/';
+const onDefense = Astro.url.pathname.replace(/\/$/, '') === '/defense';
 const links = [
   {href: '#experience', label: 'Experience'},
   {href: '#about', label: 'Expertise'},
@@ -23,10 +24,16 @@ const links = [
           </div>
         </details>
       ) : <a href={`${home}${link.href}`} class="text-[#cbd5e1] hover:text-[#60a5fa] transition-colors">{link.label}</a>}</li>)}
+      <li class="xl:hidden"><a href="/defense/" aria-current={onDefense ? 'page' : undefined} class="defense-tab inline-flex">Thesis defense</a></li>
     </ul>
+    <a href="/defense/" aria-current={onDefense ? 'page' : undefined} class="defense-tab defense-tab-corner hidden xl:inline-flex">Thesis defense</a>
   </nav>
 </header>
 <style>
+  .defense-tab { align-items: center; padding: 5px 12px; border: 1px solid #3b82f680; border-radius: 999px; color: #60a5fa; font-size: 12px; white-space: nowrap; transition: background 160ms ease, border-color 160ms ease, color 160ms ease; }
+  .defense-tab:hover, .defense-tab:focus-visible { background: #3b82f61a; border-color: #60a5fa; color: #93c5fd; outline: none; }
+  .defense-tab[aria-current="page"] { background: #2563eb; border-color: #2563eb; color: #fff; }
+  .defense-tab-corner { position: absolute; right: 24px; top: 50%; transform: translateY(-50%); }
   .project-menu { position: relative; }
   .project-chevron { transition: transform 180ms ease; }
   .project-menu[open] .project-chevron { transform: rotate(180deg); }
