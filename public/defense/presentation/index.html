@@ -8,6 +8,7 @@
 <meta name="description" content="Fail-operational decision-making for intelligent vehicles: the PhD defense of Rhandy Cardenas.">
 <link rel="icon" type="image/png" href="../../favicon.png">
 <link rel="stylesheet" href="talk.css">
+<script src="../gate.js"></script>
 </head>
 <body>
 <div id="stage" aria-live="polite"></div>
@@ -25,7 +26,12 @@
 <tr><td><kbd>B</kbd><kbd>.</kbd></td><td>black screen</td></tr>
 <tr><td><kbd>Home</kbd><kbd>End</kbd></td><td>first slide, last main slide</td></tr>
 </table></div></div>
-<script src="slides.js"></script>
-<script src="talk.js"></script>
+<script>
+  // the slides load only once the password has been entered
+  window.defenseGate.whenUnlocked(function () {
+    var load = function (src, next) { var e = document.createElement("script"); e.src = src; e.onload = next; document.body.appendChild(e); };
+    load("slides.js", function () { load("talk.js"); });
+  });
+</script>
 </body>
 </html>

@@ -101,6 +101,8 @@ const animations = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <script is:inline src="/defense/gate.js"></script>
     <meta name="description" content="Animations of the PhD defense of Rhandy Cardenas: fail-operational decision-making for intelligent vehicles." />
     <title>Thesis defense · {siteConfig.name}</title>
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
@@ -335,6 +337,7 @@ const animations = [
       document.getElementById("fs").addEventListener("click", (e) => { e.currentTarget.blur(); fullscreen(); });
       document.addEventListener("keydown", (e) => {
         if (e.altKey || e.ctrlKey || e.metaKey) return;
+        if (document.documentElement.classList.contains("defense-locked")) return;
         const onButton = e.target.closest && e.target.closest("button, a");
         if (onButton && (e.key === " " || e.key === "Enter")) return;   // buttons handle their own keys
         if (["ArrowRight", "PageDown", " ", "Enter", "ArrowDown"].includes(e.key)) { e.preventDefault(); next(); }
@@ -353,8 +356,10 @@ const animations = [
       player.addEventListener("mousemove", wake);
       document.addEventListener("fullscreenchange", wake);
 
+      // the videos load only once the password has been entered
       const fromHash = animations.findIndex((a) => "#" + a.id === location.hash);
-      select(fromHash >= 0 ? fromHash : 0);
+      const whenUnlocked = window.defenseGate ? window.defenseGate.whenUnlocked : (fn) => fn();
+      whenUnlocked(() => select(fromHash >= 0 ? fromHash : 0));
     </script>
   </body>
 </html>
