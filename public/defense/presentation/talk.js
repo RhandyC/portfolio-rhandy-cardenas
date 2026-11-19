@@ -71,7 +71,7 @@
       if (x.part && x.part !== part) { html += `<div class="part">${esc(x.part)}</div>`; }
       part = x.part;
       const done = onSec && T.sections.findIndex((y) => y.id === onSec) > T.sections.indexOf(x);
-      html += `<a data-go="${x.page}" class="${x.id === onSec ? "on" : (done ? "done" : "")}"><span>${x.n}</span><span>${esc(x.title)}</span></a>`;
+      html += `<a data-go="${x.page}" class="${x.id === onSec ? "on" : (done ? "done" : "")}"><span>${x.n}</span><span>${esc(x.toc || x.title)}</span></a>`;
     });
     return html;
   }
@@ -84,25 +84,24 @@
     if (s.type === "title") {
       inner = s.html + footer(s);
     } else if (s.type === "outline") {
-      let rows = "", part = null;
-      T.sections.forEach((x) => {
-        if (x.part && x.part !== part) rows += `<div class="part">${esc(x.part)}</div>`;
-        part = x.part;
-        const cs = (x.c || []).map((c) => `<span class="cbadge">${c}</span>`).join("");
-        rows += `<a data-go="${x.page}"><span class="n">${x.n}</span><span class="t">${esc(x.title)}<small>${esc(x.ch)}</small></span><span class="cs">${cs}</span></a>`;
-      });
-      inner = header(s) + `<div class="body"><div class="toc">${rows}</div></div>` + footer(s);
+      const rows = T.sections.filter((x) => x.c).map((x) => `<a data-go="${x.page}" href="#/${x.page}">` +
+        `<div class="num-badge ${x.c[0].toLowerCase()}">${x.c[0]}</div>` +
+        `<div class="t">${esc(x.title)}<small>${esc(x.sub || "")}</small></div>` +
+        `<div class="m"><span>${esc(x.where)}</span>${(x.pubs || []).map((p) => `<span class="pill line">${esc(p)}</span>`).join("")}</div>` +
+        `<span class="arrow">→</span></a>`).join("");
+      inner = header(s) + `<div class="body"><div class="outl">${rows}</div>${s.html || ""}</div>` + footer(s);
     } else if (s.type === "section") {
       const x = SEC[s.sec];
       const cs = (x.c || []).map((c) => `<a class="cbadge solid" data-go="contrib">${c}</a>`).join("");
-      inner = `<div class="sec"><div class="main"><div class="k">${esc(x.part ? x.part + " · " : "")}${esc(x.ch)}</div>` +
+      const pubs = (x.pubs || []).map((p) => `<span class="pill">${esc(p)}</span>`).join("");
+      inner = `<div class="sec"><div class="main"><div class="k">${esc(x.ch)}${x.where ? " · " + esc(x.where) : ""}</div>` +
         `<div class="big">${esc(x.title)}</div>${x.sub ? `<div class="sub">${x.sub}</div>` : ""}` +
-        `${x.goal ? `<div class="goal">${x.goal}</div>` : ""}${cs ? `<div class="cs">${cs}</div>` : ""}</div>` +
+        `${x.goal ? `<div class="goal">${x.goal}</div>` : ""}${cs || pubs ? `<div class="cs">${cs}${pubs}</div>` : ""}</div>` +
         `<div class="side">${tocHTML(s.sec)}</div></div>` + footer(s);
     } else if (s.type === "video") {
       inner = `<video muted playsinline preload="none" data-src="${esc(s.video.src)}" aria-label="${esc(s.title)}"></video>` +
         `<div class="vstep"></div>` + footer(s);
-    } else if (s.type === "thanks" || s.type === "bindex") {
+    } else if (s.type === "thanks" || s.type === "bindex" || s.type === "bridge") {
       inner = (s.type === "bindex" ? header(s) : "") + s.html + footer(s);
     } else {
       const bk = (s.backups || []).map((b) => `<a data-go="${b}">Backup ${label(ALL[IDX[b]])} · ${esc(ALL[IDX[b]].title)}</a>`).join("");
@@ -199,6 +198,16 @@
     el.querySelectorAll("[data-cmd=prev]").forEach((b) => { b.disabled = cur === 0 && step <= 0; });
     el.querySelectorAll("[data-cmd=next]").forEach((b) => { b.disabled = cur === ALL.length - 1 && step >= nSteps(s) - (isVideo(s) ? 1 : 0) && !playing; });
     for (let j = cur; j <= cur + 2 && j < ALL.length; j++) if (isVideo(ALL[j])) ensureSrc(j);
+    els.forEach((e, i) => e.querySelectorAll("video.bg").forEach((b) => {
+      if (i !== cur) { b.pause(); return; }
+      const t0 = +(b.dataset.start || 0);
+      if (!b.getAttribute("src")) {
+        b.src = b.dataset.src;
+        b.addEventListener("loadedmetadata", () => { b.currentTime = t0; }, { once: true });
+        b.addEventListener("ended", () => { b.currentTime = t0; b.play().catch(() => {}); });
+      }
+      b.play().catch(() => {});
+    }));
     if (history.replaceState && !PRESENTER) history.replaceState(null, "", "#/" + s.id);
     broadcast();
   }
@@ -273,7 +282,7 @@
   const overview = document.getElementById("overview");
   function buildOverview() {
     let html = `<h2>All slides</h2><div class="hint">Click a slide, or press Esc. Type a number and Enter to jump.</div>`;
-    const groups = T.sections.map((x) => ({ name: `${x.n}. ${x.title}`, items: MAIN.filter((s) => s.sec === x.id) }));
+    const groups = T.sections.map((x) => ({ name: `${x.n}. ${x.toc || x.title}`, items: MAIN.filter((s) => s.sec === x.id) }));
     groups.unshift({ name: "Opening", items: MAIN.filter((s) => !s.sec) });
     groups.push({ name: "Backup slides", items: BACK });
     groups.forEach((g) => {
