@@ -2,7 +2,7 @@
    background and related work, method, results, then a bridge to the next part.
    type: title | outline | section | content (default) | video | bridge | thanks | bindex
    ref: section of the manuscript · c: contributions shown in the header
-   time: planned seconds (presenter view) · backups: links to backup slides
+   time: planned seconds (presenter view) · backups: links to appendix slides
    video.parts: [start (s), title]; a part stops on the frame before the next start. */
 (function () {
   "use strict";
@@ -18,22 +18,22 @@
   // contribution, each with its related work, its method and its results, and a bridge to the next.
   // ch: the contribution · where: the chapters and sections of the manuscript it covers
   const sections = [
-    { id: "intro", n: 1, page: "sec-intro", kicker: "Introduction", title: "Introduction", toc: "Introduction",
+    { id: "intro", short: "Intro", n: 1, page: "sec-intro", kicker: "Introduction", title: "Introduction", toc: "Introduction",
       ch: "Introduction", where: "Chapters 1 to 3",
       sub: "Why the operational design domain must enter the decision", goal: "The problem, what the state of the art misses, and the four contributions" },
-    { id: "c1", n: 2, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
+    { id: "c1", short: "C1", n: 2, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
       ch: "Contribution 1", where: "Chapter 4", c: ["C1"], pubs: ["IFAC IAV 2025"],
       sub: "The Maneuver Capability Estimator (MCE)", goal: "Which maneuvers are ensured, in the current and in the predicted states" },
-    { id: "c2", n: 3, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "How to decide without losing the fallback?", toc: "C2 · How to decide without losing the fallback?",
+    { id: "c2", short: "C2", n: 3, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "How to decide without losing the fallback?", toc: "C2 · How to decide without losing the fallback?",
       ch: "Contribution 2", where: "Chapter 5 (§5.2) · results in §6.3 – §6.4", c: ["C2"], pubs: ["IEEE IV 2025"],
       sub: "The ODD-constrained MDP", goal: "Decisions only among ensured maneuvers, over the whole planning horizon, then two use cases: fog and a highway exit" },
-    { id: "c3", n: 4, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "And when the vehicle is uncertain?", toc: "C3 · And when the vehicle is uncertain?",
+    { id: "c3", short: "C3", n: 4, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "And when the vehicle is uncertain?", toc: "C3 · And when the vehicle is uncertain?",
       ch: "Contribution 3", where: "Chapter 5 (§5.3) · results in §6.5", c: ["C3"],
       sub: "The ODD-constrained POMDP", goal: "The same principle under uncertain states, forecasts and intentions" },
-    { id: "c4", n: 5, page: "sec-c4", kicker: "C4 · Vehicle-in-the-loop", title: "Does it run on a real vehicle?", toc: "C4 · Does it run on a real vehicle?",
+    { id: "c4", short: "C4", n: 5, page: "sec-c4", kicker: "C4 · Vehicle-in-the-loop", title: "Does it run on a real vehicle?", toc: "C4 · Does it run on a real vehicle?",
       ch: "Contribution 4", where: "Chapter 6 (§6.2 – §6.3)", c: ["C4"],
       sub: "Validation, from simulation to a Mégane E-Tech prototype", goal: "The same planner, unchanged, executing its decisions on a real vehicle" },
-    { id: "concl", n: 6, page: "sec-concl", kicker: "Conclusion", title: "Conclusion and perspectives", toc: "Conclusion and perspectives",
+    { id: "concl", short: "Conclusion", n: 6, page: "sec-concl", kicker: "Conclusion", title: "Conclusion and perspectives", toc: "Conclusion and perspectives",
       ch: "Conclusion", where: "Chapter 7",
       sub: "Contributions, evidence, limitations and future directions" },
   ];
@@ -762,14 +762,14 @@
     { id: "thanks", type: "thanks", sec: "concl", dark: true, title: "Thank you", time: 0,
       notes: "Thank you. I am ready for your questions.",
       html: `<video class="bg" muted playsinline preload="none" data-src="${V}fog.mp4" data-start="81" aria-hidden="true"></video><div class="stand"><div class="big">Thank you</div><div class="rule"></div><div class="sub">Questions and discussion</div>
-        <div class="links"><a data-go="contrib">Contributions</a><a data-go="evidence">Evidence</a><a data-go="bindex">Backup slides</a></div></div>` },
+        <div class="links"><a data-go="contrib">Contributions</a><a data-go="evidence">Evidence</a><a data-go="bindex">Appendix</a></div></div>` },
   ];
 
-  // ================================================================ backup slides
+  // ================================================================ appendix
   const backups = [
-    { id: "bindex", type: "bindex", sec: "backup", title: "Backup slides", kicker: "For the questions" },
+    { id: "bindex", type: "bindex", sec: "backup", title: "Appendix", kicker: "For the questions" },
 
-    { id: "b-cost", sec: "backup", kicker: "Backup", title: "Computational cost of one planning cycle",
+    { id: "b-cost", sec: "backup", kicker: "Appendix", title: "Computational cost of one planning cycle",
       html: `<div class="g4">
           <div class="card stat"><span class="v">366</span><span class="l">states: median tree of the ODD-MDP, four steps (p95 437, max 535)</span></div>
           <div class="card stat"><span class="v">25 ms</span><span class="l">median build and solve of the ODD-MDP (p95 38.8 ms, max 107 ms)</span></div>
@@ -777,7 +777,7 @@
           <div class="card stat"><span class="v">0.3 s</span><span class="l">time budget of the ODD-POMDP cycle</span></div></div>
         <div class="takeaway">Both planners run within the replanning period of 200 to 300 ms.</div>` },
 
-    { id: "b-mrm", sec: "backup", kicker: "Backup", title: "Three notions of MRM, and how they relate",
+    { id: "b-mrm", sec: "backup", kicker: "Appendix", title: "Three notions of MRM, and how they relate",
       html: `<div class="g2 grow">
           <div class="card ok"><h3>Ensured MRM</h3><div class="eq">MRM ∈ ${Aens()}</div><p>Its skills are fulfilled in <i class="m">s</i>, so <i class="m">s</i> is a safe state (Eq. 5.35).</p></div>
           <div class="card accent"><h3>Reachable MRM</h3><div class="eq">𝟙<sub>MRM</sub>(<i>s</i>) = 1</div><p>An MRM is reachable from <i class="m">s</i>. Used by the fallback term after the time threshold (Eq. 5.32).</p></div>
@@ -785,7 +785,7 @@
           <div class="card amber"><h3>Fail-operational</h3><div class="eq">∀<i>k</i> ∈ {0, …, <i>H</i>}, <i>s<sub>k</sub></i> ∈ <i>S</i><sub>safe</sub></div><p>Pursued jointly by the filter and the reward (Eq. 5.36), not imposed as a hard constraint.</p></div>
         </div>` },
 
-    { id: "b-fallback", sec: "backup", kicker: "Backup", title: "Fallback term, its time threshold and the horizon",
+    { id: "b-fallback", sec: "backup", kicker: "Appendix", title: "Fallback term, its time threshold and the horizon",
       html: `<div class="card eqbox"><div class="eq"><i>R</i><sub>time</sub>(<i>s</i>) = −[<i>t</i><sub>pred</sub>(<i>s</i>) − <i>T</i><sub>thr</sub>]<sup>+</sup> (1 − 𝟙<sub>MRM</sub>(<i>s</i>))</div></div>
         <div class="g4">
           <div class="card stat"><span class="v" style="font-size:40px">Threshold</span><span class="l">future time from which an MRM must remain reachable</span></div>
@@ -797,7 +797,7 @@
           <li>After it, every second without a reachable MRM is penalized, with the largest weight after collisions</li>
           <li>Safe states (Eq. 5.36) are pursued through the filter and this reward</li></ul></div>` },
 
-    { id: "b-transition", sec: "backup", kicker: "Backup", title: "Transition model: one predicted successor per action",
+    { id: "b-transition", sec: "backup", kicker: "Appendix", title: "Transition model: one predicted successor per action",
       html: `<div class="row grow"><div class="col grow">
           <div class="card eqbox"><div class="eq"><i>ŝ</i>′ = <i>f</i>(<i>s</i>, <i>a</i>)</div><div class="eq"><i>P</i>(<i>s</i>′|<i>s</i>, <i>a</i>) = 1 for the predicted successor</div></div>
           <div class="card grow"><ul class="list">
@@ -807,7 +807,7 @@
             <li>Uncertainty on states, intentions and forecasts is handled by the ${go("pomdp-sources", "ODD-POMDP")}</li></ul></div></div>
         <div class="card col grow">${fig("state_frame.jpg", "State frame")}</div></div>` },
 
-    { id: "b-vi", sec: "backup", kicker: "Backup", title: "Value iteration on the tree of ensured states",
+    { id: "b-vi", sec: "backup", kicker: "Appendix", title: "Value iteration on the tree of ensured states",
       html: `<div class="row grow"><div class="card grow"><ul class="list">
           <li>The tree is built first: root, ensured actions, predicted successors, up to four steps</li>
           <li>The reward is evaluated on the successor state</li>
@@ -815,7 +815,7 @@
           <li>The policy is the best ensured action at the root, and only that action is executed</li></ul></div>
         <div class="card col grow">${fig("tree.png", "Tree of ensured states")}</div></div>` },
 
-    { id: "b-reward", sec: "backup", kicker: "Backup", title: "Reward terms in detail",
+    { id: "b-reward", sec: "backup", kicker: "Appendix", title: "Reward terms in detail",
       html: `<table class="tbl"><tr><th style="width:260px">Term</th><th>Definition</th></tr>
           <tr><td><b>Collision</b></td><td>−1 if a collision occurs during the predicted execution or at the resulting state</td></tr>
           <tr><td><b>Risk</b></td><td>worst vehicle of the ego lane, mixing time to collision (1 to 10 s) and time headway (0.5 to 2 s)</td></tr>
@@ -827,7 +827,7 @@
           <tr><td><b>Minor terms</b></td><td>lane change cost, and a penalty for overtaking on the right</td></tr></table>
         <p class="small mute">Weights: collision much larger than fallback, then operability, risk, legal and speed.</p>` },
 
-    { id: "b-pomcp", sec: "backup", kicker: "Backup", title: "ODD-constrained POMCP in practice",
+    { id: "b-pomcp", sec: "backup", kicker: "Appendix", title: "ODD-constrained POMCP in practice",
       html: `<div class="g4">
           <div class="card stat"><span class="v">16</span><span class="l">particles in the noisy perception batch</span></div>
           <div class="card stat"><span class="v">32</span><span class="l">hypotheses on the fog in the forecast batch</span></div>
@@ -839,7 +839,7 @@
           <li>Belief rebuilt at every cycle from the world model, no second filtering</li>
           <li>Intentions estimated by a Gaussian naive Bayes classifier on position and speed</li></ul></div>` },
 
-    { id: "b-margin", sec: "backup", kicker: "Backup", title: "Strategic margin: three values in configuration A",
+    { id: "b-margin", sec: "backup", kicker: "Appendix", title: "Strategic margin: three values in configuration A",
       html: `<div class="row grow"><div class="card col" style="flex:0.8 1 0">${fig("exploration_plane.png", "Explored states for three margins")}</div>
         <div class="card grow"><ul class="list">
           <li>Entry speed in the fog: 94.4, 78.7 and 70.1 km/h for <i class="m">m</i> = 1, 1.2 and 1.5</li>
@@ -848,7 +848,7 @@
           <li>At 620 m only <i class="m">m</i> = 1.5 already plans a deceleration. At 460 m, Keep Lane would leave the ensured region for <i class="m">m</i> = 1 and 1.2</li></ul>
           <p class="small mute" style="margin-top:16px">Explored states in the plane of speed and perception range, at four moments and for three margins.</p></div></div>` },
 
-    { id: "b-rss", sec: "backup", kicker: "Backup", title: "Sense skill parameters for the lane change",
+    { id: "b-rss", sec: "backup", kicker: "Appendix", title: "Sense skill parameters for the lane change",
       html: `<div class="row grow"><div class="card col grow">${fig("ranges.png", "Required perception ranges")}<p class="small mute">RSS worst case about 300 m at 130 km/h. Both vehicles at 100 km/h: about 56 m.</p></div>
         <table class="tbl" style="flex:0.7 1 0;align-self:flex-start"><tr><th>Parameter</th><th class="c">Value</th></tr>
           <tr><td>Response time, front zones</td><td class="c">0.5 s</td></tr><tr><td>Response time, rear zone</td><td class="c">1 s</td></tr>
@@ -856,17 +856,17 @@
           <tr><td>Minimum braking</td><td class="c">2 m/s²</td></tr><tr><td>Time headway</td><td class="c">2 s</td></tr>
           <tr><td>Ratio R</td><td class="c">0.8</td></tr><tr><td>Traffic speed</td><td class="c">110 km/h ± 10 %</td></tr></table></div>` },
 
-    { id: "b-outcomes", sec: "backup", kicker: "Backup", title: "Configuration B: outcome classes",
+    { id: "b-outcomes", sec: "backup", kicker: "Appendix", title: "Configuration B: outcome classes",
       html: `<div class="card tight grow">${fig("outcomes.png", "Outcome classes in configuration B")}</div>
         <div class="card"><div class="g3 small"><span>(a) right lane, operable</span><span>(b) right lane but too fast, MRM</span><span>(c) return blocked by traffic</span><span>(d) return planned too late</span><span>(e) return never planned</span></div>
           <p class="small mute" style="margin-top:10px">Median last return 67 m before the fog with <i class="m">m</i> = 1, 93 m with <i class="m">m</i> = 1.2. One run with <i class="m">m</i> = 1.2 excluded: a truck reported with a wrong distance by the simulator.</p></div>` },
 
-    { id: "b-exit", sec: "backup", kicker: "Backup", title: "Highway exit: preparation and compliance",
+    { id: "b-exit", sec: "backup", kicker: "Appendix", title: "Highway exit: preparation and compliance",
       html: `<div class="row grow"><div class="card col tight" style="flex:0.6 1 0"><h4>Preparation</h4>${fig("exit_preparation.png", "Preparation of the exit")}</div>
           <div class="card col tight grow"><h4>Overtaking</h4>${fig("exit_overtakings.png", "Overtakings per run")}</div></div>
         <div class="card col tight grow"><h4>Rule compliance</h4>${fig("exit_compliance.png", "Overtaking on the right and time headway")}</div>` },
 
-    { id: "b-learning", sec: "backup", kicker: "Backup", title: "Why model-based, and not learned end to end",
+    { id: "b-learning", sec: "backup", kicker: "Appendix", title: "Why model-based, and not learned end to end",
       html: `<div class="row grow">
           <div class="card grow"><h3>Learning-based decision-making</h3><ul class="list">
             <li>Scales well and handles unseen situations</li>
@@ -878,7 +878,7 @@
             <li>The filter excludes non-ensured maneuvers by construction</li>
             <li>Learning fits where the skills rely on trained components: learn where the vehicle is capable, and detect when it is no longer (introspective approaches)</li></ul></div></div>` },
 
-    { id: "b-conf", sec: "backup", kicker: "Backup", title: "Statistical confidence of the main proportions",
+    { id: "b-conf", sec: "backup", kicker: "Appendix", title: "Statistical confidence of the main proportions",
       html: `<table class="tbl" style="font-size:20px"><tr><th>Experiment</th><th>Outcome</th><th>Planner</th><th class="c">Observed</th><th class="c">95 % interval</th></tr>
           <tr><td rowspan="2"><b>Fog, configuration A</b></td><td rowspan="2">Runs without MRM</td><td>Reference</td><td class="c">0 / 100</td><td class="c">0 – 4 %</td></tr>
           <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c">100 / 100</td><td class="c">96 – 100 %</td></tr>
@@ -892,7 +892,7 @@
           <tr class="hl"><td>ODD-POMDP</td><td class="c">19 / 20</td><td class="c">75 – 100 %</td></tr></table>
         <p class="small mute" style="margin:0">Exact Clopper–Pearson intervals. Both planners run on the same seeds, so a paired test would be sharper.</p>` },
 
-    { id: "b-takeover", sec: "backup", kicker: "Backup", title: "Driver takeover and automation levels",
+    { id: "b-takeover", sec: "backup", kicker: "Appendix", title: "Driver takeover and automation levels",
       html: `<div class="card grow"><ul class="list">
           <li><b>Level 2:</b> fail-operational decisions can reduce unplanned disengagements when the context shifts</li>
           <li><b>Level 3:</b> the system must issue a timely request to intervene, 12 to 15 s ahead, and drivers are often unaware of the system limits</li>
@@ -900,7 +900,7 @@
           <li>In ODD-aptive, the fallback is a guarantee held in reserve rather than the default behavior. Depending on the level, it is an MRM or a timely takeover request</li>
           <li>Scenario 1 uses a time budget of 20 s to reach a minimal risk condition, consistent with Level 3</li></ul></div>` },
 
-    { id: "b-notation", sec: "backup", kicker: "Backup", title: "Notation used in the presentation",
+    { id: "b-notation", sec: "backup", kicker: "Appendix", title: "Notation used in the presentation",
       html: `<table class="tbl"><tr><th>Symbol</th><th>Meaning</th><th>Symbol</th><th>Meaning</th></tr>
           <tr><td class="eq" style="font-size:24px">OD, <i>X</i><sub>ODD</sub></td><td>operational domain, ODD space</td><td class="eq" style="font-size:24px"><i>H</i></td><td>planning horizon (steps)</td></tr>
           <tr><td class="eq" style="font-size:24px"><i>U</i>, ${Uens()}</td><td>maneuvers, ensured maneuvers</td><td class="eq" style="font-size:24px"><i>τ</i></td><td>confidence threshold</td></tr>
@@ -909,7 +909,7 @@
           <tr><td class="eq" style="font-size:24px">𝒦(<i>u</i>)</td><td>skills required by <i class="m">u</i></td><td class="eq" style="font-size:24px"><i>ρ</i></td><td>traffic density</td></tr>
           <tr><td class="eq" style="font-size:24px"><i>R</i>, <i>W</i></td><td>reward terms and weights</td><td class="eq" style="font-size:24px"><i>T</i><sub>thr</sub></td><td>fallback threshold</td></tr></table>` },
 
-    { id: "b-vil", sec: "backup", kicker: "Backup", title: "Vehicle-in-the-loop: plans and execution",
+    { id: "b-vil", sec: "backup", kicker: "Appendix", title: "Vehicle-in-the-loop: plans and execution",
       html: `<div class="row grow"><div class="card col" style="flex:1.4 1 0"><h4>Four-maneuver plan at each update</h4>${fig("vil_planned_actions.png", "Planned actions")}</div>
           <div class="card col grow"><h4>Execution</h4>${fig("vil_speed.png", "Speed and lateral acceleration")}</div></div>
         <div class="card"><ul class="list small">
@@ -918,9 +918,9 @@
           <li>Speed almost constant at ≈ 60 km/h</li></ul></div>` },
   ];
 
-  // backup index: one link per backup slide
+  // appendix index: one link per appendix slide
   backups[0].html = `<div class="body"><div class="bindex">${backups.slice(1).map((b, j) =>
-    `<a data-go="${b.id}"><b>B${j + 1}</b><span>${b.title}</span></a>`).join("")}</div></div>`;
+    `<a data-go="${b.id}"><b>A${j + 1}</b><span>${b.title}</span></a>`).join("")}</div></div>`;
 
   window.TALK = {
     footer: "Rhandy Cardenas  ·  Fail-operational decision-making for intelligent vehicles",
