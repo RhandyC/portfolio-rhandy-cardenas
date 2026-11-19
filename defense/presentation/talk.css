@@ -48,15 +48,14 @@ body.blank #stage::after { content: ""; position: absolute; inset: 0; background
 .ftr { position: absolute; left: 0; right: 0; bottom: 0; height: 62px; z-index: 6; pointer-events: none; }
 .ftr .who { position: absolute; left: 0; right: 0; top: 15px; text-align: center; font-weight: 600; font-size: 23.5px; color: var(--navy); white-space: pre; }
 .ftr .secs, .ftr .nav { pointer-events: auto; position: absolute; top: 12px; display: flex; align-items: center; gap: 6px; }
-.ftr .secs { left: 40px; }
+.ftr .secs { left: 30px; gap: 3px; }
 .ftr .nav { right: 36px; gap: 10px; }
-.secs button { width: 34px; height: 34px; border-radius: 9px; border: 2px solid transparent; background: transparent; color: #8a96a6; font-weight: 700; font-size: 17px; cursor: pointer; padding: 0; }
+.secs button { min-width: 32px; height: 32px; border-radius: 8px; border: 2px solid transparent; background: transparent; color: #8a96a6; font-weight: 700; font-size: 15px; cursor: pointer; padding: 0 6px; font-family: inherit; }
 .secs button:hover { border-color: var(--navy); color: var(--navy); }
 .secs button.on { background: var(--navy); color: #fff; }
-.secs button.part { margin-left: 8px; }
+.secs button.part { margin-left: 6px; }
 .nav .ref { font-size: 17px; font-weight: 600; color: var(--mute); margin-right: 4px; white-space: nowrap; }
 .nav .num { font-size: 19px; font-weight: 700; color: var(--navy); min-width: 74px; text-align: right; white-space: nowrap; }
-.nav .num small { font-weight: 600; color: var(--mute); font-size: 15px; }
 .nav button { width: 38px; height: 38px; border-radius: 10px; border: 2px solid var(--navy); background: #fff; color: var(--navy); cursor: pointer; display: grid; place-items: center; padding: 0; }
 .nav button:hover { background: var(--navy); color: #fff; }
 .nav button:disabled { opacity: 0.35; cursor: default; background: #fff; color: var(--navy); }
@@ -80,8 +79,31 @@ body.blank #stage::after { content: ""; position: absolute; inset: 0; background
 .slide.video { background: var(--page); }
 .slide.video video { position: absolute; inset: 0; width: 1920px; height: 1080px; object-fit: contain; background: var(--page); cursor: pointer; }
 .slide.video .ftr .who { display: none; }
-.vstep { position: absolute; right: 36px; bottom: 64px; z-index: 6; font-size: 15px; font-weight: 600; color: var(--mute); background: #ffffffd9; padding: 4px 10px; border-radius: 8px; opacity: 0; transition: opacity 200ms; }
-.slide.video:hover .vstep { opacity: 1; }
+.vstep { position: absolute; left: 96px; bottom: 148px; z-index: 8; font-size: 17px; font-weight: 700; color: var(--navy); background: #fffffff0; padding: 6px 14px; border-radius: 10px; box-shadow: 0 4px 14px rgba(6,54,105,0.14); opacity: 0; pointer-events: none; transition: opacity 220ms; }
+.vui .slide.video.current .vstep { opacity: 1; }
+.vui .slide.video.current:has(.scrub .track:hover) .vstep { opacity: 0; }
+
+/* scene bar: pause and play, drag to any time, one dot per scene; shown when the mouse moves */
+.scrub { position: absolute; left: 96px; right: 96px; bottom: 74px; height: 64px; z-index: 8; display: flex; align-items: center; gap: 18px; padding: 0 24px 0 10px; background: #fffffff0; border-radius: 18px; box-shadow: 0 8px 28px rgba(6,54,105,0.2); opacity: 0; pointer-events: none; transition: opacity 220ms; }
+.vui .slide.video.current .scrub { opacity: 1; pointer-events: auto; }
+.scrub .pp { flex: none; width: 46px; height: 46px; border-radius: 50%; border: 0; padding: 0; background: var(--navy); color: #fff; display: grid; place-items: center; cursor: pointer; }
+.scrub .pp:hover { background: var(--amber); color: var(--navy); }
+.scrub .pp svg { width: 22px; height: 22px; }
+.scrub .pp .i-pause, .scrub.playing .pp .i-play { display: none; }
+.scrub.playing .pp .i-pause { display: block; }
+.scrub .tc { flex: none; min-width: 54px; font-size: 18px; font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
+.scrub .tc.end { color: var(--mute); text-align: right; }
+.scrub .track { position: relative; flex: 1; height: 48px; cursor: pointer; touch-action: none; }
+.scrub .rail, .scrub .fill { position: absolute; left: 0; top: 50%; height: 6px; margin-top: -3px; border-radius: 3px; pointer-events: none; }
+.scrub .rail { right: 0; background: #dfe3e8; }
+.scrub .fill { width: 0; background: var(--navy); }
+.scrub .dot { position: absolute; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; padding: 0; border-radius: 50%; border: 3px solid #fff; background: #b4c0cf; box-shadow: 0 1px 4px rgba(0,0,0,0.18); cursor: pointer; transition: transform 120ms; }
+.scrub .dot.past { background: var(--navy); }
+.scrub .dot.on { transform: scale(1.3); }
+.scrub .dot:hover { background: var(--amber); transform: scale(1.45); }
+.scrub .knob { position: absolute; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: var(--amber); border: 4px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3); pointer-events: none; z-index: 2; }
+.scrub .tip { position: absolute; bottom: 54px; left: 0; transform: translateX(-50%); background: var(--navy); color: #fff; font-size: 17px; font-weight: 600; padding: 7px 14px; border-radius: 9px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 120ms; }
+.scrub .track:hover .tip { opacity: 1; }
 
 /* ------------------------------------------------------------ body and blocks */
 .body { position: absolute; left: 64px; right: 64px; top: 152px; bottom: 76px; display: flex; flex-direction: column; justify-content: center; gap: 26px; font-size: 25px; line-height: 1.45; font-weight: 500; }
@@ -294,6 +316,13 @@ body.presenter #pv { display: grid; grid-template-columns: 1fr 520px; grid-templ
 #pv .notes .meta { font-size: 14px; color: #9fb6d4; margin-bottom: 8px; }
 #pv .curwrap { display: grid; grid-template-rows: auto 1fr; gap: 8px; min-height: 0; }
 #pv .cur { width: 100%; aspect-ratio: 16 / 9; align-self: start; }
+#pv .scrub, #pv .vstep { display: none; }
+#pv .vctl { display: flex; gap: 8px; margin: 4px 0 10px; }
+#pv .vctl button, #pv .scenes button { background: #0b1220; border: 2px solid #23497a; color: #fff; border-radius: 9px; padding: 5px 12px; cursor: pointer; font: inherit; font-size: 15px; }
+#pv .vctl button:hover, #pv .scenes button:hover { border-color: var(--amber); }
+#pv .scenes { display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin-bottom: 12px; }
+#pv .scenes button { text-align: left; font-size: 17px; line-height: 1.35; }
+#pv .scenes button.on { border-color: var(--amber); color: var(--amber); font-weight: 700; }
 
 /* title slide: the jury panel is navy, so the navigation turns light */
 .slide.title .ftr .who, .slide.title .ftr .secs, .slide.title .progress { display: none; }

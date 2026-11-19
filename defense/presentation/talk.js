@@ -1,7 +1,9 @@
 /* PhD defense presentation engine.
    - Every slide is drawn on a 1920 x 1080 canvas, scaled to the screen.
-   - Steps: video slides advance part by part (each part stops on its last frame),
+   - Steps: video slides advance scene by scene (each scene stops on its last frame),
      build slides reveal their [data-step] elements one at a time.
+   - Video slides have a scene bar (shown when the mouse moves): pause and play, drag
+     to any time, one dot per scene. Keys: K pause and play, J and L five seconds.
    - Links between slides ([data-go]) keep a return history, as Beamer's return buttons.
    - Presenter view (P): current and next slide, notes, timer; synced with BroadcastChannel.
    Plain script (no modules) so that the folder also runs offline from file://. */
@@ -25,7 +27,7 @@
 
   // ---------------------------------------------------------------- helpers
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const label = (s) => s.main ? `${s.i + 1}` : (s.type === "bindex" ? "B" : `B${s.i - MAIN.length}`);
+  const label = (s) => s.main ? `${s.i + 1}` : (s.type === "bindex" ? "A" : `A${s.i - MAIN.length}`);
   const fullLabel = (s) => s.main ? `${s.i + 1} / ${MAIN.length}` : label(s);
   const isVideo = (s) => s.type === "video";
   const nSteps = (s) => isVideo(s) ? s.video.parts.length : (s.steps || 0);
@@ -33,6 +35,8 @@
   const ICON = {
     prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
     next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+    play: '<svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6L19 12z"/></svg>',
+    pause: '<svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4.3" height="14" rx="1.2"/><rect x="13.7" y="5" width="4.3" height="14" rx="1.2"/></svg>',
     grid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>',
   };
 
@@ -43,7 +47,7 @@
     const sub = s.kicker ? (sec ? " · " : "") + esc(s.kicker) : "";
     const peers = secSlides(s.sec);
     const mini = peers.length > 1 ? `<div class="mini">${peers.map((p) =>
-      `<button type="button" data-go="${p.id}" title="${esc(fullLabel(p) + " · " + p.title)}" class="${p.i === s.i ? "on" : ""}"></button>`).join("")}</div>` : "";
+      `<button type="button" data-go="${p.id}" title="${esc(label(p) + " · " + p.title)}" class="${p.i === s.i ? "on" : ""}"></button>`).join("")}</div>` : "";
     const cs = (s.c || []).map((c) => `<a class="cbadge" data-go="contrib" title="Contribution ${c}">${c}</a>`).join("");
     return `<div class="hdr"><div class="contrib">${cs}</div><div class="kicker">${kick}${sub}</div>` +
       `<div class="title">${s.title}</div>${mini}</div>`;
@@ -51,10 +55,10 @@
 
   function footer(s) {
     const secs = T.sections.map((x) =>
-      `<button type="button" data-go="${x.page}" class="${x.id === s.sec ? "on" : ""}" title="${esc(x.n + ". " + x.title)}">${x.n}</button>`).join("") +
-      `<button type="button" class="part ${s.main ? "" : "on"}" data-go="bindex" title="Backup slides">B</button>`;
+      `<button type="button" data-go="${x.page}" class="${x.id === s.sec ? "on" : ""}" title="${esc(x.toc || x.title)}">${esc(x.short || x.n)}</button>`).join("") +
+      `<button type="button" class="part ${s.main ? "" : "on"}" data-go="bindex" title="Appendix">Appendix</button>`;
     const ref = s.ref ? `<span class="ref" title="Section of the manuscript">${esc(s.ref)}</span>` : "";
-    const num = s.main ? `${s.i + 1}<small> / ${MAIN.length}</small>` : label(s);
+    const num = s.type === "title" ? "" : label(s);
     return `<div class="ftr"><div class="secs">${secs}</div>` +
       (s.type === "video" ? "" : `<div class="who">${esc(T.footer)}</div>`) +
       `<div class="nav">${ref}<button type="button" class="ret" data-ret hidden title="Return (R)"></button>` +
@@ -100,11 +104,14 @@
         `<div class="side">${tocHTML(s.sec)}</div></div>` + footer(s);
     } else if (s.type === "video") {
       inner = `<video muted playsinline preload="none" data-src="${esc(s.video.src)}" aria-label="${esc(s.title)}"></video>` +
-        `<div class="vstep"></div>` + footer(s);
+        `<div class="vstep"></div><div class="scrub"><button type="button" class="pp" data-cmd="vtoggle" title="Pause or play (K)" aria-label="Pause or play">${ICON.play}${ICON.pause}</button>` +
+        `<span class="tc now">0:00</span><div class="track"><div class="rail"></div><div class="fill"></div>` +
+        s.video.parts.map((p, k) => `<button type="button" class="dot" data-part="${k}" aria-label="${esc(`Scene ${k + 1}: ${p[1]}`)}"></button>`).join("") +
+        `<div class="knob"></div><div class="tip"></div></div><span class="tc end"></span></div>` + footer(s);
     } else if (s.type === "thanks" || s.type === "bindex" || s.type === "bridge") {
       inner = (s.type === "bindex" ? header(s) : "") + s.html + footer(s);
     } else {
-      const bk = (s.backups || []).map((b) => `<a data-go="${b}">Backup ${label(ALL[IDX[b]])} · ${esc(ALL[IDX[b]].title)}</a>`).join("");
+      const bk = (s.backups || []).map((b) => `<a data-go="${b}">Appendix ${label(ALL[IDX[b]])} · ${esc(ALL[IDX[b]].title)}</a>`).join("");
       inner = header(s) + (bk ? `<div class="bk">${bk}</div>` : "") + `<div class="body">${s.html}</div>` + footer(s);
     }
     el.innerHTML = inner;
@@ -136,7 +143,14 @@
   const vidOf = (i) => els[i].querySelector("video");
   function ensureSrc(i) {
     const v = ALL[i] && isVideo(ALL[i]) ? vidOf(i) : null;
-    if (v && !v.getAttribute("src")) { v.preload = "auto"; v.src = v.dataset.src; v.load(); }
+    if (v && !v.getAttribute("src")) {
+      v.preload = "auto"; v.src = v.dataset.src; v.load();
+      v.addEventListener("loadedmetadata", () => layoutScrub(i));
+      ["seeked", "timeupdate", "play", "pause"].forEach((ev) => v.addEventListener(ev, () => updateScrub(i)));
+      // safety net: when the page is in the background, animation frames stop, timeupdate does not
+      v.addEventListener("timeupdate", () => { if (i === cur && playing && v.currentTime >= stopAt) { v.pause(); v.currentTime = stopAt; playing = false; render(); } });
+      v.addEventListener("seeked", () => { if (i === cur && pendingT !== null) { const t = pendingT; pendingT = null; seekTo(t); } });
+    }
     return v;
   }
   function whenReady(v, fn) {
@@ -152,18 +166,127 @@
     const s = ALL[cur];
     if (!playing || !isVideo(s)) return;
     const v = vidOf(cur);
-    if (v.currentTime >= stopAt) { v.pause(); v.currentTime = stopAt; playing = false; return; }
+    if (v.currentTime >= stopAt) { v.pause(); v.currentTime = stopAt; playing = false; render(); return; }
+    updateScrub(cur);
     requestAnimationFrame(watch);
   }
-  function playPart(k) {
+  // play scene k from time t (default: its start) up to its last frame
+  function playFrom(k, t) {
     const s = ALL[cur], v = ensureSrc(cur);
     step = k; playing = true;
     whenReady(v, () => {
       stopAt = endOf(s, k, v);
-      v.currentTime = startOf(s, k) + EPS;
+      v.currentTime = t === undefined ? startOf(s, k) + EPS : t;
       v.play().then(() => requestAnimationFrame(watch)).catch(() => { playing = false; });
     });
   }
+  const playPart = (k) => playFrom(k);
+
+  // ---------------------------------------------------------------- scene bar
+  const fmtT = (t) => { t = Math.max(0, Math.floor(t + 1e-3)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`; };
+  const vEnd = (s, v) => s.video.end || (v && v.duration) || s.video.duration || 0;
+  const partAt = (s, t) => s.video.parts.reduce((k, p, j) => (t >= p[0] - 0.01 ? j : k), 0);
+  let pendingT = null, drag = null, barTimer = 0;
+  function span(i) {
+    const s = ALL[i], v = vidOf(i);
+    return { s, v, t0: startOf(s, 0), t1: vEnd(s, v) };
+  }
+  function layoutScrub(i) {
+    const { s, t0, t1 } = span(i);
+    if (!(t1 > t0)) return;
+    els[i].querySelectorAll(".scrub .dot").forEach((d) => { d.style.left = `${((s.video.parts[+d.dataset.part][0] - t0) / (t1 - t0)) * 100}%`; });
+    els[i].querySelector(".scrub .end").textContent = fmtT(t1);
+    updateScrub(i);
+  }
+  function updateScrub(i) {
+    const { s, v, t0, t1 } = span(i);
+    if (!v || !(t1 > t0) || v.readyState < 1) return;
+    const el = els[i], t = Math.min(Math.max(v.currentTime, t0), t1), f = `${((t - t0) / (t1 - t0)) * 100}%`;
+    el.querySelector(".scrub .fill").style.width = f;
+    el.querySelector(".scrub .knob").style.left = f;
+    el.querySelector(".scrub .now").textContent = fmtT(v.currentTime);
+    const k = partAt(s, t);
+    el.querySelectorAll(".scrub .dot").forEach((d) => { const j = +d.dataset.part; d.classList.toggle("past", j <= k); d.classList.toggle("on", j === k); });
+    el.querySelector(".scrub").classList.toggle("playing", i === cur && playing);
+    el.querySelector(".vstep").textContent = `Scene ${k + 1} / ${s.video.parts.length} · ${s.video.parts[k][1]}`;
+  }
+  // pause on the frame at time t; the scene becomes the one that contains t
+  function seekTo(t) {
+    const s = ALL[cur];
+    if (!isVideo(s)) return;
+    const v = ensureSrc(cur);
+    whenReady(v, () => {
+      t = Math.min(Math.max(t, startOf(s, 0) + EPS), vEnd(s, v) - 2 * EPS);
+      playing = false; v.pause(); v.currentTime = t;
+      step = partAt(s, t);
+      render();
+    });
+  }
+  function seekLive(t) {             // while dragging: one seek at a time
+    const v = vidOf(cur);
+    if (v && v.seeking) { pendingT = t; return; }
+    seekTo(t);
+  }
+  function seekBy(d) {
+    const s = ALL[cur];
+    if (!isVideo(s)) return;
+    const v = ensureSrc(cur);
+    whenReady(v, () => {
+      const t = Math.min(Math.max(v.currentTime + d, startOf(s, 0) + EPS), vEnd(s, v) - 2 * EPS);
+      if (playing) { const k = partAt(s, t); playFrom(k, Math.min(t, endOf(s, k, v) - EPS)); render(); }
+      else seekTo(t);
+    });
+  }
+  function toggleVideo() {
+    const s = ALL[cur];
+    if (!isVideo(s)) return;
+    const v = ensureSrc(cur);
+    if (playing) { playing = false; v.pause(); render(); return; }
+    whenReady(v, () => {
+      const k = partAt(s, v.currentTime);
+      if (v.currentTime < endOf(s, k, v) - 0.1) playFrom(k, v.currentTime);
+      else if (k + 1 < s.video.parts.length) playFrom(k + 1);
+      render();
+    });
+  }
+  function showBar() {
+    document.body.classList.add("vui");
+    clearTimeout(barTimer);
+    barTimer = setTimeout(function hide() {
+      if (drag || document.querySelector(".slide.current .scrub:hover")) { barTimer = setTimeout(hide, 800); return; }
+      document.body.classList.remove("vui");
+    }, 2500);
+  }
+  function timeAt(track, x) {
+    const { t0, t1 } = span(cur), r = track.querySelector(".rail").getBoundingClientRect();
+    return t0 + Math.min(Math.max((x - r.left) / r.width, 0), 1) * (t1 - t0);
+  }
+  function hoverTip(track, x) {
+    const { s, t0, t1 } = span(cur);
+    if (!(t1 > t0)) return;
+    const t = timeAt(track, x), k = partAt(s, t), tip = track.querySelector(".tip");
+    tip.textContent = `${k + 1} · ${s.video.parts[k][1]} · ${fmtT(t)}`;
+    const w = track.offsetWidth, half = tip.offsetWidth / 2;
+    tip.style.left = `${Math.min(Math.max(((t - t0) / (t1 - t0)) * w, half - 40), w - half + 40)}px`;
+  }
+  document.addEventListener("pointerdown", (e) => {
+    const track = e.target.closest && e.target.closest(".slide.current .scrub .track");
+    if (!track || PRESENTER) return;
+    e.preventDefault();
+    const d = e.target.closest(".dot");
+    if (d) { command("vpart:" + d.dataset.part); return; }
+    drag = track;
+    try { track.setPointerCapture(e.pointerId); } catch (_) { /* synthetic pointer */ }
+    seekLive(timeAt(track, e.clientX));
+  });
+  document.addEventListener("pointermove", (e) => {
+    if (drag) { seekLive(timeAt(drag, e.clientX)); hoverTip(drag, e.clientX); return; }
+    const track = e.target.closest && e.target.closest(".slide.current .scrub .track");
+    if (track) hoverTip(track, e.clientX);
+  });
+  const endDrag = () => { if (drag) { drag = null; showBar(); } };
+  document.addEventListener("pointerup", endDrag);
+  document.addEventListener("pointercancel", endDrag);
   function showFrame(i, t) {
     const v = ensureSrc(i);
     whenReady(v, () => { v.pause(); v.currentTime = typeof t === "function" ? t(v) : t; });
@@ -186,10 +309,7 @@
     els.forEach((e, i) => e.classList.toggle("current", i === cur));
     const s = ALL[cur], el = els[cur];
     if (!isVideo(s)) applySteps(el, step);
-    else {
-      const k = Math.max(0, step);
-      el.querySelector(".vstep").textContent = `Part ${k + 1} / ${s.video.parts.length} · ${s.video.parts[k][1]}`;
-    }
+    else updateScrub(cur);
     const ret = el.querySelector("[data-ret]");
     if (ret) {
       ret.hidden = !trail.length;
@@ -239,7 +359,8 @@
     const s = ALL[cur];
     if (isVideo(s)) {
       const v = vidOf(cur);
-      if (playing) { playing = false; v.pause(); v.currentTime = stopAt; render(); return; }  // complete the part
+      if (playing) { playing = false; v.pause(); v.currentTime = stopAt; render(); return; }  // complete the scene
+      if (step >= 0 && v.readyState >= 1 && v.currentTime < endOf(s, step, v) - 0.1) { playFrom(step, v.currentTime); render(); return; }  // resume
       if (step + 1 < s.video.parts.length) { playPart(step + 1); render(); return; }
       goTo(cur + 1, 1); return;
     }
@@ -250,10 +371,17 @@
   function prev() {
     const s = ALL[cur];
     if (isVideo(s)) {
-      if (step > 0) {              // back to the end of the previous part
+      if (step > 0) {              // back to the end of the previous scene
         stopVideo(cur);
         step -= 1;
         showFrame(cur, (v) => endOf(s, step, v));
+        render(); return;
+      }
+      const v = vidOf(cur);
+      if (step === 0 && v.readyState >= 1 && v.currentTime < endOf(s, 0, v) - 0.1) {  // paused inside the first scene
+        stopVideo(cur);
+        step = -1;
+        showFrame(cur, startOf(s, 0) + EPS);
         render(); return;
       }
       goTo(cur - 1, -1); return;
@@ -284,12 +412,12 @@
     let html = `<h2>All slides</h2><div class="hint">Click a slide, or press Esc. Type a number and Enter to jump.</div>`;
     const groups = T.sections.map((x) => ({ name: `${x.n}. ${x.toc || x.title}`, items: MAIN.filter((s) => s.sec === x.id) }));
     groups.unshift({ name: "Opening", items: MAIN.filter((s) => !s.sec) });
-    groups.push({ name: "Backup slides", items: BACK });
+    groups.push({ name: "Appendix", items: BACK });
     groups.forEach((g) => {
       if (!g.items.length) return;
       html += `<div class="grp">${esc(g.name)}</div><div class="items">` + g.items.map((s) =>
         `<button type="button" data-ov="${s.i}"><span class="k">${label(s)}</span><span>${s.title.replace(/<[^>]+>/g, "")}` +
-        (isVideo(s) ? `<span class="v">▶ video · ${s.video.parts.length} parts</span>` : (s.ref ? `<span class="v">${esc(s.ref)}</span>` : "")) +
+        (isVideo(s) ? `<span class="v">▶ video · ${s.video.parts.length} scenes</span>` : (s.ref ? `<span class="v">${esc(s.ref)}</span>` : "")) +
         `</span></button>`).join("") + `</div>`;
     });
     overview.innerHTML = html;
@@ -331,6 +459,11 @@
     else if (c === "overview") toggleOverview();
     else if (c.startsWith("go:")) go(c.slice(3));
     else if (c.startsWith("idx:")) goTo(+c.slice(4), 0);
+    else if (c === "vtoggle") toggleVideo();
+    else if (c.startsWith("vat:")) seekLive(+c.slice(4));
+    else if (c.startsWith("vby:")) seekBy(+c.slice(4));
+    else if (c.startsWith("vpart:")) { if (isVideo(ALL[cur])) seekTo(startOf(ALL[cur], +c.slice(6)) + EPS); }
+    if (/^v(toggle|by|part)/.test(c)) showBar();
   }
 
   document.addEventListener("click", (e) => {
@@ -365,12 +498,16 @@
     else if (k === "b" || k === "B" || k === ".") { e.preventDefault(); document.body.classList.toggle("blank"); }
     else if ((k === "p" || k === "P") && !PRESENTER) { e.preventDefault(); openPresenter(); }
     else if (k === "h" || k === "H" || k === "?") { e.preventDefault(); helpBox.classList.add("open"); }
+    else if (k === "k" || k === "K") { e.preventDefault(); command("vtoggle"); }
+    else if (k === "j" || k === "J") { e.preventDefault(); command("vby:-5"); }
+    else if (k === "l" || k === "L") { e.preventDefault(); command("vby:5"); }
     else if (k === "Escape") { toggleOverview(false); }
   });
 
   // the cursor disappears when the mouse rests in full screen
   let idleTimer = 0;
   document.addEventListener("mousemove", () => {
+    if (isVideo(ALL[cur]) && !PRESENTER) showBar();
     document.body.classList.remove("idle");
     clearTimeout(idleTimer);
     if (document.fullscreenElement) idleTimer = setTimeout(() => document.body.classList.add("idle"), 1800);
@@ -422,9 +559,12 @@
     const more = isVideo(s) ? k + 1 < s.video.parts.length : k < nSteps(s);
     if (more && !isVideo(s)) cloneSlide(i, k + 1, document.querySelector("#pv .nxt"));
     else cloneSlide(more ? i : i + 1, more ? k + 1 : 0, document.querySelector("#pv .nxt"));
-    document.querySelector("#pv .nlab").textContent = more ? (isVideo(s) ? `Next: part ${k + 2} of this video` : "Next: next step of this slide") : "Next slide";
+    document.querySelector("#pv .nlab").textContent = more ? (isVideo(s) ? `Next: scene ${k + 2} of this video` : "Next: next step of this slide") : "Next slide";
     let notes = `<div class="meta">${esc(fullLabel(s))}${s.ref ? " · " + esc(s.ref) : ""}${s.time ? " · planned " + fmt(s.time * 1000) : ""}</div>`;
-    if (isVideo(s)) notes += `<p>${s.video.parts.map((p, j) => (j === k ? "<b>▶ " : "") + `${j + 1}. ${esc(p[1])}` + (j === k ? (isPlaying ? " (playing)" : "") + "</b>" : "")).join("<br>")}</p>`;
+    if (isVideo(s)) {
+      notes += `<div class="vctl"><button type="button" data-cmd="vby:-5">−5 s (J)</button><button type="button" data-cmd="vtoggle">Pause / play (K)</button><button type="button" data-cmd="vby:5">+5 s (L)</button></div>`;
+      notes += `<div class="scenes">${s.video.parts.map((p, j) => `<button type="button" data-cmd="vpart:${j}" class="${j === k ? "on" : ""}">${j + 1}. ${esc(p[1])}${j === k && isPlaying ? " (playing)" : ""}</button>`).join("")}</div>`;
+    }
     notes += s.notes ? `<p>${esc(s.notes)}</p>` : "";
     document.querySelector("#pv .notes").innerHTML = notes;
     tick();
