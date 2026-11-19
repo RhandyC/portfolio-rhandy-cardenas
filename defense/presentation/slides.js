@@ -1,5 +1,6 @@
-/* Content of the PhD defense. The order follows the manuscript, chapter by chapter.
-   type: title | outline | section | content (default) | video | thanks | bindex
+/* Content of the PhD defense. After a short introduction, one part per contribution:
+   background and related work, method, results, then a bridge to the next part.
+   type: title | outline | section | content (default) | video | bridge | thanks | bindex
    ref: section of the manuscript · c: contributions shown in the header
    time: planned seconds (presenter view) · backups: links to backup slides
    video.parts: [start (s), title]; a part stops on the frame before the next start. */
@@ -13,25 +14,27 @@
   const Uens = (s = "S") => `<i>U</i><sub>ens</sub>(<i>${s}</i>)`;
   const Aens = (s = "s") => `<i>A</i><sub>ens</sub>(<i>${s}</i>)`;
 
+  // Structure of the defense, after Leurent (2020): a short introduction, then one part per
+  // contribution, each with its related work, its method and its results, and a bridge to the next.
+  // ch: the contribution · where: the chapters and sections of the manuscript it covers
   const sections = [
-    { id: "intro", n: 1, page: "sec-intro", kicker: "Ch. 1 · Introduction", title: "General introduction", ch: "Chapter 1",
-      sub: "Why the operational design domain must enter the decision", goal: "Research question, objectives and contributions" },
-    { id: "found", n: 2, page: "sec-found", kicker: "Ch. 2 · Conceptual foundations", title: "Conceptual foundations", ch: "Chapter 2",
-      part: "Part I · Fundamentals and state of the art",
-      sub: "Fail-operational systems, self-awareness and context-awareness, the ODD", goal: "What a fail-operational vehicle must know about itself and its context" },
-    { id: "dm", n: 3, page: "sec-dm", kicker: "Ch. 3 · Decision-making for driving", title: "Decision-making for driving", ch: "Chapter 3",
-      part: "Part I · Fundamentals and state of the art",
-      sub: "Decision levels, tactical decision-making, the ODD as support", goal: "The gaps addressed by the thesis" },
-    { id: "cap", n: 4, page: "sec-cap", kicker: "Ch. 4 · Decisional capability", title: "ODD-aptive: decisional capability and operability", ch: "Chapter 4",
-      part: "Part II · A decisional architecture for fail-operational decision-making", c: ["C1"],
-      sub: "Which maneuvers can the vehicle ensure, in the current and in the predicted states?", goal: "The Maneuver Capability Estimator, applied to a lane change" },
-    { id: "dec", n: 5, page: "sec-dec", kicker: "Ch. 5 · Tactical decision-making", title: "ODD-aptive: fail-operational tactical decision-making", ch: "Chapter 5",
-      part: "Part II · A decisional architecture for fail-operational decision-making", c: ["C2", "C3"],
-      sub: "Deciding only among ensured maneuvers, over the whole planning horizon", goal: "The ODD-MDP, then its extension under uncertainty: the ODD-POMDP" },
-    { id: "val", n: 6, page: "sec-val", kicker: "Ch. 6 · Validation", title: "Simulation and vehicle-in-the-loop validation", ch: "Chapter 6",
-      part: "Part III · Implementation and evaluation", c: ["C4"],
-      sub: "From simulation to a real prototype", goal: "Nominal behavior, fail-operational behavior, and results under uncertainty" },
-    { id: "concl", n: 7, page: "sec-concl", kicker: "Ch. 7 · Conclusion", title: "General conclusion and prospects", ch: "Chapter 7",
+    { id: "intro", n: 1, page: "sec-intro", kicker: "Introduction", title: "Introduction", toc: "Introduction",
+      ch: "Introduction", where: "Chapters 1 to 3",
+      sub: "Why the operational design domain must enter the decision", goal: "The problem, what the state of the art misses, and the four contributions" },
+    { id: "c1", n: 2, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
+      ch: "Contribution 1", where: "Chapter 4", c: ["C1"], pubs: ["IFAC IAV 2025"],
+      sub: "The Maneuver Capability Estimator (MCE)", goal: "Which maneuvers are ensured, in the current and in the predicted states" },
+    { id: "c2", n: 3, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "How to decide without losing the fallback?", toc: "C2 · How to decide without losing the fallback?",
+      ch: "Contribution 2", where: "Chapter 5 (§5.2) · results in §6.3 – §6.4", c: ["C2"], pubs: ["IEEE IV 2025"],
+      sub: "The ODD-constrained MDP", goal: "Decisions only among ensured maneuvers, over the whole planning horizon, then two use cases: fog and a highway exit" },
+    { id: "c3", n: 4, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "And when the vehicle is uncertain?", toc: "C3 · And when the vehicle is uncertain?",
+      ch: "Contribution 3", where: "Chapter 5 (§5.3) · results in §6.5", c: ["C3"],
+      sub: "The ODD-constrained POMDP", goal: "The same principle under uncertain states, forecasts and intentions" },
+    { id: "c4", n: 5, page: "sec-c4", kicker: "C4 · Vehicle-in-the-loop", title: "Does it run on a real vehicle?", toc: "C4 · Does it run on a real vehicle?",
+      ch: "Contribution 4", where: "Chapter 6 (§6.2 – §6.3)", c: ["C4"],
+      sub: "Validation, from simulation to a Mégane E-Tech prototype", goal: "The same planner, unchanged, executing its decisions on a real vehicle" },
+    { id: "concl", n: 6, page: "sec-concl", kicker: "Conclusion", title: "Conclusion and perspectives", toc: "Conclusion and perspectives",
+      ch: "Conclusion", where: "Chapter 7",
       sub: "Contributions, evidence, limitations and future directions" },
   ];
 
@@ -58,11 +61,8 @@
         <div class="logos"><img src="${F}logo_utc.png" alt="Université de technologie de Compiègne"><img src="${F}logo_heudiasyc.png" alt="Heudiasyc"></div></div>
         <div class="jury"><h2>JURY</h2>${jury.map(([r, n, a]) => `<div class="p"><div class="r">${r}</div><div><div class="n">${n}</div><div class="a">${a}</div></div></div>`).join("")}</div></div>` },
 
-    { id: "outline", type: "outline", title: "Outline", kicker: "The talk follows the manuscript", time: 30,
-      notes: "The talk follows the manuscript: the introduction, the foundations and the state of the art, the two chapters of the approach, the validation, and the conclusion. Each contribution, C1 to C4, is marked where it appears." },
-
     // ================================================================ 1. introduction
-    { id: "sec-intro", type: "section", sec: "intro", dark: true, title: "General introduction", time: 10 },
+    { id: "sec-intro", type: "section", sec: "intro", dark: true, title: "Introduction", time: 10 },
 
     { id: "motivation", sec: "intro", kicker: "Motivation", ref: "§1.2", time: 60,
       title: "The ODD is fixed by design, the operating conditions keep changing",
@@ -74,10 +74,31 @@
           <p class="small">The <b>operational domain (OD)</b> is the current set of conditions. It moves along the journey, while the ODD stays fixed. Today, ODD monitoring is a set of isolated condition checks, rarely part of the decision.</p></div>
       </div>` },
 
+    { id: "failures", sec: "intro", kicker: "Failure modes", ref: "§2.3", time: 45,
+      title: "Real operation already meets conditions the ODD did not foresee",
+      notes: "Reported incidents of Waymo robotaxis: along light rail tracks, into an active police scene, on a flooded roadway. These situations are not captured by the usual ODD dimensions. They may also come from failures unrelated to the ODD, but they suggest that both the description of the ODD and its monitoring need to be richer.",
+      html: `<div class="g3 grow">
+        ${[["waymo_light_rail.jpg", "Along light rail tracks"], ["waymo_police_scene.jpg", "Into an active police scene"], ["waymo_flooded_road.jpg", "On a flooded roadway"]]
+          .map(([f, t]) => `<div class="card col tight" style="gap:14px">${fig(f, t)}<p class="small" style="text-align:center;margin:0"><b class="navyt">${t}</b></p></div>`).join("")}
+        </div>
+        <p class="xs mute" style="margin:-10px 0 0;text-align:right">Reported incidents of Waymo robotaxis (CNN, 2026)</p>
+        <div class="takeaway">These situations fall outside the usual ODD dimensions: the description of the ODD <b>and its monitoring</b> need to be richer.</div>` },
+
     { id: "v-problem-a", type: "video", sec: "intro", ref: "§1.3", time: 45,
       title: "Problem: a sequence of admissible decisions can leave no fallback",
       notes: "Current systems check the ODD as a monitor: each maneuver is admissible when it is chosen. Yet the sequence narrows operability until no fallback is left, without any single decision being incorrect.",
       video: { src: A + "problem.mp4", parts: [[0.0, "Each decision is checked when it is taken"], [9.0, "Yet the sequence leaves no fallback"]], end: 16.0 } },
+
+    { id: "failop", sec: "intro", kicker: "Fail-operational system", ref: "§2.2.1", time: 60,
+      title: "Fail-operational: fewer capabilities, a fallback always reachable",
+      notes: "Running example of chapter 2: the primary LiDAR loses range. A reliable, robust, fault-tolerant, fail-safe or fail-operational system answers differently. The fail-operational one updates its capabilities and replans at a reduced speed, without the lane change that is no longer ensured.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.25 1 0"><h4>Running example: the primary LiDAR loses range</h4>${fig("responses.png", "Responses of reliable, robust, fault-tolerant, fail-safe and fail-operational systems")}</div>
+        <div class="col grow">
+          <div class="card accent"><h3>Fail-operational</h3><p>Under faults or degraded operating conditions, the system continues to perform its driving task, possibly with a <b>reduced set of capabilities</b>, while preserving at all times the possibility of reaching a <b>minimal risk condition</b>.</p></div>
+          <div class="card"><h3>Fail-safe</h3><p>On a failure that prevents the function from continuing, transition to a minimal risk condition. The mission is aborted.</p></div>
+          <div class="card amber"><h4>Scope of the thesis</h4><p>Degradations, such as fog, that reduce performance without a fault and without interrupting the function.</p></div>
+        </div></div>` },
 
     { id: "question", sec: "intro", kicker: "Problem statement", ref: "§1.3", time: 60,
       title: "Research question",
@@ -99,118 +120,22 @@
       notes: "The answer of the thesis: anticipate the loss of capability, so that a fallback always stays within reach. This is fail-operational decision-making.",
       video: { src: A + "problem.mp4", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a fallback always reachable"]] } },
 
-    { id: "contrib", sec: "intro", kicker: "Objectives and contributions", ref: "§1.4", time: 60,
-      title: "Four contributions, integrated into one architecture: ODD-aptive",
-      notes: "Four contributions, one principle: capability precedes choice. The state of the art was published as a survey in IEEE Transactions on Intelligent Vehicles in 2025. Each card links to its chapter.",
-      html: `<div class="g4 grow">
-        ${[["c1", "C1", "Maneuver Capability Estimator", "Which maneuvers the vehicle can ensure, in the current and in the predicted states", "Chapter 4 · IFAC IAV 2025", "sec-cap"],
-           ["c2", "C2", "ODD-constrained MDP", "Decisions taken only among ensured maneuvers, over the whole planning horizon", "Chapter 5 · IEEE IV 2025", "sec-dec"],
-           ["c3", "C3", "ODD-constrained POMDP", "The same principle when states, intentions and forecasts are uncertain", "Chapter 5", "pomdp-sources"],
-           ["c4", "C4", "Validation", "IPG CarMaker simulation, and vehicle-in-the-loop on a Mégane E-Tech prototype", "Chapter 6", "sec-val"]]
-          .map(([k, c, t, d, r, to]) => `<a class="card col" data-go="${to}" href="#/${to}" style="text-decoration:none;cursor:pointer">
-            <div class="num-badge ${k}">${c}</div><h3 style="margin-top:6px">${t}</h3><p class="grow">${d}</p><p class="small mute">${r} →</p></a>`).join("")}
-        </div>
-        <div class="card navy"><h3>Capability precedes choice</h3><p>A maneuver must be assessed as ensured in the corresponding state before it can be considered by the policy planner, throughout the planning horizon.</p></div>` },
-
-    // ================================================================ 2. conceptual foundations
-    { id: "sec-found", type: "section", sec: "found", dark: true, title: "Conceptual foundations", time: 10 },
-
-    { id: "failop", sec: "found", kicker: "Fail-operational system", ref: "§2.2.1", time: 60,
-      title: "Fail-operational: fewer capabilities, a fallback always reachable",
-      notes: "Running example of chapter 2: the primary LiDAR loses range. A reliable, robust, fault-tolerant, fail-safe or fail-operational system answers differently. The fail-operational one updates its capabilities and replans at a reduced speed, without the lane change that is no longer ensured.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.25 1 0"><h4>Running example: the primary LiDAR loses range</h4>${fig("responses.png", "Responses of reliable, robust, fault-tolerant, fail-safe and fail-operational systems")}</div>
-        <div class="col grow">
-          <div class="card accent"><h3>Fail-operational</h3><p>Under faults or degraded operating conditions, the system continues to perform its driving task, possibly with a <b>reduced set of capabilities</b>, while preserving at all times the possibility of reaching a <b>minimal risk condition</b>.</p></div>
-          <div class="card"><h3>Fail-safe</h3><p>On a failure that prevents the function from continuing, transition to a minimal risk condition. The mission is aborted.</p></div>
-          <div class="card amber"><h4>Scope of the thesis</h4><p>Degradations, such as fog, that reduce performance without a fault and without interrupting the function.</p></div>
-        </div></div>` },
-
-    { id: "awareness", sec: "found", kicker: "Self-awareness, context-awareness, ODD", ref: "§2.2.2 – §2.4", time: 60,
-      title: "Knowing what it can do, in the context it is in",
-      notes: "The synthesis of chapter 2. Self-awareness: an explicit representation of the vehicle's own capabilities. Context-awareness: the external conditions. The ODD links both. Its limits: uncertainty requires margins, and discontinuities at the boundaries require anticipation. That is the task of a fail-operational system.",
+    { id: "positioning", sec: "intro", kicker: "Positioning", ref: "§3.4 – §3.5", time: 75,
+      title: "What is missing in the state of the art?",
+      notes: "The four gaps identified at the end of the survey, published in IEEE Transactions on Intelligent Vehicles in 2025. For each, what exists, what is missing, and the contribution that addresses it. Each badge links to its part.",
+      backups: ["b-learning"],
       html: `<div class="g2 grow">
-        <div class="card ok"><h3>Self-awareness</h3><p>An explicit representation of the vehicle's own capabilities: what it can achieve now, and after a given action, each with a degree of performance.</p></div>
-        <div class="card" style="border-left:10px solid var(--blue)"><h3>Context-awareness</h3><p>The external conditions: from the relations between road users to road topology, traffic rules and speed limits.</p></div>
-        <div class="card accent"><h3>The Operational Design Domain</h3><p>Links the capabilities of the system to a structured representation of the context. Geo-fenced, capability-driven or scene-based definitions; its monitoring can support the decision.</p></div>
-        <div class="card bad"><h3>Limits of the ODD</h3><p>Uncertainty on the perceived context requires margins. Discontinuities at the boundaries require <b>anticipation</b> and a contingency plan in advance.</p></div>
+        ${[["Long-term, sequential decisions", "MDPs and POMDPs plan sequences of maneuvers, under uncertainty <span class=\"mute\">(Brechtel, 2014; Hubmann, 2018; Hoel, 2019)</span>", "Rule-based and most learning-based methods select one maneuver at a time", ["C2", "C3"]],
+           ["Capability in future states", "Ability and skill graphs, restricted domains and arbitration graphs assess what the vehicle can do <span class=\"mute\">(Reschka, 2015; Colwell, 2018; Pior, 2020)</span>", "Only in the current state: the logic remains reactive", ["C1", "C2"]],
+           ["Situation awareness enriched by the ODD", "Monitoring tells how far the operational domain is inside the ODD, and even the time left before exiting it <span class=\"mute\">(Charmet, 2024)</span>", "The context describes the scene, not whether the vehicle remains capable in it", ["C1"]],
+           ["Interdependent ODD dimensions", "Weather, road type and density are each monitored, for instance rain through μODDs <span class=\"mute\">(Salvi, 2022)</span>", "One dimension at a time, while the admissible speed depends on visibility or friction", ["C1"]]]
+          .map(([t, y, n, cs], j) => `<div class="card col" style="gap:20px;padding:30px 36px"><div class="row" style="align-items:center;gap:18px"><div class="num-badge" style="width:50px;height:50px;font-size:24px">${j + 1}</div><h3 style="margin:0;font-size:31px">${t}</h3></div>
+            <ul class="chk" style="gap:16px"><li class="y">${y}</li><li class="n">${n}</li></ul>
+            <div class="row" style="margin-top:auto;align-items:center;gap:10px"><span class="xs mute" style="font-weight:600">Addressed by</span>${cs.map((c) => `<a class="cbadge ink" data-go="sec-${c.toLowerCase()}" href="#/sec-${c.toLowerCase()}">${c}</a>`).join("")}</div></div>`).join("")}
         </div>
-        <div class="takeaway">A fail-operational vehicle must know <b>what it can still do</b> in the context ahead, not only whether it is inside its ODD now.</div>` },
+        <p class="xs mute" style="margin:0;text-align:right">Gaps identified in the survey: R. Cardenas et al., IEEE Transactions on Intelligent Vehicles, 2025</p>` },
 
-    // ================================================================ 3. decision-making for driving
-    { id: "sec-dm", type: "section", sec: "dm", dark: true, title: "Decision-making for driving", time: 10 },
-
-    { id: "levels", sec: "dm", kicker: "Decision levels", ref: "§3.2", time: 50,
-      title: "The thesis works at the tactical level: which maneuver, and when",
-      notes: "Three decision levels after Michon. The tactical level answers what maneuver to perform, when and how, over a few seconds. The industrial starting point is a set of ADAS features already validated.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.2 1 0"><h4>Michon's three levels</h4>${fig("michon.png", "Michon's levels of the driving task")}</div>
-        <div class="col grow">
-          <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
-          <div class="card tight amber"><span class="pill amber">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
-          <div class="card tight"><span class="pill gray">Operational · 1 s to 10 ms</span><p class="small" style="margin-top:8px">Trajectory, control and stabilization</p></div>
-          <div class="card navy"><h3>Contribution of the thesis</h3><p>An anticipatory tactical layer that keeps the vehicle within what it can ensure, over ADAS features already validated.</p></div>
-        </div></div>` },
-
-    { id: "methods", sec: "dm", kicker: "Tactical decision-making", ref: "§3.3", time: 60,
-      title: "Context describes the scene, it rarely says what the vehicle can still do",
-      notes: "Synthesis of the survey, table of chapter 3. Probabilistic methods handle uncertainty and long horizons at a computational cost, which online sampling solvers mitigate. Learning-based methods scale but give no guarantee. In all families, the context describes the scene.",
-      html: `<table class="tbl"><tr><th>Method</th><th class="c">Uncert.</th><th class="c">Scal.</th><th class="c">Unseen</th><th class="c">Horizon</th><th class="c">Explain.</th><th class="c">Cost</th><th class="c">Real time</th><th>Main limitation</th></tr>
-        <tr><td><b>Rule-based</b></td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td>Limited to the encoded cases, one maneuver at a time</td></tr>
-        <tr class="hl"><td><b>Probabilistic</b></td><td class="c">++</td><td class="c">+</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−</td><td class="c">+</td><td>Cost grows with the state and belief spaces</td></tr>
-        <tr><td><b>Learning-based</b></td><td class="c">+</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td class="c">−</td><td class="c">−</td><td class="c">+</td><td>Black box, no safety guarantee, sim-to-real gap</td></tr>
-        <tr><td><b>Hybrid</b></td><td class="c">++</td><td class="c">−</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−−</td><td class="c">+</td><td>Scalability and computational cost</td></tr></table>
-        <div class="row grow">
-          <div class="card grow"><h4>Families reviewed</h4><ul class="list small">
-            <li><b>Rule-based:</b> finite and hierarchical state machines, behavior trees, fuzzy logic</li>
-            <li><b>Probabilistic:</b> game theory, decision networks, MDP, POMDP</li>
-            <li><b>Learning-based:</b> SVM, decision trees, neural networks, reinforcement learning</li>
-            <li><b>Hybrid:</b> rules combined with learning</li></ul></div>
-          <div class="card navy grow"><h3>Common gap</h3><p>The context “is used to describe the scene, not to assess whether the vehicle remains capable of operating safely in it.”</p></div>
-        </div>`,
-      backups: ["b-learning"] },
-
-    { id: "gaps", sec: "dm", kicker: "The ODD as support for decision-making", ref: "§3.4 – §3.5", time: 60,
-      title: "When the ODD enters the decision, it is used reactively",
-      notes: "Works that use the ODD in decisions, at each level. They adapt once a condition is detected. Anticipating the boundary before reaching it is the open challenge, and it is the starting point of ODD-aptive.",
-      html: `<div class="row grow">
-        <div class="col grow">
-          ${[["Strategic", "Route adapted to the reliability of perception (Lee et al., 2020)"],
-             ["Tactical", "Skill and ability graphs for a lane change (Reschka, 2015; Ulbrich, 2015). Arbitration graph that checks the functions against the ODD (Pior, 2020)"],
-             ["Operational", "Speed reduced as rain increases, with μODDs (Salvi, 2022)"],
-             ["Monitoring", "Restricted Operational Domain (Colwell, 2018). Time to exit the ODD (Charmet, 2024)"]]
-            .map(([l, t]) => `<div class="card tight row" style="align-items:center;gap:18px"><span class="pill" style="min-width:160px;justify-content:center">${l}</span><span class="small">${t}</span></div>`).join("")}
-        </div>
-        <div class="col grow">
-          <div class="card"><div class="quote" style="font-size:26px">“The underlying logic remains reactive. The idea of anticipating ODD boundaries before they are reached, and proactively adjusting the vehicle's behavior accordingly, remains an open challenge.”</div></div>
-          <div class="card grow"><h3>Gaps identified at the end of the review</h3><ol class="nums">
-            <li>Long-term, sequential decision-making</li><li>Capabilities of the vehicle in future states</li>
-            <li>Situation awareness enriched by the ODD</li><li>An ODD representation with interdependent dimensions</li></ol></div>
-        </div></div>` },
-
-    // ================================================================ 4. decisional capability
-    { id: "sec-cap", type: "section", sec: "cap", dark: true, title: "ODD-aptive: decisional capability and operability", time: 10 },
-
-    { id: "assumptions", sec: "cap", c: ["C1"], kicker: "Problem statement and working assumptions", ref: "§4.2", time: 60,
-      title: "A tactical layer that orchestrates the existing driving functions",
-      notes: "Where the work sits: between route planning and control, at the tactical level. ODD-aptive does not redesign the driving functions. And the assumptions, stated up front: they are design choices that keep the focus on the decision.",
-      html: `<div class="row grow">
-        <div class="col grow">
-          <div class="card tight"><span class="pill gray">Strategic</span> <span class="small">Route: road segments, exits, destination</span></div>
-          <div class="card tight amber"><span class="pill amber">Tactical</span> <span class="small"><b>Which maneuver, and when: ODD-aptive</b></span></div>
-          <div class="card tight"><span class="pill gray">Operational</span> <span class="small">Trajectory and control</span></div>
-          <div class="card grow"><p>ODD-aptive does not redesign the driving functions. It orchestrates commercially validated ADAS features, each with its own operating envelope: ACC, lane centering (LCA), semi-autonomous lane change (SALC), and the MRM execution.</p></div>
-        </div>
-        <div class="card grow"><h3>Working assumptions</h3><ul class="list">
-          <li>The ODD and its requirements are specified in advance. Only the decisions adapt</li>
-          <li>A predefined set of maneuvers, whose availability is assessed in each situation</li>
-          <li>Ego, traffic and context come from upstream perception, localization, maps and fusion</li>
-          <li>Capabilities that are not assessed, Act skills included, are assumed fulfilled</li>
-          <li>Prediction models exist over a finite horizon; future operability is conditional on them</li>
-          <li>Highway driving, with the conditions ahead announced by the electronic horizon</li></ul></div>
-        </div>` },
-
-    { id: "architecture", sec: "cap", c: ["C1"], kicker: "Global overview of ODD-aptive", ref: "§4.3", time: 80, steps: 1,
+    { id: "architecture", sec: "intro", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 80, steps: 1,
       title: "Capability precedes choice: the MCE is queried in every predicted state",
       notes: "The architecture of chapter 4. Inputs on the left, the route on top, the existing ADAS features on the right. The question is the tactical layer. Next step: the planning horizon builder grows the tree; for each state it asks the Maneuver Capability Estimator which maneuvers are ensured, and only those go to the state predictor, which uses the electronic horizon for the conditions ahead. The policy planner solves the resulting model and the first action configures an ADAS feature.",
       html: `<div class="arch">
@@ -249,7 +174,75 @@
         <div class="xs mute" style="position:absolute;left:1430px;top:720px;width:362px">commands to the vehicle</div>
       </div>` },
 
-    { id: "maneuvers", sec: "cap", c: ["C1"], kicker: "Mapping the ODD to the behavioral level", ref: "§4.4.1 – §4.4.2", time: 55,
+    { id: "setup", sec: "intro", c: ["C4"], kicker: "Experimental platform", ref: "§6.2", time: 50,
+      title: "The same planner, from simulation to a real prototype",
+      notes: "Three loops that progressively replace simulated elements by real ones. The results of each part come from the software-in-the-loop; the last part shows the vehicle-in-the-loop. In both, ODD-aptive runs unchanged.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.2 1 0"><h4>From software-in-the-loop to vehicle-in-the-loop</h4>${fig("v_cycle.png", "Validation loops")}
+          <p class="small">Vehicle-in-the-loop: a Mégane E-Tech prototype on a test track. Its RTK position is replicated in CarMaker, the virtual traffic is perceived as if it were real, and the real ADAS features execute the requests.</p></div>
+        <div class="col grow">
+          <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker</span><span class="l">software-in-the-loop: road, traffic, conditions and vehicle dynamics</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">ROS node</span><span class="l">ODD-aptive sends a target lane and a set speed to the ADAS features</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">5 s · 3.5 s</span><span class="l">one lane change · one keep-lane or ±10 km/h step</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period; only the first maneuver is executed</span></div>
+        </div></div>` },
+
+    { id: "contrib", type: "outline", sec: "intro", kicker: "Contributions and outline", ref: "§1.4", time: 60,
+      title: "Four contributions, integrated into one architecture: ODD-aptive",
+      notes: "Four contributions, one principle: capability precedes choice. Each one answers a question, and the defense follows them in that order: each part gives its related work, its method and its results. Each line links to its part.",
+      html: `<div class="card navy"><h3>Capability precedes choice</h3><p>A maneuver must be assessed as ensured in the corresponding state before the policy planner can consider it, throughout the planning horizon.</p></div>` },
+
+    // ================================================================ 2. C1 · decisional capability
+    { id: "sec-c1", type: "section", sec: "c1", dark: true, title: "C1 · What can the vehicle still ensure?", time: 10 },
+
+    { id: "awareness", sec: "c1", kicker: "Background · awareness and the ODD", ref: "§2.2.2 – §2.4", time: 60,
+      title: "What must the vehicle know about itself and its context?",
+      notes: "The synthesis of chapter 2. Self-awareness: an explicit representation of the vehicle's own capabilities. Context-awareness: the external conditions. The ODD links both. Its limits: uncertainty requires margins, and discontinuities at the boundaries require anticipation. That is the task of a fail-operational system.",
+      html: `<div class="card tight" style="height:440px">${fig("awareness.png", "Context-awareness and self-awareness", 404)}</div>
+        <div class="g4">
+          <div class="card tight ok"><h4>Self-awareness</h4><p class="small">The vehicle's own capabilities: what it can achieve now, and after a given action, each with a degree of performance.</p></div>
+          <div class="card tight" style="border-left:10px solid var(--blue)"><h4>Context-awareness</h4><p class="small">The external conditions, from the relations between road users to the road topology and the traffic rules.</p></div>
+          <div class="card tight accent"><h4>The ODD</h4><p class="small">Links the capabilities of the system to a structured representation of the context. Its monitoring can support the decision.</p></div>
+          <div class="card tight bad"><h4>Its limits</h4><p class="small">Uncertainty on the perceived context requires margins. Discontinuities at the boundaries require <b>anticipation</b>.</p></div>
+        </div>
+        <div class="takeaway">A fail-operational vehicle must know <b>what it can still do</b> in the context ahead, not only whether it is inside its ODD now.</div>` },
+
+    { id: "assumptions", sec: "c1", c: ["C1"], kicker: "Problem statement and working assumptions", ref: "§4.2", time: 60,
+      title: "A tactical layer that orchestrates the existing driving functions",
+      notes: "Where the work sits: between route planning and control, at the tactical level. ODD-aptive does not redesign the driving functions. And the assumptions, stated up front: they are design choices that keep the focus on the decision.",
+      html: `<div class="row grow">
+        <div class="col grow">
+          <div class="card tight"><span class="pill gray">Strategic</span> <span class="small">Route: road segments, exits, destination</span></div>
+          <div class="card tight amber"><span class="pill amber">Tactical</span> <span class="small"><b>Which maneuver, and when: ODD-aptive</b></span></div>
+          <div class="card tight"><span class="pill gray">Operational</span> <span class="small">Trajectory and control</span></div>
+          <div class="card grow"><p>ODD-aptive does not redesign the driving functions. It orchestrates commercially validated ADAS features, each with its own operating envelope: ACC, lane centering (LCA), semi-autonomous lane change (SALC), and the MRM execution.</p></div>
+        </div>
+        <div class="card grow"><h3>Working assumptions</h3><ul class="list">
+          <li>The ODD and its requirements are specified in advance. Only the decisions adapt</li>
+          <li>A predefined set of maneuvers, whose availability is assessed in each situation</li>
+          <li>Ego, traffic and context come from upstream perception, localization, maps and fusion</li>
+          <li>Capabilities that are not assessed, Act skills included, are assumed fulfilled</li>
+          <li>Prediction models exist over a finite horizon; future operability is conditional on them</li>
+          <li>Highway driving, with the conditions ahead announced by the electronic horizon</li></ul></div>
+        </div>` },
+
+    { id: "rw-c1", sec: "c1", c: ["C1"], kicker: "Related work · capability assessment", ref: "§2.2, §3.4", time: 70,
+      title: "How is the capability of the vehicle assessed today?",
+      notes: "Three families. Ability and skill graphs decompose a behavior into skills with a level of performance, and have been used to trigger a lane change or not. The restricted operational domain removes the maneuvers that a lost capability no longer supports. The arbitration graph checks every function against the ODD before deciding. Monitoring estimates the time to exit the ODD. All of them assess the current state, and adapt once a condition is detected. The MCE assesses each maneuver, in the predicted states too.",
+      html: `<div class="g3" style="height:250px">
+          <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<p class="xs mute" style="margin:0;text-align:center">Ability graph (Reschka, 2015)</p></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<p class="xs mute" style="margin:0;text-align:center">Restricted Operational Domain (Colwell, 2018)</p></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<p class="xs mute" style="margin:0;text-align:center">Arbitration graph (Pior, 2020)</p></div>
+        </div>
+        <table class="tbl chkt"><tr><th style="width:430px">Work</th><th style="width:170px">Level</th><th>What it brings</th><th>What is missing</th></tr>
+          <tr><td><b>Ability and skill graphs</b> <span class="mute">Reschka, 2015 · Ulbrich, 2015</span></td><td>Tactical</td><td class="y">Skills with a level of performance; trigger a lane change or not</td><td class="n">Current state only</td></tr>
+          <tr><td><b>Restricted Operational Domain</b> <span class="mute">Colwell, 2018</span></td><td>Monitoring</td><td class="y">A lost capability removes some maneuvers and keeps others</td><td class="n">Current state only, reactive</td></tr>
+          <tr><td><b>Arbitration graph</b> <span class="mute">Pior, 2020</span></td><td>Tactical</td><td class="y">Every function checked against the ODD before deciding</td><td class="n">No prediction of the future state</td></tr>
+          <tr><td><b>Time to exit the ODD</b> <span class="mute">Charmet, 2024</span></td><td>Monitoring</td><td class="y">Anticipates the exit, with measurement uncertainty</td><td class="n">Triggers a takeover or an MRM, not the maneuver</td></tr>
+          <tr><td><b>μODDs</b> <span class="mute">Salvi, 2022</span></td><td>Operational</td><td class="y">Speed reduced as the rain increases</td><td class="n">One dimension, one maneuver</td></tr>
+          <tr class="hl"><td><b>MCE, this thesis</b> <span class="cbadge ink" style="height:26px;font-size:15px;min-width:40px;margin-left:6px">C1</span></td><td>Tactical</td><td class="y" colspan="2">Each maneuver, in the current <b>and in the predicted states</b>, every loss traced back to a change of context</td></tr></table>` },
+
+    { id: "maneuvers", sec: "c1", c: ["C1"], kicker: "Mapping the ODD to the behavioral level", ref: "§4.4.1 – §4.4.2", time: 55,
       title: "The driving task is decomposed into maneuvers, each with its own boundaries",
       notes: "Asking whether the whole vehicle is within its ODD is too coarse. The task is decomposed into maneuvers, and the question is asked for each of them. Each maneuver has its own boundaries in the space of the operational constraints.",
       html: `<div class="card col" style="flex:1.3 1 0">${fig("decomposition.jpg", "Decomposition of the driving task into maneuvers")}</div>
@@ -259,7 +252,7 @@
           <div class="card"><h4>Constraints</h4><p class="small"><b>Continuous</b> ones (visibility, density, speed) allow margins and gradual anticipation. <b>Discrete</b> ones (road type, works) change abruptly: their transitions must be predicted.</p></div>
         </div>` },
 
-    { id: "operability", sec: "cap", c: ["C1"], kicker: "Ensured maneuvers and levels of operability", ref: "§4.4.3", time: 45,
+    { id: "operability", sec: "c1", c: ["C1"], kicker: "Ensured maneuvers and levels of operability", ref: "§4.4.3", time: 45,
       title: "Three levels of operability, from the set of ensured maneuvers",
       notes: "Three levels of operability. Degradation is per maneuver, not an intermediate level: a maneuver can remain ensured with a reduced performance range. The same assessment runs on predicted states, fed by the electronic horizon.",
       html: `<div class="g3">
@@ -270,7 +263,7 @@
         <div class="card amber"><p>Degradation is <b>per maneuver</b>, not an intermediate level: a maneuver can remain ensured with a reduced performance range.</p></div>
         <div class="takeaway">The same assessment runs on <b>predicted states</b>, fed by the electronic horizon. This is what makes anticipation possible.</div>` },
 
-    { id: "skills", sec: "cap", c: ["C1"], kicker: "Assessing the decisional capability", ref: "§4.5.1 – §4.5.2", time: 60,
+    { id: "skills", sec: "c1", c: ["C1"], kicker: "Assessing the decisional capability", ref: "§4.5.1 – §4.5.2", time: 60,
       title: "A maneuver is ensured when all its skills are fulfilled",
       notes: "Sense, Think, Act, after Pfeifer. Each skill is a requirement expressed on the operational domain, so it can be evaluated on a predicted context, which is what makes anticipation possible.",
       html: `<div class="row grow">
@@ -283,17 +276,17 @@
           <p class="small" style="margin:0">Skills are organized in graphs and shared between maneuvers. Every loss can be traced back to an identified change of context.</p>
         </div></div>` },
 
-    { id: "v-mce", type: "video", sec: "cap", c: ["C1"], ref: "§4.5.2", time: 60,
+    { id: "v-mce", type: "video", sec: "c1", c: ["C1"], ref: "§4.5.2", time: 60,
       title: "The Maneuver Capability Estimator",
       notes: "Skill graphs per maneuver, evaluation in S_i, one skill lost (partial operability), a shared skill lost (MRM required), traceability back to the context.",
       video: { src: A + "mce.mp4", parts: [[0.0, "Each maneuver relies on its own skill graph"], [12.5, "A maneuver is ensured when all its skills are fulfilled"], [21.0, "A change of context affects only the maneuvers that need the skill"], [32.5, "A shared skill is lost: every maneuver that needs it is lost"], [44.5, "Every loss is traced back to a change of context"]] } },
 
-    { id: "v-rss", type: "video", sec: "cap", c: ["C1"], ref: "§4.5.3", time: 40,
+    { id: "v-rss", type: "video", sec: "c1", c: ["C1"], ref: "§4.5.3", time: 40,
       title: "Application to a lane change: what distance to keep behind the front vehicle",
       notes: "The safe distance of RSS: enough to stop in time, and enough for the ACC to settle in smoothly behind a vehicle that slows down. It builds the required perception range of the Sense skill.",
       video: { src: A + "rss.mp4", parts: [[0.0, "How much distance to stop in time?"], [16.91, "How much distance to settle in smoothly behind it?"]] } },
 
-    { id: "sense", sec: "cap", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 60,
+    { id: "sense", sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 60,
       title: "Sense: the perception range must cover the RSS distance in each zone",
       notes: "The lane change needs to see vehicles in zones A, B and C. The requirement depends on the speeds, through the RSS distance. Below about 67 m of visibility the lane change window vanishes, while Keep Lane remains ensured at a lower speed.",
       backups: ["b-rss"],
@@ -308,12 +301,12 @@
           <div class="card tight stat"><span class="v">≈ 95 km/h</span><span class="l">highest speed for Keep Lane with 50 m of visibility</span></div>
         </div></div>` },
 
-    { id: "v-window", type: "video", sec: "cap", c: ["C1"], ref: "§4.5.3", time: 65,
+    { id: "v-window", type: "video", sec: "c1", c: ["C1"], ref: "§4.5.3", time: 65,
       title: "The lane change window closes in the fog",
       notes: "The perception range required in three zones defines a speed window for the lane change. Fog narrows it until it closes, while keeping the lane remains ensured.",
       video: { src: A + "window.mp4", parts: [[0.0, "Required perception range: one RSS rule, three zones"], [6.0, "Speed trades the rear zone against the front zones"], [14.5, "Above both curves, the lane change is ensured"], [18.5, "Fog shrinks the envelope: the speed window narrows"], [27.0, "Too slow or too fast: a zone is no longer covered"], [36.0, "Below ≈ 67 m: Keep Lane ensured, lane change not ensured"], [46.5, "Uncertainty on the traffic speed: the limit rises to ≈ 81 m"]] } },
 
-    { id: "other-skills", sec: "cap", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 45,
+    { id: "other-skills", sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 45,
       title: "Lane markings, prediction and interaction complete the skill graph",
       notes: "Three other skills. The density skill is the one used for the congestion before the exit. Degradation is per maneuver: Keep Lane can remain ensured with a reduced performance range.",
       html: `<div class="g3">
@@ -323,7 +316,7 @@
         </div>
         <div class="card ok"><p><b>Keep Lane</b> does not need the rear zone, and its forward requirement drops with the speed. It stays ensured, in a degraded mode, when the lane change is lost.</p></div>` },
 
-    { id: "margin", sec: "cap", c: ["C1"], kicker: "Strategic margin", ref: "§4.5", time: 45,
+    { id: "margin", sec: "c1", c: ["C1"], kicker: "Strategic margin", ref: "§4.5", time: 45,
       title: "A strategic margin: a preference, not a second boundary",
       notes: "The strategic margin is fixed by the designer. It defines a preferred region away from the skill boundary and enters the decision through the reward, so it never removes a maneuver. With m equal to 1.5, the preferred speed in dense fog is about 56 km/h, but the vehicle may still drive up to the boundary.",
       backups: ["b-margin"],
@@ -335,10 +328,53 @@
         <div class="card col center grow" style="text-align:center"><div class="stat"><span class="v" style="font-size:84px">95 → 56 km/h</span><span class="l" style="font-size:24px">with 50 m of visibility: the Keep Lane boundary, then the speed preferred with <i class="m">m</i> = 1.5</span></div></div>
         </div>` },
 
-    // ================================================================ 5. tactical decision-making
-    { id: "sec-dec", type: "section", sec: "dec", dark: true, title: "ODD-aptive: fail-operational tactical decision-making", time: 10 },
+    { id: "bridge-c1", type: "bridge", sec: "c1", dark: true, kicker: "Limitation", time: 30,
+      title: "Ensured now, but what about the states the decision leads to?",
+      notes: "The MCE answers a question about one state. A decision is a sequence: a maneuver ensured now can lead to a state where nothing is ensured, as in the problem shown at the start. So the decision must chain maneuvers and check every predicted state. This is the second contribution.",
+      html: `<div class="bridge"><div class="k">Limitation of the assessment alone</div>
+        <div class="q">Ensured now, but what about the states the decision leads to?</div>
+        <ul class="chk"><li class="y">The MCE tells which maneuvers are ensured in a given state, current or predicted</li>
+          <li class="n">A maneuver ensured now can lead to a state where no fallback is ensured, ${go("v-problem-a", "as in the problem")}</li>
+          <li class="to">The decision must chain maneuvers, and check every predicted state</li></ul>
+        <a class="next" data-go="sec-c2" href="#/sec-c2"><span class="cbadge solid">C2</span> How to decide without losing the fallback? →</a></div>` },
 
-    { id: "odd-mdp", sec: "dec", c: ["C2"], kicker: "ODD-constrained MDP", ref: "§5.2.1 – §5.2.4", time: 75,
+    // ================================================================ 3. C2 · ODD-constrained MDP: method, then the fog and highway exit use cases
+    { id: "sec-c2", type: "section", sec: "c2", dark: true, title: "C2 · How to decide without losing the fallback?", time: 10 },
+
+    { id: "levels", sec: "c2", kicker: "Background · decision levels", ref: "§3.2", time: 50,
+      title: "Which decision? The tactical level: which maneuver, and when",
+      notes: "Three decision levels after Michon. The tactical level answers what maneuver to perform, when and how, over a few seconds. The industrial starting point is a set of ADAS features already validated.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.2 1 0"><h4>Michon's three levels</h4>${fig("michon.png", "Michon's levels of the driving task")}</div>
+        <div class="col grow">
+          <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
+          <div class="card tight amber"><span class="pill amber">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
+          <div class="card tight"><span class="pill gray">Operational · 1 s to 10 ms</span><p class="small" style="margin-top:8px">Trajectory, control and stabilization</p></div>
+          <div class="card navy"><h3>Contribution of the thesis</h3><p>An anticipatory tactical layer that keeps the vehicle within what it can ensure, over ADAS features already validated.</p></div>
+        </div></div>` },
+
+    { id: "methods", sec: "c2", kicker: "Related work · tactical decision-making", ref: "§3.3", time: 60,
+      title: "How do existing methods decide?",
+      notes: "Related work for this part: the synthesis of the survey, table of chapter 3. Probabilistic methods handle uncertainty and long horizons at a computational cost, which online sampling solvers mitigate. Learning-based methods scale but give no guarantee. In all families, the context describes the scene.",
+      html: `<table class="tbl" style="font-size:24px"><tr><th>Method</th><th class="c">Uncert.</th><th class="c">Scal.</th><th class="c">Unseen</th><th class="c">Horizon</th><th class="c">Explain.</th><th class="c">Cost</th><th class="c">Real time</th><th>Main limitation</th></tr>
+        <tr><td><b>Rule-based</b></td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td>Limited to the encoded cases, one maneuver at a time</td></tr>
+        <tr class="hl"><td><b>Probabilistic</b></td><td class="c">++</td><td class="c">+</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−</td><td class="c">+</td><td>Cost grows with the state and belief spaces</td></tr>
+        <tr><td><b>Learning-based</b></td><td class="c">+</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td class="c">−</td><td class="c">−</td><td class="c">+</td><td>Black box, no safety guarantee, sim-to-real gap</td></tr>
+        <tr><td><b>Hybrid</b></td><td class="c">++</td><td class="c">−</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−−</td><td class="c">+</td><td>Scalability and computational cost</td></tr></table>
+        <div class="row grow">
+          <div class="card grow"><h4>Families reviewed</h4><ul class="list">
+            <li><b>Rule-based:</b> finite and hierarchical state machines, behavior trees, fuzzy logic</li>
+            <li><b>Probabilistic:</b> game theory, decision networks, MDP, POMDP</li>
+            <li><b>Learning-based:</b> SVM, decision trees, neural networks, reinforcement learning</li>
+            <li><b>Hybrid:</b> rules combined with learning</li></ul></div>
+          <div class="card navy grow"><h3>What the ODD-MDP keeps, and what it adds</h3><ul class="chk">
+            <li class="y">Probabilistic planning: sequential decisions over a long horizon, explainable</li>
+            <li class="n">In every family, the context “is used to describe the scene, not to assess whether the vehicle remains capable of operating safely in it”</li>
+            <li class="to">The capability filter, in every predicted state</li></ul></div>
+        </div>`,
+      backups: ["b-learning"] },
+
+    { id: "odd-mdp", sec: "c2", c: ["C2"], kicker: "ODD-constrained MDP", ref: "§5.2.1 – §5.2.4", time: 75,
       title: "The MCE restricts the action space in every state of the decision model",
       notes: "The ODD-MDP. The state joins the operational domain, the ego vehicle and the surrounding vehicles. The only change to a standard MDP is the filter: the maximum runs over the ensured actions, in every state of the tree, not only at the root.",
       backups: ["b-transition", "b-vi"],
@@ -360,12 +396,12 @@
         </div>
         <div class="takeaway">The only change to a standard MDP: the maximum runs over the <b>ensured actions</b>, in every state of the tree, not only at the root.</div>` },
 
-    { id: "v-search", type: "video", sec: "dec", c: ["C2"], ref: "§5.2.3, §5.2.7", time: 55,
+    { id: "v-search", type: "video", sec: "c2", c: ["C2"], ref: "§5.2.3, §5.2.7", time: 55,
       title: "The search tree of the ODD-MDP",
       notes: "How far to explore, where to explore once the MCE prunes what leaves the ODD, the best ensured sequence, and the search that starts again after each action.",
       video: { src: A + "search.mp4", parts: [[0.0, "Deciding means exploring possible futures"], [6.5, "How far to explore: the planning horizon"], [17.0, "Where to explore: pruning with the MCE"], [28.5, "Among the ensured futures, the best sequence"], [36.0, "Execute the first action, then explore again"]] } },
 
-    { id: "reward", sec: "dec", c: ["C2"], kicker: "Reward function", ref: "§5.2.5", time: 60,
+    { id: "reward", sec: "c2", c: ["C2"], kicker: "Reward function", ref: "§5.2.5", time: 60,
       title: "Among the ensured maneuvers, the reward ranks the options",
       notes: "The reward is evaluated on the successor state. The last two terms are the operability terms: they reward the preservation of ensured maneuvers and of their margins, and the reachability of an MRM within a prescribed future horizon.",
       backups: ["b-reward", "b-fallback"],
@@ -384,7 +420,7 @@
             <div class="card ok"><h4>Operability term</h4><div class="eq" style="font-size:30px"><i>R</i><sub>op</sub> = −(1 − |${Aens()}| / |<i>A</i>|)</div><p class="xs mute">weighted by the margin of each ensured action in the implemented version</p></div>
           </div></div>` },
 
-    { id: "safe", sec: "dec", c: ["C2"], kicker: "Safe states and fail-operational strategies", ref: "§5.2.6", time: 60,
+    { id: "safe", sec: "c2", c: ["C2"], kicker: "Safe states and fail-operational strategies", ref: "§5.2.6", time: 60,
       title: "Fail-operational: every predicted state keeps a fallback available",
       notes: "The fail-operational property, made explicit. It is pursued by the filter and the reward together. On the right, two policies in the plane of speed and perception range: only the anticipatory one keeps every state inside the skill-fulfilled region.",
       backups: ["b-mrm"],
@@ -401,9 +437,114 @@
           <p class="xs mute">Both start at 90 km/h with 200 m of range; visibility falls to 40 m. The non-anticipatory policy reaches ≈ 117 km/h and crosses the boundary. The anticipatory one holds ≈ 95 km/h, then slows to ≈ 55 km/h.</p></div>
         </div>` },
 
-    { id: "pomdp-sources", sec: "dec", c: ["C3"], kicker: "Extension to partial observability", ref: "§5.3.1 – §5.3.2", time: 55,
+    { id: "nominal-lc", sec: "c2", c: ["C2", "C4"], kicker: "Nominal tactical behavior", ref: "§6.3.1", time: 50,
+      title: "Nominal lane change: safe gaps, and a plan revised every 200 ms",
+      notes: "Before any degradation, the planner must do what any tactical planner does. The horizon covers four maneuvers, but the tree is rebuilt every 200 ms, so a plan is never followed blindly.",
+      html: `<div class="row grow">
+        <div class="col" style="flex:1.1 1 0">
+          <div class="card tight">${fig("lane_change_scenario.jpg", "Lane change with approaching traffic", 200)}</div>
+          <div class="card grow"><ul class="list small">
+            <li>10 speed combinations: approaching vehicle 130 to 140 km/h, slower vehicle 72 to 86 km/h, or ego at 110 km/h</li>
+            <li>Merges ahead when the gap allows, otherwise lets the faster vehicle pass</li>
+            <li>The return is in the plan more than 10 s before it is executed</li>
+            <li>Aborted before crossing the line in 2 of the 10 combinations, when updated predictions show the merge is unsafe</li>
+            <li>Overtaking completed without collision in every run</li></ul></div>
+        </div>
+        <div class="card col tight" style="flex:0.55 1 0"><h4>Merge ahead, 130 km/h</h4>${fig("lc_sequence_1.png", "Merge ahead")}</div>
+        <div class="card col tight" style="flex:0.55 1 0"><h4>Abort, then behind, 135 km/h</h4>${fig("lc_sequence_2.png", "Abort then merge behind")}</div>
+        </div>` },
+
+    { id: "v-fog", type: "video", sec: "c2", c: ["C2", "C4"], ref: "§6.4.2", time: 135,
+      title: "Scenario 1: reduced visibility",
+      notes: "The hypotheses of the fog scenario, then the reference planner with a single decision step against ODD-aptive with four steps, on the same traffic.",
+      video: { src: V + "fog.mp4", parts: [[12.0, "The electronic horizon announces the fog"], [18.5, "Fog reduces the perception envelope"], [29.0, "Keep Lane ensured, lane change not ensured"], [41.0, "The MRM requires the hard shoulder"], [48.5, "Keep the MRM reachable when the capabilities are degraded"], [61.5, "The simulations, and how to read the display"], [81.0, "One decision step against four, up to the fog"]] } },
+
+    { id: "fog-a", sec: "c2", c: ["C2", "C4"], kicker: "Scenario 1: reduced visibility · configuration A", ref: "§6.4.2", time: 60,
+      title: "Fog ahead: with four steps, no MRM in 100 runs out of 100",
+      notes: "Configuration A. With one step, the set speed stays at 130 km/h until about 170 m before the fog and every run ends with an MRM. With four steps, the deceleration starts before the 300 m ramp: the vehicle reacts to the forecast degradation, not to the observed one. No collision in the 400 runs. The margin lowers the entry speed without a second boundary.",
+      backups: ["b-margin", "b-conf"],
+      html: `<div class="row grow">
+        <div class="card col tight" style="flex:0.42 1 0">${fig("fog_config_a.png", "Fog scenario, configuration A")}</div>
+        <div class="col grow">
+          <div class="card small tight">Fog announced ≈ 2.5 km ahead, perception range from 200 m to 50 m inside. No traffic, the vehicle stays in its lane. Reference: same MCE, reward and models, <b>one step</b> (3.5 s). ODD-aptive: <b>four steps</b> (14 s).</div>
+          <table class="tbl"><tr><th>Planner</th><th class="c">Runs without MRM</th><th class="c">First deceleration before the fog</th><th class="c">Speed at fog entry</th></tr>
+            <tr><td>Reference, one step</td><td class="c badt"><b style="color:var(--bad)">0 / 100</b></td><td class="c">170 m (139–191)</td><td class="c">MRM at ≈ 115 km/h</td></tr>
+            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">456 m (446–464)</td><td class="c">94.4 km/h (93.7–94.9)</td></tr>
+            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.2</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">455 m (446–466)</td><td class="c">78.7 km/h (77.5–79.4)</td></tr>
+            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.5</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">478 m (470–488)</td><td class="c">70.1 km/h (68.8–72.3)</td></tr></table>
+          <div class="card tight grow">${fig("fog_speed_profiles.png", "Speed profiles before the fog")}</div>
+        </div></div>` },
+
+    { id: "fog-b", sec: "c2", c: ["C2", "C4"], kicker: "Scenario 1: reduced visibility · configuration B", ref: "§6.4.2", time: 60,
+      title: "With traffic: more returns in time, and more overtaking, not less",
+      notes: "Configuration B. ODD-aptive plans the return in every run. Its remaining failures are mostly returns blocked by a vehicle alongside in the last 300 m. And it overtakes more, so anticipation is not conservative. One run with m = 1.2 is excluded, a simulator artefact.",
+      backups: ["b-outcomes", "b-conf"],
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.1 1 0"><h4>Lane occupied before the fog</h4>${fig("fog_lane_occupancy.png", "Lane occupancy before the fog")}</div>
+        <div class="card grow"><h4>Setup</h4><ul class="list small">
+          <li>Three lanes, 15 vehicles per km and lane, slower trucks on the right</li>
+          <li>In the fog the rear detection is lost, so lane changes are no longer ensured</li>
+          <li>The MRM uses the hard shoulder, reachable only from the right lane</li>
+          <li>100 seeds for each planner</li></ul></div>
+        </div>
+        <table class="tbl"><tr><th>Planner</th><th class="c">Right lane at the fog</th><th class="c">Blocked by traffic</th><th class="c">Planned too late</th><th class="c">Never planned</th><th class="c">Runs with overtaking</th><th class="c">Mean speed</th></tr>
+          <tr><td>Reference, one step</td><td class="c">76 / 100</td><td class="c">5</td><td class="c">10</td><td class="c">9</td><td class="c">45</td><td class="c">90.7 km/h</td></tr>
+          <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c"><b>90 / 100</b></td><td class="c">7</td><td class="c">3</td><td class="c"><b>0</b></td><td class="c"><b>82</b></td><td class="c">96.1 km/h</td></tr>
+          <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.2</td><td class="c"><b>92 / 99</b></td><td class="c">6</td><td class="c">1</td><td class="c"><b>0</b></td><td class="c">76</td><td class="c">94.3 km/h</td></tr></table>` },
+
+    { id: "v-exit", type: "video", sec: "c2", c: ["C2", "C4"], ref: "§6.4.3", time: 140,
+      title: "Scenario 2: preparing a highway exit",
+      notes: "The hypotheses of the exit scenario, then a run of ODD-aptive: it keeps overtaking after the announcement and prepares the exit during the last kilometre.",
+      video: { src: V + "exit.mp4", parts: [[12.0, "The electronic horizon announces the exit"], [19.0, "Slower traffic invites overtaking"], [27.75, "The exit is a route objective, not a rule"], [38.5, "Level 2: the driver remains the fallback"], [51.5, "Keep overtaking, then return in time"], [63.5, "The simulations, and how to read the display"], [80.75, "A run of ODD-aptive up to the exit"]] } },
+
+    { id: "exit", sec: "c2", c: ["C2", "C4"], kicker: "Scenario 2: preparing a highway exit", ref: "§6.4.3", time: 50,
+      title: "Highway exit: taken in all 100 runs, while still overtaking",
+      notes: "The vehicle keeps overtaking after the announcement and prepares the exit during the last kilometre, with no rule imposing a lane at a given distance. The preparation emerges from the exploration of predicted states and from the reward.",
+      backups: ["b-exit", "b-conf"],
+      html: `<div class="row grow">
+        <div class="card col tight" style="flex:0.7 1 0">${fig("exit_scenario.png", "Highway exit scenario")}</div>
+        <div class="col grow">
+          <div class="card small">Exit announced 2 km before it, 12 vehicles per km and lane, half of the right lane trucks. The exit is a <b>route objective</b> in the reward, not a rule.</div>
+          <div class="card tight grow">${fig("exit_lane_occupancy.png", "Lane occupancy before the exit")}</div>
+          <div class="g4">
+            <div class="card tight stat"><span class="v ok" style="font-size:30px">100 / 100</span><span class="l">exits taken</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">40</span><span class="l">overtaking sequences start after the announcement</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">1230 → 618 m</span><span class="l">median first exit-driven decision, then final return</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">84 → 103 km/h</span><span class="l">mean speed, without overtaking, then with two or more</span></div>
+          </div>
+        </div></div>` },
+
+    { id: "congestion", sec: "c2", c: ["C2", "C4"], kicker: "Scenario 2: preparing a highway exit", ref: "§6.4.3", time: 50,
+      title: "Announced congestion is a capability limit: the return comes ≈ 400 m earlier",
+      notes: "The planner only models the nearest vehicles, so it cannot see the congestion before reaching it. The announced density is the only way to know that the lane changes will become harder. We frame it as a capability limit.",
+      html: `<div class="row">
+        <div class="card grow small">Over the last 1500 m, the density rises from 12 to 20 vehicles per km and lane. The electronic horizon announces it.</div>
+        <div class="card grow small">The interaction skill keeps a lane change ensured only below a maximum density. With the announced density, the MCE sees the limit in the predicted states.</div>
+        <div class="card grow small">Same 20 seeds, with and without the announced density.</div></div>
+        <div class="card tight grow">${fig("congestion.png", "Returns with and without the announced density")}</div>
+        <div class="g4">
+          <div class="card tight stat"><span class="v" style="font-size:40px">471 → 876 m</span><span class="l">median final return to the right lane, without then with the density</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">94 → 218 m</span><span class="l">latest return before the exit</span></div>
+          <div class="card tight stat"><span class="v ok" style="font-size:40px">20 / 20</span><span class="l">exits taken by both variants</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">83.4 → 85.0</span><span class="l">km/h mean speed until the exit, no loss of progress</span></div>
+        </div>` },
+
+    { id: "bridge-c2", type: "bridge", sec: "c2", dark: true, kicker: "Limitation", time: 30,
+      title: "What if the perceived state is wrong?",
+      notes: "The ODD-MDP decides among ensured maneuvers and keeps a fallback reachable, in fog and before an exit. But it takes the perceived state as exact. Positions and speeds are noisy, the fog forecast can be wrong, and the intentions of the other drivers are hidden. The third contribution keeps the same principle under this uncertainty.",
+      html: `<div class="bridge"><div class="k">Limitation of the ODD-MDP</div>
+        <div class="q">What if the perceived state is wrong?</div>
+        <ul class="chk"><li class="y">Decisions only among ensured maneuvers, with a fallback kept reachable, in fog and before an exit</li>
+          <li class="n">The perceived state is taken as exact: noisy positions and speeds, an uncertain fog forecast, hidden intentions</li>
+          <li class="to">Keep the same principle when the state is uncertain</li></ul>
+        <a class="next" data-go="sec-c3" href="#/sec-c3"><span class="cbadge solid">C3</span> And when the vehicle is uncertain? →</a></div>` },
+
+    // ================================================================ 4. C3 · ODD-constrained POMDP: method, then the results under uncertainty
+    { id: "sec-c3", type: "section", sec: "c3", dark: true, title: "C3 · And when the vehicle is uncertain?", time: 10 },
+
+    { id: "pomdp-sources", sec: "c3", c: ["C3"], kicker: "Extension to partial observability", ref: "§5.3.1 – §5.3.2", time: 55,
       title: "Three sources of uncertainty, one belief over particles",
-      notes: "Three sources, which do not play the same role. Noise on the vehicles changes which gap looks acceptable. The forecast uncertainty enters the skills, so this is where the capability reasoning matters most. Intentions stay hidden whatever the sensor quality. Each card links to its experiment in chapter 6.",
+      notes: "Three sources, which do not play the same role. Noise on the vehicles changes which gap looks acceptable. The forecast uncertainty enters the skills, so this is where the capability reasoning matters most. Intentions stay hidden whatever the sensor quality. Each card links to its experiment, later in this part.",
       html: `<div class="card tight" style="height:250px">${fig("uncertainty.png", "Three sources of uncertainty", 214)}</div>
         <div class="g3 grow">
           ${[["1", "Surrounding vehicles", "Noisy position and speed of the other vehicles", "Which gap looks safe, through the prediction and the reward", "Fit into a platoon before the fog, 100 seeds", "r-noisy"],
@@ -414,12 +555,27 @@
               <p class="small" style="margin-top:auto"><b class="mute">Experiment:</b> ${go(to, e + " →")}</p></div>`).join("")}
         </div>` },
 
-    { id: "v-pomcp-a", type: "video", sec: "dec", c: ["C3"], ref: "§5.3.3 – §5.3.4", time: 45,
+    { id: "rw-c3", sec: "c3", c: ["C3"], kicker: "Related work · partial observability", ref: "§3.3", time: 60,
+      title: "How do POMDP planners handle uncertainty?",
+      notes: "POMDPs are the standard frame for tactical decisions under partial observability: lane changes, merging, intersections. Online Monte Carlo search with belief updates makes them tractable, and POMCP represents the belief with particles. What they keep uncertain is the traffic. The capability of the vehicle is assessed, at best, in the current state. The ODD-POMDP adds the capability check in every particle.",
+      html: `<div class="card tight col" style="height:410px;gap:8px">${fig("rw_pomdp.png", "Partially observable driving scenarios")}
+          <p class="xs mute" style="margin:0;text-align:center">Left: intersection with unknown intentions and sensor noise (Hubmann, 2018). Right: highway exit where the yielding intentions are hidden (Chen, 2025).</p></div>
+        <div class="g2 grow">
+          <div class="card col" style="justify-content:center"><h3>What POMDP planners bring</h3><ul class="chk">
+            <li class="y">A belief over what is hidden: sensor noise, intentions <span class="mute">(Ulbrich, 2015; Hubmann, 2018)</span></li>
+            <li class="y">Online Monte Carlo search with belief updates keeps it tractable <span class="mute">(Hubmann, 2018; Zhang, 2020)</span>, with particles in POMCP <span class="mute">(Silver, 2010)</span></li>
+            <li class="y">Deep reinforcement learning to scale <span class="mute">(Hoel, 2019)</span></li></ul></div>
+          <div class="card navy col" style="justify-content:center"><h3>What is missing, and what C3 adds</h3><ul class="chk">
+            <li class="n">The uncertainty is on the traffic. The capability of the vehicle is assessed, at best, in the current state <span style="color:#9fb6d4">(Ulbrich, 2015)</span></li>
+            <li class="to">ODD-POMDP: an action is kept when a share <i class="m">τ</i> of the particles ensures it, in every node of the search</li></ul></div>
+        </div>` },
+
+    { id: "v-pomcp-a", type: "video", sec: "c3", c: ["C3"], ref: "§5.3.3 – §5.3.4", time: 45,
       title: "The belief, and an action ensured for a share τ of the particles",
       notes: "The current state is only estimated: noisy position and speed, uncertain intentions, an uncertain fog forecast. The belief keeps several possible states, the particles. The MCE checks the action in every particle: it is ensured only if a share τ of the particles ensures it.",
       video: { src: A + "pomcp.mp4", parts: [[0.0, "Under uncertainty, the current state becomes a belief"], [19.0, "An action is ensured when a share τ of the particles ensures it"]], end: 30.6 } },
 
-    { id: "belief", sec: "dec", c: ["C3"], kicker: "Ensured actions at the belief level", ref: "§5.3.3 – §5.3.4", time: 45,
+    { id: "belief", sec: "c3", c: ["C3"], kicker: "Ensured actions at the belief level", ref: "§5.3.3 – §5.3.4", time: 45,
       title: "An action is ensured when a share τ of the particles ensures it",
       notes: "The ensured set is now defined on the belief. An action is kept when the share of particles in which it is ensured reaches the threshold tau. The guarantee becomes probabilistic, and tau an explicit design parameter, 0.9 in the experiments.",
       html: `<div class="row grow">
@@ -439,12 +595,12 @@
             <li>The guarantee becomes probabilistic, and <i class="m">τ</i> an explicit design parameter, 0.9 in the experiments</li></ul></div>
         </div></div>` },
 
-    { id: "v-pomcp-b", type: "video", sec: "dec", c: ["C3"], ref: "§5.3.6", time: 55,
+    { id: "v-pomcp-b", type: "video", sec: "c3", c: ["C3"], ref: "§5.3.6", time: 55,
       title: "The ODD-constrained Monte Carlo search",
       notes: "Each simulation draws one particle and follows ensured actions up to the horizon. Simulation after simulation, the tree grows toward the most promising ensured actions. Only the best ensured action is executed, the belief is rebuilt and the search starts again.",
       video: { src: A + "pomcp.mp4", parts: [[30.6, "Monte Carlo search: one simulation at a time"], [46.0, "Many simulations: the tree grows where it matters"], [59.37, "Execute the best ensured action, rebuild the belief, search again"]] } },
 
-    { id: "pomcp", sec: "dec", c: ["C3"], kicker: "Resolution through Monte Carlo planning", ref: "§5.3.5 – §5.3.6", time: 50,
+    { id: "pomcp", sec: "c3", c: ["C3"], kicker: "Resolution through Monte Carlo planning", ref: "§5.3.5 – §5.3.6", time: 50,
       title: "ODD-constrained POMCP: the MCE filters selection, expansion and rollout",
       notes: "POMCP with the capability filter at the three stages where actions are chosen. The final action is the best ensured action at the root. For the ODD-MDP, intentions enter through a tactical risk term; in the ODD-POMDP, the particles carry them.",
       backups: ["b-pomcp", "b-cost"],
@@ -460,137 +616,7 @@
           <div class="card amber col" style="flex:0.75 1 0"><h3>Intentions in the ODD-MDP</h3><p class="small">A tactical risk term brings them into the reward:</p><div class="eq" style="font-size:31px"><i>R<sub>i</sub></i><sup>LC</sup> = <i>P<sub>i</sub></i><sup>LC</sup> · <i>R<sub>i</sub></i><sup>hyp</sup></div><p class="small">In the ODD-POMDP, the particles carry them.</p></div>
         </div>` },
 
-    // ================================================================ 6. validation
-    { id: "sec-val", type: "section", sec: "val", dark: true, title: "Simulation and vehicle-in-the-loop validation", time: 10 },
-
-    { id: "setup", sec: "val", c: ["C4"], kicker: "Validation setup", ref: "§6.2", time: 50,
-      title: "The same planner, from simulation to a real prototype",
-      notes: "Three loops that progressively replace simulated elements by real ones. This chapter covers the software-in-the-loop and the vehicle-in-the-loop. In both, ODD-aptive runs unchanged.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.2 1 0"><h4>From software-in-the-loop to vehicle-in-the-loop</h4>${fig("v_cycle.png", "Validation loops")}
-          <p class="small">Vehicle-in-the-loop: a Mégane E-Tech prototype on a test track. Its RTK position is replicated in CarMaker, the virtual traffic is perceived as if it were real, and the real ADAS features execute the requests.</p></div>
-        <div class="col grow">
-          <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker</span><span class="l">software-in-the-loop: road, traffic, conditions and vehicle dynamics</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">ROS node</span><span class="l">ODD-aptive sends a target lane and a set speed to the ADAS features</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">5 s · 3.5 s</span><span class="l">one lane change · one keep-lane or ±10 km/h step</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period; only the first maneuver is executed</span></div>
-        </div></div>` },
-
-    { id: "nominal-lc", sec: "val", c: ["C4"], kicker: "Nominal tactical behavior", ref: "§6.3.1", time: 50,
-      title: "Nominal lane change: safe gaps, and a plan revised every 200 ms",
-      notes: "Before any degradation, the planner must do what any tactical planner does. The horizon covers four maneuvers, but the tree is rebuilt every 200 ms, so a plan is never followed blindly.",
-      html: `<div class="row grow">
-        <div class="col" style="flex:1.1 1 0">
-          <div class="card tight">${fig("lane_change_scenario.jpg", "Lane change with approaching traffic", 200)}</div>
-          <div class="card grow"><ul class="list small">
-            <li>10 speed combinations: approaching vehicle 130 to 140 km/h, slower vehicle 72 to 86 km/h, or ego at 110 km/h</li>
-            <li>Merges ahead when the gap allows, otherwise lets the faster vehicle pass</li>
-            <li>The return is in the plan more than 10 s before it is executed</li>
-            <li>Aborted before crossing the line in 2 of the 10 combinations, when updated predictions show the merge is unsafe</li>
-            <li>Overtaking completed without collision in every run</li></ul></div>
-        </div>
-        <div class="card col tight" style="flex:0.55 1 0"><h4>Merge ahead, 130 km/h</h4>${fig("lc_sequence_1.png", "Merge ahead")}</div>
-        <div class="card col tight" style="flex:0.55 1 0"><h4>Abort, then behind, 135 km/h</h4>${fig("lc_sequence_2.png", "Abort then merge behind")}</div>
-        </div>` },
-
-    { id: "v-vil", type: "video", sec: "val", c: ["C4"], ref: "§6.3.2", time: 95,
-      title: "Long-term overtaking on the prototype vehicle",
-      notes: "The strongest evidence of the talk: a real vehicle executing the decisions. Let the video run without talking over it for the first seconds.",
-      video: { src: V + "vil.mp4", parts: [[12.0, "A real vehicle, with virtual traffic"], [21.25, "Is returning to the right lane worthwhile?"], [33.0, "The run: one overtaking sequence past the whole group"]] } },
-
-    { id: "vil-result", sec: "val", c: ["C4"], kicker: "Long-term overtaking on the prototype vehicle", ref: "§6.3.2", time: 50,
-      title: "On the prototype, one overtaking sequence passes the whole group",
-      notes: "A one-maneuver planner tends to return as soon as it passes a vehicle. ODD-aptive tells the cases apart: it returns after a single overtaking, and passes the whole group when the vehicles are close. The planner only represents the nearest vehicles, so passing the group comes from successive planning updates.",
-      backups: ["b-vil"],
-      html: `<div class="row grow">
-        <div class="col" style="flex:1 1 0">
-          <div class="card tight">${fig("overtaking_policies.jpg", "Single and multiple overtaking policies", 220)}</div>
-          <div class="card grow"><ul class="list small">
-            <li>Requested speed 65 km/h on a 1.5 km straight, four virtual vehicles at ≈ 35 km/h</li>
-            <li>Returns ≈ 1 s after passing the first truck, alone ahead</li>
-            <li>Then keeps the left lane past two cars and the second truck, back right after ≈ 77 s</li>
-            <li>At 53.9 s, Keep Lane is valued 17.34 against 14.80 for a lane change right</li>
-            <li>Four smooth lane changes, lateral acceleration below ≈ 1.2 m/s²</li></ul></div>
-        </div>
-        <div class="card col" style="flex:1 1 0"><h4>Camera and RViz views, from 15 s to 77 s</h4>${fig("overtaking_sequence.jpg", "Overtaking sequence on the prototype")}</div>
-        </div>` },
-
-    { id: "v-fog", type: "video", sec: "val", c: ["C4"], ref: "§6.4.2", time: 135,
-      title: "Scenario 1: reduced visibility",
-      notes: "The hypotheses of the fog scenario, then the reference planner with a single decision step against ODD-aptive with four steps, on the same traffic.",
-      video: { src: V + "fog.mp4", parts: [[12.0, "The electronic horizon announces the fog"], [18.5, "Fog reduces the perception envelope"], [29.0, "Keep Lane ensured, lane change not ensured"], [41.0, "The MRM requires the hard shoulder"], [48.5, "Keep the MRM reachable when the capabilities are degraded"], [61.5, "The simulations, and how to read the display"], [81.0, "One decision step against four, up to the fog"]] } },
-
-    { id: "fog-a", sec: "val", c: ["C4"], kicker: "Scenario 1: reduced visibility · configuration A", ref: "§6.4.2", time: 60,
-      title: "Fog ahead: with four steps, no MRM in 100 runs out of 100",
-      notes: "Configuration A. With one step, the set speed stays at 130 km/h until about 170 m before the fog and every run ends with an MRM. With four steps, the deceleration starts before the 300 m ramp: the vehicle reacts to the forecast degradation, not to the observed one. No collision in the 400 runs. The margin lowers the entry speed without a second boundary.",
-      backups: ["b-margin", "b-conf"],
-      html: `<div class="row grow">
-        <div class="card col tight" style="flex:0.42 1 0">${fig("fog_config_a.png", "Fog scenario, configuration A")}</div>
-        <div class="col grow">
-          <div class="card small">Fog announced ≈ 2.5 km ahead, perception range from 200 m to 50 m inside. No traffic, the vehicle stays in its lane. Reference: same MCE, reward and models, <b>one step</b> (3.5 s). ODD-aptive: <b>four steps</b> (14 s).</div>
-          <table class="tbl"><tr><th>Planner</th><th class="c">Runs without MRM</th><th class="c">First deceleration before the fog</th><th class="c">Speed at fog entry</th></tr>
-            <tr><td>Reference, one step</td><td class="c badt"><b style="color:var(--bad)">0 / 100</b></td><td class="c">170 m (139–191)</td><td class="c">MRM at ≈ 115 km/h</td></tr>
-            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">456 m (446–464)</td><td class="c">94.4 km/h (93.7–94.9)</td></tr>
-            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.2</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">455 m (446–466)</td><td class="c">78.7 km/h (77.5–79.4)</td></tr>
-            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.5</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">478 m (470–488)</td><td class="c">70.1 km/h (68.8–72.3)</td></tr></table>
-          <div class="card tight grow">${fig("fog_speed_profiles.png", "Speed profiles before the fog")}</div>
-        </div></div>` },
-
-    { id: "fog-b", sec: "val", c: ["C4"], kicker: "Scenario 1: reduced visibility · configuration B", ref: "§6.4.2", time: 60,
-      title: "With traffic: more returns in time, and more overtaking, not less",
-      notes: "Configuration B. ODD-aptive plans the return in every run. Its remaining failures are mostly returns blocked by a vehicle alongside in the last 300 m. And it overtakes more, so anticipation is not conservative. One run with m = 1.2 is excluded, a simulator artefact.",
-      backups: ["b-outcomes", "b-conf"],
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.1 1 0"><h4>Lane occupied before the fog</h4>${fig("fog_lane_occupancy.png", "Lane occupancy before the fog")}</div>
-        <div class="card grow"><h4>Setup</h4><ul class="list small">
-          <li>Three lanes, 15 vehicles per km and lane, slower trucks on the right</li>
-          <li>In the fog the rear detection is lost, so lane changes are no longer ensured</li>
-          <li>The MRM uses the hard shoulder, reachable only from the right lane</li>
-          <li>100 seeds for each planner</li></ul></div>
-        </div>
-        <table class="tbl"><tr><th>Planner</th><th class="c">Right lane at the fog</th><th class="c">Blocked by traffic</th><th class="c">Planned too late</th><th class="c">Never planned</th><th class="c">Runs with overtaking</th><th class="c">Mean speed</th></tr>
-          <tr><td>Reference, one step</td><td class="c">76 / 100</td><td class="c">5</td><td class="c">10</td><td class="c">9</td><td class="c">45</td><td class="c">90.7 km/h</td></tr>
-          <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c"><b>90 / 100</b></td><td class="c">7</td><td class="c">3</td><td class="c"><b>0</b></td><td class="c"><b>82</b></td><td class="c">96.1 km/h</td></tr>
-          <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.2</td><td class="c"><b>92 / 99</b></td><td class="c">6</td><td class="c">1</td><td class="c"><b>0</b></td><td class="c">76</td><td class="c">94.3 km/h</td></tr></table>` },
-
-    { id: "v-exit", type: "video", sec: "val", c: ["C4"], ref: "§6.4.3", time: 140,
-      title: "Scenario 2: preparing a highway exit",
-      notes: "The hypotheses of the exit scenario, then a run of ODD-aptive: it keeps overtaking after the announcement and prepares the exit during the last kilometre.",
-      video: { src: V + "exit.mp4", parts: [[12.0, "The electronic horizon announces the exit"], [19.0, "Slower traffic invites overtaking"], [27.75, "The exit is a route objective, not a rule"], [38.5, "Level 2: the driver remains the fallback"], [51.5, "Keep overtaking, then return in time"], [63.5, "The simulations, and how to read the display"], [80.75, "A run of ODD-aptive up to the exit"]] } },
-
-    { id: "exit", sec: "val", c: ["C4"], kicker: "Scenario 2: preparing a highway exit", ref: "§6.4.3", time: 50,
-      title: "Highway exit: taken in all 100 runs, while still overtaking",
-      notes: "The vehicle keeps overtaking after the announcement and prepares the exit during the last kilometre, with no rule imposing a lane at a given distance. The preparation emerges from the exploration of predicted states and from the reward.",
-      backups: ["b-exit", "b-conf"],
-      html: `<div class="row grow">
-        <div class="card col tight" style="flex:0.7 1 0">${fig("exit_scenario.png", "Highway exit scenario")}</div>
-        <div class="col grow">
-          <div class="card small">Exit announced 2 km before it, 12 vehicles per km and lane, half of the right lane trucks. The exit is a <b>route objective</b> in the reward, not a rule.</div>
-          <div class="card tight grow">${fig("exit_lane_occupancy.png", "Lane occupancy before the exit")}</div>
-          <div class="g4">
-            <div class="card tight stat"><span class="v ok" style="font-size:30px">100 / 100</span><span class="l">exits taken</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">40</span><span class="l">overtaking sequences start after the announcement</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">1230 → 618 m</span><span class="l">median first exit-driven decision, then final return</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">84 → 103 km/h</span><span class="l">mean speed, without overtaking, then with two or more</span></div>
-          </div>
-        </div></div>` },
-
-    { id: "congestion", sec: "val", c: ["C4"], kicker: "Scenario 2: preparing a highway exit", ref: "§6.4.3", time: 50,
-      title: "Announced congestion is a capability limit: the return comes ≈ 400 m earlier",
-      notes: "The planner only models the nearest vehicles, so it cannot see the congestion before reaching it. The announced density is the only way to know that the lane changes will become harder. We frame it as a capability limit.",
-      html: `<div class="row">
-        <div class="card grow small">Over the last 1500 m, the density rises from 12 to 20 vehicles per km and lane. The electronic horizon announces it.</div>
-        <div class="card grow small">The interaction skill keeps a lane change ensured only below a maximum density. With the announced density, the MCE sees the limit in the predicted states.</div>
-        <div class="card grow small">Same 20 seeds, with and without the announced density.</div></div>
-        <div class="card tight grow">${fig("congestion.png", "Returns with and without the announced density")}</div>
-        <div class="g4">
-          <div class="card tight stat"><span class="v" style="font-size:40px">471 → 876 m</span><span class="l">median final return to the right lane, without then with the density</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">94 → 218 m</span><span class="l">latest return before the exit</span></div>
-          <div class="card tight stat"><span class="v ok" style="font-size:40px">20 / 20</span><span class="l">exits taken by both variants</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">83.4 → 85.0</span><span class="l">km/h mean speed until the exit, no loss of progress</span></div>
-        </div>` },
-
-    { id: "r-noisy", sec: "val", c: ["C3", "C4"], kicker: "Results under uncertainty · surrounding vehicles", ref: "§6.5.1", time: 50,
+    { id: "r-noisy", sec: "c3", c: ["C3", "C4"], kicker: "Results under uncertainty · surrounding vehicles", ref: "§6.5.1", time: 50,
       title: "Noisy perception: the belief avoids rejecting a safe gap",
       notes: "With noise, the ODD-MDP is outside the right lane at the fog entry in 13 runs, the ODD-POMDP in 6. No collision in any run. The gain comes from evaluating each lane change over several hypotheses.",
       html: `<div class="row grow">
@@ -603,7 +629,7 @@
           <p class="xs mute" style="margin:0">Ten vehicles in the right lane with 25 to 55 m gaps, fog 1000 m ahead, correlated noise on distance and speed. Same 100 seeds for both planners.</p>
         </div></div>` },
 
-    { id: "r-forecast-tau", sec: "val", c: ["C3", "C4"], kicker: "Results under uncertainty · visibility forecast", ref: "§6.5.2", time: 50,
+    { id: "r-forecast-tau", sec: "c3", c: ["C3", "C4"], kicker: "Results under uncertainty · visibility forecast", ref: "§6.5.2", time: 50,
       title: "Visibility forecast: τ turns a probability into a decision boundary",
       notes: "Top: share of hypotheses for which Keep Lane is ensured, in the plane of speed and forecast visibility. The threshold tau turns this probability into a boundary. Bottom: the higher tau, the earlier and smoother the slowdown.",
       html: `<div class="row grow">
@@ -618,7 +644,7 @@
           <div class="card tight stat"><span class="v" style="font-size:42px"><i class="m">τ</i> = 0.9</span><span class="l">chosen threshold. <i class="m">τ</i> = 1 is too conservative, about 55 km/h for the worst hypothesis</span></div>
         </div></div>` },
 
-    { id: "r-forecast", sec: "val", c: ["C3", "C4"], kicker: "Results under uncertainty · visibility forecast", ref: "§6.5.2", time: 50,
+    { id: "r-forecast", sec: "c3", c: ["C3", "C4"], kicker: "Results under uncertainty · visibility forecast", ref: "§6.5.2", time: 50,
       title: "Forecast errors: the ODD-POMDP passes the fog in 19 of 20 runs",
       notes: "The fog starts up to 150 m before or after the announced point. When it is denser than announced, the ODD-MDP arrives too fast and loses Keep Lane. The ODD-POMDP slows down progressively and passes every dense case. The cost is one precautionary MRM in a lighter fog.",
       backups: ["b-conf"],
@@ -640,12 +666,12 @@
           <p class="xs mute">Seed 8: real fog 115 m after the announced point, 45.5 m of visibility (78 km/h admissible). The ODD-POMDP enters at 73 km/h. The ODD-MDP enters at 92 km/h and requests the MRM 22 m inside.</p></div>
         </div>` },
 
-    { id: "v-intentions", type: "video", sec: "val", c: ["C3", "C4"], ref: "§6.5.3", time: 95,
+    { id: "v-intentions", type: "video", sec: "c3", c: ["C3", "C4"], ref: "§6.5.3", time: 95,
       title: "Uncertain tactical intentions",
       notes: "An intention cannot be measured: it is estimated from the kinematics. The particles hold the possible maneuvers, and each future is evaluated with its consequences. Two use cases: a cut-in, and a vehicle entering the highway.",
       video: { src: V + "intentions.mp4", parts: [[12.0, "An intention cannot be measured"], [19.75, "The tactical state of each vehicle"], [29.25, "The belief: a set of particles"], [38.75, "Each future is evaluated with its consequences"], [52.5, "The simulations, and how to read the display"], [69.75, "A cut-in, and a vehicle entering the highway"]] } },
 
-    { id: "r-cutin", sec: "val", c: ["C3", "C4"], kicker: "Results under uncertainty · tactical intentions", ref: "§6.5.3", time: 45,
+    { id: "r-cutin", sec: "c3", c: ["C3", "C4"], kicker: "Results under uncertainty · tactical intentions", ref: "§6.5.3", time: 45,
       title: "Cut-in: the ODD-POMDP reacts before the car moves",
       notes: "Reaction time measured from the start of the lateral motion of the car. The ODD-POMDP evaluates separately the futures with and without the cut-in, which explains its earlier reaction. Illustrative run only.",
       html: `<p class="small" style="margin:0">Ego at 130 km/h in the middle lane. A car behind a truck in the right lane cuts in. Every planner receives the same estimated intention, with <i class="m">P</i> ≈ 0.35 to 0.39.</p>
@@ -657,8 +683,43 @@
           <div class="card tight stat"><span class="v ok" style="font-size:40px">−2.8 s</span><span class="l">ODD-POMDP: changes lane before the car moves and passes it at 130 km/h</span></div>
         </div>` },
 
-    // ================================================================ 7. conclusion
-    { id: "sec-concl", type: "section", sec: "concl", dark: true, title: "General conclusion and prospects", time: 10 },
+    { id: "bridge-c3", type: "bridge", sec: "c3", dark: true, kicker: "From simulation to the vehicle", time: 25,
+      title: "Does it run on a real vehicle?",
+      notes: "Every result so far comes from IPG CarMaker, over hundreds of runs, with simulated sensors, traffic and dynamics. The last contribution brings the same planner, unchanged, to a prototype vehicle.",
+      html: `<div class="bridge"><div class="k">From simulation to the vehicle</div>
+        <div class="q">Does it run on a real vehicle?</div>
+        <ul class="chk"><li class="y">The ODD-MDP and the ODD-POMDP evaluated in IPG CarMaker, over hundreds of runs</li>
+          <li class="n">Simulated sensors, traffic and vehicle dynamics</li>
+          <li class="to">The same planner, unchanged, on a Mégane E-Tech prototype</li></ul>
+        <a class="next" data-go="sec-c4" href="#/sec-c4"><span class="cbadge solid">C4</span> Does it run on a real vehicle? →</a></div>` },
+
+    // ================================================================ 5. C4 · vehicle-in-the-loop
+    { id: "sec-c4", type: "section", sec: "c4", dark: true, title: "C4 · Does it run on a real vehicle?", time: 10 },
+
+    { id: "v-vil", type: "video", sec: "c4", c: ["C4"], ref: "§6.3.2", time: 95,
+      title: "Long-term overtaking on the prototype vehicle",
+      notes: "The strongest evidence of the defense: a real vehicle executing the decisions. Let the video run without talking over it for the first seconds.",
+      video: { src: V + "vil.mp4", parts: [[12.0, "A real vehicle, with virtual traffic"], [21.25, "Is returning to the right lane worthwhile?"], [33.0, "The run: one overtaking sequence past the whole group"]] } },
+
+    { id: "vil-result", sec: "c4", c: ["C4"], kicker: "Long-term overtaking on the prototype vehicle", ref: "§6.3.2", time: 50,
+      title: "On the prototype, one overtaking sequence passes the whole group",
+      notes: "A one-maneuver planner tends to return as soon as it passes a vehicle. ODD-aptive tells the cases apart: it returns after a single overtaking, and passes the whole group when the vehicles are close. The planner only represents the nearest vehicles, so passing the group comes from successive planning updates.",
+      backups: ["b-vil"],
+      html: `<div class="row grow">
+        <div class="col" style="flex:1 1 0">
+          <div class="card tight">${fig("overtaking_policies.jpg", "Single and multiple overtaking policies", 220)}</div>
+          <div class="card grow"><ul class="list small">
+            <li>Requested speed 65 km/h on a 1.5 km straight, four virtual vehicles at ≈ 35 km/h</li>
+            <li>Returns ≈ 1 s after passing the first truck, alone ahead</li>
+            <li>Then keeps the left lane past two cars and the second truck, back right after ≈ 77 s</li>
+            <li>At 53.9 s, Keep Lane is valued 17.34 against 14.80 for a lane change right</li>
+            <li>Four smooth lane changes, lateral acceleration below ≈ 1.2 m/s²</li></ul></div>
+        </div>
+        <div class="card col" style="flex:1 1 0"><h4>Camera and RViz views, from 15 s to 77 s</h4>${fig("overtaking_sequence.jpg", "Overtaking sequence on the prototype")}</div>
+        </div>` },
+
+    // ================================================================ 6. conclusion
+    { id: "sec-concl", type: "section", sec: "concl", dark: true, title: "Conclusion and perspectives", time: 10 },
 
     { id: "evidence", sec: "concl", kicker: "General conclusion", ref: "§7.1", time: 60,
       title: "Each contribution, and the evidence behind it",
@@ -700,8 +761,8 @@
 
     { id: "thanks", type: "thanks", sec: "concl", dark: true, title: "Thank you", time: 0,
       notes: "Thank you. I am ready for your questions.",
-      html: `<div class="stand"><div class="big">Thank you</div><div class="rule"></div><div class="sub">Questions and discussion</div>
-        <div class="links"><a data-go="outline">Outline</a><a data-go="contrib">Contributions</a><a data-go="evidence">Evidence</a><a data-go="bindex">Backup slides</a></div></div>` },
+      html: `<video class="bg" muted playsinline preload="none" data-src="${V}fog.mp4" data-start="81" aria-hidden="true"></video><div class="stand"><div class="big">Thank you</div><div class="rule"></div><div class="sub">Questions and discussion</div>
+        <div class="links"><a data-go="contrib">Contributions</a><a data-go="evidence">Evidence</a><a data-go="bindex">Backup slides</a></div></div>` },
   ];
 
   // ================================================================ backup slides
@@ -839,7 +900,7 @@
           <li>In ODD-aptive, the fallback is a guarantee held in reserve rather than the default behavior. Depending on the level, it is an MRM or a timely takeover request</li>
           <li>Scenario 1 uses a time budget of 20 s to reach a minimal risk condition, consistent with Level 3</li></ul></div>` },
 
-    { id: "b-notation", sec: "backup", kicker: "Backup", title: "Notation used in the talk",
+    { id: "b-notation", sec: "backup", kicker: "Backup", title: "Notation used in the presentation",
       html: `<table class="tbl"><tr><th>Symbol</th><th>Meaning</th><th>Symbol</th><th>Meaning</th></tr>
           <tr><td class="eq" style="font-size:24px">OD, <i>X</i><sub>ODD</sub></td><td>operational domain, ODD space</td><td class="eq" style="font-size:24px"><i>H</i></td><td>planning horizon (steps)</td></tr>
           <tr><td class="eq" style="font-size:24px"><i>U</i>, ${Uens()}</td><td>maneuvers, ensured maneuvers</td><td class="eq" style="font-size:24px"><i>τ</i></td><td>confidence threshold</td></tr>
