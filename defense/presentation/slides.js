@@ -179,43 +179,169 @@
         </div>
         <p class="xs mute" style="margin:0;text-align:right">Gaps identified in the survey: R. Cardenas et al., IEEE Transactions on Intelligent Vehicles, 2025</p>` },
 
-    { id: "architecture", sec: "intro", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 80, steps: 1,
-      title: "Capability precedes choice: the MCE is queried in every predicted state",
-      notes: "The architecture of chapter 4. Inputs on the left, the route on top, the existing ADAS features on the right. The question is the tactical layer. Next step: the planning horizon builder grows the tree; for each state it asks the Maneuver Capability Estimator which maneuvers are ensured, and only those go to the state predictor, which uses the electronic horizon for the conditions ahead. The policy planner solves the resulting model and the first action configures an ADAS feature.",
-      html: `<div class="arch">
-        <svg viewBox="0 0 1792 852" width="1792" height="852" aria-hidden="true">
-          <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#063669"/></marker>
-          <marker id="aha" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c98a00"/></marker></defs>
-          <g stroke="#063669" stroke-width="4" fill="none" marker-end="url(#ah)">
-            <path d="M180 150 V218"/><path d="M180 340 V408"/><path d="M360 470 H436"/>
-            <path d="M890 92 V150"/><path d="M1340 262 H1426"/><path d="M1610 322 V388"/><path d="M1610 512 V578"/>
+    { id: "architecture", sec: "intro", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 70, steps: 1,
+      title: "ODD-aptive: three decision layers, from the context to the vehicle commands",
+      notes: "The architecture of chapter 4, Figure 4.1, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. Next step: inside the tactical layer, the MCE, the planning horizon builder, the state predictor and the policy planner. Capability precedes choice: E1 to E3 build what is ensured, E4 chooses among it. The next slide zooms in.",
+      html: `<div class="ar">
+        <div class="frm" style="left:0;top:0;width:340px;height:712px"><span class="frt">Input preparation</span></div>
+        <div class="pn" style="left:14px;top:40px;width:312px;height:160px"><div class="ph"><span class="k">A</span>Context sources</div>
+          <div class="pb"><div><b>Perception &amp; localization</b><div class="t">cameras · LiDAR · radar · GNSS</div></div><div><b>V2X</b> <span class="t">vehicles, infrastructure</span></div><div><b>Digital map</b> <span class="t">road topology</span></div></div></div>
+        <div class="pn" style="left:14px;top:238px;width:312px;height:92px"><div class="ph"><span class="k">B</span>World model</div><div class="pb">Fusion, tracking, context update</div></div>
+        <div class="pn" style="left:14px;top:368px;width:312px;height:334px"><div class="ph"><span class="k">C</span>State representation</div>
+          <div class="pb ctr"><div class="eqs"><i>𝒮</i> = OD × <i>p</i><sub>ego</sub> × {<i>p<sub>i</sub></i>}</div><div class="t">Operational domain (OD)</div><img src="${F}arch_od.jpg" alt="Operational domain: weather, road type, speed limit" style="width:270px"><div class="t">Dynamic scenario: ego and other vehicles</div><img src="${F}arch_scen.jpg" alt="Ego vehicle and surrounding vehicles" style="width:228px"></div></div>
+        <div class="pn" style="left:0;top:752px;width:340px;height:100px"><div class="ph"><span class="k">G</span>Input environment</div><img class="cover" src="${F}arch_env.jpg" alt="Highway traffic"></div>
+
+        <div class="pn" style="left:430px;top:0;width:940px;height:196px"><div class="ph"><span class="k">D</span>Strategic layer<span class="s">Mission and route planning at the road-network level</span></div>
+          <div class="pb row"><img src="${F}arch_city.jpg" alt="Route on a city map" style="width:640px;height:107px;border-radius:8px"><div class="rp"><b>Route plan <i>𝓡</i></b><ul><li>Road segments</li><li>Upcoming exit</li><li>Destination</li></ul></div></div></div>
+
+        <div class="pn tac" style="left:430px;top:260px;width:940px;height:506px"><div class="ph"><span class="k">E</span>Tactical layer<span class="s">Maneuver decisions with ensured maneuver capabilities</span><span class="tag">Contribution</span></div></div>
+        <div class="q" data-until="1" style="left:430px;top:340px;width:940px"><div class="qm">?</div><div class="qt">Which maneuver, and when?</div></div>
+        <div class="mb" data-step="1" style="left:460px;top:420px;width:240px;height:140px"><span><b>E2</b> Planning horizon builder</span><span class="t">grows the tree of predicted states from <i>s</i><sub>0</sub></span></div>
+        <div class="mb" data-step="1" style="left:780px;top:318px;width:290px;height:100px"><span><b>E1</b> MCE · monitoring</span><span class="t">which maneuvers are ensured in <i>s<sub>i</sub></i></span></div>
+        <div class="mb" data-step="1" style="left:780px;top:562px;width:290px;height:100px"><span><b>E3</b> State predictor</span><span class="t">next states, with the electronic horizon</span></div>
+        <div class="mb cho" data-step="1" style="left:1116px;top:420px;width:234px;height:140px"><span><b>E4</b> Policy planner</span><span class="t">reward and solver, only among ensured maneuvers</span></div>
+        <div data-step="1" style="left:1116px;top:572px;width:234px;text-align:center"><div class="eqs"><i>π</i>(<i>s</i>) = <i>A</i><sub>1</sub> → <i>A</i><sub>2</sub> → <i>A</i><sub>3</sub></div><div class="t">a sequence of maneuvers</div></div>
+        <div class="pr" data-step="1" style="left:460px;top:690px;width:880px"><b>Capability precedes choice</b>: E1 – E3 build what is ensured, E4 chooses only among it</div>
+
+        <div class="pn" style="left:1460px;top:260px;width:332px;height:506px"><div class="ph"><span class="k">F</span>Operational layer</div></div>
+        <div class="pn sb" style="left:1474px;top:308px;width:304px;height:172px"><div class="ph"><span class="k">F1</span>ADAS features selector</div><img src="${F}arch_adas.png" alt="ACC, LCA, SALC and MRM execution" style="width:288px;margin:6px 6px 0"></div>
+        <div class="pn sb" style="left:1474px;top:518px;width:304px;height:104px"><div class="ph"><span class="k">F2</span>Trajectory planner</div><img src="${F}arch_traj.jpg" alt="Reference trajectory" style="width:288px;margin:4px 6px 0"></div>
+        <div class="pn sb" style="left:1474px;top:658px;width:304px;height:96px"><div class="ph"><span class="k">F3</span>Low-level control</div><div class="pb ctr" style="justify-content:center;flex:1">Lateral and longitudinal control</div></div>
+
+        <svg class="wires" viewBox="0 0 1792 852" aria-hidden="true">
+          <defs><marker id="arA-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#063669"/></marker>
+          <marker id="arA-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#a8237e"/></marker></defs>
+          <g marker-end="url(#arA-n)">
+            <path class="w" d="M170 200 V234"/><path class="w" d="M170 330 V364"/>
+            <path class="w" d="M326 284 H392 V100 H426"/>
+            <path class="w" d="M326 520 H426"/><path class="w" d="M900 196 V256"/>
+            <path class="w" d="M1370 380 H1470"/>
+            <path class="w" d="M1626 480 V514"/><path class="w" d="M1626 622 V654"/>
+            <path class="w" d="M1626 754 V806 H344"/><path class="w" d="M170 752 V716"/>
           </g>
-          <text x="1372" y="250" font-size="26" font-style="italic" fill="#063669" font-family="Cambria Math, serif">a<tspan font-size="17" dy="6">t</tspan></text>
-          <g data-step="1" stroke="#c98a00" stroke-width="4" fill="none" marker-end="url(#aha)">
-            <path d="M760 360 H896"/><path d="M896 395 H764"/>
-            <path d="M760 470 H896"/><path d="M896 505 H764"/>
-            <path d="M620 560 V636"/>
+          <text class="vl" transform="translate(381 192) rotate(-90)" text-anchor="middle">Map + ego pose</text>
+          <g data-step="1">
+            <path class="w" d="M428 520 H456" marker-end="url(#arA-n)"/>
+            <path class="w" d="M600 420 V368 H776" marker-start="url(#arA-n)" marker-end="url(#arA-n)"/>
+            <path class="w" d="M600 560 V612 H776" marker-start="url(#arA-n)" marker-end="url(#arA-n)"/>
+            <path class="w mg" d="M700 500 H1110" marker-end="url(#arA-m)"/>
+            <path class="w" d="M1233 420 V380 H1372"/>
           </g>
-          <text data-step="1" x="640" y="608" font-size="18" font-weight="600" fill="#68707a" font-family="Montserrat, sans-serif">tree of ensured maneuvers</text>
         </svg>
-        <div class="bx" style="left:0;top:40px;width:360px;height:110px"><b>A</b> Context sources<div class="t">perception, V2X, maps</div></div>
-        <div class="bx" style="left:0;top:230px;width:360px;height:110px"><b>B</b> World model<div class="t">fusion and tracking</div></div>
-        <div class="bx" style="left:0;top:420px;width:360px;height:110px"><b>C</b> State<div class="t">OD × ego × vehicles</div></div>
-        <div class="xs mute" style="position:absolute;left:0;top:550px;width:360px">At each update, the current state becomes the root of the plan</div>
-        <div class="bx" style="left:440px;top:0;width:900px;height:90px;display:flex;align-items:center"><span><b>D</b> Strategic layer · route plan: road segments, exits, destination</span></div>
-        <div class="tac" style="left:440px;top:150px;width:900px;height:640px"></div>
-        <div class="lbl" style="left:470px;top:170px;color:#9a6a00">E · Tactical layer · ODD-aptive</div>
-        <div data-until="1" style="position:absolute;left:440px;top:300px;width:900px;text-align:center"><div style="font-size:150px;font-weight:700;color:#fbb515;line-height:1">?</div><div style="font-size:34px;font-weight:700;color:#063669;margin-top:16px">Which maneuver, and when?</div></div>
-        <div data-step="1" class="bx" style="left:480px;top:330px;width:280px;height:200px;display:flex;flex-direction:column;justify-content:center"><b>E2</b> Planning horizon builder</div>
-        <div data-step="1" class="bx" style="left:900px;top:320px;width:400px;height:100px;border:3px solid #1e8c3c"><b>E1</b> MCE<div class="t">returns the ensured maneuvers</div></div>
-        <div data-step="1" class="bx" style="left:900px;top:440px;width:400px;height:100px"><b>E3</b> State predictor<div class="t">+ electronic horizon</div></div>
-        <div data-step="1" class="bx" style="left:480px;top:640px;width:280px;height:110px;display:flex;flex-direction:column;justify-content:center"><b>E4</b> Policy planner</div>
-        <div data-step="1" class="small" style="position:absolute;left:900px;top:630px;width:400px;color:#063669;font-weight:600">Only the first action is executed, then the plan is rebuilt</div>
-        <div class="lbl" style="left:1430px;top:160px">Operational layer</div>
-        <div class="bx" style="left:1430px;top:200px;width:362px;height:122px"><b>F</b> ADAS features selector<div class="t">ACC · LCA · SALC · MRM</div></div>
-        <div class="bx" style="left:1430px;top:392px;width:362px;height:120px;display:flex;align-items:center"><span><b>G</b> Trajectory planner</span></div>
-        <div class="bx" style="left:1430px;top:582px;width:362px;height:120px;display:flex;align-items:center"><span><b>H</b> Low-level control</span></div>
-        <div class="xs mute" style="position:absolute;left:1430px;top:720px;width:362px">commands to the vehicle</div>
+        <div class="sig" style="left:182px;top:207px">Observations</div>
+        <div class="sig" style="left:182px;top:331px;font-size:13.5px;line-height:1.15">Integrated world<br>representation</div>
+        <div class="sig" style="left:346px;top:466px">Current<br>state <i>s</i><sub>0</sub></div>
+        <div class="sig" style="left:914px;top:212px">Route plan <i>𝓡</i>: road segments, upcoming exit, destination</div>
+        <div class="sig" style="left:1080px;top:344px;width:282px;text-align:right">Current action <i>a<sub>t</sub></i> = (<i>m<sub>t</sub></i>, <i>θ<sub>t</sub></i>)</div>
+        <div class="sig" style="left:1638px;top:485px">Selected feature + <i>θ<sub>t</sub></i></div>
+        <div class="sig" style="left:1638px;top:626px">Reference trajectory <i>T</i></div>
+        <div class="sig" style="left:1180px;top:778px">Control commands <i>u<sub>t</sub></i></div>
+        <div class="sig" style="left:182px;top:722px">Measurements</div>
+        <div class="sig" data-step="1" style="left:466px;top:336px"><i>s<sub>i</sub></i> → <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div>
+        <div class="sig" data-step="1" style="left:466px;top:618px">(<i>s<sub>i</sub></i>, <i>a</i>, <i>s′</i>)</div>
+        <div class="sig mg" data-step="1" style="left:728px;top:468px">MDP / POMDP with ensured maneuvers</div>
+      </div>` },
+
+    { id: "tactical", sec: "intro", c: ["C1", "C2", "C3"], kicker: "ODD-aptive · tactical layer", ref: "§4.3", time: 100, steps: 3,
+      title: "Tactical layer: capability in every predicted state, then a sequence of maneuvers",
+      notes: "Zoom into the tactical layer. (0) The current state, or the belief, becomes the root s0 of the planning horizon, and the planning horizon builder queries the MCE with each state. The MCE monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (1) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead. The builder repeats query and prediction up to the horizon H. (2) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (3) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state.",
+      html: `<div class="ar zoom">
+        <div class="pn" style="left:0;top:372px;width:186px;height:236px"><div class="ph"><span class="k">C</span>State</div>
+          <div class="pb ctr" style="padding:6px 8px;gap:4px"><div class="eqs"><i>s</i><sub>0</sub> / <i>b</i><sub>0</sub></div><div class="t">(OD, <i>p</i><sub>ego</sub>, {<i>p<sub>i</sub></i>})</div><img src="${F}arch_od.jpg" alt="Operational domain" style="width:168px"><img src="${F}arch_scen.jpg" alt="Dynamic scenario" style="width:168px"></div></div>
+        <div class="dchip" style="left:1300px;top:0"><span class="k">D</span>Route plan <i>𝓡</i><span class="t2">road segments, upcoming exit, destination</span></div>
+        <div class="efrm" style="left:206px;top:56px;width:1586px;height:584px"></div>
+        <div class="elbl" style="left:228px;top:64px">E · Tactical layer · ODD-aptive</div>
+
+        <div class="pn" style="left:228px;top:96px;width:552px;height:240px"><div class="ph"><span class="k">E1</span>Maneuver Capability Estimator<span class="tag cap">Monitoring</span></div>
+          <div class="mce">
+            <div><h5>Sense</h5><span class="sk l">Sense skill 1</span><span class="sk b">Sense skill 2</span><span class="sk k">Sense skill 3</span></div>
+            <div><h5>Think</h5><span class="sk l">Think skill 1</span><span class="sk b">Think skill 2</span><span class="sk k">Think skill 3</span></div>
+            <div><h5>Act</h5><span class="sk b">Act skill 1</span><span class="sk l">Act skill 2</span><span class="sk k">Act skill 3</span></div>
+          </div>
+          <div class="lg"><span class="sk k sw"></span>KL requires <span class="sk l sw"></span>LCL requires · ensured if all its skills hold in <i>s<sub>i</sub></i></div></div>
+
+        <div class="pn" style="left:228px;top:386px;width:552px;height:240px"><div class="ph"><span class="k">E2</span>Planning horizon builder<span class="s">states (MDP) · beliefs (POMDP)</span></div></div>
+
+        <div class="pn mg" data-step="2" style="left:878px;top:96px;width:400px;height:240px"><div class="ph"><span class="k"><i>𝓜</i></span>MDP / POMDP with ensured maneuvers</div>
+          <div class="pb"><ul class="ls"><li>States <i>s<sub>i</sub></i>, or beliefs <i>b<sub>i</sub></i>, up to horizon <i>H</i></li><li>Actions restricted to <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</li><li>Predicted transitions (<i>s<sub>i</sub></i>, <i>a</i>, <i>s′</i>)</li></ul><div class="t" style="margin-top:4px"><b class="mgt">Capability enters the model</b> before the policy is optimized</div></div></div>
+
+        <div class="pn" data-step="1" style="left:878px;top:430px;width:400px;height:196px"><div class="ph"><span class="k">E3</span>State predictor<span class="s">+ electronic horizon (V2X)</span></div>
+          <div class="e3"><figure><img src="${F}arch_e3in.jpg" alt="Input state and lane change to the left"><figcaption>state <i>s<sub>i</sub></i> + maneuver <i>a</i></figcaption></figure><span class="ar1">→</span><figure><img src="${F}arch_e3out.jpg" alt="Predicted state"><figcaption>predicted state <i>s′</i></figcaption></figure></div>
+          <div class="eqs" style="text-align:center;font-size:19px"><i>s′</i> = <i>f</i>(<i>s<sub>i</sub></i>, <i>a</i>), &nbsp;<i>a</i> ∈ <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div></div>
+
+        <div class="pn" data-step="2" style="left:1328px;top:104px;width:444px;height:522px"><div class="ph"><span class="k">E4</span>Policy planner<span class="tag cho">Choice</span></div>
+          <div class="e4">
+            <div class="blk"><div class="sh"><span class="k">E4.1</span>Reward evaluation</div>
+              <table class="rw"><tr><td>Safety</td><td>collision, TTC / TIV risk</td><td><i>R</i><sub>col</sub>, <i>R</i><sub>risk</sub></td></tr>
+                <tr><td>Legal</td><td>speed limit</td><td><i>R</i><sub>legal</sub></td></tr>
+                <tr><td>Progress</td><td>driving speed</td><td><i>R</i><sub>speed</sub></td></tr>
+                <tr><td>Route</td><td>itinerary lane, next exit</td><td><i>R</i><sub>route</sub></td></tr>
+                <tr><td>Operability</td><td>ensured maneuvers, MRM</td><td><i>R</i><sub>op</sub>, <i>R</i><sub>time</sub></td></tr></table>
+              <div class="eqs" style="text-align:center;margin-top:6px"><i>R</i>(<i>s</i>) = Σ<sub><i>k</i></sub> <i>W<sub>k</sub></i> <i>R<sub>k</sub></i>(<i>s</i>)</div></div>
+            <div class="blk"><div class="sh"><span class="k">E4.2</span>Solver</div>
+              <div class="eqs" style="font-size:18.5px;text-align:center"><i>V</i>(<i>s</i>) = max<sub><i>a</i> ∈ <i>A</i><sub>ens</sub>(<i>s</i>)</sub> [ <i>R</i>(<i>s</i>, <i>a</i>) + <i>γ</i> Σ<sub><i>s′</i></sub> <i>P</i>(<i>s′</i> | <i>s</i>, <i>a</i>) <i>V</i>(<i>s′</i>) ]</div>
+              <div class="t" style="text-align:center">MDP: value iteration · POMDP: Monte Carlo tree search</div>
+              <div class="cpc1">The max runs over <i>A</i><sub>ens</sub>(<i>s</i>) only: <b>capability precedes choice</b></div></div>
+            <div class="po">Solver output: the policy <i>π</i></div>
+          </div></div>
+
+        <div class="outc" data-step="3" style="left:206px;top:668px;width:1210px;height:184px">
+          <div class="o1"><div class="ot">Output: a sequence of maneuvers</div><div class="eqs big"><i>π</i>(<i>s</i><sub>0</sub>) = <i>A</i><sub>1</sub> → <i>A</i><sub>2</sub> → <i>A</i><sub>3</sub></div><div class="t">here keep lane → change left → change right</div></div>
+          <img src="${F}arch_pol.jpg" alt="Sequence KL, LCL, LCR" style="width:520px;border-radius:8px">
+          <div class="o3"><b>Only <i>A</i><sub>1</sub> is executed</b><div class="t">then the plan is rebuilt from the new state (receding horizon)</div></div></div>
+        <div class="pn" data-step="3" style="left:1512px;top:668px;width:280px;height:184px"><div class="ph"><span class="k">F1</span>ADAS features selector</div><img src="${F}arch_adas.png" alt="ACC, LCA, SALC and MRM execution" style="width:264px;margin:8px 5px 0"></div>
+
+        <svg class="wires" viewBox="0 0 1792 852" aria-hidden="true">
+          <defs><marker id="arB-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#063669"/></marker>
+          <marker id="arB-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#a8237e"/></marker></defs>
+          <g data-step="3"><path class="w am" d="M290 535 L470 490 L640 522 L724 522"/></g>
+          <path class="w" d="M186 535 H258" marker-end="url(#arB-n)"/>
+          <g class="nd"><circle cx="290" cy="535" r="28"/><text class="nt" x="290" y="537">s₀</text></g>
+          <g>
+            <path class="w" d="M380 384 V340" marker-end="url(#arB-n)"/>
+            <path class="w" d="M640 338 V382" marker-end="url(#arB-n)"/>
+            <path class="w" d="M317 528 L444 497" marker-end="url(#arB-n)"/>
+            <path class="w" d="M316 546 L444 581" marker-end="url(#arB-n)"/>
+            <path class="w bad" d="M300 562 L321 603"/><text class="xx" x="325" y="613">✕</text>
+            <text class="el" x="366" y="503">KL</text><text class="el" x="384" y="586">LCL</text><text class="el bad" x="250" y="606">LCR</text>
+          </g>
+          <g data-step="1">
+            <path class="w" d="M780 470 H874" marker-end="url(#arB-n)"/>
+            <path class="w" d="M878 590 H784" marker-end="url(#arB-n)"/>
+            <path class="w" d="M492 486 L616 472" marker-end="url(#arB-n)"/>
+            <path class="w" d="M491 497 L617 517" marker-end="url(#arB-n)"/>
+            <path class="w" d="M492 588 L616 584" marker-end="url(#arB-n)"/>
+            <path class="w bad" d="M486 603 L540 613"/><text class="xx" x="546" y="620">✕</text>
+            <text class="el" x="546" y="471">KL</text><text class="el" x="530" y="530">LCL</text><text class="el" x="546" y="580">KL</text>
+            <g class="nd p"><circle cx="470" cy="490" r="22"/><text class="nt" x="470" y="492">s₁</text></g>
+            <g class="nd p"><circle cx="470" cy="588" r="22"/><text class="nt" x="470" y="590">s₂</text></g>
+            <g class="nd p"><circle cx="640" cy="470" r="20"/><text class="nt sm" x="640" y="472">s₃</text></g>
+            <g class="nd p"><circle cx="640" cy="522" r="20"/><text class="nt sm" x="640" y="524">s₄</text></g>
+            <g class="nd p"><circle cx="640" cy="584" r="20"/><text class="nt sm" x="640" y="586">s₅</text></g>
+            <text class="dots" x="700" y="476">…</text><text class="dots" x="700" y="590">…</text>
+            <text class="dl" x="290" y="446">depth 0</text><text class="dl" x="470" y="446">depth 1</text><text class="dl" x="640" y="446">depth 2</text><text class="dl" x="738" y="446">… <tspan font-style="italic" font-family="Cambria Math, serif">H</tspan></text>
+            <text class="el bad" x="672" y="616" style="font-size:13px">✕ not ensured</text>
+          </g>
+          <g data-step="2">
+            <path class="w mg" d="M780 410 H830 V214 H872" marker-end="url(#arB-m)"/>
+            <path class="w mg" d="M1278 214 H1322" marker-end="url(#arB-m)"/>
+            <path class="w" d="M1546 40 V100" marker-end="url(#arB-n)"/>
+          </g>
+          <g data-step="3">
+            <circle class="ring" cx="470" cy="490" r="27"/><circle class="ring" cx="640" cy="522" r="25"/>
+            <text class="el am" x="680" y="514">LCR</text>
+            <path class="w" d="M1380 626 V664" marker-end="url(#arB-n)"/>
+            <path class="w" d="M1416 760 H1508" marker-end="url(#arB-n)"/>
+          </g>
+        </svg>
+        <div class="sig" style="left:192px;top:500px"><i>s</i><sub>0</sub></div>
+        <div class="sig" style="left:222px;top:349px;width:150px;text-align:right">Query with state <i>s<sub>i</sub></i></div>
+        <div class="sig" style="left:650px;top:347px"><i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div>
+        <div class="sig" data-step="1" style="left:786px;top:440px"><i>s<sub>i</sub></i>, <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div>
+        <div class="sig" data-step="1" style="left:790px;top:597px">(<i>s<sub>i</sub></i>, <i>a</i>, <i>s′</i>)</div>
+        <div class="sig" data-step="3" style="left:1392px;top:638px">policy <i>π</i></div>
+        <div class="sig" data-step="3" style="left:1420px;top:728px"><i>a<sub>t</sub></i> = (<i>m<sub>t</sub></i>, <i>θ<sub>t</sub></i>)</div>
+        <div class="sig t" data-step="3" style="left:1424px;top:768px;line-height:1.15">current<br>action</div>
       </div>` },
 
     { id: "setup", sec: "intro", c: ["C4"], kicker: "Experimental platform", ref: "§6.2", time: 50,
