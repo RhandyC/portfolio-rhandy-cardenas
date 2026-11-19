@@ -98,7 +98,8 @@
       const x = SEC[s.sec];
       const cs = (x.c || []).map((c) => `<a class="cbadge solid" data-go="contrib">${c}</a>`).join("");
       const pubs = (x.pubs || []).map((p) => `<span class="pill">${esc(p)}</span>`).join("");
-      inner = `<div class="sec"><div class="main"><div class="k">${esc(x.ch)}${x.where ? " · " + esc(x.where) : ""}</div>` +
+      const cpc = x.cpc ? `<div class="cpcstrip"><span class="${/cap/.test(x.cpc) ? "on" : ""}">Capability</span><span class="pre">precedes</span><span class="${/cho/.test(x.cpc) ? "on" : ""}">choice</span></div>` : "";
+      inner = `<div class="sec"><div class="main">${cpc}<div class="k">${esc(x.ch)}${x.where ? " · " + esc(x.where) : ""}</div>` +
         `<div class="big">${esc(x.title)}</div>${x.sub ? `<div class="sub">${x.sub}</div>` : ""}` +
         `${x.goal ? `<div class="goal">${x.goal}</div>` : ""}${cs || pubs ? `<div class="cs">${cs}${pubs}</div>` : ""}</div>` +
         `<div class="side">${tocHTML(s.sec)}</div></div>` + footer(s);
