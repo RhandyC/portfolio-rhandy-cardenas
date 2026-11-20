@@ -602,7 +602,7 @@
 
     { id: "reward", sec: "c2", c: ["C2"], kicker: "Reward function", ref: "§5.2.5", time: 70,
       title: "Among the ensured maneuvers, the reward ranks the options",
-      notes: "Five objectives: safety, legal compliance, progress, the route, and operability. The first terms are classical. The operability terms are what makes the policy anticipate. The first one counts the ensured actions, each weighted by its margin to the boundary of its most constrained skill: the planner prefers states where the remaining maneuvers are comfortably ensured. The second one penalizes predicted states, beyond a time threshold, from which no minimal risk maneuver is reachable, more as they are later. The weights put collision first, then the reachable fallback, then operability.",
+      notes: "Five objectives: safety, legal compliance, progress, the route, and operability. The first terms are classical. The operability terms are what makes the policy anticipate. The first one counts the ensured actions, each weighted by its margin to the boundary of its most constrained skill: the planner prefers states where the remaining maneuvers are comfortably ensured. The second one penalizes predicted states, beyond a time threshold, from which no minimal risk maneuver is reachable, more as they are later. The weights put collision first, then the reachable fallback, then operability. And because the model is explicit and the reward is a sum of named terms, every decision can be explained: compared with simply keeping the lane, term by term, now and over the horizon, which gives its main reason and what it costs. The details are in the appendix.",
       backups: ["b-reward", "b-fallback"],
       html: `<div class="card eqbox" style="padding:14px 24px 10px"><div class="eq" style="font-size:29px"><i>R</i>(<i>s</i>) = <span class="grp"><span><i>W</i><sub>col</sub><i>R</i><sub>col</sub> + <i>W</i><sub>risk</sub><i>R</i><sub>risk</sub></span><span class="lab">safety</span></span> + <span class="grp"><span><i>W</i><sub>legal</sub><i>R</i><sub>legal</sub></span><span class="lab">legal</span></span> + <span class="grp"><span><i>W</i><sub>speed</sub><i>R</i><sub>speed</sub></span><span class="lab">progress</span></span> + <span class="grp"><span><i>W</i><sub>route</sub><i>R</i><sub>route</sub></span><span class="lab">route</span></span> + <span class="grp op"><span><i>W</i><sub>op</sub><i>R</i><sub>op</sub> + <i>W</i><sub>time</sub><i>R</i><sub>time</sub></span><span class="lab">operability</span></span></div></div>
         <div class="row grow">
@@ -618,6 +618,8 @@
             <div class="card ok tight"><h4>Fallback availability</h4><div class="eq" style="font-size:29px"><i>R</i><sub>time</sub>(<i>s</i>) = −[ <i>t</i><sub>pred</sub>(<i>s</i>) − <i>T</i><sub>thr</sub> ]<sub>+</sub> ( 1 − 𝟙<sub>MRM</sub>(<i>s</i>) )</div>
               <p class="xs mute" style="margin:0">a predicted state beyond <i class="m">T</i><sub>thr</sub> with no reachable MRM is penalized, more as it is later</p></div>
             <div class="card tight" style="text-align:center"><div class="eq" style="font-size:28px"><i>W</i><sub>col</sub> ≫ <i>W</i><sub>time</sub> &gt; <i>W</i><sub>op</sub> &gt; <i>W</i><sub>risk</sub> &gt; <i>W</i><sub>legal</sub> &gt; <i>W</i><sub>speed</sub></div></div>
+            <div class="card navy tight xhint"><h4>Model-based, so every decision can be explained</h4>
+              <p>Each term is known in every predicted state. Compared with <b>keep lane</b>, term by term, a decision gives its <b>main reason</b> and its <b>trade-off</b>, now and over the horizon. ${go("b-explain", "Appendix →")}</p></div>
           </div></div>` },
 
     { id: "safe", sec: "c2", c: ["C2"], kicker: "Safe states and fail-operational strategies", ref: "§5.2.6", time: 60,
@@ -1046,6 +1048,42 @@
           <li>The policy is the best ensured action at the root, and only that action is executed</li></ul></div>
         <div class="card col grow">${fig("tree.png", "Tree of ensured states")}</div></div>` },
 
+    { id: "b-explain", sec: "backup", kicker: "Appendix", title: "Explaining a decision: the plan against keep lane, term by term",
+      notes: "Not in the manuscript. Because the planner is model-based, a decision can be explained. The reward is a weighted sum of named terms and the tree is explicit, so every value splits term by term. The reference is the nominal policy, keep the lane and the set speed, rolled out in the same model over the same horizon: the explanation answers the question a person asks, why this rather than carrying on. Short term, the first action against keep lane. Long term, the whole plan against the nominal plan. The term that gains most is the main reason; the terms that lose are the trade-off. Two levels, as in the thesis: if keep lane is no longer ensured, the explanation is the capability, and the MCE names the skill lost and the context; if it is still ensured, the explanation is the choice, given by the terms. The bars are schematic, not measured.",
+      html: `<div class="row grow xpl">
+        <div class="col" style="flex:1 1 0">
+          <div class="card tight"><h4>Why it can be explained</h4><ul class="list small">
+            <li><b>Explicit model:</b> the tree of ensured states is built, and can be stored, at every cycle</li>
+            <li><b>Named reward terms:</b> every value splits term by term, along the planned sequence</li></ul>
+            <div class="eq"><i>Q</i>(<i>s</i><sub>0</sub>, <i>a</i>) = Σ<sub><i>k</i></sub> <i>W<sub>k</sub></i> <i>Q<sub>k</sub></i>(<i>s</i><sub>0</sub>, <i>a</i>), &nbsp; <i>Q<sub>k</sub></i>(<i>s</i><sub>0</sub>, <i>a</i>) = Σ<sub><i>t</i>=0</sub><sup><i>H</i></sup> <i>γ<sup>t</sup></i> <i>R<sub>k</sub></i>(<i>s<sub>t</sub></i>, <i>a<sub>t</sub></i>)</div></div>
+          <div class="card tight"><h4>Reference: the nominal policy</h4>
+            <div class="eq"><i>π</i><sub>nom</sub>(<i>s</i>) = (KL, <i>θ</i> = 0), &nbsp; <i>Q<sub>k</sub></i><sup>nom</sup>(<i>s</i><sub>0</sub>) = Σ<sub><i>t</i></sub> <i>γ<sup>t</sup></i> <i>R<sub>k</sub></i>(<i>s<sub>t</sub></i><sup>nom</sup>, <i>a</i><sub>nom</sub>)</div>
+            <ul class="list small">
+            <li>Keep the lane and the set speed: what the vehicle does if nothing calls for a change</li>
+            <li>The question a person asks: <b>why this, rather than carrying on?</b></li>
+            <li>Rolled out in the same model, over the same horizon: same predictions, same terms</li></ul></div>
+          <div class="card tight grow"><h4>Two levels, as in the thesis</h4><ul class="list small">
+            <li><span class="pill ok">Capability</span> Keep lane no longer ensured over the horizon: the MCE names the skill lost and the context that caused it (${go("skills", "C1")})</li>
+            <li><span class="pill">Choice</span> Keep lane still ensured: the terms say what the plan gains and what it pays (${go("reward", "C2")})</li></ul></div>
+        </div>
+        <div class="col" style="flex:1.08 1 0">
+          <div class="card tight"><h4>Short term and long term</h4>
+            <div class="eqrow"><div class="eq"><i>δ<sub>k</sub></i> = <i>W<sub>k</sub></i> [ <i>R<sub>k</sub></i>(<i>s</i><sub>0</sub>, <i>a</i>*) − <i>R<sub>k</sub></i>(<i>s</i><sub>0</sub>, <i>a</i><sub>nom</sub>) ]</div><span><b>short term:</b> the first action, now</span></div>
+            <div class="eqrow"><div class="eq"><i>Δ<sub>k</sub></i> = <i>W<sub>k</sub></i> [ <i>Q<sub>k</sub></i>(<i>s</i><sub>0</sub>, <i>a</i>*) − <i>Q<sub>k</sub></i><sup>nom</sup>(<i>s</i><sub>0</sub>) ]</div><span><b>long term:</b> the whole plan, over the horizon</span></div>
+            <div class="eqrow"><div class="eq"><i>k</i>* = argmax<sub><i>k</i></sub> <i>Δ<sub>k</sub></i> &nbsp;·&nbsp; { <i>k</i> : <i>Δ<sub>k</sub></i> &lt; 0 }</div><span>the <b>main reason</b>, and the <b>trade-off</b>: what the decision pays</span></div>
+            <p class="xs mute" style="margin:4px 0 0">Σ<sub><i class="m">k</i></sub> <i class="m">Δ<sub>k</sub></i> = <i class="m">Q</i>(<i class="m">s</i><sub>0</sub>, <i class="m">a</i>*) − <i class="m">Q</i><sup>nom</sup>(<i class="m">s</i><sub>0</sub>) ≥ 0 whenever keep lane stays ensured, since the nominal plan is one branch of the tree</p></div>
+          <div class="card tight grow"><h4>Reading of scenario 1, with traffic (${go("fog-b", "fog")}) · schematic</h4>
+            <div class="xbars">
+              <span class="lb main">Fallback <i class="m">R</i><sub>time</sub></span><span class="ng"></span><span class="ps"><i style="width:92%"></i></span>
+              <span class="lb">Operability <i class="m">R</i><sub>op</sub></span><span class="ng"></span><span class="ps"><i style="width:38%"></i></span>
+              <span class="lb">Risk <i class="m">R</i><sub>risk</sub></span><span class="ng"></span><span class="ps"><i style="width:6%"></i></span>
+              <span class="lb">Lane change cost</span><span class="ng"><i style="width:16%"></i></span><span class="ps"></span>
+              <span class="lb">Progress <i class="m">R</i><sub>speed</sub></span><span class="ng"><i style="width:44%"></i></span><span class="ps"></span>
+              <span></span><span class="ax">pays</span><span class="ax r">gains</span></div>
+            <div class="xsay">“I return to the right lane before the fog <b>because the hard shoulder must stay reachable</b> there. It costs speed behind the trucks, and one lane change.”</div>
+            <p class="xs mute" style="margin:0">Bars <i class="m">Δ<sub>k</sub></i> drawn to illustrate the reading, not measured values</p></div>
+        </div></div>` },
+
     { id: "b-reward", sec: "backup", kicker: "Appendix", title: "Reward terms in detail",
       html: `<table class="tbl"><tr><th style="width:260px">Term</th><th>Definition</th></tr>
           <tr><td><b>Collision</b></td><td>−1 if a collision occurs during the predicted execution or at the resulting state</td></tr>
@@ -1106,6 +1144,7 @@
             <li>Its horizon covers the surrounding traffic, not the capabilities of the vehicle itself</li></ul></div>
           <div class="card navy grow"><h3>In ODD-aptive</h3><ul class="list">
             <li>Each skill is a requirement on the operational domain: decisions are traceable</li>
+            <li>Each decision can be explained against keep lane, term by term (${go("b-explain", "appendix")})</li>
             <li>The filter excludes non-ensured maneuvers by construction</li>
             <li>Learning fits where the skills rely on trained components: learn where the vehicle is capable, and detect when it is no longer (introspective approaches)</li></ul></div></div>` },
 
