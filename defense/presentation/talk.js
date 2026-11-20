@@ -6,6 +6,7 @@
      to any time, one dot per scene. Keys: K pause and play, J and L five seconds.
    - Links between slides ([data-go]) keep a return history, as Beamer's return buttons.
    - Presenter view (P): current and next slide, notes, timer; synced with BroadcastChannel.
+   - Review mode (C, or the comment button): handled by review.js through window.TALKAPI.
    Plain script (no modules) so that the folder also runs offline from file://. */
 (function () {
   "use strict";
@@ -37,6 +38,7 @@
     next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
     play: '<svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6L19 12z"/></svg>',
     pause: '<svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4.3" height="14" rx="1.2"/><rect x="13.7" y="5" width="4.3" height="14" rx="1.2"/></svg>',
+    cmt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M4 5.5h16v10.5h-9l-4.5 3.5v-3.5H4z"/></svg>',
     grid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>',
   };
 
@@ -65,6 +67,7 @@
       `<button type="button" data-cmd="prev" title="Previous (←)" aria-label="Previous">${ICON.prev}</button>` +
       `<button type="button" data-cmd="overview" title="All slides (O)" aria-label="All slides">${ICON.grid}</button>` +
       `<button type="button" data-cmd="next" title="Next (→)" aria-label="Next">${ICON.next}</button>` +
+      `<button type="button" class="cmtbtn" data-cmd="comments" title="Comments (C)" aria-label="Comments">${ICON.cmt}<span class="cnt"></span></button>` +
       `<span class="num">${num}</span></div></div>` +
       (s.main ? `<div class="progress"><i style="width:${((s.i + 1) / MAIN.length * 100).toFixed(2)}%"></i></div>` : "");
   }
@@ -133,9 +136,11 @@
 
   // ---------------------------------------------------------------- scaling
   function fit() {
-    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    // the review panel takes the right side of wide screens
+    const W = window.innerWidth - (document.body.classList.contains("cmt-open") && window.innerWidth > 900 ? 380 : 0);
+    const s = Math.min(W / 1920, window.innerHeight / 1080);
     stage.style.left = "0px"; stage.style.top = "0px";
-    stage.style.transform = `translate(${(window.innerWidth - 1920 * s) / 2}px, ${(window.innerHeight - 1080 * s) / 2}px) scale(${s})`;
+    stage.style.transform = `translate(${(W - 1920 * s) / 2}px, ${(window.innerHeight - 1080 * s) / 2}px) scale(${s})`;
     if (PRESENTER) fitPresenter();
   }
   window.addEventListener("resize", fit);
@@ -331,6 +336,7 @@
     }));
     if (history.replaceState && !PRESENTER) history.replaceState(null, "", "#/" + s.id);
     broadcast();
+    if (window.TALKREVIEW) window.TALKREVIEW.render();
   }
 
   // enter slide i; dir = 1 forward (start), -1 backward (end state)
@@ -464,6 +470,7 @@
     else if (c.startsWith("vat:")) seekLive(+c.slice(4));
     else if (c.startsWith("vby:")) seekBy(+c.slice(4));
     else if (c.startsWith("vpart:")) { if (isVideo(ALL[cur])) seekTo(startOf(ALL[cur], +c.slice(6)) + EPS); }
+    else if (c === "comments") { if (window.TALKREVIEW) window.TALKREVIEW.toggle(); }
     if (/^v(toggle|by|part)/.test(c)) showBar();
   }
 
@@ -478,6 +485,7 @@
 
   document.addEventListener("keydown", (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;  // typing a comment
     const k = e.key;
     if (helpBox.classList.contains("open")) { helpBox.classList.remove("open"); e.preventDefault(); return; }
     if (overview.classList.contains("open") && (k === "Escape" || k === "o" || k === "O")) { toggleOverview(false); e.preventDefault(); return; }
@@ -502,6 +510,7 @@
     else if (k === "k" || k === "K") { e.preventDefault(); command("vtoggle"); }
     else if (k === "j" || k === "J") { e.preventDefault(); command("vby:-5"); }
     else if (k === "l" || k === "L") { e.preventDefault(); command("vby:5"); }
+    else if ((k === "c" || k === "C") && !PRESENTER) { e.preventDefault(); command("comments"); }
     else if (k === "Escape") { toggleOverview(false); }
   });
 
@@ -594,6 +603,23 @@
     if (chan) chan.postMessage({ type: "hello" });
     else document.querySelector("#pv .notes").textContent = "This browser cannot link the two windows.";
   }
+
+  // ---------------------------------------------------------------- review mode hooks (review.js)
+  function gotoAt(id, k, t) {
+    if (!(id in IDX)) return;
+    const i = IDX[id], s = ALL[i];
+    if (i !== cur) goTo(i, 0);
+    if (isVideo(s)) {
+      if (typeof t === "number") { stopVideo(cur); step = partAt(s, t); showFrame(cur, t); render(); }
+    } else { step = Math.max(0, Math.min(k || 0, nSteps(s))); render(); }
+  }
+  window.TALKAPI = {
+    state: () => { const s = ALL[cur]; return { s, step, label: label(s), t: isVideo(s) && vidOf(cur) ? vidOf(cur).currentTime : null, steps: nSteps(s) }; },
+    slide: (id) => (id in IDX ? ALL[IDX[id]] : null),
+    label: (id) => (id in IDX ? label(ALL[IDX[id]]) : "?"),
+    order: (id) => (id in IDX ? IDX[id] : 1e9),
+    gotoAt, fit, next: () => command("next"), prev: () => command("prev"), presenter: PRESENTER,
+  };
 
   // ---------------------------------------------------------------- start
   const start = () => {
