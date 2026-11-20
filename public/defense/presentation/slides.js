@@ -62,7 +62,7 @@
         <div class="logos"><img src="${F}logo_utc.png" alt="Université de technologie de Compiègne"><img src="${F}logo_heudiasyc.png" alt="Heudiasyc"></div></div>
         <div class="jury"><h2>JURY</h2>${jury.map(([r, n, a]) => `<div class="p"><div class="r">${r}</div><div><div class="n">${n}</div><div class="a">${a}</div></div></div>`).join("")}</div></div>` },
 
-    // ================================================================ 1. introduction: the news, who is responsible, the principle, the problem, the question
+    // ================================================================ 1. introduction: the news, the ODD, who is responsible, the changing context, the principle, the problem, the state of the art
     { id: "sec-intro", type: "section", sec: "intro", dark: true, title: "Introduction", time: 10 },
 
     { id: "news", sec: "intro", kicker: "In the news", ref: "§2.3", time: 60,
@@ -81,88 +81,163 @@
             <p class="xs" style="margin:8px 0 0 38px;color:#c7d3e3">Waymo, safety recall of 3,791 robotaxis filed with NHTSA, May 2026, after a flooded road in San Antonio</p></div>
           <div style="flex:0 0 560px;font-size:28px;font-weight:600;line-height:1.4">Perceiving the conditions was not enough: the vehicle had to know <span style="color:var(--amber)">what it could still do</span> there.</div></div></div>` },
 
+    { id: "odd", sec: "intro", kicker: "Motivation · what is the ODD?", ref: "§2.2", time: 75, steps: 2,
+      title: "The Operational Design Domain: where a function is designed to operate",
+      notes: "Before talking about levels and responsibility, the key notion. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
+      html: `<div class="row grow">
+        <div class="col grow" style="flex:1 1 0">
+          <div class="card" style="padding:28px 36px"><div class="quote" style="font-size:27px">“Operating conditions under which a given driving automation system or feature thereof is specifically designed to function, including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
+            <p class="xs mute" style="margin:10px 0 0 38px">SAE J3016, definition of the Operational Design Domain (ODD)</p></div>
+          <div class="card grow"><h3>What is it for?</h3><ul class="list" style="gap:22px;font-size:28px">
+            <li>The designer states the conditions in which the function was <b>designed and validated</b></li>
+            <li>Outside its ODD, the system is <b>beyond its operational limits</b></li>
+            <li>Example: an ACC designed for highways in free-flowing traffic, not validated in heavy rain or with two-wheelers</li></ul></div>
+        </div>
+        <div class="col grow" style="flex:1.05 1 0">
+          <div class="card" data-step="1"><h3 style="margin-bottom:12px">How is it structured? A hierarchical taxonomy</h3>
+            <div class="oddtax">
+              <div><b>Physical infrastructure</b><span>road types, surfaces, edges, geometry</span></div>
+              <div><b>Operational constraints</b><span>speed limit, traffic conditions</span></div>
+              <div><b>Objects</b><span>signage, road users, obstacles</span></div>
+              <div><b>Connectivity</b><span>V2X, fleet management, infrastructure sensors</span></div>
+              <div><b>Environmental conditions</b><span>weather, illumination, particulate matter</span></div>
+              <div><b>Zones</b><span>geofencing, school and work zones, regions</span></div>
+            </div><p class="xs mute" style="margin:10px 0 0">Top levels proposed by the NHTSA (2018), each broken down into sublevels · requirements in ISO 34503 (2023)</p></div>
+          <div class="card row grow" data-step="2" style="gap:22px;align-items:center;padding:18px 22px">
+            <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="height:300px;border-radius:10px">
+            <div><h4 style="margin-bottom:8px">Deployed example: Mercedes-Benz Drive Pilot</h4><p class="small" style="margin:0">The first Level 3 system approved in Europe. Its ODD is a driving scene: separated highway, HD map, moderate to heavy traffic, detectable lane markings, no inclement weather.</p></div></div>
+        </div></div>` },
+
     { id: "responsibility", sec: "intro", kicker: "Motivation · who is responsible?", ref: "§1.2", time: 60,
-      title: "From Level 3, the vehicle answers for its own limits",
-      notes: "Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed, and automation now advances level by level. The decisive step is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its ODD: it must monitor its own limits and request a takeover in time, 12 to 15 seconds ahead. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. The higher the level, the more the vehicle itself must know what it can do.",
+      title: "Who watches the ODD? From Level 3, the vehicle itself",
+      notes: "Every automated feature has its own ODD; the automation level says who is responsible for it. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed, and automation now advances level by level. The decisive step is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its ODD: it must monitor its own limits and request a takeover in time, 12 to 15 seconds ahead. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. The higher the level, the more the vehicle itself must know what it can do.",
       html: `<div class="card tight row" style="align-items:center;gap:22px"><span class="pill amber">2018</span><p class="small" style="margin:0">Fully self-driving fleets announced for 2019 – 2020 by General Motors, Toyota and Nissan. The task proved harder than assumed: automation now advances <b>level by level</b>.</p></div>
         <div class="row grow">
-          <div class="card col" style="flex:1.3 1 0">${fig("sae_levels.png", "Automation levels and examples of ODD")}</div>
+          <div class="card col" style="flex:1.3 1 0"><h4>Each feature has its own ODD</h4>${fig("sae_levels.png", "Automation levels and examples of ODD")}</div>
           <div class="col grow">
-            <div class="card tight grow"><h4>Up to Level 2</h4><p class="small">The <b>driver</b> supervises, and must know the limits of the system, which drivers often do not.</p></div>
+            <div class="card tight grow"><h4>Up to Level 2</h4><p class="small">The <b>driver</b> supervises, and must know the ODD of the system, which drivers often do not.</p></div>
             <div class="card tight accent grow"><h4>Level 3</h4><p class="small">The <b>system</b> performs the whole driving task within its ODD, monitors its own limits and requests a takeover in time, <b>12 to 15 s</b> ahead.</p></div>
             <div class="card tight ok grow"><h4>Level 4 and above</h4><p class="small">Nobody takes over: the system reaches a <b>minimal risk condition</b> by itself.</p></div>
           </div></div>
         <div class="takeaway">The higher the level, the more the vehicle itself must know <b>what it can do</b>, and under which conditions.</div>` },
 
-    { id: "monitoring", sec: "intro", kicker: "Motivation · today", ref: "§1.2", time: 50,
-      title: "Today, the ODD is monitored, not used to decide",
-      notes: "Along one journey, the operational domain keeps changing: city, highway, a foggy pass, countryside. The ODD, fixed by design, does not. Today, ODD monitoring is mostly a set of isolated condition checks, and it rarely enters the decision layer. The system then reacts once a limit is crossed: abrupt deactivation, emergency stop, or, at the scale of a fleet, a suspended service. What is needed is the opposite: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation, and the vehicle becomes fail-operational.",
+    { id: "context", sec: "intro", kicker: "Motivation · a changing context", ref: "§1.2, §2.2", time: 60, steps: 2,
+      title: "Along a route, the context keeps changing; the ODD does not",
+      notes: "Along one route, the context keeps changing: a highway exit, road works, missing lane markings, a tunnel, a traffic jam, a curve, rain expected ahead. The ODD, fixed by design, does not change. What changes is the operational domain, OD, the current conditions; staying in the ODD means keeping the OD inside it, now and on the route ahead. (1) Today, ODD monitoring is mostly a set of isolated condition checks, rarely part of the decision: the limit is noticed once it is crossed, with an abrupt deactivation, an emergency stop or, for a fleet, a suspended service. (2) What is needed is the opposite: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation.",
       html: `<div class="row grow">
-        <div class="card col" style="flex:1.15 1 0"><h4>One journey, several operational domains</h4>${fig("od_journey.jpg", "The operational domain along a journey")}
-          <p class="small">The <b>operational domain (OD)</b>, the current conditions, changes along the journey. The <b>ODD</b>, fixed by design, does not.</p></div>
+        <div class="card col" style="flex:0 0 700px;padding:20px 26px"><h4>One route, many context changes</h4>${fig("context_changes.png", "Target route with context changes: highway exit, road works, missing lane markings, tunnel, traffic jam, curved road, expected rain")}</div>
         <div class="col grow">
-          <div class="card bad grow"><h3>Today: monitor, then react</h3><ul class="list" style="font-size:26px;gap:16px">
+          <div class="card accent"><h3>Operational domain (OD) and ODD</h3><p>The <b>ODD</b> is fixed by design. The <b>OD</b>, the current conditions, changes all along the journey. Staying in the ODD means keeping the OD inside it, <b>now and on the route ahead</b>.</p></div>
+          <div class="card bad grow" data-step="1"><h3>Today: monitor, then react</h3><ul class="list" style="gap:12px">
             <li>Isolated condition checks, rarely part of the decision</li>
             <li>The limit is noticed once it is crossed</li>
             <li>Abrupt deactivation, emergency stop, or a suspended service</li></ul></div>
-          <div class="card ok grow"><h3>Needed: anticipate, inside the decision</h3><ul class="list" style="font-size:26px;gap:16px">
+          <div class="card ok grow" data-step="2"><h3>Needed: anticipate, inside the decision</h3><ul class="list" style="gap:12px">
             <li>Foresee the limits over the coming maneuvers</li>
             <li>Keep operating with fewer capabilities while it is safe</li>
             <li>Start the fallback while it is still feasible: <b>graceful degradation</b></li></ul></div>
         </div></div>` },
 
-    { id: "principle", sec: "intro", kicker: "Guiding principle of the thesis", ref: "§1.1 – §1.2", time: 50,
+    { id: "principle", sec: "intro", kicker: "Guiding principle of the thesis", ref: "§1.2", time: 60, steps: 2,
       title: "Capability precedes choice",
-      notes: "This is the guiding principle of the whole thesis. A system can only make the right choice if it first understands what it is capable of, and within which operational limits. Two steps, in this order. First, capability: which maneuvers can the vehicle still ensure, in the current conditions and in the states its decisions lead to. That is the first contribution. Second, choice: among those maneuvers only, which sequence to follow, so that a fallback always remains within reach, even under uncertainty. That is the second and the third contributions. The fourth runs both on a real vehicle.",
-      html: `<div class="card" style="padding:38px 60px"><div class="quote" style="font-size:40px">A system can only make the right choice if it first understands what it is capable of, and within which operational limits.</div></div>
-        <div class="cpcflow grow">
-          <div class="card ok col" style="gap:16px"><div class="row" style="align-items:center;gap:18px"><span class="num-badge c1">1</span><h3 style="margin:0;font-size:36px">Capability</h3></div>
-            <p>Which maneuvers can the vehicle still <b>ensure</b>, in the current conditions and in the states its decisions lead to?</p>
-            <div class="eqbox" style="margin-top:auto"><div class="eq" style="font-size:34px">${Aens()} ⊆ <i>A</i></div><p class="xs mute" style="margin:2px 0 0">the ensured maneuvers of a state <i class="m">s</i>, assessed by the MCE</p></div>
-            <div class="row" style="gap:10px;align-items:center"><span class="xs mute" style="font-weight:600">Contribution</span><a class="cbadge ink" data-go="sec-c1" href="#/sec-c1">C1</a></div></div>
+      notes: "The motivation in one line. Automated driving proved harder than announced, so automation advances level by level. From Level 3, the vehicle answers for its own limits; it must therefore be aware of its ODD, now and ahead, and use it to decide: avoid ODD exits, and degrade safely when needed. (1) This is the guiding principle of the whole thesis: a system can only make the right choice if it first understands what it is capable of, and within which operational limits. (2) Two steps, in this order. First, capability: what can the vehicle still do safely, now and in the situations its decisions lead to. Then, choice: among those options only, which maneuvers, in which order, keeping a fallback within reach.",
+      html: `<div class="chain">
+          <div class="st"><span class="n">1</span>Driving proved harder than announced</div><div class="ar2">→</div>
+          <div class="st"><span class="n">2</span>Automation advances level by level</div><div class="ar2">→</div>
+          <div class="st"><span class="n">3</span>From Level 3, the vehicle answers for its own limits</div><div class="ar2">→</div>
+          <div class="st"><span class="n">4</span>It must be aware of its ODD, now and ahead</div><div class="ar2">→</div>
+          <div class="st"><span class="n">5</span>And use it to decide: avoid ODD exits, degrade safely</div></div>
+        <div class="card navy" data-step="1" style="padding:40px 64px"><div class="quote" style="font-size:42px;color:#fff;border-color:var(--amber)">A system can only make the right choice if it first understands what it is capable of, and within which operational limits.</div></div>
+        <div class="cpcflow grow" data-step="2">
+          <div class="card ok col" style="gap:14px;justify-content:center"><h3 style="margin:0;font-size:44px">1 · Capability</h3>
+            <p style="font-size:33px">What can the vehicle still do <b>safely</b>, now and in the situations its decisions lead to?</p></div>
           <div class="arrow-big">→</div>
-          <div class="card col" style="gap:16px;border-left:10px solid var(--blue)"><div class="row" style="align-items:center;gap:18px"><span class="num-badge c2">2</span><h3 style="margin:0;font-size:36px">Choice</h3></div>
-            <p>Among <b>those maneuvers only</b>, which sequence to follow, so that a fallback always remains within reach, even under uncertainty?</p>
-            <div class="eqbox" style="margin-top:auto"><div class="eq" style="font-size:34px"><i>π</i>*(<i>s</i>) = argmax<sub><i>a</i> ∈ ${Aens()}</sub> <i>Q</i>*(<i>s</i>, <i>a</i>)</div><p class="xs mute" style="margin:2px 0 0">a policy that chooses only among them, in every predicted state</p></div>
-            <div class="row" style="gap:10px;align-items:center"><span class="xs mute" style="font-weight:600">Contributions</span><a class="cbadge ink" data-go="sec-c2" href="#/sec-c2">C2</a><a class="cbadge ink" data-go="sec-c3" href="#/sec-c3">C3</a></div></div>
-        </div>
-        <p class="xs mute" style="margin:0;text-align:right">Both steps run unchanged on a real vehicle: ${go("sec-c4", "C4")}</p>` },
+          <div class="card col" style="gap:14px;justify-content:center;border-left:10px solid var(--blue)"><h3 style="margin:0;font-size:44px">2 · Choice</h3>
+            <p style="font-size:33px">Among <b>those options only</b>, which maneuvers, in which order, keeping a fallback within reach?</p></div>
+        </div>` },
 
     { id: "v-problem-a", type: "video", sec: "intro", ref: "§1.3", time: 45,
       title: "Problem: a sequence of admissible decisions can leave no fallback",
       notes: "Current systems check the ODD as a monitor: each maneuver is admissible when it is chosen. Yet the sequence narrows operability until no fallback is left, without any single decision being incorrect.",
       video: { src: A + "problem.mp4", parts: [[0.0, "Each decision is checked when it is taken"], [9.0, "Yet the sequence leaves no fallback"]], end: 16.0 } },
 
-    { id: "question", sec: "intro", kicker: "Problem statement", ref: "§1.3", time: 60,
+    { id: "question", sec: "intro", kicker: "Problem statement", ref: "§1.3", time: 75, steps: 3,
       title: "Research question",
-      notes: "The research question, and what an answer must do: first capability, then choice. In the example, rain reduces visibility ahead: the vehicle anticipates the limitation and slows down before reaching it, so it stays within its ODD.",
-      html: `<div class="card"><div class="quote">“How can an intelligent vehicle ensure ODD-compliant decision-making as its operational context continuously evolves?”</div></div>
-        <div class="row grow">
-          <div class="card col grow"><h4>Anticipatory ODD-based decision-making</h4>${fig("anticipation.jpg", "Anticipating the loss of capability")}
-            <p class="xs mute">Rain reduces the visibility ahead: the vehicle anticipates the limitation and slows down before reaching it.</p></div>
-          <div class="card grow"><h3>What an answer must do</h3><ol class="nums">
-            <li>Characterize how the context constrains what the vehicle can safely do <span class="cbadge ink sm">C1</span></li>
-            <li>Monitor the planning horizon for impending ODD exits, and act before them <span class="cbadge ink sm">C2</span></li>
-            <li>Stay operational while it is safe, keeping a Minimal Risk Maneuver (MRM) reachable <span class="cbadge ink sm">C2</span></li>
-            <li>Start the fallback early enough when continued operation cannot be ensured <span class="cbadge ink sm">C2</span></li>
-            <li>Remain robust to uncertainty, in real time <span class="cbadge ink sm">C3</span><span class="cbadge ink sm">C4</span></li></ol></div>
-        </div>` },
+      notes: "The research question. The figure gives what an answer must achieve, in two views of the same situation: on the left, the operational conditions as a point in the space of conditions, with the ODD as the region where the system was designed to operate; on the right, the road. (0) At t0, the conditions lie within the ODD. (1) A first decision, DM1, leads to t1, still within the ODD. (2) Rain reduces the visibility ahead: if nothing changes, the next state would leave the ODD. (3) Anticipating it, the second decision reduces the speed, and the vehicle stays within its ODD. The decision is taken before the limit, not after it.",
+      html: `<div class="card" style="padding:20px 36px"><div class="quote" style="font-size:32px">“How can an intelligent vehicle ensure ODD-compliant decision-making as its operational context continuously evolves?”</div></div>
+        <div class="row grow" style="align-items:stretch">
+          <div class="card col" style="flex:0 0 640px;padding:14px 18px"><h4 style="margin:0">In the space of operational conditions</h4>
+            <svg class="odsp" viewBox="0 0 640 520" aria-hidden="true">
+              <defs><marker id="odsp-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d1d1d"/></marker></defs>
+              <path class="blob" d="M70 130 C 50 50, 210 20, 310 45 C 430 75, 560 30, 575 160 C 585 260, 548 330, 560 420 C 572 500, 430 505, 310 488 C 190 470, 70 505, 48 400 C 32 300, 85 220, 70 130 Z"/>
+              <text class="oddl" x="96" y="112">ODD</text>
+              <g class="odb"><rect x="80" y="300" width="150" height="100" rx="6"/><text x="155" y="352">OD<tspan class="sb" dy="12">t0</tspan></text></g>
+              <g data-step="1"><path class="dm" d="M168 404 Q 228 476 296 424" marker-end="url(#odsp-a)"/><text class="dml" x="138" y="470">DM<tspan class="sb" dy="8">1</tspan></text>
+                <g class="odb"><rect x="300" y="330" width="150" height="100" rx="6"/><text x="375" y="382">OD<tspan class="sb" dy="12">t1</tspan></text></g></g>
+              <g data-step="2"><rect class="out" x="561" y="296" width="46" height="108"/><rect class="odd2" x="430" y="296" width="177" height="108" rx="6"/>
+                <text class="odl2" x="600" y="438">OD<tspan class="sb" dy="12">t1′</tspan></text>
+                <text class="rain" x="606" y="476" text-anchor="end">rain: visibility drops</text></g>
+              <g data-step="3"><path class="dm" d="M372 328 Q 350 258 396 199" marker-end="url(#odsp-a)"/><text class="dml" x="272" y="268">DM<tspan class="sb" dy="8">2</tspan></text>
+                <g class="odb"><rect x="330" y="95" width="150" height="100" rx="6"/><text x="405" y="147">OD<tspan class="sb" dy="12">t2</tspan></text></g></g>
+            </svg></div>
+          <div class="card col grow" style="padding:14px 18px;align-items:center"><h4 style="margin:0;align-self:flex-start">On the road</h4>
+            <div class="wipe"><img class="w0" src="${F}anticipation.jpg" alt=""><div class="wp" data-dim="1"><div data-dim="2"><div data-dim="3"><img class="w1" src="${F}anticipation.jpg" alt="Anticipatory decision-making: the vehicle reduces its speed before the visibility drops"></div></div></div></div></div>
+        </div>
+        <div class="capt"><div data-until="1">At <i class="m">t</i><sub>0</sub>, the operational conditions lie within the ODD</div>
+          <div data-step="1"><div data-until="2">Decision DM<sub>1</sub>: at <i class="m">t</i><sub>1</sub>, the conditions are still within the ODD</div></div>
+          <div data-step="2"><div data-until="3">Rain reduces the visibility: <b>if nothing changes</b>, the next state OD<sub>t1′</sub> leaves the ODD</div></div>
+          <div data-step="3">Anticipating it, DM<sub>2</sub> <b>reduces the speed</b>: OD<sub>t2</sub> stays within the ODD</div></div>` },
 
     { id: "v-problem-b", type: "video", sec: "intro", ref: "§1.3", time: 40,
       title: "Anticipate: a fallback always within reach",
       notes: "The answer of the thesis: anticipate the loss of capability, so that a fallback always stays within reach. This is fail-operational decision-making.",
       video: { src: A + "problem.mp4", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a fallback always reachable"]] } },
 
-    { id: "failop", sec: "intro", kicker: "Fail-operational system", ref: "§2.2.1", time: 60,
-      title: "Fail-operational: fewer capabilities, a fallback always reachable",
-      notes: "Running example of chapter 2: the primary LiDAR loses range. A reliable, robust, fault-tolerant, fail-safe or fail-operational system answers differently. The fail-operational one updates its capabilities and replans at a reduced speed, without the lane change that is no longer ensured.",
+    { id: "failop", sec: "intro", kicker: "The aim", ref: "§1.3, §2.2.1", time: 60, steps: 2,
+      title: "Fail-operational: keep driving with fewer capabilities, a fallback always reachable",
+      notes: "What we aim for, on a simple example from chapter 2: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable. The scope of the thesis is this kind of degradation, such as fog, that reduces capabilities without any fault.",
+      html: `<div class="card row" style="gap:30px;align-items:center;padding:18px 28px">
+          <img src="${F}failop_a.png" alt="The LiDAR range is reduced; the nominal range is dashed" style="width:640px;border-radius:10px">
+          <div><h4 style="margin-bottom:8px">Example: the primary LiDAR loses range</h4><p style="margin:0">Highway, 130 km/h. The perception horizon shrinks <span class="mute">(nominal range dashed)</span>. What should the vehicle do?</p></div></div>
+        <div class="g2 grow">
+          <div class="card col" data-step="1" style="gap:12px"><h3 style="margin:0">Fail-safe</h3><img src="${F}failop_e.png" alt="Fail-safe: the vehicle stops on the hard shoulder" style="width:100%;border-radius:10px">
+            <p style="margin:0;font-size:27px">Reaches a minimal risk condition, here a stop on the hard shoulder: <b>the mission is aborted</b>.</p></div>
+          <div class="card col ok" data-step="2" style="gap:12px"><h3 style="margin:0">Fail-operational</h3><img src="${F}failop_f.png" alt="Fail-operational: the vehicle continues at a reduced speed, the lane change is no longer ensured" style="width:100%;border-radius:10px">
+            <p style="margin:0;font-size:27px">Updates its capabilities and <b>keeps driving</b> at a reduced speed, without the lane change no longer ensured, a fallback always reachable.</p></div>
+        </div>
+        <div class="takeaway" data-step="2">Scope of the thesis: degradations, such as fog, that reduce capabilities <b>without any fault</b>.</div>` },
+
+    { id: "levels", sec: "intro", kicker: "State of the art · decision levels", ref: "§3.2", time: 50,
+      title: "Which decision? The tactical level: which maneuver, and when",
+      notes: "Three decision levels after Michon. The tactical level answers what maneuver to perform, when and how, over a few seconds. The industrial starting point is a set of ADAS features already validated.",
       html: `<div class="row grow">
-        <div class="card col" style="flex:1.25 1 0"><h4>Running example: the primary LiDAR loses range</h4>${fig("responses.png", "Responses of reliable, robust, fault-tolerant, fail-safe and fail-operational systems")}</div>
+        <div class="card col" style="flex:1.2 1 0"><h4>Michon's three levels</h4>${fig("michon.png", "Michon's levels of the driving task")}</div>
         <div class="col grow">
-          <div class="card accent"><h3>Fail-operational</h3><p>Under faults or degraded operating conditions, the system continues to perform its driving task, possibly with a <b>reduced set of capabilities</b>, while preserving at all times the possibility of reaching a <b>minimal risk condition</b>.</p></div>
-          <div class="card"><h3>Fail-safe</h3><p>On a failure that prevents the function from continuing, transition to a minimal risk condition. The mission is aborted.</p></div>
-          <div class="card amber"><h4>Scope of the thesis</h4><p>Degradations, such as fog, that reduce performance without a fault and without interrupting the function.</p></div>
+          <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
+          <div class="card tight amber"><span class="pill amber">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
+          <div class="card tight"><span class="pill gray">Operational · 1 s to 10 ms</span><p class="small" style="margin-top:8px">Trajectory, control and stabilization</p></div>
+          <div class="card navy"><h3>Contribution of the thesis</h3><p>An anticipatory tactical layer that keeps the vehicle within what it can ensure, over ADAS features already validated.</p></div>
         </div></div>` },
+
+    { id: "methods", sec: "intro", kicker: "State of the art · tactical decision-making", ref: "§3.3", time: 60,
+      title: "How do existing methods decide?",
+      notes: "The state of the art in one table, the synthesis of the survey, table of chapter 3. Probabilistic methods handle uncertainty and long horizons at a computational cost, which online sampling solvers mitigate. Learning-based methods scale but give no guarantee. In all families, the context describes the scene.",
+      html: `<table class="tbl" style="font-size:24px"><tr><th>Method</th><th class="c">Uncert.</th><th class="c">Scal.</th><th class="c">Unseen</th><th class="c">Horizon</th><th class="c">Explain.</th><th class="c">Cost</th><th class="c">Real time</th><th>Main limitation</th></tr>
+        <tr><td><b>Rule-based</b></td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td>Limited to the encoded cases, one maneuver at a time</td></tr>
+        <tr class="hl"><td><b>Probabilistic</b></td><td class="c">++</td><td class="c">+</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−</td><td class="c">+</td><td>Cost grows with the state and belief spaces</td></tr>
+        <tr><td><b>Learning-based</b></td><td class="c">+</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td class="c">−</td><td class="c">−</td><td class="c">+</td><td>Black box, no safety guarantee, sim-to-real gap</td></tr>
+        <tr><td><b>Hybrid</b></td><td class="c">++</td><td class="c">−</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−−</td><td class="c">+</td><td>Scalability and computational cost</td></tr></table>
+        <div class="row grow">
+          <div class="card grow"><h4>Families reviewed</h4><ul class="list">
+            <li><b>Rule-based:</b> finite and hierarchical state machines, behavior trees, fuzzy logic</li>
+            <li><b>Probabilistic:</b> game theory, decision networks, MDP, POMDP</li>
+            <li><b>Learning-based:</b> SVM, decision trees, neural networks, reinforcement learning</li>
+            <li><b>Hybrid:</b> rules combined with learning</li></ul></div>
+          <div class="card navy grow"><h3>What this thesis keeps, and what is missing</h3><ul class="chk">
+            <li class="y">Probabilistic planning: sequential decisions over a long horizon, explainable</li>
+            <li class="n">In every family, the context “is used to describe the scene, not to assess whether the vehicle remains capable of operating safely in it”</li></ul></div>
+        </div>`,
+      backups: ["b-learning"] },
 
     { id: "positioning", sec: "intro", kicker: "Positioning", ref: "§3.4 – §3.5", time: 75,
       title: "What is missing in the state of the art?",
@@ -179,10 +254,11 @@
         </div>
         <p class="xs mute" style="margin:0;text-align:right">Gaps identified in the survey: R. Cardenas et al., IEEE Transactions on Intelligent Vehicles, 2025</p>` },
 
-    { id: "architecture", sec: "intro", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 70, steps: 1,
-      title: "ODD-aptive: three decision layers, from the context to the vehicle commands",
-      notes: "The architecture of chapter 4, Figure 4.1, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. Next step: inside the tactical layer, the MCE, the planning horizon builder, the state predictor and the policy planner. Capability precedes choice: E1 to E3 build what is ensured, E4 chooses among it. The next slide zooms in.",
-      html: `<div class="ar">
+    { id: "architecture", sec: "intro", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 150, steps: 5,
+      title: "ODD-aptive: three decision layers, and inside the tactical one",
+      notes: "The architecture of chapter 4, Figure 4.1, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. (1) Zoom into the tactical layer. The current state, or belief, becomes the root s0 of the planning horizon builder. (2) For each state, the builder queries the MCE, which monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (3) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead; query and prediction repeat up to the horizon H. (4) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (5) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state.",
+      html: `<div class="ar zm">
+        <div class="ov" data-dim="1">
         <div class="frm" style="left:0;top:0;width:340px;height:712px"><span class="frt">Input preparation</span></div>
         <div class="pn" style="left:14px;top:40px;width:312px;height:160px"><div class="ph"><span class="k">A</span>Context sources</div>
           <div class="pb"><div><b>Perception &amp; localization</b><div class="t">cameras · LiDAR · radar · GNSS</div></div><div><b>V2X</b> <span class="t">vehicles, infrastructure</span></div><div><b>Digital map</b> <span class="t">road topology</span></div></div></div>
@@ -194,65 +270,40 @@
         <div class="pn" style="left:430px;top:0;width:940px;height:196px"><div class="ph"><span class="k">D</span>Strategic layer<span class="s">Mission and route planning at the road-network level</span></div>
           <div class="pb row"><img src="${F}arch_city.jpg" alt="Route on a city map" style="width:640px;height:107px;border-radius:8px"><div class="rp"><b>Route plan <i>𝓡</i></b><ul><li>Road segments</li><li>Upcoming exit</li><li>Destination</li></ul></div></div></div>
 
-        <div class="pn tac" style="left:430px;top:260px;width:940px;height:506px"><div class="ph"><span class="k">E</span>Tactical layer<span class="s">Maneuver decisions with ensured maneuver capabilities</span><span class="tag">Contribution</span></div></div>
-        <div class="q" data-until="1" style="left:430px;top:340px;width:940px"><div class="qm">?</div><div class="qt">Which maneuver, and when?</div></div>
-        <div class="mb" data-step="1" style="left:460px;top:420px;width:240px;height:140px"><span><b>E2</b> Planning horizon builder</span><span class="t">grows the tree of predicted states from <i>s</i><sub>0</sub></span></div>
-        <div class="mb" data-step="1" style="left:780px;top:318px;width:290px;height:100px"><span><b>E1</b> MCE · monitoring</span><span class="t">which maneuvers are ensured in <i>s<sub>i</sub></i></span></div>
-        <div class="mb" data-step="1" style="left:780px;top:562px;width:290px;height:100px"><span><b>E3</b> State predictor</span><span class="t">next states, with the electronic horizon</span></div>
-        <div class="mb cho" data-step="1" style="left:1116px;top:420px;width:234px;height:140px"><span><b>E4</b> Policy planner</span><span class="t">reward and solver, only among ensured maneuvers</span></div>
-        <div data-step="1" style="left:1116px;top:572px;width:234px;text-align:center"><div class="eqs"><i>π</i>(<i>s</i>) = <i>A</i><sub>1</sub> → <i>A</i><sub>2</sub> → <i>A</i><sub>3</sub></div><div class="t">a sequence of maneuvers</div></div>
-        <div class="pr" data-step="1" style="left:460px;top:690px;width:880px"><b>Capability precedes choice</b>: E1 – E3 build what is ensured, E4 chooses only among it</div>
+        <div class="pn tac" style="left:430px;top:262px;width:940px;height:447px"><div class="ph"><span class="k">E</span>Tactical layer<span class="s">Maneuver decisions with ensured maneuver capabilities</span><span class="tag">Contribution</span></div></div>
 
-        <div class="pn" style="left:1460px;top:260px;width:332px;height:506px"><div class="ph"><span class="k">F</span>Operational layer</div></div>
-        <div class="pn sb" style="left:1474px;top:308px;width:304px;height:172px"><div class="ph"><span class="k">F1</span>ADAS features selector</div><img src="${F}arch_adas.png" alt="ACC, LCA, SALC and MRM execution" style="width:288px;margin:6px 6px 0"></div>
-        <div class="pn sb" style="left:1474px;top:518px;width:304px;height:104px"><div class="ph"><span class="k">F2</span>Trajectory planner</div><img src="${F}arch_traj.jpg" alt="Reference trajectory" style="width:288px;margin:4px 6px 0"></div>
-        <div class="pn sb" style="left:1474px;top:658px;width:304px;height:96px"><div class="ph"><span class="k">F3</span>Low-level control</div><div class="pb ctr" style="justify-content:center;flex:1">Lateral and longitudinal control</div></div>
+        <div class="pn" style="left:1460px;top:262px;width:332px;height:447px"><div class="ph"><span class="k">F</span>Operational layer</div></div>
+        <div class="pn sb" style="left:1474px;top:304px;width:304px;height:164px"><div class="ph"><span class="k">F1</span>ADAS features selector</div><img src="${F}arch_adas.png" alt="ACC, LCA, SALC and MRM execution" style="width:288px;margin:6px 6px 0"></div>
+        <div class="pn sb" style="left:1474px;top:498px;width:304px;height:96px"><div class="ph"><span class="k">F2</span>Trajectory planner</div><img src="${F}arch_traj.jpg" alt="Reference trajectory" style="width:288px;margin:2px 6px 0"></div>
+        <div class="pn sb" style="left:1474px;top:622px;width:304px;height:78px"><div class="ph"><span class="k">F3</span>Low-level control</div><div class="pb ctr" style="justify-content:center;flex:1;padding:4px 8px">Lateral and longitudinal control</div></div>
 
         <svg class="wires" viewBox="0 0 1792 852" aria-hidden="true">
-          <defs><marker id="arA-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#063669"/></marker>
-          <marker id="arA-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#a8237e"/></marker></defs>
+          <defs><marker id="arA-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#063669"/></marker></defs>
           <g marker-end="url(#arA-n)">
             <path class="w" d="M170 200 V234"/><path class="w" d="M170 330 V364"/>
             <path class="w" d="M326 284 H392 V100 H426"/>
-            <path class="w" d="M326 520 H426"/><path class="w" d="M900 196 V256"/>
+            <path class="w" d="M326 520 H426"/><path class="w" d="M900 196 V258"/>
             <path class="w" d="M1370 380 H1470"/>
-            <path class="w" d="M1626 480 V514"/><path class="w" d="M1626 622 V654"/>
-            <path class="w" d="M1626 754 V806 H344"/><path class="w" d="M170 752 V716"/>
+            <path class="w" d="M1626 468 V494"/><path class="w" d="M1626 594 V618"/>
+            <path class="w" d="M1626 700 V806 H344"/><path class="w" d="M170 752 V716"/>
           </g>
           <text class="vl" transform="translate(381 192) rotate(-90)" text-anchor="middle">Map + ego pose</text>
-          <g data-step="1">
-            <path class="w" d="M428 520 H456" marker-end="url(#arA-n)"/>
-            <path class="w" d="M600 420 V368 H776" marker-start="url(#arA-n)" marker-end="url(#arA-n)"/>
-            <path class="w" d="M600 560 V612 H776" marker-start="url(#arA-n)" marker-end="url(#arA-n)"/>
-            <path class="w mg" d="M700 500 H1110" marker-end="url(#arA-m)"/>
-            <path class="w" d="M1233 420 V380 H1372"/>
-          </g>
         </svg>
         <div class="sig" style="left:182px;top:207px">Observations</div>
         <div class="sig" style="left:182px;top:331px;font-size:13.5px;line-height:1.15">Integrated world<br>representation</div>
         <div class="sig" style="left:346px;top:466px">Current<br>state <i>s</i><sub>0</sub></div>
-        <div class="sig" style="left:914px;top:212px">Route plan <i>𝓡</i>: road segments, upcoming exit, destination</div>
-        <div class="sig" style="left:1080px;top:344px;width:282px;text-align:right">Current action <i>a<sub>t</sub></i> = (<i>m<sub>t</sub></i>, <i>θ<sub>t</sub></i>)</div>
-        <div class="sig" style="left:1638px;top:485px">Selected feature + <i>θ<sub>t</sub></i></div>
-        <div class="sig" style="left:1638px;top:626px">Reference trajectory <i>T</i></div>
+        <div class="sig" style="left:914px;top:214px">Route plan <i>𝓡</i>: road segments, upcoming exit, destination</div>
+        <div class="sig zh" style="left:1080px;top:344px;width:282px;text-align:right">Current action <i>a<sub>t</sub></i> = (<i>m<sub>t</sub></i>, <i>θ<sub>t</sub></i>)</div>
+        <div class="sig" style="left:1638px;top:470px">Selected feature + <i>θ<sub>t</sub></i></div>
+        <div class="sig" style="left:1638px;top:596px">Reference trajectory <i>T</i></div>
         <div class="sig" style="left:1180px;top:778px">Control commands <i>u<sub>t</sub></i></div>
         <div class="sig" style="left:182px;top:722px">Measurements</div>
-        <div class="sig" data-step="1" style="left:466px;top:336px"><i>s<sub>i</sub></i> → <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div>
-        <div class="sig" data-step="1" style="left:466px;top:618px">(<i>s<sub>i</sub></i>, <i>a</i>, <i>s′</i>)</div>
-        <div class="sig mg" data-step="1" style="left:728px;top:468px">MDP / POMDP with ensured maneuvers</div>
-      </div>` },
+        </div>
+        <div class="q" data-until="1" style="left:430px;top:372px;width:940px"><div class="qm">?</div><div class="qt">Which maneuver, and when?</div></div>
 
-    { id: "tactical", sec: "intro", c: ["C1", "C2", "C3"], kicker: "ODD-aptive · tactical layer", ref: "§4.3", time: 100, steps: 3,
-      title: "Tactical layer: capability in every predicted state, then a sequence of maneuvers",
-      notes: "Zoom into the tactical layer. (0) The current state, or the belief, becomes the root s0 of the planning horizon, and the planning horizon builder queries the MCE with each state. The MCE monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (1) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead. The builder repeats query and prediction up to the horizon H. (2) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (3) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state.",
-      html: `<div class="ar zoom">
-        <div class="pn" style="left:0;top:372px;width:186px;height:236px"><div class="ph"><span class="k">C</span>State</div>
-          <div class="pb ctr" style="padding:6px 8px;gap:4px"><div class="eqs"><i>s</i><sub>0</sub> / <i>b</i><sub>0</sub></div><div class="t">(OD, <i>p</i><sub>ego</sub>, {<i>p<sub>i</sub></i>})</div><img src="${F}arch_od.jpg" alt="Operational domain" style="width:168px"><img src="${F}arch_scen.jpg" alt="Dynamic scenario" style="width:168px"></div></div>
-        <div class="dchip" style="left:1300px;top:0"><span class="k">D</span>Route plan <i>𝓡</i><span class="t2">road segments, upcoming exit, destination</span></div>
-        <div class="efrm" style="left:206px;top:56px;width:1586px;height:584px"></div>
-        <div class="elbl" style="left:228px;top:64px">E · Tactical layer · ODD-aptive</div>
+        <div class="pn after" data-step="1" style="left:110px;top:386px;width:552px;height:240px"><div class="ph"><span class="k">E2</span>Planning horizon builder<span class="s">states (MDP) · beliefs (POMDP)</span></div></div>
 
-        <div class="pn" style="left:228px;top:96px;width:552px;height:240px"><div class="ph"><span class="k">E1</span>Maneuver Capability Estimator<span class="tag cap">Monitoring</span></div>
+        <div class="pn" data-step="2" style="left:110px;top:96px;width:552px;height:240px"><div class="ph"><span class="k">E1</span>Maneuver Capability Estimator<span class="tag cap">Monitoring</span></div>
           <div class="mce">
             <div><h5>Sense</h5><span class="sk l">Sense skill 1</span><span class="sk b">Sense skill 2</span><span class="sk k">Sense skill 3</span></div>
             <div><h5>Think</h5><span class="sk l">Think skill 1</span><span class="sk b">Think skill 2</span><span class="sk k">Think skill 3</span></div>
@@ -260,16 +311,14 @@
           </div>
           <div class="lg"><span class="sk k sw"></span>KL requires <span class="sk l sw"></span>LCL requires · ensured if all its skills hold in <i>s<sub>i</sub></i></div></div>
 
-        <div class="pn" style="left:228px;top:386px;width:552px;height:240px"><div class="ph"><span class="k">E2</span>Planning horizon builder<span class="s">states (MDP) · beliefs (POMDP)</span></div></div>
-
-        <div class="pn mg" data-step="2" style="left:878px;top:96px;width:400px;height:240px"><div class="ph"><span class="k"><i>𝓜</i></span>MDP / POMDP with ensured maneuvers</div>
+        <div class="pn mg" data-step="4" style="left:760px;top:96px;width:400px;height:240px"><div class="ph"><span class="k"><i>𝓜</i></span>MDP / POMDP with ensured maneuvers</div>
           <div class="pb"><ul class="ls"><li>States <i>s<sub>i</sub></i>, or beliefs <i>b<sub>i</sub></i>, up to horizon <i>H</i></li><li>Actions restricted to <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</li><li>Predicted transitions (<i>s<sub>i</sub></i>, <i>a</i>, <i>s′</i>)</li></ul><div class="t" style="margin-top:4px"><b class="mgt">Capability enters the model</b> before the policy is optimized</div></div></div>
 
-        <div class="pn" data-step="1" style="left:878px;top:430px;width:400px;height:196px"><div class="ph"><span class="k">E3</span>State predictor<span class="s">+ electronic horizon (V2X)</span></div>
+        <div class="pn" data-step="3" style="left:760px;top:430px;width:400px;height:196px"><div class="ph"><span class="k">E3</span>State predictor<span class="s">+ electronic horizon (V2X)</span></div>
           <div class="e3"><figure><img src="${F}arch_e3in.jpg" alt="Input state and lane change to the left"><figcaption>state <i>s<sub>i</sub></i> + maneuver <i>a</i></figcaption></figure><span class="ar1">→</span><figure><img src="${F}arch_e3out.jpg" alt="Predicted state"><figcaption>predicted state <i>s′</i></figcaption></figure></div>
           <div class="eqs" style="text-align:center;font-size:19px"><i>s′</i> = <i>f</i>(<i>s<sub>i</sub></i>, <i>a</i>), &nbsp;<i>a</i> ∈ <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div></div>
 
-        <div class="pn" data-step="2" style="left:1328px;top:104px;width:444px;height:522px"><div class="ph"><span class="k">E4</span>Policy planner<span class="tag cho">Choice</span></div>
+        <div class="pn" data-step="4" style="left:1210px;top:130px;width:566px;height:496px"><div class="ph"><span class="k">E4</span>Policy planner<span class="tag cho">Choice</span></div>
           <div class="e4">
             <div class="blk"><div class="sh"><span class="k">E4.1</span>Reward evaluation</div>
               <table class="rw"><tr><td>Safety</td><td>collision, TTC / TIV risk</td><td><i>R</i><sub>col</sub>, <i>R</i><sub>risk</sub></td></tr>
@@ -279,83 +328,75 @@
                 <tr><td>Operability</td><td>ensured maneuvers, MRM</td><td><i>R</i><sub>op</sub>, <i>R</i><sub>time</sub></td></tr></table>
               <div class="eqs" style="text-align:center;margin-top:6px"><i>R</i>(<i>s</i>) = Σ<sub><i>k</i></sub> <i>W<sub>k</sub></i> <i>R<sub>k</sub></i>(<i>s</i>)</div></div>
             <div class="blk"><div class="sh"><span class="k">E4.2</span>Solver</div>
-              <div class="eqs" style="font-size:18.5px;text-align:center"><i>V</i>(<i>s</i>) = max<sub><i>a</i> ∈ <i>A</i><sub>ens</sub>(<i>s</i>)</sub> [ <i>R</i>(<i>s</i>, <i>a</i>) + <i>γ</i> Σ<sub><i>s′</i></sub> <i>P</i>(<i>s′</i> | <i>s</i>, <i>a</i>) <i>V</i>(<i>s′</i>) ]</div>
+              <div class="eqs" style="font-size:20px;text-align:center"><i>V</i>(<i>s</i>) = max<sub><i>a</i> ∈ <i>A</i><sub>ens</sub>(<i>s</i>)</sub> [ <i>R</i>(<i>s</i>, <i>a</i>) + <i>γ</i> Σ<sub><i>s′</i></sub> <i>P</i>(<i>s′</i> | <i>s</i>, <i>a</i>) <i>V</i>(<i>s′</i>) ]</div>
               <div class="t" style="text-align:center">MDP: value iteration · POMDP: Monte Carlo tree search</div>
               <div class="cpc1">The max runs over <i>A</i><sub>ens</sub>(<i>s</i>) only: <b>capability precedes choice</b></div></div>
             <div class="po">Solver output: the policy <i>π</i></div>
           </div></div>
 
-        <div class="outc" data-step="3" style="left:206px;top:668px;width:1210px;height:184px">
+        <div class="outc" data-step="5" style="left:110px;top:660px;width:1340px;height:176px">
           <div class="o1"><div class="ot">Output: a sequence of maneuvers</div><div class="eqs big"><i>π</i>(<i>s</i><sub>0</sub>) = <i>A</i><sub>1</sub> → <i>A</i><sub>2</sub> → <i>A</i><sub>3</sub></div><div class="t">here keep lane → change left → change right</div></div>
-          <img src="${F}arch_pol.jpg" alt="Sequence KL, LCL, LCR" style="width:520px;border-radius:8px">
+          <img src="${F}arch_pol.jpg" alt="Sequence KL, LCL, LCR" style="width:540px;border-radius:8px">
           <div class="o3"><b>Only <i>A</i><sub>1</sub> is executed</b><div class="t">then the plan is rebuilt from the new state (receding horizon)</div></div></div>
-        <div class="pn" data-step="3" style="left:1512px;top:668px;width:280px;height:184px"><div class="ph"><span class="k">F1</span>ADAS features selector</div><img src="${F}arch_adas.png" alt="ACC, LCA, SALC and MRM execution" style="width:264px;margin:8px 5px 0"></div>
 
         <svg class="wires" viewBox="0 0 1792 852" aria-hidden="true">
           <defs><marker id="arB-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#063669"/></marker>
           <marker id="arB-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#a8237e"/></marker></defs>
-          <g data-step="3"><path class="w am" d="M290 535 L470 490 L640 522 L724 522"/></g>
-          <path class="w" d="M186 535 H258" marker-end="url(#arB-n)"/>
-          <g class="nd"><circle cx="290" cy="535" r="28"/><text class="nt" x="290" y="537">s₀</text></g>
-          <g>
-            <path class="w" d="M380 384 V340" marker-end="url(#arB-n)"/>
-            <path class="w" d="M640 338 V382" marker-end="url(#arB-n)"/>
-            <path class="w" d="M317 528 L444 497" marker-end="url(#arB-n)"/>
-            <path class="w" d="M316 546 L444 581" marker-end="url(#arB-n)"/>
-            <path class="w bad" d="M300 562 L321 603"/><text class="xx" x="325" y="613">✕</text>
-            <text class="el" x="366" y="503">KL</text><text class="el" x="384" y="586">LCL</text><text class="el bad" x="250" y="606">LCR</text>
+          <g transform="translate(-118 0)">
+            <g data-step="5"><path class="w am" d="M290 535 L470 490 L640 522 L724 522"/></g>
+            <g class="after" data-step="1"><path class="w" d="M124 535 H258" marker-end="url(#arB-n)"/>
+              <g class="nd"><circle cx="290" cy="535" r="28"/><text class="nt" x="290" y="537">s₀</text></g></g>
+            <g data-step="2">
+              <path class="w" d="M380 384 V340" marker-end="url(#arB-n)"/>
+              <path class="w" d="M640 338 V382" marker-end="url(#arB-n)"/>
+              <path class="w" d="M317 528 L444 497" marker-end="url(#arB-n)"/>
+              <path class="w" d="M316 546 L444 581" marker-end="url(#arB-n)"/>
+              <path class="w bad" d="M300 562 L321 603"/><text class="xx" x="325" y="613">✕</text>
+              <text class="el" x="366" y="503">KL</text><text class="el" x="384" y="586">LCL</text><text class="el bad" x="250" y="606">LCR</text>
+            </g>
+            <g data-step="3">
+              <path class="w" d="M780 470 H874" marker-end="url(#arB-n)"/>
+              <path class="w" d="M878 590 H784" marker-end="url(#arB-n)"/>
+              <path class="w" d="M492 486 L616 472" marker-end="url(#arB-n)"/>
+              <path class="w" d="M491 497 L617 517" marker-end="url(#arB-n)"/>
+              <path class="w" d="M492 588 L616 584" marker-end="url(#arB-n)"/>
+              <path class="w bad" d="M486 603 L540 613"/><text class="xx" x="546" y="620">✕</text>
+              <text class="el" x="546" y="471">KL</text><text class="el" x="530" y="530">LCL</text><text class="el" x="546" y="580">KL</text>
+              <g class="nd p"><circle cx="470" cy="490" r="22"/><text class="nt" x="470" y="492">s₁</text></g>
+              <g class="nd p"><circle cx="470" cy="588" r="22"/><text class="nt" x="470" y="590">s₂</text></g>
+              <g class="nd p"><circle cx="640" cy="470" r="20"/><text class="nt sm" x="640" y="472">s₃</text></g>
+              <g class="nd p"><circle cx="640" cy="522" r="20"/><text class="nt sm" x="640" y="524">s₄</text></g>
+              <g class="nd p"><circle cx="640" cy="584" r="20"/><text class="nt sm" x="640" y="586">s₅</text></g>
+              <text class="dots" x="700" y="476">…</text><text class="dots" x="700" y="590">…</text>
+              <text class="dl" x="290" y="446">depth 0</text><text class="dl" x="470" y="446">depth 1</text><text class="dl" x="640" y="446">depth 2</text><text class="dl" x="738" y="446">… <tspan font-style="italic" font-family="Cambria Math, serif">H</tspan></text>
+              <text class="el bad" x="672" y="616" style="font-size:13px">✕ not ensured</text>
+            </g>
+            <g data-step="5">
+              <circle class="ring" cx="470" cy="490" r="27"/><circle class="ring" cx="640" cy="522" r="25"/>
+              <text class="el am" x="680" y="514">LCR</text>
+            </g>
           </g>
-          <g data-step="1">
-            <path class="w" d="M780 470 H874" marker-end="url(#arB-n)"/>
-            <path class="w" d="M878 590 H784" marker-end="url(#arB-n)"/>
-            <path class="w" d="M492 486 L616 472" marker-end="url(#arB-n)"/>
-            <path class="w" d="M491 497 L617 517" marker-end="url(#arB-n)"/>
-            <path class="w" d="M492 588 L616 584" marker-end="url(#arB-n)"/>
-            <path class="w bad" d="M486 603 L540 613"/><text class="xx" x="546" y="620">✕</text>
-            <text class="el" x="546" y="471">KL</text><text class="el" x="530" y="530">LCL</text><text class="el" x="546" y="580">KL</text>
-            <g class="nd p"><circle cx="470" cy="490" r="22"/><text class="nt" x="470" y="492">s₁</text></g>
-            <g class="nd p"><circle cx="470" cy="588" r="22"/><text class="nt" x="470" y="590">s₂</text></g>
-            <g class="nd p"><circle cx="640" cy="470" r="20"/><text class="nt sm" x="640" y="472">s₃</text></g>
-            <g class="nd p"><circle cx="640" cy="522" r="20"/><text class="nt sm" x="640" y="524">s₄</text></g>
-            <g class="nd p"><circle cx="640" cy="584" r="20"/><text class="nt sm" x="640" y="586">s₅</text></g>
-            <text class="dots" x="700" y="476">…</text><text class="dots" x="700" y="590">…</text>
-            <text class="dl" x="290" y="446">depth 0</text><text class="dl" x="470" y="446">depth 1</text><text class="dl" x="640" y="446">depth 2</text><text class="dl" x="738" y="446">… <tspan font-style="italic" font-family="Cambria Math, serif">H</tspan></text>
-            <text class="el bad" x="672" y="616" style="font-size:13px">✕ not ensured</text>
+          <g data-step="4">
+            <path class="w mg" d="M662 410 H712 V214 H754" marker-end="url(#arB-m)"/>
+            <path class="w mg" d="M1160 214 H1204" marker-end="url(#arB-m)"/>
+            <path class="w" d="M1250 74 V126" marker-end="url(#arB-n)"/>
           </g>
-          <g data-step="2">
-            <path class="w mg" d="M780 410 H830 V214 H872" marker-end="url(#arB-m)"/>
-            <path class="w mg" d="M1278 214 H1322" marker-end="url(#arB-m)"/>
-            <path class="w" d="M1546 40 V100" marker-end="url(#arB-n)"/>
-          </g>
-          <g data-step="3">
-            <circle class="ring" cx="470" cy="490" r="27"/><circle class="ring" cx="640" cy="522" r="25"/>
-            <text class="el am" x="680" y="514">LCR</text>
-            <path class="w" d="M1380 626 V664" marker-end="url(#arB-n)"/>
-            <path class="w" d="M1416 760 H1508" marker-end="url(#arB-n)"/>
+          <g data-step="5">
+            <path class="w" d="M1330 626 V656" marker-end="url(#arB-n)"/>
+            <path class="w" d="M1450 748 H1782" marker-end="url(#arB-n)"/>
           </g>
         </svg>
-        <div class="sig" style="left:192px;top:500px"><i>s</i><sub>0</sub></div>
-        <div class="sig" style="left:222px;top:349px;width:150px;text-align:right">Query with state <i>s<sub>i</sub></i></div>
-        <div class="sig" style="left:650px;top:347px"><i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div>
-        <div class="sig" data-step="1" style="left:786px;top:440px"><i>s<sub>i</sub></i>, <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div>
-        <div class="sig" data-step="1" style="left:790px;top:597px">(<i>s<sub>i</sub></i>, <i>a</i>, <i>s′</i>)</div>
-        <div class="sig" data-step="3" style="left:1392px;top:638px">policy <i>π</i></div>
-        <div class="sig" data-step="3" style="left:1420px;top:728px"><i>a<sub>t</sub></i> = (<i>m<sub>t</sub></i>, <i>θ<sub>t</sub></i>)</div>
-        <div class="sig t" data-step="3" style="left:1424px;top:768px;line-height:1.15">current<br>action</div>
+        <div class="sig after" data-step="1" style="left:14px;top:498px"><i>s</i><sub>0</sub> / <i>b</i><sub>0</sub></div>
+        <div class="sig t after" data-step="1" style="left:14px;top:546px">from C</div>
+        <div class="sig" data-step="2" style="left:104px;top:349px;width:150px;text-align:right">Query with state <i>s<sub>i</sub></i></div>
+        <div class="sig" data-step="2" style="left:532px;top:347px"><i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div>
+        <div class="sig" data-step="3" style="left:668px;top:440px"><i>s<sub>i</sub></i>, <i>A</i><sub>ens</sub>(<i>s<sub>i</sub></i>)</div>
+        <div class="sig" data-step="3" style="left:672px;top:597px">(<i>s<sub>i</sub></i>, <i>a</i>, <i>s′</i>)</div>
+        <div class="sig" data-step="4" style="left:1262px;top:84px">Route plan <i>𝓡</i> from D: road segments, upcoming exit, destination</div>
+        <div class="sig" data-step="5" style="left:1342px;top:630px">policy <i>π</i></div>
+        <div class="sig" data-step="5" style="left:1490px;top:714px"><i>a<sub>t</sub></i> = (<i>m<sub>t</sub></i>, <i>θ<sub>t</sub></i>)</div>
+        <div class="sig t" data-step="5" style="left:1470px;top:758px;line-height:1.2">current action, to the<br>ADAS features selector (F1)</div>
       </div>` },
-
-    { id: "setup", sec: "intro", c: ["C4"], kicker: "Experimental platform", ref: "§6.2", time: 50,
-      title: "The same planner, from simulation to a real prototype",
-      notes: "Three loops that progressively replace simulated elements by real ones. The results of each part come from the software-in-the-loop; the last part shows the vehicle-in-the-loop. In both, ODD-aptive runs unchanged.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.2 1 0"><h4>From software-in-the-loop to vehicle-in-the-loop</h4>${fig("v_cycle.png", "Validation loops")}
-          <p class="small">Vehicle-in-the-loop: a Mégane E-Tech prototype on a test track. Its RTK position is replicated in CarMaker, the virtual traffic is perceived as if it were real, and the real ADAS features execute the requests.</p></div>
-        <div class="col grow">
-          <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker</span><span class="l">software-in-the-loop: road, traffic, conditions and vehicle dynamics</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">ROS node</span><span class="l">ODD-aptive sends a target lane and a set speed to the ADAS features</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">5 s · 3.5 s</span><span class="l">one lane change · one keep-lane or ±10 km/h step</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period; only the first maneuver is executed</span></div>
-        </div></div>` },
 
     { id: "contrib", type: "outline", sec: "intro", kicker: "Contributions and outline", ref: "§1.4", time: 60,
       title: "Four contributions, integrated into one architecture: ODD-aptive",
@@ -508,41 +549,8 @@
           <li class="to"><b>Choice</b>: chain maneuvers among the ensured ones, and check every predicted state</li></ul>
         <a class="next" data-go="sec-c2" href="#/sec-c2"><span class="cbadge solid">C2</span> How to decide without losing the fallback? →</a></div>` },
 
-    // ================================================================ 3. C2 · choice: ODD-constrained MDP, formalism, then the fog and highway exit use cases
+    // ================================================================ 3. C2 · choice: ODD-constrained MDP
     { id: "sec-c2", type: "section", sec: "c2", dark: true, title: "C2 · How to decide without losing the fallback?", time: 10 },
-
-    { id: "levels", sec: "c2", kicker: "Background · decision levels", ref: "§3.2", time: 50,
-      title: "Which decision? The tactical level: which maneuver, and when",
-      notes: "Three decision levels after Michon. The tactical level answers what maneuver to perform, when and how, over a few seconds. The industrial starting point is a set of ADAS features already validated.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.2 1 0"><h4>Michon's three levels</h4>${fig("michon.png", "Michon's levels of the driving task")}</div>
-        <div class="col grow">
-          <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
-          <div class="card tight amber"><span class="pill amber">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
-          <div class="card tight"><span class="pill gray">Operational · 1 s to 10 ms</span><p class="small" style="margin-top:8px">Trajectory, control and stabilization</p></div>
-          <div class="card navy"><h3>Contribution of the thesis</h3><p>An anticipatory tactical layer that keeps the vehicle within what it can ensure, over ADAS features already validated.</p></div>
-        </div></div>` },
-
-    { id: "methods", sec: "c2", kicker: "Related work · tactical decision-making", ref: "§3.3", time: 60,
-      title: "How do existing methods decide?",
-      notes: "Related work for this part: the synthesis of the survey, table of chapter 3. Probabilistic methods handle uncertainty and long horizons at a computational cost, which online sampling solvers mitigate. Learning-based methods scale but give no guarantee. In all families, the context describes the scene.",
-      html: `<table class="tbl" style="font-size:24px"><tr><th>Method</th><th class="c">Uncert.</th><th class="c">Scal.</th><th class="c">Unseen</th><th class="c">Horizon</th><th class="c">Explain.</th><th class="c">Cost</th><th class="c">Real time</th><th>Main limitation</th></tr>
-        <tr><td><b>Rule-based</b></td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td>Limited to the encoded cases, one maneuver at a time</td></tr>
-        <tr class="hl"><td><b>Probabilistic</b></td><td class="c">++</td><td class="c">+</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−</td><td class="c">+</td><td>Cost grows with the state and belief spaces</td></tr>
-        <tr><td><b>Learning-based</b></td><td class="c">+</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td class="c">−</td><td class="c">−</td><td class="c">+</td><td>Black box, no safety guarantee, sim-to-real gap</td></tr>
-        <tr><td><b>Hybrid</b></td><td class="c">++</td><td class="c">−</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−−</td><td class="c">+</td><td>Scalability and computational cost</td></tr></table>
-        <div class="row grow">
-          <div class="card grow"><h4>Families reviewed</h4><ul class="list">
-            <li><b>Rule-based:</b> finite and hierarchical state machines, behavior trees, fuzzy logic</li>
-            <li><b>Probabilistic:</b> game theory, decision networks, MDP, POMDP</li>
-            <li><b>Learning-based:</b> SVM, decision trees, neural networks, reinforcement learning</li>
-            <li><b>Hybrid:</b> rules combined with learning</li></ul></div>
-          <div class="card navy grow"><h3>What the ODD-MDP keeps, and what it adds</h3><ul class="chk">
-            <li class="y">Probabilistic planning: sequential decisions over a long horizon, explainable</li>
-            <li class="n">In every family, the context “is used to describe the scene, not to assess whether the vehicle remains capable of operating safely in it”</li>
-            <li class="to">The capability filter, in every predicted state</li></ul></div>
-        </div>`,
-      backups: ["b-learning"] },
 
     { id: "odd-mdp", sec: "c2", c: ["C2"], kicker: "Formalism", ref: "§5.2.1 – §5.2.3", time: 80,
       title: "The ODD-MDP: capability enters the Bellman equation",
@@ -731,7 +739,7 @@
           <li class="to">Keep capability before choice when the state is uncertain</li></ul>
         <a class="next" data-go="sec-c3" href="#/sec-c3"><span class="cbadge solid">C3</span> And when the vehicle is uncertain? →</a></div>` },
 
-    // ================================================================ 4. C3 · choice under uncertainty: ODD-constrained POMDP, then the results
+    // ================================================================ 4. C3 · choice under uncertainty: ODD-constrained POMDP
     { id: "sec-c3", type: "section", sec: "c3", dark: true, title: "C3 · And when the vehicle is uncertain?", time: 10 },
 
     { id: "pomdp-sources", sec: "c3", c: ["C3"], kicker: "Extension to partial observability", ref: "§5.3.1 – §5.3.2", time: 55,
@@ -905,6 +913,19 @@
 
     // ================================================================ 5. C4 · vehicle-in-the-loop
     { id: "sec-c4", type: "section", sec: "c4", dark: true, title: "C4 · Does it run on a real vehicle?", time: 10 },
+
+    { id: "setup", sec: "c4", c: ["C4"], kicker: "Experimental platform", ref: "§6.2", time: 50,
+      title: "The same planner, from simulation to a real prototype",
+      notes: "Three loops that progressively replace simulated elements by real ones. The results of each part come from the software-in-the-loop; the last part shows the vehicle-in-the-loop. In both, ODD-aptive runs unchanged.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.2 1 0"><h4>From software-in-the-loop to vehicle-in-the-loop</h4>${fig("v_cycle.png", "Validation loops")}
+          <p class="small">Vehicle-in-the-loop: a Mégane E-Tech prototype on a test track. Its RTK position is replicated in CarMaker, the virtual traffic is perceived as if it were real, and the real ADAS features execute the requests.</p></div>
+        <div class="col grow">
+          <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker</span><span class="l">software-in-the-loop: road, traffic, conditions and vehicle dynamics</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">ROS node</span><span class="l">ODD-aptive sends a target lane and a set speed to the ADAS features</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">5 s · 3.5 s</span><span class="l">one lane change · one keep-lane or ±10 km/h step</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period; only the first maneuver is executed</span></div>
+        </div></div>` },
 
     { id: "v-vil", type: "video", sec: "c4", c: ["C4"], ref: "§6.3.2", time: 95,
       title: "Long-term overtaking on the prototype vehicle",
