@@ -14,66 +14,65 @@
   const go = (id, text) => `<a class="go" data-go="${id}" href="#/${id}">${text}</a>`;
   const Uens = (s = "S") => `<i>U</i><sub>ens</sub>(<i>${s}</i>)`;
   const Aens = (s = "s") => `<i>A</i><sub>ens</sub>(<i>${s}</i>)`;
+  // in-text citation, as in an article: talk.js writes its number, [n]
+  const R = (...k) => `<cite class="cref" data-k="${k.join(",")}"></cite>`;
 
-  // references: [short label, full reference], from the manuscript's bibliography (HDSThesis.bbl)
+  // references, IEEE style, from the manuscript's bibliography: [foot of a slide, full reference]
   const BIB = {
-    "11097482": ["Cardenas et al., IEEE IV 2025", " — Cardenas, Adouane, Zinoune, et al. <i>ODD-Based Long-Term Decision-Making for Intelligent Vehicles</i>. 2025 IEEE Intelligent Vehicles Symposium (IV), 2025."],
-    "AVSC2021BehavioralCompetencies": ["AVSC, 2021", " — Automated Vehicle Safety Consortium. <i>AVSC Best Practice for Evaluation of Behavioral Competencies for Automated Driving System Dedicated Vehicles (ADS-DVs)</i>. SAE Industry Technologies Consortia, 2021."],
-    "CARDENAS2025162": ["Cardenas et al., IFAC 2025", " — Cardenas, Adouane, Zinoune, et al. <i>Assessing the Decisional Capability for an ODD-Compliant Automatic Lane Change System via Sense-Think-Act Paradigm</i>. IFAC-PapersOnLine, 2025."],
-    "Farah2021Awareness": ["Farah et al., IEEE T-ITS 2021", " — Farah, Bhusari, Gent, et al. <i>An Empirical Analysis to Assess the Operational Design Domain of Lane Keeping System Equipped Vehicles Combining Objective and Subjective Risk Measures</i>. IEEE Transactions on Intelligent Transportation Systems, 2021."],
-    "WANG2021surrogate": ["Wang et al., Accid. Anal. Prev. 2021", " — Wang, Xie, Huang, et al. <i>A review of surrogate safety measures and their applications in connected and automated vehicles safety modeling</i>. Accident Analysis Prevention, 2021."],
-    "alshiekh2018shielding": ["Alshiekh et al., AAAI 2018", " — Alshiekh, Bloem, Ehlers, et al. <i>Safe Reinforcement Learning via Shielding</i>. Proceedings of the AAAI Conference on Artificial Intelligence, 2018."],
-    "armand2014ontology": ["Armand et al., IEEE IV 2014", " — Armand, Filliat, Ibañez-Guzman. <i>Ontology-based context awareness for driving assistance systems</i>. 2014 IEEE Intelligent Vehicles Symposium Proceedings, 2014."],
-    "auer2002finite": ["Auer et al., Mach. Learn. 2002", " — Auer, Cesa-Bianchi, Fischer. <i>Finite-time Analysis of the Multiarmed Bandit Problem</i>. Machine Learning, 2002."],
-    "avizienis2004taxonomy": ["Avizienis et al., IEEE TDSC 2004", " — Avizienis, Laprie, Randell, et al. <i>Basic concepts and taxonomy of dependable and secure computing</i>. IEEE Transactions on Dependable and Secure Computing, 2004."],
-    "bellman1957MDP": ["Bellman, J. Math. Mech. 1957", " — Bellman. <i>A markovian decision process</i>. Journal of Mathematics and Mechanics, 1957."],
-    "bellman1957dynamic": ["Bellman, Princeton UP 1957", " — Bellman. <i>Dynamic Programming</i>. Princeton University Press, 1957."],
-    "bussemaker2014SensingRF": ["Bussemaker, thesis, TU Delft 2014", " — Bussemaker. <i>Sensing requirements for an automated vehicle for highway and rural environments</i>. TU Delft, 2014."],
-    "cardenas2025context_aware": ["Cardenas et al., IEEE T-IV 2025", " — Cardenas, Adouane, Zinoune, et al. <i>Context-Aware and Reliable Long-Term Decision-Making for Safe Intelligent Vehicles: A Survey</i>. IEEE Transactions on Intelligent Vehicles, 2025."],
-    "charmet2024monitoring": ["Charmet et al., IEEE ITSC 2024", " — Charmet, Cherfaoui, Ibanez-Guzman, et al. <i>Operational Design Domain Monitoring with Uncertain Measurements</i>. 2024 IEEE 27th International Conference on Intelligent Transportation Systems (ITSC), 2024."],
-    "chen2025intention": ["Chen et al., IEEE T-ITS 2025", " — Chen, Yan, Yu, et al. <i>Intention-Guided Heuristic Partially Observable Monte Carlo Planning for Off-Ramp Decision-Making of Autonomous Vehicles</i>. IEEE Transactions on Intelligent Transportation Systems, 2025."],
-    "cnn2026waymo": ["CNN, 2026", " — Lah. <i>Waymo robotaxis have run red lights, driven into closed and flooded roads, CNN finds</i>. CNN Investigates, 2026."],
-    "colwell_automated_2018": ["Colwell et al., IEEE IV 2018", " — Colwell, Phan, Saleem, et al. <i>An Automated Vehicle Safety Concept Based on Runtime Restriction of the Operational Design Domain</i>. 2018 IEEE Intelligent Vehicles Symposium (IV), 2018."],
-    "czarnecki2018operational": ["Czarnecki, WISE Lab 2018", " — Czarnecki. <i>Operational Design Domain for Automated Driving Systems: Taxonomy of Basic Terms</i>. Waterloo Intelligent Systems Engineering (WISE) Lab, University of Waterloo, Canada, 2018."],
-    "donges2015behaviormodels": ["Donges, 2014", " — Donges. <i>Driver Behavior Models</i>. Handbook of Driver Assistance Systems: Basic Information, Components and Systems for Active Safety and Comfort, 2014."],
-    "fail2022Stolte": ["Stolte et al., IEEE T-IV 2022", " — Stolte, Ackermann, Graubohm, et al. <i>Taxonomy to Unify Fault Tolerance Regimes for Automotive Systems: Defining Fail-Operational, Fail-Degraded, and Fail-Safe</i>. IEEE Transactions on Intelligent Vehicles, 2022."],
-    "fiedler2022hybrid": ["Fiedler et al., IEEE ITSC 2022", " — Fiedler, Gerwien, Knoll. <i>A Hybrid Tactical Decision-Making Approach in Automated Driving Combining Knowledge-Based Systems and Reinforcement Learning</i>. 2022 IEEE 25th ITSC, 2022."],
-    "glaser2010ttctiv": ["Glaser et al., IEEE T-ITS 2010", " — Glaser, Vanholme, Mammar, et al. <i>Maneuver-Based Trajectory Planning for Highly Autonomous Vehicles on Real Road With Traffic and Driver Interaction</i>. IEEE Transactions on Intelligent Transportation Systems, 2010."],
-    "hang2021gametheoric": ["Hang et al., IEEE T-ITS 2021", " — Hang, Lv, Xing, et al. <i>Human-Like Decision Making for Autonomous Driving: A Noncooperative Game Theoretic Approach</i>. IEEE T-ITS, 2021."],
-    "hasuo2022rss": ["Hasuo, arXiv 2022", " — Hasuo. <i>Responsibility-Sensitive Safety: an Introduction with an Eye to Logical Foundations and Formalization</i>. 2022."],
-    "hoel2019combiningdeep": ["Hoel et al., IEEE T-IV 2020", " — Hoel, Driggs-Campbell, Wolff, et al. <i>Combining Planning and Deep Reinforcement Learning in Tactical Decision Making for Autonomous Driving</i>. IEEE Transactions on Intelligent Vehicles, 2020."],
-    "hubmann2018uncertainty": ["Hubmann et al., IEEE T-IV 2018", " — Hubmann, Schulz, Becker, et al. <i>Automated Driving in Uncertain Environments: Planning With Interaction and Uncertain Maneuver Prediction</i>. IEEE Transactions on Intelligent Vehicles, 2018."],
-    "hullermeier2021aleatoric": ["Hüllermeier & Waegeman, Mach. Learn. 2021", " — Hüllermeier, Waegeman. <i>Aleatoric and epistemic uncertainty in machine learning: an introduction to concepts and methods</i>. Machine Learning, 2021."],
-    "ipgCarMaker": ["IPG CarMaker, 2024", " — IPG Automotive. <i>CarMaker 13.0.1</i>. 2024."],
-    "iso2018iso26262": ["ISO 26262, 2018", " — ISO. <i>Road Vehicles—Functional Safety</i>. International Organization for Standardization, 2018."],
-    "iso2020iso4804": ["ISO/TR 4804, 2020", " — ISO. <i>Road vehicles — Safety and cybersecurity for automated driving systems — Design, verification and validation</i>. International Organization for Standardization, 2020."],
-    "iso2023iso34503": ["ISO 34503, 2023", " — ISO. <i>Road Vehicles—Test Scenarios for Automated Driving Systems—Specification for Operational Design Domain</i>. International Organization for Standardization, 2023."],
-    "jatzkowski2021knowledge": ["Jatzkowski et al., IEEE IV 2021", " — Jatzkowski, Menzel, Bock, et al. <i>A Knowledge-based Approach for the Automatic Construction of Skill Graphs for Online Monitoring</i>. 2021 IEEE Intelligent Vehicles Symposium (IV), 2021."],
-    "krajewski2018highd": ["Krajewski et al., IEEE ITSC 2018", " — Krajewski, Bock, Kloeker, et al. <i>The highD Dataset: A Drone Dataset of Naturalistic Vehicle Trajectories on German Highways for Validation of Highly Automated Driving Systems</i>. IEEE International Conference on Intelligent Transportation Systems (ITSC), 2018."],
-    "krasowski2020safe": ["Krasowski et al., IEEE ITSC 2020", " — Krasowski, Wang, Althoff. <i>Safe Reinforcement Learning for Autonomous Lane Changing Using Set-Based Prediction</i>. IEEE International Conference on Intelligent Transportation Systems (ITSC), 2020."],
-    "kuehn2017takeover": ["Kuehn et al., ESV 2017", " — Kuehn, Vogelpohl, Vollrath. <i>Takeover Times in Highly Automated Driving (Level 3)</i>. Proceedings of the 25th International Technical Conference on the Enhanced Safety of Vehicles (ESV), 2017."],
-    "kuhn2021introspective": ["Kuhn et al., IEEE T-ITS 2021", " — Kuhn, Hofbauer, Petrovic, et al. <i>Introspective Failure Prediction for Autonomous Driving Using Late Fusion of State and Camera Information</i>. IEEE Transactions on Intelligent Transportation Systems, 2021."],
-    "li2021lcduration": ["Li et al., 2021", " — Li, Li, Ni. <i>Exploration of lane-changing duration for heavy vehicles and passenger cars: a survival analysis approach</i>. 2021."],
-    "michon1985critical": ["Michon, 1985", " — Michon. <i>A Critical View of Driver Behavior Models: What Do We Know, What Should We Do?</i>. Human Behavior and Traffic Safety, 1985."],
-    "murphy2012machine": ["Murphy, MIT Press 2012", " — Murphy. <i>Machine Learning: A Probabilistic Perspective</i>. MIT Press, 2012."],
-    "olsson2016BT": ["Olsson, thesis, KTH 2016", " — Olsson. <i>Behavior Trees for decision-making in Autonomous Driving</i>. KTH Royal Institute of Technology, 2016."],
-    "pior2020behaviorbased": ["Orzechowski et al., IEEE IV 2020", " — Orzechowski, Burger, Lauer. <i>Decision-Making for Automated Vehicles Using a Hierarchical Behavior-Based Arbitration Scheme</i>. 2020 IEEE IV Symposium, 2020."],
-    "rabiee2023introspective": ["Rabiee & Biswas, Artif. Intell. 2023", " — Rabiee, Biswas. <i>Introspective Perception for Mobile Robots</i>. Artificial Intelligence, 2023."],
-    "ref_claim_GM": ["Forbes, 2018", " — <i>Look, Ma. No Pedals No Steering Wheel! Autonomous Car Coming From GM in 2019</i>. Forbes. 2018."],
-    "ref_claim_Nissan": ["Nissan, 2013", " — <i>Nissan Announces Unprecedented Autonomous Drive Benchmarks</i>. Nissan Motor Co. News. 2013."],
-    "ref_claim_toyota": ["The Wall Street Journal, 2015", " — <i>Toyota Aims to Make Self-Driving Cars by 2020</i>. The Wall Street Journal. 2015."],
-    "renault2022cta": ["Renault Group, 2022", " — Deca, Rosain-Boussiquet. <i>Centre technique d'Aubevoye : 40 ans d'histoire(s) et de passion automobile</i>. Renault Group Magazine, 2022."],
-    "reschka2015ability": ["Reschka et al., IEEE IV 2015", " — Reschka, Bagschik, Ulbrich, et al. <i>Ability and skill graphs for system modeling, online monitoring, and decision support for vehicle guidance systems</i>. 2015 IEEE Intelligent Vehicles Symposium (IV), 2015."],
-    "sae2021taxonomy": ["SAE J3016, 2021", " — SAE International. <i>Taxonomy and Definitions for Terms Related to Driving Automation Systems for On-Road Motor Vehicles</i>. SAE Standard J3016_202104, 2021."],
-    "salvi2022fuzzy": ["Salvi et al., IEEE IV 2022", " — Salvi, Weiss, Trapp, et al. <i>Fuzzy Interpretation of Operational Design Domains in Autonomous Driving</i>. 2022 IEEE Intelligent Vehicles Symposium (IV), 2022."],
-    "schlatow2017selfawareness": ["Schlatow et al., DATE 2017", " — Schlatow, Moostl, Ernst, et al. <i>Self-awareness in autonomous automotive systems</i>. Design, Automation Test in Europe Conference Exhibition (DATE), 2017, 2017."],
-    "shwartz2017RSS": ["Shalev-Shwartz et al., arXiv 2017", " — Shalev-Shwartz, Shammah, Shashua. <i>On a Formal Model of Safe and Scalable Self-driving Cars</i>. CoRR, 2017."],
-    "silver_monte-carlo_2010": ["Silver & Veness, NeurIPS 2010", " — Silver, Veness. <i>Monte-Carlo Planning in Large POMDPs</i>. Advances in Neural Information Processing Systems, 2010."],
-    "sun2022operational": ["Sun, thesis, U. Waterloo 2022", " — Sun. <i>Operational Design Domain Monitoring and Augmentation for Autonomous Driving</i>. Univ. of Waterloo, 2022."],
-    "treiber2000congested": ["Treiber et al., Phys. Rev. E 2000", " — Treiber, Hennecke, Helbing. <i>Congested traffic states in empirical observations and microscopic simulations</i>. Physical Review E, 2000."],
-    "ulbrich2015pomdp": ["Ulbrich & Maurer, IEEE ITSC 2015", " — Ulbrich, Maurer. <i>Towards Tactical Lane Change Behavior Planning for Automated Vehicles</i>. 2015 IEEE 18th International Conference on Intelligent Transportation Systems, 2015."],
-    "woerter2021enhanced": ["Woerter et al., CARS 2021", " — Woerter, Kreutz, Salvi, et al. <i>Enhanced system awareness as basis for resilience of autonomous vehicles</i>. CARS 2021 6th International Workshop on Critical Automotive Applications: Robustness Safety, 2021."],
-    "zhang2020efficient": ["Zhang et al., IEEE ICRA 2020", " — Zhang, Ding, Chen, et al. <i>Efficient Uncertainty-aware Decision-making for Automated Driving Using Guided Branching</i>. 2020 IEEE International Conference on Robotics and Automation (ICRA), 2020."],
+    "11097482": ["R. Cardenas et al., “ODD-Based Long-Term Decision-Making for Intelligent Vehicles,” <i>IEEE IV</i>, 2025.", "R. Cardenas, L. Adouane, C. Zinoune, and M.-A. Benloucif, “ODD-Based Long-Term Decision-Making for Intelligent Vehicles,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, 2025, pp. 1215–1221."],
+    "AVSC2021BehavioralCompetencies": ["AVSC, <i>Evaluation of behavioral competencies for ADS-DVs</i>, Best Practice AVSC00008202111, 2021.", "Automated Vehicle Safety Consortium, <i>AVSC Best Practice for Evaluation of Behavioral Competencies for Automated Driving System Dedicated Vehicles (ADS-DVs)</i>, SAE Industry Technologies Consortia, Best Practice AVSC00008202111, 2021."],
+    "CARDENAS2025162": ["R. Cardenas et al., “Assessing the Decisional Capability for an ODD-Compliant Automatic Lane Change System via Sense-Think-Act Paradigm,” <i>IFAC-PapersOnLine</i>, 2025.", "R. Cardenas, L. Adouane, C. Zinoune, and M.-A. Benloucif, “Assessing the Decisional Capability for an ODD-Compliant Automatic Lane Change System via Sense-Think-Act Paradigm,” <i>IFAC-PapersOnLine</i>, vol. 59, no. 3, pp. 162–167, 2025."],
+    "Farah2021Awareness": ["H. Farah et al., “An Empirical Analysis to Assess the Operational Design Domain of Lane Keeping System Equipped Vehicles Combining Objective and Subjective Risk Measures,” <i>IEEE T-ITS</i>, 2021.", "H. Farah et al., “An Empirical Analysis to Assess the Operational Design Domain of Lane Keeping System Equipped Vehicles Combining Objective and Subjective Risk Measures,” <i>IEEE Transactions on Intelligent Transportation Systems</i>, vol. 22, no. 5, pp. 2589–2598, 2021."],
+    "WANG2021surrogate": ["C. Wang et al., “A review of surrogate safety measures and their applications in connected and automated vehicles safety modeling,” <i>Accid. Anal. Prev.</i>, 2021.", "C. Wang, Y. Xie, H. Huang, and P. Liu, “A review of surrogate safety measures and their applications in connected and automated vehicles safety modeling,” <i>Accident Analysis & Prevention</i>, vol. 157, Art. no. 106157, 2021."],
+    "alshiekh2018shielding": ["M. Alshiekh et al., “Safe Reinforcement Learning via Shielding,” <i>AAAI</i>, 2018.", "M. Alshiekh, R. Bloem, R. Ehlers, B. Könighofer, S. Niekum, and U. Topcu, “Safe Reinforcement Learning via Shielding,” in <i>Proc. AAAI Conference on Artificial Intelligence</i>, 2018, pp. 2669–2678."],
+    "armand2014ontology": ["A. Armand et al., “Ontology-based context awareness for driving assistance systems,” <i>IEEE IV</i>, 2014.", "A. Armand, D. Filliat, and J. Ibañez-Guzman, “Ontology-based context awareness for driving assistance systems,” in <i>Proc. IEEE Intelligent Vehicles Symposium</i>, 2014, pp. 227–233."],
+    "auer2002finite": ["P. Auer et al., “Finite-time Analysis of the Multiarmed Bandit Problem,” <i>Mach. Learn.</i>, 2002.", "P. Auer, N. Cesa-Bianchi, and P. Fischer, “Finite-time Analysis of the Multiarmed Bandit Problem,” <i>Machine Learning</i>, vol. 47, pp. 235–256, 2002."],
+    "avizienis2004taxonomy": ["A. Avizienis et al., “Basic concepts and taxonomy of dependable and secure computing,” <i>IEEE TDSC</i>, 2004.", "A. Avizienis, J.-C. Laprie, B. Randell, and C. Landwehr, “Basic concepts and taxonomy of dependable and secure computing,” <i>IEEE Transactions on Dependable and Secure Computing</i>, vol. 1, no. 1, pp. 11–33, 2004."],
+    "bellman1957MDP": ["R. Bellman, “A markovian decision process,” <i>J. Math. Mech.</i>, 1957.", "R. Bellman, “A markovian decision process,” <i>Journal of Mathematics and Mechanics</i>, vol. 6, no. 5, pp. 679–684, 1957."],
+    "bellman1957dynamic": ["R. Bellman, <i>Dynamic Programming</i>. Princeton University Press, 1957.", "R. Bellman, <i>Dynamic Programming</i>. Princeton University Press, 1957."],
+    "bussemaker2014SensingRF": ["K. J. Bussemaker, “Sensing requirements for an automated vehicle for highway and rural environments,” Master's thesis, TU Delft, 2014.", "K. J. Bussemaker, “Sensing requirements for an automated vehicle for highway and rural environments,” Master's thesis, TU Delft, 2014."],
+    "cardenas2025context_aware": ["R. Cardenas et al., “Context-Aware and Reliable Long-Term Decision-Making for Safe Intelligent Vehicles: A Survey,” <i>IEEE T-IV</i>, 2025.", "R. Cardenas, L. Adouane, C. Zinoune, and M.-A. Benloucif, “Context-Aware and Reliable Long-Term Decision-Making for Safe Intelligent Vehicles: A Survey,” <i>IEEE Transactions on Intelligent Vehicles</i>, vol. 10, no. 12, pp. 5288–5307, 2025."],
+    "charmet2024monitoring": ["T. Charmet et al., “Operational Design Domain Monitoring with Uncertain Measurements,” <i>IEEE ITSC</i>, 2024.", "T. Charmet, V. Cherfaoui, J. Ibañez-Guzman, and A. Armand, “Operational Design Domain Monitoring with Uncertain Measurements,” in <i>Proc. IEEE 27th International Conference on Intelligent Transportation Systems (ITSC)</i>, 2024, pp. 1023–1030."],
+    "chen2025intention": ["Y. Chen et al., “Intention-Guided Heuristic Partially Observable Monte Carlo Planning for Off-Ramp Decision-Making of Autonomous Vehicles,” <i>IEEE T-ITS</i>, 2025.", "Y. Chen, G. Yan, H. Yu, and J. Xi, “Intention-Guided Heuristic Partially Observable Monte Carlo Planning for Off-Ramp Decision-Making of Autonomous Vehicles,” <i>IEEE Transactions on Intelligent Transportation Systems</i>, vol. 26, no. 7, pp. 10834–10849, 2025."],
+    "colwell_automated_2018": ["I. Colwell et al., “An Automated Vehicle Safety Concept Based on Runtime Restriction of the Operational Design Domain,” <i>IEEE IV</i>, 2018.", "I. Colwell, B. Phan, S. Saleem, R. Salay, and K. Czarnecki, “An Automated Vehicle Safety Concept Based on Runtime Restriction of the Operational Design Domain,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, 2018, pp. 1910–1917."],
+    "czarnecki2018operational": ["K. Czarnecki, “Operational Design Domain for Automated Driving Systems: Taxonomy of Basic Terms,” <i>WISE Lab, Univ. of Waterloo</i>, 2018.", "K. Czarnecki, “Operational Design Domain for Automated Driving Systems: Taxonomy of Basic Terms,” <i>Waterloo Intelligent Systems Engineering (WISE) Lab, University of Waterloo, Canada</i>, 2018."],
+    "donges2015behaviormodels": ["E. Donges, “Driver Behavior Models,” in <i>Handbook of Driver Assistance Systems</i>, 2014.", "E. Donges, “Driver Behavior Models,” in <i>Handbook of Driver Assistance Systems: Basic Information, Components and Systems for Active Safety and Comfort</i>. Springer International Publishing, 2014, pp. 1–12."],
+    "fail2022Stolte": ["T. Stolte et al., “Taxonomy to Unify Fault Tolerance Regimes for Automotive Systems: Defining Fail-Operational, Fail-Degraded, and Fail-Safe,” <i>IEEE T-IV</i>, 2022.", "T. Stolte et al., “Taxonomy to Unify Fault Tolerance Regimes for Automotive Systems: Defining Fail-Operational, Fail-Degraded, and Fail-Safe,” <i>IEEE Transactions on Intelligent Vehicles</i>, vol. 7, no. 2, pp. 251–262, 2022."],
+    "fiedler2022hybrid": ["J. Fiedler et al., “A Hybrid Tactical Decision-Making Approach in Automated Driving Combining Knowledge-Based Systems and Reinforcement Learning,” <i>IEEE ITSC</i>, 2022.", "J. Fiedler, M. Gerwien, and C. Knoll, “A Hybrid Tactical Decision-Making Approach in Automated Driving Combining Knowledge-Based Systems and Reinforcement Learning,” in <i>Proc. IEEE 25th ITSC</i>, 2022, pp. 3478–3483."],
+    "glaser2010ttctiv": ["S. Glaser et al., “Maneuver-Based Trajectory Planning for Highly Autonomous Vehicles on Real Road With Traffic and Driver Interaction,” <i>IEEE T-ITS</i>, 2010.", "S. Glaser, B. Vanholme, S. Mammar, D. Gruyer, and L. Nouvelière, “Maneuver-Based Trajectory Planning for Highly Autonomous Vehicles on Real Road With Traffic and Driver Interaction,” <i>IEEE Transactions on Intelligent Transportation Systems</i>, vol. 11, no. 3, pp. 589–606, 2010."],
+    "hang2021gametheoric": ["P. Hang et al., “Human-Like Decision Making for Autonomous Driving: A Noncooperative Game Theoretic Approach,” <i>IEEE T-ITS</i>, 2021.", "P. Hang, C. Lv, Y. Xing, C. Huang, and Z. Hu, “Human-Like Decision Making for Autonomous Driving: A Noncooperative Game Theoretic Approach,” <i>IEEE T-ITS</i>, vol. 22, no. 4, pp. 2076–2087, 2021."],
+    "hasuo2022rss": ["I. Hasuo, “Responsibility-Sensitive Safety: an Introduction with an Eye to Logical Foundations and Formalization,” <i>arXiv</i>, 2022.", "I. Hasuo, “Responsibility-Sensitive Safety: an Introduction with an Eye to Logical Foundations and Formalization,” <i>arXiv preprint</i>, 2022."],
+    "hoel2019combiningdeep": ["C. Hoel et al., “Combining Planning and Deep Reinforcement Learning in Tactical Decision Making for Autonomous Driving,” <i>IEEE T-IV</i>, 2020.", "C. Hoel, K. Driggs-Campbell, K. Wolff, L. Laine, and M. J. Kochenderfer, “Combining Planning and Deep Reinforcement Learning in Tactical Decision Making for Autonomous Driving,” <i>IEEE Transactions on Intelligent Vehicles</i>, vol. 5, no. 2, pp. 294–305, 2020."],
+    "hubmann2018uncertainty": ["C. Hubmann et al., “Automated Driving in Uncertain Environments: Planning With Interaction and Uncertain Maneuver Prediction,” <i>IEEE T-IV</i>, 2018.", "C. Hubmann, J. Schulz, M. Becker, D. Althoff, and C. Stiller, “Automated Driving in Uncertain Environments: Planning With Interaction and Uncertain Maneuver Prediction,” <i>IEEE Transactions on Intelligent Vehicles</i>, vol. 3, no. 1, pp. 5–17, 2018."],
+    "hullermeier2021aleatoric": ["E. Hüllermeier and W. Waegeman, “Aleatoric and epistemic uncertainty in machine learning: an introduction to concepts and methods,” <i>Mach. Learn.</i>, 2021.", "E. Hüllermeier and W. Waegeman, “Aleatoric and epistemic uncertainty in machine learning: an introduction to concepts and methods,” <i>Machine Learning</i>, vol. 110, pp. 457–506, 2021."],
+    "ipgCarMaker": ["IPG Automotive, “CarMaker 13.0.1,” 2024.", "IPG Automotive, “CarMaker 13.0.1,” 2024."],
+    "iso2018iso26262": ["ISO, <i>ISO 26262</i>, 2018.", "ISO, <i>Road Vehicles—Functional Safety</i>, ISO 26262, 2018."],
+    "iso2020iso4804": ["ISO, <i>ISO/TR 4804</i>, 2020.", "ISO, <i>Road vehicles — Safety and cybersecurity for automated driving systems — Design, verification and validation</i>, ISO/TR 4804, 2020."],
+    "iso2023iso34503": ["ISO, <i>ISO 34503</i>, 2023.", "ISO, <i>Road Vehicles—Test Scenarios for Automated Driving Systems—Specification for Operational Design Domain</i>, ISO 34503, 2023."],
+    "jatzkowski2021knowledge": ["I. Jatzkowski et al., “A Knowledge-based Approach for the Automatic Construction of Skill Graphs for Online Monitoring,” <i>IEEE IV</i>, 2021.", "I. Jatzkowski, T. Menzel, A. Bock, and M. Maurer, “A Knowledge-based Approach for the Automatic Construction of Skill Graphs for Online Monitoring,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, 2021, pp. 142–149."],
+    "krajewski2018highd": ["R. Krajewski et al., “The highD Dataset: A Drone Dataset of Naturalistic Vehicle Trajectories on German Highways for Validation of Highly Automated Driving Systems,” <i>IEEE ITSC</i>, 2018.", "R. Krajewski, J. Bock, L. Kloeker, and L. Eckstein, “The highD Dataset: A Drone Dataset of Naturalistic Vehicle Trajectories on German Highways for Validation of Highly Automated Driving Systems,” in <i>Proc. IEEE International Conference on Intelligent Transportation Systems (ITSC)</i>, 2018, pp. 2118–2125."],
+    "krasowski2020safe": ["H. Krasowski et al., “Safe Reinforcement Learning for Autonomous Lane Changing Using Set-Based Prediction,” <i>IEEE ITSC</i>, 2020.", "H. Krasowski, X. Wang, and M. Althoff, “Safe Reinforcement Learning for Autonomous Lane Changing Using Set-Based Prediction,” in <i>Proc. IEEE International Conference on Intelligent Transportation Systems (ITSC)</i>, 2020, pp. 1–7."],
+    "kuehn2017takeover": ["M. Kuehn et al., “Takeover Times in Highly Automated Driving (Level 3),” <i>ESV</i>, 2017.", "M. Kuehn, T. Vogelpohl, and M. Vollrath, “Takeover Times in Highly Automated Driving (Level 3),” in <i>Proc. 25th International Technical Conference on the Enhanced Safety of Vehicles (ESV)</i>, 2017."],
+    "kuhn2021introspective": ["C. Kuhn et al., “Introspective Failure Prediction for Autonomous Driving Using Late Fusion of State and Camera Information,” <i>IEEE T-ITS</i>, 2021.", "C. Kuhn, M. Hofbauer, G. Petrovic, and E. Steinbach, “Introspective Failure Prediction for Autonomous Driving Using Late Fusion of State and Camera Information,” <i>IEEE Transactions on Intelligent Transportation Systems</i>, vol. 22, 2021."],
+    "michon1985critical": ["J. A. Michon, “A Critical View of Driver Behavior Models: What Do We Know, What Should We Do?,” in <i>Human Behavior and Traffic Safety</i>, 1985.", "J. A. Michon, “A Critical View of Driver Behavior Models: What Do We Know, What Should We Do?,” in <i>Human Behavior and Traffic Safety</i>. Springer US, 1985, pp. 485–524."],
+    "murphy2012machine": ["K. P. Murphy, <i>Machine Learning: A Probabilistic Perspective</i>. MIT Press, 2012.", "K. P. Murphy, <i>Machine Learning: A Probabilistic Perspective</i>. MIT Press, 2012."],
+    "olsson2016BT": ["M. Olsson, “Behavior Trees for decision-making in Autonomous Driving,” Master's thesis, KTH Royal Institute of Technology, 2016.", "M. Olsson, “Behavior Trees for decision-making in Autonomous Driving,” Master's thesis, KTH Royal Institute of Technology, 2016."],
+    "pior2020behaviorbased": ["P. F. Orzechowski et al., “Decision-Making for Automated Vehicles Using a Hierarchical Behavior-Based Arbitration Scheme,” <i>IEEE IV</i>, 2020.", "P. F. Orzechowski, C. Burger, and M. Lauer, “Decision-Making for Automated Vehicles Using a Hierarchical Behavior-Based Arbitration Scheme,” in <i>Proc. IEEE IV Symposium</i>, 2020, pp. 767–774."],
+    "rabiee2023introspective": ["S. Rabiee and J. Biswas, “Introspective Perception for Mobile Robots,” <i>Artif. Intell.</i>, 2023.", "S. Rabiee and J. Biswas, “Introspective Perception for Mobile Robots,” <i>Artificial Intelligence</i>, vol. 324, Art. no. 103999, 2023."],
+    "ref_claim_GM": ["“Look, Ma. No Pedals & No Steering Wheel! Autonomous Car Coming From GM in 2019,” <i>Forbes</i>, 2018.", "“Look, Ma. No Pedals & No Steering Wheel! Autonomous Car Coming From GM in 2019,” <i>Forbes</i>, 2018."],
+    "ref_claim_Nissan": ["“Nissan Announces Unprecedented Autonomous Drive Benchmarks,” <i>Nissan Motor Co. News</i>, 2013.", "“Nissan Announces Unprecedented Autonomous Drive Benchmarks,” <i>Nissan Motor Co. News</i>, 2013."],
+    "ref_claim_toyota": ["“Toyota Aims to Make Self-Driving Cars by 2020,” <i>The Wall Street Journal</i>, 2015.", "“Toyota Aims to Make Self-Driving Cars by 2020,” <i>The Wall Street Journal</i>, 2015."],
+    "renault2022cta": ["F. Deca and D. Rosain-Boussiquet, “Centre technique d'Aubevoye : 40 ans d'histoire(s) et de passion automobile,” <i>Renault Group Magazine</i>, 2022.", "F. Deca and D. Rosain-Boussiquet, “Centre technique d'Aubevoye : 40 ans d'histoire(s) et de passion automobile,” <i>Renault Group Magazine</i>, 2022."],
+    "reschka2015ability": ["A. Reschka et al., “Ability and skill graphs for system modeling, online monitoring, and decision support for vehicle guidance systems,” <i>IEEE IV</i>, 2015.", "A. Reschka, G. Bagschik, S. Ulbrich, M. Nolte, and M. Maurer, “Ability and skill graphs for system modeling, online monitoring, and decision support for vehicle guidance systems,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, 2015, pp. 933–939."],
+    "sae2021taxonomy": ["SAE International, <i>SAE J3016</i>, 2021.", "SAE International, <i>Taxonomy and Definitions for Terms Related to Driving Automation Systems for On-Road Motor Vehicles</i>, SAE Standard J3016_202104, 2021."],
+    "salvi2022fuzzy": ["A. Salvi et al., “Fuzzy Interpretation of Operational Design Domains in Autonomous Driving,” <i>IEEE IV</i>, 2022.", "A. Salvi, G. Weiss, M. Trapp, F. Oboril, and C. Buerkle, “Fuzzy Interpretation of Operational Design Domains in Autonomous Driving,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, 2022, pp. 1261–1267."],
+    "schlatow2017selfawareness": ["J. Schlatow et al., “Self-awareness in autonomous automotive systems,” <i>DATE</i>, 2017.", "J. Schlatow et al., “Self-awareness in autonomous automotive systems,” in <i>Proc. Design, Automation & Test in Europe Conference & Exhibition (DATE)</i>, 2017, pp. 1050–1055."],
+    "shwartz2017RSS": ["S. Shalev-Shwartz et al., “On a Formal Model of Safe and Scalable Self-driving Cars,” <i>arXiv</i>, 2017.", "S. Shalev-Shwartz, S. Shammah, and A. Shashua, “On a Formal Model of Safe and Scalable Self-driving Cars,” <i>arXiv preprint</i> arXiv:1708.06374, 2017."],
+    "silver_monte-carlo_2010": ["D. Silver and J. Veness, “Monte-Carlo Planning in Large POMDPs,” <i>NeurIPS</i>, 2010.", "D. Silver and J. Veness, “Monte-Carlo Planning in Large POMDPs,” in <i>Advances in Neural Information Processing Systems</i>, 2010."],
+    "sun2022operational": ["C. Sun, “Operational Design Domain Monitoring and Augmentation for Autonomous Driving,” Ph.D. dissertation, Univ. of Waterloo, 2022.", "C. Sun, “Operational Design Domain Monitoring and Augmentation for Autonomous Driving,” Ph.D. dissertation, Univ. of Waterloo, 2022."],
+    "ulbrich2015pomdp": ["S. Ulbrich and M. Maurer, “Towards Tactical Lane Change Behavior Planning for Automated Vehicles,” <i>IEEE ITSC</i>, 2015.", "S. Ulbrich and M. Maurer, “Towards Tactical Lane Change Behavior Planning for Automated Vehicles,” in <i>Proc. IEEE 18th International Conference on Intelligent Transportation Systems</i>, 2015, pp. 989–995."],
+    "woerter2021enhanced": ["F. Woerter et al., “Enhanced system awareness as basis for resilience of autonomous vehicles,” <i>CARS</i>, 2021.", "F. Woerter, A. Kreutz, A. Salvi, M. Dreiser, and G. Weiss, “Enhanced system awareness as basis for resilience of autonomous vehicles,” in <i>Proc. CARS 2021 6th International Workshop on Critical Automotive Applications: Robustness & Safety</i>, 2021."],
+    "zhang2020efficient": ["L. Zhang et al., “Efficient Uncertainty-aware Decision-making for Automated Driving Using Guided Branching,” <i>IEEE ICRA</i>, 2020.", "L. Zhang, W. Ding, J. Chen, and S. Shen, “Efficient Uncertainty-aware Decision-making for Automated Driving Using Guided Branching,” in <i>Proc. IEEE International Conference on Robotics and Automation (ICRA)</i>, 2020, pp. 3291–3297."],
   };
 
   // Structure of the defense: the introduction, the fundamentals and the state of the art, the method
@@ -89,10 +88,10 @@
       ch: "Fundamentals and state of the art",
       sub: "Awareness, the ODD and the capability of the vehicle; decision-making for driving" },
     { id: "c1", short: "C1", n: 3, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
-      ch: "Contribution 1", c: ["C1"], pubs: ["IFAC IAV 2025"],
+      ch: "Contribution 1", c: ["C1"], pubs: ["IFAC IAV 2025"], pubk: "CARDENAS2025162",
       sub: "The ODD-aptive architecture and the Maneuver Capability Estimator (MCE)" },
     { id: "c2", short: "C2", n: 4, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "Which sequence of ensured maneuvers to choose?", toc: "C2 · Which sequence of ensured maneuvers to choose?",
-      ch: "Contribution 2", c: ["C2"], pubs: ["IEEE IV 2025"],
+      ch: "Contribution 2", c: ["C2"], pubs: ["IEEE IV 2025"], pubk: "11097482",
       sub: "The ODD-constrained MDP" },
     { id: "c3", short: "C3", n: 5, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "What if the information is uncertain?", toc: "C3 · What if the information is uncertain?",
       ch: "Contribution 3", c: ["C3"],
@@ -135,33 +134,33 @@
     // ================================================================ 1. introduction: level by level, the ODD, monitored but not decided, the problem, the idea and the question, the aim, the contributions
     { id: "sec-intro", type: "section", sec: "intro", dark: true, title: "Introduction", time: 10 },
 
-    { id: "responsibility", cite: ["sae2021taxonomy", "ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan", "Farah2021Awareness", "kuehn2017takeover"], th: "Level by level", sec: "intro", kicker: "Motivation · automation, level by level", time: 60,
+    { id: "responsibility", cite: ["ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan", "sae2021taxonomy", "Farah2021Awareness", "kuehn2017takeover"], th: "Level by level", sec: "intro", kicker: "Motivation · automation, level by level", time: 60,
       title: "Automation advances level by level; the frontier lies between Level 2 and Level 3",
       notes: "Automated driving advances, but level by level. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed. The decisive frontier is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its operational design domain: it must monitor its own limits and request a takeover in time. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. So, to cross this frontier, the vehicle itself must know what it can do.",
-      html: `<div class="card tight row" style="align-items:center;gap:22px"><span class="pill amber">2018</span><p class="small" style="margin:0">Fully self-driving fleets announced for 2019 – 2020 by General Motors, Toyota and Nissan. The task proved harder than assumed: automation now advances <b>level by level</b>.</p></div>
+      html: `<div class="card tight row" style="align-items:center;gap:22px"><span class="pill amber">2018</span><p class="small" style="margin:0">Fully self-driving fleets announced for 2019 – 2020 by General Motors, Toyota and Nissan ${R("ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan")}. The task proved harder than assumed: automation now advances <b>level by level</b> ${R("sae2021taxonomy")}.</p></div>
         <div class="row grow">
           <div class="card col" style="flex:1.3 1 0"><h4>Each feature has its own ODD</h4>${fig("sae_levels.png", "Automation levels and examples of ODD")}</div>
           <div class="col grow">
-            <div class="card tight grow"><h4>Up to Level 2</h4><p class="small">The <b>driver</b> supervises, and must know the ODD of the system, which drivers often do not.</p></div>
-            <div class="card tight accent grow"><h4>Level 3</h4><p class="small">The <b>system</b> performs the whole driving task within its ODD, monitors its own limits and requests a takeover in time, <b>12 to 15 s</b> ahead.</p></div>
+            <div class="card tight grow"><h4>Up to Level 2</h4><p class="small">The <b>driver</b> supervises, and must know the ODD of the system, which drivers often do not ${R("Farah2021Awareness")}.</p></div>
+            <div class="card tight accent grow"><h4>Level 3</h4><p class="small">The <b>system</b> performs the whole driving task within its ODD, monitors its own limits and requests a takeover in time, <b>12 to 15 s</b> ahead ${R("kuehn2017takeover")}.</p></div>
             <div class="card tight ok grow"><h4>Level 4 and above</h4><p class="small">Nobody takes over: the system reaches a <b>minimal risk condition</b> by itself.</p></div>
           </div></div>
         <div class="takeaway">The higher the level, the more the vehicle itself must know <b>what it can do</b>, and under which conditions.</div>` },
 
-    { id: "odd", cite: ["sae2021taxonomy", "iso2023iso34503", "czarnecki2018operational"], th: "Its limits: the ODD", sec: "intro", kicker: "Motivation · what is the ODD?", time: 75, steps: 2,
+    { id: "odd", cite: ["sae2021taxonomy", "czarnecki2018operational", "iso2023iso34503"], th: "Its limits: the ODD", sec: "intro", kicker: "Motivation · what is the ODD?", time: 75, steps: 2,
       title: "To cross it, the vehicle must know its own limits: the ODD",
       notes: "To cross this frontier, the vehicle must know its own limits, and they have a name: the Operational Design Domain. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
       html: `<div class="row grow">
         <div class="col grow" style="flex:1 1 0">
           <div class="card" style="padding:28px 36px"><div class="quote" style="font-size:27px">“Operating conditions under which a given driving automation system or feature thereof is specifically designed to function, including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
-            <p class="xs mute" style="margin:10px 0 0 38px">SAE J3016, definition of the Operational Design Domain (ODD)</p></div>
+            <p class="xs mute" style="margin:10px 0 0 38px">SAE J3016 ${R("sae2021taxonomy")}, definition of the Operational Design Domain (ODD)</p></div>
           <div class="card grow"><h3>What is it for?</h3><ul class="list" style="gap:22px;font-size:28px">
             <li>The designer states the conditions in which the function was <b>designed and validated</b></li>
             <li>Outside its ODD, the system is <b>beyond its operational limits</b></li>
             <li>Example: an ACC designed for highways in free-flowing traffic, not validated in heavy rain or with two-wheelers</li></ul></div>
         </div>
         <div class="col grow" style="flex:1.05 1 0">
-          <div class="card" data-step="1"><h3 style="margin-bottom:12px">How is it structured? A hierarchical taxonomy</h3>
+          <div class="card" data-step="1"><h3 style="margin-bottom:12px">How is it structured? A hierarchical taxonomy ${R("czarnecki2018operational")}</h3>
             <div class="oddtax">
               <div><b>Physical infrastructure</b><span>road types, surfaces, edges, geometry</span></div>
               <div><b>Operational constraints</b><span>speed limit, traffic conditions</span></div>
@@ -169,7 +168,7 @@
               <div><b>Connectivity</b><span>V2X, fleet management, infrastructure sensors</span></div>
               <div><b>Environmental conditions</b><span>weather, illumination, particulate matter</span></div>
               <div><b>Zones</b><span>geofencing, school and work zones, regions</span></div>
-            </div><p class="xs mute" style="margin:10px 0 0">Top levels proposed by the NHTSA (2018), each broken down into sublevels · requirements in ISO 34503 (2023)</p></div>
+            </div><p class="xs mute" style="margin:10px 0 0">Top levels proposed by the NHTSA (2018), each broken down into sublevels · requirements in ISO 34503 ${R("iso2023iso34503")}</p></div>
           <div class="card row grow" data-step="2" style="gap:22px;align-items:center;padding:18px 22px">
             <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="height:300px;border-radius:10px">
             <div><h4 style="margin-bottom:8px">Deployed example: Mercedes-Benz Drive Pilot</h4><p class="small" style="margin:0">The first Level 3 system approved in Europe. Its ODD is a driving scene: separated highway, HD map, moderate to heavy traffic, detectable lane markings, no inclement weather.</p></div></div>
@@ -183,7 +182,7 @@
         <div class="col grow">
           <div class="card accent"><h3>Operational domain (OD) and ODD</h3><p>The <b>ODD</b> is fixed by design. The <b>OD</b>, the current conditions, changes all along the journey. Staying in the ODD means keeping the OD inside it, <b>now and on the route ahead</b>.</p></div>
           <div class="card bad grow" data-step="1"><h3>Today: monitor, then react</h3><ul class="list" style="gap:12px">
-            <li>Isolated condition checks and margins: monitoring, not decision</li>
+            <li>Isolated condition checks and margins: monitoring, not decision ${R("sun2022operational", "cardenas2025context_aware")}</li>
             <li>Maneuvers chosen without checking that the vehicle can manage them</li>
             <li>The limit is noticed once it is crossed</li>
             <li>Abrupt deactivation, emergency stop, or a suspended service</li></ul></div>
@@ -217,7 +216,7 @@
       notes: "What we want instead: anticipate the loss of capability. Under the rain the vehicle keeps fewer options, but its policy can always lead it to a minimal risk condition, through a fallback maneuver. This is fail-operational decision-making.",
       video: { src: A + "problem.mp4?v=4", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a minimal risk condition always within reach"]] } },
 
-    { id: "contrib", cite: ["cardenas2025context_aware", "CARDENAS2025162", "11097482"], th: "The contributions", type: "outline", sec: "intro", kicker: "Contributions and outline", time: 60,
+    { id: "contrib", cite: ["CARDENAS2025162", "11097482"], th: "The contributions", type: "outline", sec: "intro", kicker: "Contributions and outline", time: 60,
       title: "Four contributions, one principle, one architecture: ODD-aptive",
       notes: "How we get there. Four contributions, one principle: capability precedes choice. Each one answers a question. The first three are the method, each illustrated with its animations; the fourth is the validation of all of them, in simulation and on a prototype vehicle. Each line links to its part.",
       html: `<div class="card navy"><h3>Capability precedes choice</h3><p>A maneuver must be assessed as ensured in the corresponding state before the policy planner can consider it, throughout the planning horizon.</p></div>` },
@@ -225,31 +224,31 @@
     // ================================================================ 2. fundamentals and state of the art
     { id: "sec-sota", type: "section", sec: "sota", dark: true, title: "Fundamentals and state of the art", time: 10 },
 
-    { id: "failop", cite: ["avizienis2004taxonomy", "fail2022Stolte", "iso2018iso26262"], sec: "sota", kicker: "Background · fail-operational systems", time: 60, steps: 2,
+    { id: "failop", cite: ["avizienis2004taxonomy", "iso2018iso26262", "fail2022Stolte"], sec: "sota", kicker: "Background · fail-operational systems", time: 60, steps: 2,
       title: "Fail-safe or fail-operational: keep driving with fewer capabilities",
       notes: "First, what fail-operational means, on a simple example: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable.",
       html: `<div class="card row" style="gap:30px;align-items:center;padding:18px 28px">
           <img src="${F}failop_a.png" alt="The LiDAR range is reduced; the nominal range is dashed" style="width:640px;border-radius:10px">
           <div><h4 style="margin-bottom:8px">Example: the primary LiDAR loses range</h4><p style="margin:0">Highway, 130 km/h. The perception horizon shrinks <span class="mute">(nominal range dashed)</span>. What should the vehicle do?</p></div></div>
         <div class="g2 grow">
-          <div class="card col" data-step="1" style="gap:12px"><h3 style="margin:0">Fail-safe</h3><img src="${F}failop_e.png" alt="Fail-safe: the vehicle stops on the hard shoulder" style="width:100%;border-radius:10px">
+          <div class="card col" data-step="1" style="gap:12px"><h3 style="margin:0">Fail-safe ${R("avizienis2004taxonomy", "iso2018iso26262")}</h3><img src="${F}failop_e.png" alt="Fail-safe: the vehicle stops on the hard shoulder" style="width:100%;border-radius:10px">
             <p style="margin:0;font-size:27px">Reaches a minimal risk condition, here a stop on the hard shoulder: <b>the mission is aborted</b>.</p></div>
-          <div class="card col ok" data-step="2" style="gap:12px"><h3 style="margin:0">Fail-operational</h3><img src="${F}failop_f.png" alt="Fail-operational: the vehicle continues at a reduced speed, the lane change is no longer ensured" style="width:100%;border-radius:10px">
+          <div class="card col ok" data-step="2" style="gap:12px"><h3 style="margin:0">Fail-operational ${R("fail2022Stolte")}</h3><img src="${F}failop_f.png" alt="Fail-operational: the vehicle continues at a reduced speed, the lane change is no longer ensured" style="width:100%;border-radius:10px">
             <p style="margin:0;font-size:27px">Updates its capabilities and <b>keeps driving</b> at a reduced speed, without the lane change no longer ensured, a fallback always reachable.</p></div>
         </div>` },
 
-    { id: "awareness", cite: ["schlatow2017selfawareness", "woerter2021enhanced", "armand2014ontology", "salvi2022fuzzy"], sec: "sota", kicker: "Background · awareness and the ODD", time: 70, steps: 2,
+    { id: "awareness", cite: ["armand2014ontology", "salvi2022fuzzy", "woerter2021enhanced", "schlatow2017selfawareness"], sec: "sota", kicker: "Background · awareness and the ODD", time: 70, steps: 2,
       title: "What must the vehicle know about its context, and about itself?",
       notes: "What the vehicle must know, in two kinds of awareness. Context awareness: the knowledge associated with the context, semantic, such as road users and crossings, or aggregated, such as a school zone, its speed limit and the time of day; and the risk associated with the context, here a risk map around a vehicle. (1) Self awareness: the impact of actions on oneself, for instance what the vehicle can still see after a lane change, and the dependencies of the system, for instance the capability graph of an ACC, whose behaviors rest on lower-level capabilities. (2) The ODD links both: the capabilities of the system, and a structured representation of the context. Its limits: the perceived context is uncertain, so margins are needed, and the boundaries are discontinuous, so they must be anticipated.",
       html: `<div class="awr">
           <div class="card col aw ctx"><h3>Context awareness</h3>
             <div class="awp"><span>Knowledge associated with the context</span><span>Risk associated with the context</span></div>
             <div class="awg">
-              <figure><img src="${F}aw_semantic.png" alt="Road with vehicles and a pedestrian crossing"><figcaption>Semantic: road users, a crossing</figcaption></figure>
-              <figure><img src="${F}aw_aggregated.png" alt="School zone at 30, and the time of day"><figcaption>Aggregated: a school zone, the time of day</figcaption></figure>
-              <figure class="w2"><img src="${F}aw_risk.png" alt="Risk map around a vehicle"><figcaption>Context-based risk estimation</figcaption></figure>
+              <figure><img src="${F}aw_semantic.png" alt="Road with vehicles and a pedestrian crossing"><figcaption>Semantic: road users, a crossing ${R("armand2014ontology")}</figcaption></figure>
+              <figure><img src="${F}aw_aggregated.png" alt="School zone at 30, and the time of day"><figcaption>Aggregated: a school zone, the time of day ${R("salvi2022fuzzy")}</figcaption></figure>
+              <figure class="w2"><img src="${F}aw_risk.png" alt="Risk map around a vehicle"><figcaption>Context-based risk estimation ${R("woerter2021enhanced")}</figcaption></figure>
             </div></div>
-          <div class="card col aw self" data-step="1"><h3>Self awareness</h3>
+          <div class="card col aw self" data-step="1"><h3>Self awareness ${R("schlatow2017selfawareness")}</h3>
             <div class="awp"><span>Impact of actions on oneself</span><span>System dependencies</span></div>
             <div class="awg">
               <figure class="w2"><img src="${F}aw_vision.png" alt="What the vehicle can see before and after a lane change"><figcaption>What it can still see, before and after a lane change</figcaption></figure>
@@ -257,26 +256,26 @@
             </div></div>
         </div>
         <div class="card navy awodd" data-step="2"><b>The ODD links both</b>: the capabilities of the system, and a structured representation of its context. The context is uncertain, so <b>margins</b> are needed; the boundaries are discontinuous, so they must be <b>anticipated</b>.</div>` },
-    { id: "rw-c1", cite: ["reschka2015ability", "ulbrich2015pomdp", "colwell_automated_2018", "pior2020behaviorbased", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", time: 70,
+    { id: "rw-c1", cite: ["reschka2015ability", "colwell_automated_2018", "pior2020behaviorbased", "ulbrich2015pomdp", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", time: 70,
       title: "How is the capability of the vehicle assessed today?",
       notes: "Three families. Ability and skill graphs decompose a behavior into skills with a level of performance, and have been used to trigger a lane change or not. The restricted operational domain removes the maneuvers that a lost capability no longer supports. The arbitration graph checks every function against the ODD before deciding. Monitoring estimates the time to exit the ODD. All of them assess the current state, and adapt once a condition is detected. The MCE assesses each maneuver, in the predicted states too.",
       html: `<div class="g3" style="height:350px">
-          <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<p class="xs mute" style="margin:0;text-align:center">Ability graph (Reschka, 2015)</p></div>
-          <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<p class="xs mute" style="margin:0;text-align:center">Restricted Operational Domain (Colwell, 2018)</p></div>
-          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<p class="xs mute" style="margin:0;text-align:center">Arbitration graph (Orzechowski, 2020)</p></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<p class="xs mute" style="margin:0;text-align:center">Ability graph ${R("reschka2015ability")}</p></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<p class="xs mute" style="margin:0;text-align:center">Restricted Operational Domain ${R("colwell_automated_2018")}</p></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<p class="xs mute" style="margin:0;text-align:center">Arbitration graph ${R("pior2020behaviorbased")}</p></div>
         </div>
         <table class="tbl chkt"><tr><th style="width:470px">Work</th><th>What it brings</th><th>What is missing</th></tr>
-          <tr><td><b>Ability and skill graphs</b> <span class="mute">Reschka, 2015 · Ulbrich, 2015</span></td><td class="y">Skills with a level of performance; trigger a lane change or not</td><td class="n">Current state only</td></tr>
-          <tr><td><b>Restricted Operational Domain</b> <span class="mute">Colwell, 2018</span></td><td class="y">A lost capability removes some maneuvers and keeps others</td><td class="n">Current state only, reactive</td></tr>
-          <tr><td><b>Arbitration graph</b> <span class="mute">Orzechowski, 2020</span></td><td class="y">Every function checked against the ODD before deciding</td><td class="n">No prediction of the future state</td></tr>
-          <tr><td><b>Time to exit the ODD</b> <span class="mute">Charmet, 2024</span></td><td class="y">Anticipates the exit, with measurement uncertainty</td><td class="n">Triggers a takeover or an MRM, not the maneuver</td></tr>
-          <tr><td><b>μODDs</b> <span class="mute">Salvi, 2022</span></td><td class="y">Speed reduced as the rain increases</td><td class="n">One dimension, one maneuver</td></tr></table>` },
+          <tr><td><b>Ability and skill graphs</b> ${R("reschka2015ability", "ulbrich2015pomdp")}</td><td class="y">Skills with a level of performance; trigger a lane change or not</td><td class="n">Current state only</td></tr>
+          <tr><td><b>Restricted Operational Domain</b> ${R("colwell_automated_2018")}</td><td class="y">A lost capability removes some maneuvers and keeps others</td><td class="n">Current state only, reactive</td></tr>
+          <tr><td><b>Arbitration graph</b> ${R("pior2020behaviorbased")}</td><td class="y">Every function checked against the ODD before deciding</td><td class="n">No prediction of the future state</td></tr>
+          <tr><td><b>Time to exit the ODD</b> ${R("charmet2024monitoring")}</td><td class="y">Anticipates the exit, with measurement uncertainty</td><td class="n">Triggers a takeover or an MRM, not the maneuver</td></tr>
+          <tr><td><b>μODDs</b> ${R("salvi2022fuzzy")}</td><td class="y">Speed reduced as the rain increases</td><td class="n">One dimension, one maneuver</td></tr></table>` },
 
     { id: "levels", cite: ["michon1985critical", "donges2015behaviormodels"], sec: "sota", kicker: "State of the art · decision levels", time: 50,
       title: "Which decision? The tactical level: which maneuver, and when",
       notes: "Three decision levels after Michon. Strategic: the route, over hours to minutes. Tactical: which maneuver, and when, from a minute to a second. Operational: the trajectory and its control, below the second. We work at the tactical level, over ADAS features already validated.",
       html: `<div class="row grow" style="align-items:stretch">
-        <div class="card col" style="flex:1.2 1 0;justify-content:center"><h4>Michon's three levels</h4>${fig("michon_focus.png", "Michon's levels of the driving task, the tactical level in focus")}</div>
+        <div class="card col" style="flex:1.2 1 0;justify-content:center"><h4>Michon's three levels ${R("michon1985critical", "donges2015behaviormodels")}</h4>${fig("michon_focus.png", "Michon's levels of the driving task, the tactical level in focus")}</div>
         <div class="col grow" style="justify-content:center">
           <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
           <div class="card tight ok"><span class="pill ok">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
@@ -294,28 +293,28 @@
         <tr><td><b>Hybrid</b></td><td class="c">++</td><td class="c">−</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−−</td><td class="c">+</td><td>Scalability and computational cost</td></tr></table>
         <div class="row grow">
           <div class="card grow"><h4>Families reviewed</h4><ul class="list">
-            <li><b>Rule-based:</b> finite and hierarchical state machines, behavior trees, fuzzy logic</li>
-            <li><b>Probabilistic:</b> game theory, decision networks, MDP, POMDP</li>
-            <li><b>Learning-based:</b> SVM, decision trees, neural networks, reinforcement learning</li>
-            <li><b>Hybrid:</b> rules combined with learning</li></ul></div>
+            <li><b>Rule-based:</b> finite and hierarchical state machines, behavior trees ${R("olsson2016BT")}, fuzzy logic</li>
+            <li><b>Probabilistic:</b> game theory ${R("hang2021gametheoric")}, decision networks, MDP, POMDP ${R("ulbrich2015pomdp", "hubmann2018uncertainty")}</li>
+            <li><b>Learning-based:</b> SVM, decision trees, neural networks, reinforcement learning ${R("hoel2019combiningdeep")}</li>
+            <li><b>Hybrid:</b> rules combined with learning ${R("fiedler2022hybrid")}</li></ul></div>
           <div class="card navy grow"><h3>What we keep, and what is missing</h3><ul class="chk">
             <li class="y">Probabilistic planning: sequential decisions over a long horizon, explainable</li>
             <li class="n">In every family, the context “is used to describe the scene, not to assess whether the vehicle remains capable of operating safely in it”</li></ul></div>
         </div>`,
       backups: ["b-learning"] },
 
-    { id: "rw-c3", cite: ["ulbrich2015pomdp", "hubmann2018uncertainty", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep", "chen2025intention"], sec: "sota", c: ["C3"], kicker: "Related work · partial observability", time: 60,
+    { id: "rw-c3", cite: ["hubmann2018uncertainty", "chen2025intention", "ulbrich2015pomdp", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep"], sec: "sota", c: ["C3"], kicker: "Related work · partial observability", time: 60,
       title: "How do POMDP planners handle uncertainty?",
       notes: "POMDPs are the standard frame for tactical decisions under partial observability: lane changes, merging, intersections. Online Monte Carlo search with belief updates makes them tractable, and POMCP represents the belief with particles. What they keep uncertain is the traffic. The capability of the vehicle is assessed, at best, in the current state. The ODD-POMDP adds the capability check in every particle.",
       html: `<div class="card tight col" style="height:410px;gap:8px">${fig("rw_pomdp.png", "Partially observable driving scenarios")}
-          <p class="xs mute" style="margin:0;text-align:center">Left: intersection with unknown intentions and sensor noise (Hubmann, 2018). Right: highway exit where the yielding intentions are hidden (Chen, 2025).</p></div>
+          <p class="xs mute" style="margin:0;text-align:center">Left: intersection with unknown intentions and sensor noise ${R("hubmann2018uncertainty")}. Right: highway exit where the yielding intentions are hidden ${R("chen2025intention")}.</p></div>
         <div class="g2 grow">
           <div class="card col" style="justify-content:center"><h3>What POMDP planners bring</h3><ul class="chk">
-            <li class="y">A belief over what is hidden: sensor noise, intentions <span class="mute">(Ulbrich, 2015; Hubmann, 2018)</span></li>
-            <li class="y">Online Monte Carlo search with belief updates keeps it tractable <span class="mute">(Hubmann, 2018; Zhang, 2020)</span>, with particles in POMCP <span class="mute">(Silver, 2010)</span></li>
-            <li class="y">Deep reinforcement learning to scale <span class="mute">(Hoel, 2019)</span></li></ul></div>
+            <li class="y">A belief over what is hidden: sensor noise, intentions ${R("ulbrich2015pomdp", "hubmann2018uncertainty")}</li>
+            <li class="y">Online Monte Carlo search with belief updates keeps it tractable ${R("hubmann2018uncertainty", "zhang2020efficient")}, with particles in POMCP ${R("silver_monte-carlo_2010")}</li>
+            <li class="y">Deep reinforcement learning to scale ${R("hoel2019combiningdeep")}</li></ul></div>
           <div class="card navy col" style="justify-content:center"><h3>What is missing, and what C3 adds</h3><ul class="chk">
-            <li class="n">The uncertainty is on the traffic. The capability of the vehicle is assessed, at best, in the current state <span style="color:#9fb6d4">(Ulbrich, 2015)</span></li>
+            <li class="n">The uncertainty is on the traffic. The capability of the vehicle is assessed, at best, in the current state ${R("ulbrich2015pomdp")}</li>
             <li class="to">ODD-POMDP: an action is kept when a share <i class="m">τ</i> of the particles ensures it, in every node of the search</li></ul></div>
         </div>` },
 
@@ -324,15 +323,15 @@
       notes: "The four gaps identified at the end of the survey, published in IEEE Transactions on Intelligent Vehicles in 2025. For each, what exists, what is missing, and the contribution that addresses it. Each badge links to its part.",
       backups: ["b-learning"],
       html: `<div class="g2 grow">
-        ${[["Long-term, sequential decisions", "MDPs and POMDPs plan sequences of maneuvers, under uncertainty <span class=\"mute\">(Brechtel, 2014; Hubmann, 2018; Hoel, 2019)</span>", "Rule-based and most learning-based methods select one maneuver at a time", ["C2", "C3"]],
-           ["Capability in future states", "Ability and skill graphs, restricted domains and arbitration graphs assess what the vehicle can do <span class=\"mute\">(Reschka, 2015; Colwell, 2018; Orzechowski, 2020)</span>", "Only in the current state: the logic remains reactive", ["C1", "C2"]],
-           ["Situation awareness enriched by the ODD", "Monitoring tells how far the operational domain is inside the ODD, and even the time left before exiting it <span class=\"mute\">(Charmet, 2024)</span>", "The context describes the scene, not whether the vehicle remains capable in it", ["C1"]],
-           ["Interdependent ODD dimensions", "Weather, road type and density are each monitored, for instance rain through μODDs <span class=\"mute\">(Salvi, 2022)</span>", "One dimension at a time, while the admissible speed depends on visibility or friction", ["C1"]]]
+        ${[["Long-term, sequential decisions", "MDPs and POMDPs plan sequences of maneuvers, under uncertainty", "Rule-based and most learning-based methods select one maneuver at a time", ["C2", "C3"]],
+           ["Capability in future states", "Ability and skill graphs, restricted domains and arbitration graphs assess what the vehicle can do", "Only in the current state: the logic remains reactive", ["C1", "C2"]],
+           ["Situation awareness enriched by the ODD", "Monitoring tells how far the operational domain is inside the ODD, and even the time left before exiting it", "The context describes the scene, not whether the vehicle remains capable in it", ["C1"]],
+           ["Interdependent ODD dimensions", "Weather, road type and density are each monitored, for instance rain through μODDs", "One dimension at a time, while the admissible speed depends on visibility or friction", ["C1"]]]
           .map(([t, y, n, cs], j) => `<div class="card col" style="gap:20px;padding:30px 36px"><div class="row" style="align-items:center;gap:18px"><div class="num-badge" style="width:50px;height:50px;font-size:24px">${j + 1}</div><h3 style="margin:0;font-size:31px">${t}</h3></div>
             <ul class="chk" style="gap:16px"><li class="y">${y}</li><li class="n">${n}</li></ul>
             <div class="row" style="margin-top:auto;align-items:center;gap:10px"><span class="xs mute" style="font-weight:600">Addressed by</span>${cs.map((c) => `<a class="cbadge ink" data-go="sec-${c.toLowerCase()}" href="#/sec-${c.toLowerCase()}">${c}</a>`).join("")}</div></div>`).join("")}
         </div>
-        <p class="xs mute" style="margin:0;text-align:right">Gaps identified in the survey: R. Cardenas et al., IEEE Transactions on Intelligent Vehicles, 2025</p>` },
+        <p class="xs mute" style="margin:0;text-align:right">Gaps identified in our survey ${R("cardenas2025context_aware")}</p>` },
 
     // ================================================================ 3. C1 · capability: the architecture and the MCE, illustrated by its animations
     { id: "sec-c1", type: "section", sec: "c1", dark: true, title: "C1 · What can the vehicle still ensure?", time: 10 },
@@ -351,7 +350,7 @@
             <span class="c1a">→</span>
             <a class="card c1s" data-go="v-mce"><span class="n">3</span><b>The same assessment in the predicted states</b><span class="t">Now, and after each decision</span></a>
           </div></div>` },
-    { id: "architecture", cite: ["michon1985critical"], sec: "c1", kicker: "Our answer: ODD-aptive", time: 170, steps: 6,
+    { id: "architecture", sec: "c1", kicker: "Our answer: ODD-aptive", time: 170, steps: 6,
       title: "ODD-aptive: three decision layers, and inside the tactical one",
       notes: "The ODD-aptive architecture, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. (1) Zoom into the tactical layer. The current state, or belief, becomes the root s0 of the planning horizon builder. (2) For each state, the builder queries the MCE, which monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (3) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead; query and prediction repeat up to the horizon H. (4) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (5) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state. (6) Back to the whole architecture, now with the tactical layer filled: the capability estimator, the horizon builder, the state predictor, the MDP or POMDP and the policy planner, between the state from the world model and the action sent to the operational layer.",
       html: `<div class="ar zm" data-dim="6">
@@ -502,8 +501,8 @@
       notes: "Asking whether the whole vehicle is within its ODD is too coarse. The task is decomposed into maneuvers, and the question is asked for each of them. Each maneuver has its own boundaries in the space of the operational constraints.",
       html: `<div class="card col" style="flex:1.3 1 0">${fig("decomposition.jpg", "Decomposition of the driving task into maneuvers")}</div>
         <div class="g3">
-          <div class="card"><h4>Maneuvers</h4><div class="eq"><i>U</i> = {KL, LCL, LCR, MRM}</div><p class="small">Each maneuver activates an existing feature, configured by its parameters: target speed, target lane, time gap.</p></div>
-          <div class="card"><h4>Operational domain</h4><div class="eq"><i>X</i><sub>ODD</sub> = <i>C</i><sub>1</sub> × <i>C</i><sub>2</sub> × … × <i>C<sub>n</sub></i></div><p class="small">Each constraint has its admissible values. The OD is a point of this space, moving along the journey.</p></div>
+          <div class="card"><h4>Maneuvers ${R("AVSC2021BehavioralCompetencies")}</h4><div class="eq"><i>U</i> = {KL, LCL, LCR, MRM}</div><p class="small">Each maneuver activates an existing feature, configured by its parameters: target speed, target lane, time gap.</p></div>
+          <div class="card"><h4>Operational domain ${R("iso2023iso34503", "colwell_automated_2018")}</h4><div class="eq"><i>X</i><sub>ODD</sub> = <i>C</i><sub>1</sub> × <i>C</i><sub>2</sub> × … × <i>C<sub>n</sub></i></div><p class="small">Each constraint has its admissible values. The OD is a point of this space, moving along the journey.</p></div>
           <div class="card"><h4>Constraints</h4><p class="small"><b>Continuous</b> ones (visibility, density, speed) allow margins and gradual anticipation. <b>Discrete</b> ones (road type, works) change abruptly: their transitions must be predicted.</p></div>
         </div>` },
 
@@ -512,8 +511,8 @@
       notes: "Three levels of operability. Degradation is per maneuver, not an intermediate level: a maneuver can remain ensured with a reduced performance range. The same assessment runs on predicted states, fed by the electronic horizon.",
       html: `<div class="g3">
           <div class="card ok col" style="gap:22px;padding:34px 36px"><span class="pill ok" style="align-self:flex-start;font-size:24px">Full operability</span><div class="eq" style="font-size:44px">${Uens()} = <i>U</i></div><p style="font-size:28px">Every maneuver is ensured, possibly in a degraded mode.</p></div>
-          <div class="card deg col" style="gap:22px;padding:34px 36px"><span class="pill deg" style="align-self:flex-start;font-size:24px">Partial operability</span><div class="eq" style="font-size:44px">∅ ⊊ ${Uens()} ⊊ <i>U</i></div><p style="font-size:28px">A restricted operational domain: only some maneuvers remain.</p></div>
-          <div class="card bad col" style="gap:22px;padding:34px 36px"><span class="pill bad" style="align-self:flex-start;font-size:24px">Loss of operability</span><div class="eq" style="font-size:44px">${Uens()} = ∅</div><p style="font-size:28px">No maneuver is ensured: a fallback is required.</p></div>
+          <div class="card deg col" style="gap:22px;padding:34px 36px"><span class="pill deg" style="align-self:flex-start;font-size:24px">Partial operability</span><div class="eq" style="font-size:44px">∅ ⊊ ${Uens()} ⊊ <i>U</i></div><p style="font-size:28px">A restricted operational domain ${R("colwell_automated_2018")}: only some maneuvers remain.</p></div>
+          <div class="card bad col" style="gap:22px;padding:34px 36px"><span class="pill bad" style="align-self:flex-start;font-size:24px">Loss of operability</span><div class="eq" style="font-size:44px">${Uens()} = ∅</div><p style="font-size:28px">No maneuver is ensured: a fallback is required ${R("charmet2024monitoring")}.</p></div>
         </div>
         <div class="card amber"><p>Degradation is <b>per maneuver</b>, not an intermediate level: a maneuver can remain ensured with a reduced performance range.</p></div>
         <div class="takeaway">The same assessment runs on <b>predicted states</b>, fed by the electronic horizon. This is what makes anticipation possible.</div>` },
@@ -529,7 +528,7 @@
           <div class="card tight"><span class="pill">Sense</span> <span class="small">the <b>acquisition of the information</b> required to assess and support the maneuver</span></div>
           <div class="card tight"><span class="pill">Think</span> <span class="small">the ability to <b>process and interpret</b> this information for decision-making</span></div>
           <div class="card tight"><span class="pill gray">Act</span> <span class="small">the ability to <b>execute the maneuver</b> once selected (assumed fulfilled in this work)</span></div>
-          <p class="small" style="margin:0">Skills are organized in graphs and shared between maneuvers. Every loss can be traced back to an identified change of context.</p>
+          <p class="small" style="margin:0">Skills are organized in graphs and shared between maneuvers ${R("reschka2015ability", "jatzkowski2021knowledge")}. Every loss can be traced back to an identified change of context.</p>
         </div></div>` },
 
     { id: "v-mce", type: "video", sec: "c1", c: ["C1"], time: 60,
@@ -540,7 +539,7 @@
     { id: "sense-zones", cite: ["bussemaker2014SensingRF", "CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Sense skills", time: 70, steps: 3,
       title: "Sense: before engaging, does the vehicle see all it needs?",
       notes: "Take the Sense skills. The question they answer: before engaging in a maneuver, does the vehicle see all it needs? Each maneuver has key zones whose content the vehicle must know first. Entering a roundabout: the part of the ring from which the cars arrive. Crossing an intersection: the crossing road, in both directions. Overtaking a stopped bus: the crossing in front of the bus, where a pedestrian may step out. Changing lane: three zones around the vehicle. A key zone counts only if it is inside what the vehicle perceives, and its perception envelope is reduced in two ways: fog shrinks it, as in the roundabout and the lane change; obstacles occlude it, as the buildings at the intersection, until the vehicle reaches the stop line, or the bus: the vehicle starts to overtake, its sight lines to the crossing stop on the bus, so it holds, sees a pedestrian step out, and creeps until it sees the whole crossing. A key zone that is not perceived: the maneuver is not ensured. Let us now take one of them in detail: the lane change.",
-      html: `<div class="card tight" style="font-size:26px;padding:16px 30px">Before engaging, the vehicle must know what is in the <b>key zones</b> of the maneuver. They count only if they are inside its <b>perception envelope</b>: fog shrinks it, obstacles occlude it.</div>
+      html: `<div class="card tight" style="font-size:26px;padding:16px 30px">Before engaging, the vehicle must know what is in the <b>key zones</b> of the maneuver ${R("bussemaker2014SensingRF")}. They count only if they are inside its <b>perception envelope</b> ${R("CARDENAS2025162")}: fog shrinks it, obstacles occlude it.</div>
         <div class="sloops seq">${[["sense_roundabout", "Entering a roundabout", "the ring upstream of the entry", "Fog"],
           ["sense_intersection", "Crossing an intersection", "the crossing road, both ways", "Occlusion"],
           ["sense_bus", "Overtaking a stopped bus", "the crossing in front of the bus", "Occlusion"],
@@ -552,7 +551,7 @@
       title: "An example: the skills of a lane change",
       notes: "From the general estimator to one example: the lane change. It is ensured when all its skills hold. Sense: the vehicles in three zones, A behind us in the target lane, B ahead in the target lane, C ahead in our lane, and the lane markings of the target lane. Think: the predictor models every perceived vehicle, and the traffic is fluid enough for the function. Act is assumed fulfilled in this work. We develop the first skill: how much perception range does each zone need? The answer comes from a safe distance, RSS.",
       html: `<div class="row grow">
-        <div class="card col" style="flex:0.82 1 0"><h4>Zones of interest of a lane change to the left</h4>${fig("zones.jpg", "Zones A, B and C of the lane change")}
+        <div class="card col" style="flex:0.82 1 0"><h4>Zones of interest of a lane change to the left ${R("CARDENAS2025162")}</h4>${fig("zones.jpg", "Zones A, B and C of the lane change")}
           <p class="small" style="margin:0">The lane change uses <b>A</b>, behind in the target lane, <b>B</b>, ahead in the target lane, and <b>C</b>, ahead in the ego lane. PE: perception envelope, smaller in fog</p></div>
         <div class="col grow" style="gap:14px;justify-content:center">
           <div class="card eqbox"><div class="eq" style="font-size:29px">LC ∈ ${Uens()} ⇔ <i>f</i><sub>veh</sub>(<i>S</i>) = <i>f</i><sub>lane</sub>(<i>S</i>) = <i>f</i><sub>pred</sub>(<i>S</i>) = <i>f</i><sub>inter</sub>(<i>S</i>) = 1</div>
@@ -575,10 +574,10 @@
       backups: ["b-rss"],
       html: `<div class="row grow">
         <div class="col" style="flex:1.18 1 0;gap:18px">
-          <div class="card col" style="gap:10px"><h4>RSS: minimum safe distance between a rear and a front vehicle</h4>
+          <div class="card col" style="gap:10px"><h4>RSS: minimum safe distance between a rear and a front vehicle ${R("shwartz2017RSS")}</h4>
             <div class="eqbox"><div class="eq" style="font-size:31px"><i>d</i><sub>min</sub><sup>RSS</sup> = [ <i>v<sub>r</sub> ρ</i> + ½ <i>a</i><sub>max</sub><i>ρ</i><sup>2</sup> + <span class="fr"><span>(<i>v<sub>r</sub></i> + <i>ρ a</i><sub>max</sub>)<sup>2</sup></span><span>2 <i>b</i><sub>min</sub></span></span> − <span class="fr"><span><i>v<sub>f</sub></i><sup>2</sup></span><span>2 <i>b</i><sub>max</sub></span></span> ]<sub>+</sub></div></div>
             <p class="small" style="margin:0"><i class="m">v<sub>r</sub></i>, <i class="m">v<sub>f</sub></i>: rear and front speeds · <i class="m">ρ</i>: response time · <i class="m">a</i><sub>max</sub>: acceleration during the response · <i class="m">b</i><sub>min</sub>: braking of the rear vehicle · <i class="m">b</i><sub>max</sub>: braking of the front vehicle</p></div>
-          <div class="card col grow" style="gap:10px"><h4>For a lane change: a smooth insertion, not an emergency stop</h4>
+          <div class="card col grow" style="gap:10px"><h4>For a lane change: a smooth insertion, not an emergency stop ${R("CARDENAS2025162")}</h4>
             <div class="eqbox"><div class="eq" style="font-size:31px"><i>d</i><sub>req</sub> = <i>T R v<sub>f</sub></i> + <i>d</i><sub>min</sub><sup>RSS</sup>( <i>v<sub>r</sub></i> − <i>R v<sub>f</sub></i> , (1 − <i>R</i>) <i>v<sub>f</sub></i> )</div></div>
             <ul class="list small"><li>The front vehicle slows down to a fraction <i class="m">R</i> of its speed, instead of stopping</li>
               <li>The rear vehicle then keeps a time gap <i class="m">T</i> behind it</li></ul></div>
@@ -589,7 +588,7 @@
               <tr><td>B, C, ahead</td><td>the ego vehicle</td><td><i class="m">d</i><sub>req</sub>(<i class="m">v</i><sub>ego</sub>, <i class="m">v</i><sub>front</sub>)</td></tr>
               <tr><td>A, behind</td><td>the car behind</td><td><i class="m">d</i><sub>req</sub>(<i class="m">v</i><sub>rear</sub>, <i class="m">v</i><sub>ego</sub>)</td></tr></table></div>
           <div class="card eqbox"><div class="eq" style="font-size:27px"><i>f</i><sub>veh</sub>(<i>S</i>) = 1 ⇔ <i>d</i><sub>PE</sub><sup><i>z</i></sup>(<i>S</i>) ≥ <i>d</i><sub>req</sub><sup><i>z</i></sup>(<i>S</i>), ∀<i>z</i> ∈ {A, B, C}</div>
-            <div class="xs mute">The perception envelope must cover the requirement in every zone</div></div>
+            <div class="xs mute">The perception envelope must cover the requirement in every zone ${R("bussemaker2014SensingRF")}</div></div>
           <div class="card navy grow" style="display:flex;flex-direction:column;justify-content:center"><h4>What follows</h4><p style="margin:0">Ahead, the requirement grows with the speed; behind, it grows when the ego vehicle is slower. Only a <b>window of speeds</b> covers every zone, and fog narrows it.</p></div>
         </div></div>` },
     { id: "v-window", type: "video", sec: "c1", c: ["C1"], time: 65,
@@ -601,7 +600,7 @@
       title: "Lane markings, prediction and interaction complete the skill graph",
       notes: "Three other skills. The density skill is the one used for the congestion before the exit. Degradation is per maneuver: Keep Lane can remain ensured with a reduced performance range.",
       html: `<div class="g3">
-          <div class="card col"><span class="pill" style="align-self:flex-start">Sense · lane markings</span><div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>lane</sub>(<i>S</i>) = 1 ⇔ <i>d</i><sub>PE</sub><sup>lane</sup>(<i>S</i>) ≥ <i>D</i><sub>min</sub>(<i>S</i>)</div><p class="small">The markings of the target lane are detected over the stopping distance at the current speed.</p></div>
+          <div class="card col"><span class="pill" style="align-self:flex-start">Sense · lane markings</span> ${R("CARDENAS2025162")}<div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>lane</sub>(<i>S</i>) = 1 ⇔ <i>d</i><sub>PE</sub><sup>lane</sup>(<i>S</i>) ≥ <i>D</i><sub>min</sub>(<i>S</i>)</div><p class="small">The markings of the target lane are detected over the stopping distance at the current speed.</p></div>
           <div class="card col"><span class="pill" style="align-self:flex-start">Think · prediction</span><div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>pred</sub>(<i>S</i>) = 1 ⇔ every perceived vehicle is regular</div><p class="small">Emergency vehicles and two-wheelers fall outside what the predictor models.</p></div>
           <div class="card col"><span class="pill" style="align-self:flex-start">Think · interaction</span><div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>inter</sub>(<i>S</i>) = 1 ⇔ <i>ρ</i>(<i>S</i>) ≤ <i>ρ</i><sub>max</sub></div><p class="small">The lane change function is designed for fluid traffic and does not negotiate gaps. The electronic horizon announces the density in advance.</p></div>
         </div>
@@ -648,10 +647,10 @@
           </svg>
           <p class="xs mute" style="margin:0">Required range for zones B and C, traffic ahead at 110 km/h</p></div>
         <div class="col" style="flex:1 1 0;gap:18px">
-          <div class="card tight col" style="gap:8px"><h4>How far from the boundary</h4>
+          <div class="card tight col" style="gap:8px"><h4>How far from the boundary ${R("salvi2022fuzzy")}</h4>
             <div class="eq" style="font-size:30px;text-align:center"><i>ρ<sub>k</sub></i>(<i>s</i>) = <span class="fr"><span><i>g<sub>k</sub></i><sup>av</sup>(<i>s</i>)</span><span><i>g<sub>k</sub></i><sup>req</sup>(<i>s</i>)</span></span> &nbsp;=&nbsp; <span class="fr"><span><i>d</i><sub>PE</sub></span><span><i>d</i><sub>req</sub>(<i>v</i><sub>ego</sub>)</span></span></div>
             <p class="small" style="margin:0">Available over required: <b>1 on the boundary</b>, larger when the point is far from it</p></div>
-          <div class="card tight col" data-step="2" style="gap:8px"><h4>Strategic margin: a preferred region</h4>
+          <div class="card tight col" data-step="2" style="gap:8px"><h4>Strategic margin: a preferred region ${R("hullermeier2021aleatoric")}</h4>
             <div class="eq" style="font-size:30px;text-align:center"><i>w<sub>k</sub></i>(<i>s</i>) = min(1, <span class="fr"><span><i>ρ<sub>k</sub></i>(<i>s</i>) − 1</span><span><i>m<sub>k</sub></i> − 1</span></span>)</div>
             <p class="small" style="margin:0">0 on the boundary, 1 from <i class="m">m<sub>k</sub></i> on; an action is as close as its most constrained skill, <i class="m">w<sub>a</sub></i> = min<sub><i class="m">k</i></sub> <i class="m">w<sub>k</sub></i></p></div>
           <div class="card tight col grow" data-step="3" style="gap:8px"><h4>In the reward, not a second boundary</h4>
@@ -675,7 +674,7 @@
       title: "The ODD-MDP: capability enters the Bellman equation",
       notes: "Why an MDP. It represents sequential decisions over a horizon. It handles uncertainty in the transitions and extends to partial observability, which the third contribution uses. Tactical maneuvers form a discrete set of actions. And its elements can be tuned from data, as in reinforcement learning. The state joins the operational domain, the ego vehicle and the surrounding vehicles: including the OD is what lets the filter and the reward depend on the context. An action pairs a maneuver with a set speed change. The MCE returns the ensured actions of a state, in every predicted state. The only change to the Bellman equation: the maximum runs over the ensured actions. Capability precedes choice is written into the equation, and the policy is ODD-compliant by construction, not by verification.",
       html: `<div class="row" style="gap:24px">
-          <div class="card col" style="flex:0.78 1 0;gap:10px"><h4>Why an MDP</h4><ul class="chk small" style="gap:10px">
+          <div class="card col" style="flex:0.78 1 0;gap:10px"><h4>Why an MDP ${R("bellman1957MDP")}</h4><ul class="chk small" style="gap:10px">
             <li class="y">Sequential decisions over a horizon</li>
             <li class="y">Uncertain transitions, extends to partial observability (${go("sec-c3", "C3")})</li>
             <li class="y">Maneuvers form a discrete set of actions</li>
@@ -690,7 +689,7 @@
           <div class="eq big"><i>V</i>*(<i>s</i>) = <span class="lim"><span class="o hcho">max</span><span class="u hcap"><i>a</i> ∈ ${Aens()}</span></span> [ <i>R</i>(<i>s</i>, <i>a</i>) + <i>γ</i> Σ<sub><i>s</i>′</sub> <i>P</i>(<i>s</i>′ | <i>s</i>, <i>a</i>) <i>V</i>*(<i>s</i>′) ]
             <span style="display:inline-block;width:60px"></span><i>π</i>*(<i>s</i>) = <span class="lim"><span class="o hcho">argmax</span><span class="u hcap"><i>a</i> ∈ ${Aens()}</span></span> <i>Q</i>*(<i>s</i>, <i>a</i>)</div>
           <div class="legend"><span><i class="sw cho"></i><b>Choice</b>: the policy planner, over the whole horizon</span><span><i class="sw cap"></i><b>Capability</b>: only the maneuvers the MCE ensures</span></div></div>
-        <div class="takeaway"><b>Capability precedes choice</b>, written into the equation: no maneuver that is not ensured enters the value function, so the policy is <b>ODD-compliant by construction</b>, not by verification.</div>` },
+        <div class="takeaway"><b>Capability precedes choice</b>, written into the equation ${R("11097482")}: no maneuver that is not ensured enters the value function, so the policy is <b>ODD-compliant by construction</b>, not by verification.</div>` },
 
     { id: "v-search", type: "video", sec: "c2", c: ["C2"], time: 55,
       title: "The search tree of the ODD-MDP",
@@ -711,7 +710,7 @@
           <div class="tprow"><span class="pill">Scene</span><span>The ego vehicle follows the kinematics of its maneuver, with its ACC behind a leader; the surrounding vehicles keep a constant acceleration in their lane</span></div>
           <div class="tprow"><span class="pill ok">OD</span><span>What it will be at the predicted position and time, the fog ahead for instance, from the electronic horizon and V2X</span></div>
           <p class="xs mute" style="margin:0">The MCE is called again on every predicted state: this builds the tree of ensured state-action pairs</p></div>
-        <div class="card col" style="flex:0.95 1 0;gap:12px"><h4>Resolution: value iteration on the tree</h4>
+        <div class="card col" style="flex:0.95 1 0;gap:12px"><h4>Resolution: value iteration on the tree ${R("bellman1957dynamic")}</h4>
           <div class="eqbox" style="text-align:left"><div class="eq" style="font-size:28px"><i>V</i>(<i>s</i>) ← max<sub><i>a</i> ∈ ${Aens()}</sub> [ <i>R</i>(<i>s</i>, <i>a</i>) + <i>γ</i> Σ<sub><i>s</i>′</sub> <i>P</i>(<i>s</i>′ | <i>s</i>, <i>a</i>) <i>V</i>(<i>s</i>′) ]</div>
             <div class="eq" style="font-size:28px"><i>a<sub>t</sub></i> = argmax<sub><i>a</i> ∈ ${Aens("s<sub>0</sub>")}</sub> <i>Q</i>(<i>s</i><sub>0</sub>, <i>a</i>)</div></div>
           <h4 style="margin-top:4px">Why value iteration</h4>
@@ -728,7 +727,7 @@
         <div class="row grow">
           <table class="tbl" style="flex:1 1 0;font-size:21px"><tr><th style="width:150px">Term</th><th>Definition</th></tr>
             <tr><td><b>Collision</b></td><td><span class="eq" style="font-size:25px"><i>R</i><sub>col</sub>(<i>s</i>) = −𝟙<sub>col</sub>(<i>s</i>)</span>, during the execution or at the resulting state</td></tr>
-            <tr><td><b>Risk</b></td><td><span class="eq" style="font-size:25px">TTC<sub><i>i</i></sub> = <i>d<sub>i</sub></i> / (<i>v</i><sub>ego</sub> − <i>v<sub>i</sub></i>), &nbsp;TIV<sub><i>i</i></sub> = <i>d<sub>i</sub></i> / <i>v</i><sub>ego</sub></span>, worst vehicle of the ego lane</td></tr>
+            <tr><td><b>Risk</b></td><td><span class="eq" style="font-size:25px">TTC<sub><i>i</i></sub> = <i>d<sub>i</sub></i> / (<i>v</i><sub>ego</sub> − <i>v<sub>i</sub></i>), &nbsp;TIV<sub><i>i</i></sub> = <i>d<sub>i</sub></i> / <i>v</i><sub>ego</sub></span>, worst vehicle of the ego lane ${R("WANG2021surrogate", "glaser2010ttctiv")}</td></tr>
             <tr><td><b>Legal</b></td><td>relative excess over the speed limit</td></tr>
             <tr><td><b>Progress</b></td><td><span class="eq" style="font-size:25px"><i>R</i><sub>speed</sub>(<i>s</i>) = <i>v</i><sub>ego</sub> / <i>v</i><sub>max</sub></span>, the only positive term</td></tr>
             <tr><td><b>Route</b></td><td>the lane occupied, more as the next itinerary event approaches</td></tr></table>
@@ -750,7 +749,7 @@
         <div class="col" style="flex:0.95 1 0;gap:16px">
           <div class="card col" style="gap:8px"><h4>Safe state</h4>
             <div class="eqbox"><div class="eq" style="font-size:30px"><i>s</i> ∈ <i>S</i><sub>safe</sub> ⇔ MRM ∈ ${Uens("s")}</div></div>
-            <p class="small" style="margin:0">From <i class="m">s</i>, the minimal risk maneuver is ensured: it can bring the vehicle to a <b>minimal risk condition</b></p></div>
+            <p class="small" style="margin:0">From <i class="m">s</i>, the minimal risk maneuver is ensured: it can bring the vehicle to a <b>minimal risk condition</b> ${R("sae2021taxonomy", "iso2020iso4804")}</p></div>
           <div class="card col" style="gap:8px"><h4>Kept within reach by the reward</h4>
             <div class="eqbox"><div class="eq" style="font-size:28px"><i>R</i><sub>time</sub>(<i>s</i>) = −[ <i>t</i><sub>pred</sub>(<i>s</i>) − <i>T</i><sub>thr</sub> ]<sub>+</sub> ( 1 − 𝟙<sub>MRM</sub>(<i>s</i>) )</div></div>
             <p class="small" style="margin:0">Beyond <i class="m">T</i><sub>thr</sub>, a predicted state from which no MRM can be reached is penalized, more and more as it gets further</p></div>
@@ -781,9 +780,9 @@
       notes: "Three sources, which do not play the same role. Noise on the vehicles changes which gap looks acceptable. The forecast uncertainty enters the skills, so this is where the capability reasoning matters most. Intentions stay hidden whatever the sensor quality. Each card links to its experiment, in the validation.",
       html: `<div class="card tight" style="height:250px">${fig("uncertainty.png", "Three sources of uncertainty", 214)}</div>
         <div class="g3 grow">
-          ${[["1", "Surrounding vehicles", "Noisy position and speed of the other vehicles", "Which gap looks safe, through the prediction and the reward", "Fit into a platoon before the fog, 100 seeds", "r-noisy"],
+          ${[["1", "Surrounding vehicles", "Noisy position and speed of the other vehicles " + R("zhang2020efficient") + "", "Which gap looks safe, through the prediction and the reward", "Fit into a platoon before the fog, 100 seeds", "r-noisy"],
              ["2", "Visibility forecast", "Where the fog starts and how dense it is", "The skills themselves, so the capability assessment", "Fog denser or lighter than announced, 20 seeds", "r-forecast"],
-             ["3", "Tactical intentions", "Whether a car will cut in", "The predicted traffic, with braking in some of the futures", "Truck cut-in, illustrative run", "r-cutin"]]
+             ["3", "Tactical intentions", "Whether a car will cut in " + R("chen2025intention") + "", "The predicted traffic, with braking in some of the futures", "Truck cut-in, illustrative run", "r-cutin"]]
             .map(([n, t, u, a, e, to]) => `<div class="card col" style="gap:8px"><div class="row" style="align-items:center;gap:16px"><div class="num-badge">${n}</div><h3 style="margin:0">${t}</h3></div>
               <p class="small"><b class="mute">Uncertain:</b> ${u}</p><p class="small"><b class="mute">Acts on:</b> ${a}</p>
               <p class="small" style="margin-top:auto"><b class="mute">Experiment:</b> ${go(to, e + " →")}</p></div>`).join("")}
@@ -795,9 +794,9 @@
       html: `<div class="row" style="gap:24px">
           <div class="card defs grow">
             <span class="pill">Model</span><div class="eq">𝒫 = (<i>S</i>, <i>A</i>, <i>T</i>, <i>R</i>, <i>O</i>, <i>Z</i>, <i>γ</i>)</div>
-            <span class="pill">Belief</span><div class="eq"><i>b<sub>t</sub></i> ≈ {<i>s<sub>t</sub></i><sup>(<i>i</i>)</sup>}<sub><i>i</i>=1</sub><sup><i>N</i></sup> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">particles</span></div>
+            <span class="pill">Belief</span><div class="eq"><i>b<sub>t</sub></i> ≈ {<i>s<sub>t</sub></i><sup>(<i>i</i>)</sup>}<sub><i>i</i>=1</sub><sup><i>N</i></sup> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">particles</span> ${R("silver_monte-carlo_2010")}</div>
             <span class="pill">Observation</span><div class="eq"><i>o<sub>t</sub></i> = {(<i>p̂<sub>i</sub></i><sup>kin</sup>(<i>t</i>), <i>û<sub>i</sub></i>(<i>t</i>))}<sub><i>i</i>=1</sub><sup><i>N</i><sub>veh</sub></sup>, &nbsp; <i>p̂<sub>i</sub></i><sup>kin</sup> ~ 𝒩(<i>p<sub>i</sub></i><sup>kin</sup>, <i>Σ<sub>i</sub></i>)</div>
-            <span class="pill">Intention</span><div class="eq"><i>P</i>(<i>u</i> | <i>z</i>) ∝ <i>P</i>(<i>u</i>) Π<sub><i>k</i>=1</sub><sup>4</sup> 𝒩(<i>z<sub>k</sub></i> | <i>μ<sub>u,k</sub></i>, <i>σ</i><sup>2</sup><sub><i>u,k</i></sub>)</div>
+            <span class="pill">Intention</span><div class="eq"><i>P</i>(<i>u</i> | <i>z</i>) ∝ <i>P</i>(<i>u</i>) Π<sub><i>k</i>=1</sub><sup>4</sup> 𝒩(<i>z<sub>k</sub></i> | <i>μ<sub>u,k</sub></i>, <i>σ</i><sup>2</sup><sub><i>u,k</i></sub>) ${R("murphy2012machine")}</div>
             <span class="pill ok">Ensured</span><div class="eq"><i>P</i>(<i>a</i> ensured | <i>b<sub>t</sub></i>) ≈ <sup>1</sup>⁄<sub><i>N</i></sub> Σ<sub><i>i</i></sub> 𝟙[<i>a</i> ∈ ${Aens("s<sub>t</sub><sup>(i)</sup>")}] ≥ <i>τ</i> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">share of particles</span></div>
           </div></div>
         <table class="tbl grow" style="font-size:22px"><tr><th style="width:230px"></th><th>ODD-MDP</th><th>ODD-POMDP</th></tr>
@@ -817,12 +816,12 @@
       notes: "Each simulation draws one particle and follows ensured actions up to the horizon. Simulation after simulation, the tree grows toward the most promising ensured actions. Only the best ensured action is executed, the belief is rebuilt and the search starts again.",
       video: { src: A + "pomcp.mp4", parts: [[30.6, "Monte Carlo search: one simulation at a time"], [46.0, "Many simulations: the tree grows where it matters"], [59.37, "Execute the best ensured action, rebuild the belief, search again"]] } },
 
-    { id: "pomcp", cite: ["silver_monte-carlo_2010", "auer2002finite"], sec: "c3", c: ["C3"], kicker: "Resolution through Monte Carlo planning", time: 50,
+    { id: "pomcp", cite: ["auer2002finite", "silver_monte-carlo_2010"], sec: "c3", c: ["C3"], kicker: "Resolution through Monte Carlo planning", time: 50,
       title: "ODD-constrained POMCP: the MCE filters selection, expansion and rollout",
       notes: "POMCP with the capability filter at the three stages where actions are chosen. The final action is the best ensured action at the root. The particles carry the intentions of the other drivers.",
       backups: ["b-pomcp", "b-cost"],
       html: `<div class="g4">
-          ${[["Selection", "UCB1 among the ensured actions of the node", 1], ["Expansion", "new nodes only for ensured actions", 1], ["Rollout", "random policy drawn from the ensured actions", 1], ["Backpropagation", "the return updates values and visit counts", 0]]
+          ${[["Selection", "UCB1 among the ensured actions of the node " + R("auer2002finite") + "", 1], ["Expansion", "new nodes only for ensured actions", 1], ["Rollout", "random policy drawn from the ensured actions", 1], ["Backpropagation", "the return updates values and visit counts " + R("silver_monte-carlo_2010") + "", 0]]
             .map(([t, d, f], j) => `<div class="card col" style="gap:10px"><div class="row" style="align-items:center;gap:12px"><div class="num-badge" style="width:44px;height:44px;font-size:21px">${j + 1}</div><h3 style="margin:0">${t}</h3></div>
               <p class="small">${d}</p>${f ? '<span class="pill ok" style="align-self:flex-start;margin-top:auto">MCE filter</span>' : ""}</div>`).join("")}
         </div>
@@ -847,14 +846,14 @@
     // ================================================================ 6. C4 · validation in simulation and on the vehicle
     { id: "sec-c4", type: "section", sec: "c4", dark: true, title: "C4 · Does it run on a real vehicle?", time: 10 },
 
-    { id: "setup", cite: ["ipgCarMaker", "renault2022cta"], sec: "c4", c: ["C4"], kicker: "Experimental platform", time: 50,
+    { id: "setup", cite: ["renault2022cta", "ipgCarMaker"], sec: "c4", c: ["C4"], kicker: "Experimental platform", time: 50,
       title: "The same planner, from simulation to a real prototype",
       notes: "Three loops that progressively replace simulated elements by real ones. The results that follow come from the software-in-the-loop, except the overtaking on the prototype, which is the vehicle-in-the-loop. In both, ODD-aptive runs unchanged.",
       html: `<div class="row grow">
         <div class="card col" style="flex:1.2 1 0"><h4>From software-in-the-loop to vehicle-in-the-loop</h4>${fig("v_cycle.png", "Validation loops")}
-          <p class="small">Vehicle-in-the-loop: a Mégane E-Tech prototype on a test track. Its RTK position is replicated in CarMaker, the virtual traffic is perceived as if it were real, and the real ADAS features execute the requests.</p></div>
+          <p class="small">Vehicle-in-the-loop: a Mégane E-Tech prototype on a test track ${R("renault2022cta")}. Its RTK position is replicated in CarMaker, the virtual traffic is perceived as if it were real, and the real ADAS features execute the requests.</p></div>
         <div class="col grow setupr">
-          <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker</span><span class="l">software-in-the-loop: road, traffic, conditions and vehicle dynamics</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker ${R("ipgCarMaker")}</span><span class="l">software-in-the-loop: road, traffic, conditions and vehicle dynamics</span></div>
           <div class="card tight stat"><span class="v" style="font-size:40px">ROS node</span><span class="l">ODD-aptive sends a target lane and a set speed to the ADAS features</span></div>
           <div class="card tight stat"><span class="v" style="font-size:40px">5 s · 3.5 s</span><span class="l">one lane change · one keep-lane or ±10 km/h step</span></div>
           <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period; only the first maneuver is executed</span></div>
@@ -1020,7 +1019,7 @@
           <tr><td><span class="num-badge c4" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C4</span><b>Validation</b></td><td>Integration into an industrial prototyping architecture</td><td>${go("v-vil", "Vehicle-in-the-loop on a Mégane E-Tech: one overtaking sequence past a whole group")}</td></tr></table>
         <div class="takeaway" style="margin-top:auto"><b>Capability precedes choice:</b> anticipation changes the decisions and keeps the vehicle fail-operational, without making it overly conservative.</div>` },
 
-    { id: "perspectives", cite: ["kuhn2021introspective", "rabiee2023introspective", "krajewski2018highd", "alshiekh2018shielding", "krasowski2020safe"], sec: "concl", kicker: "Future directions", time: 75,
+    { id: "perspectives", cite: ["alshiekh2018shielding", "krasowski2020safe", "kuhn2021introspective", "rabiee2023introspective", "krajewski2018highd"], sec: "concl", kicker: "Future directions", time: 75,
       title: "Limitations, and where the work goes next",
       notes: "The main limitation: the planner acts at the last admissible instant, for instance when it returns to the right lane just before the fog. Monitoring the maneuver during its execution is the first perspective that addresses it.",
       html: `<div class="row grow">
@@ -1031,10 +1030,10 @@
           <li>Vehicle-in-the-loop gives a first confirmation. Tests with real traffic and degraded conditions are ongoing</li></ul></div>
         <div class="card ok grow"><h3>Perspectives</h3><ol class="nums small">
           <li>Extend the domain and the skills: urban roads, monitoring of braking, steering and power through Act skills</li>
-          <li>Optimize the maneuver parameters, such as the set speed or the lane change duration, as continuous variables</li>
+          <li>Optimize the maneuver parameters, such as the set speed or the lane change duration, as continuous variables ${R("alshiekh2018shielding", "krasowski2020safe")}</li>
           <li>Monitor the maneuver during its execution, to replan or abort it as soon as a condition changes</li>
-          <li>Learn from data where the vehicle is capable, with introspective approaches</li>
-          <li>Richer prediction of the surrounding traffic and of its interactions with the ego vehicle</li></ol></div>
+          <li>Learn from data where the vehicle is capable, with introspective approaches ${R("kuhn2021introspective", "rabiee2023introspective")}</li>
+          <li>Richer prediction of the surrounding traffic and of its interactions with the ego vehicle ${R("krajewski2018highd")}</li></ol></div>
         </div>` },
 
     { id: "publications", sec: "concl", kicker: "Publications", time: 15,
@@ -1079,7 +1078,7 @@
       html: `<div class="g2 grow">
           <div class="card ok"><h3>Ensured MRM</h3><div class="eq">MRM ∈ ${Aens()}</div><p>Its skills are fulfilled in <i class="m">s</i>, so <i class="m">s</i> is a safe state.</p></div>
           <div class="card accent"><h3>Reachable MRM</h3><div class="eq">𝟙<sub>MRM</sub>(<i>s</i>) = 1</div><p>An MRM is reachable from <i class="m">s</i>. Used by the fallback term after the time threshold.</p></div>
-          <div class="card bad"><h3>Required MRM</h3><div class="eq">${Uens()} = ∅</div><p>No maneuver is ensured: loss of operability, a fallback is required.</p></div>
+          <div class="card bad"><h3>Required MRM</h3><div class="eq">${Uens()} = ∅</div><p>No maneuver is ensured: loss of operability, a fallback is required ${R("sae2021taxonomy", "iso2020iso4804")}.</p></div>
           <div class="card amber"><h3>Fail-operational</h3><div class="eq">∀<i>k</i> ∈ {0, …, <i>H</i>}, <i>s<sub>k</sub></i> ∈ <i>S</i><sub>safe</sub></div><p>Pursued jointly by the filter and the reward, not imposed as a hard constraint.</p></div>
         </div>` },
 
@@ -1109,7 +1108,7 @@
       html: `<div class="row grow"><div class="card grow"><ul class="list">
           <li>The tree is built first: root, ensured actions, predicted successors, up to four steps</li>
           <li>The reward is evaluated on the successor state</li>
-          <li>On a finite tree, value iteration converges to the backward induction from the leaves</li>
+          <li>On a finite tree, value iteration converges to the backward induction from the leaves ${R("bellman1957dynamic")}</li>
           <li>The policy is the best ensured action at the root, and only that action is executed</li></ul></div>
         <div class="card col grow">${fig("tree.png", "Tree of ensured states")}</div></div>` },
 
@@ -1161,15 +1160,15 @@
           <tr><td><b>Minor terms</b></td><td>lane change cost, and a penalty for overtaking on the right</td></tr></table>
         <p class="small mute">Weights: collision much larger than fallback, then operability, risk, legal and speed.</p>` },
 
-    { id: "b-pomcp", cite: ["silver_monte-carlo_2010", "auer2002finite"], sec: "backup", kicker: "Appendix", title: "ODD-constrained POMCP in practice",
+    { id: "b-pomcp", cite: ["auer2002finite", "silver_monte-carlo_2010"], sec: "backup", kicker: "Appendix", title: "ODD-constrained POMCP in practice",
       html: `<div class="g4">
           <div class="card stat"><span class="v">16</span><span class="l">particles in the noisy perception batch</span></div>
           <div class="card stat"><span class="v">32</span><span class="l">hypotheses on the fog in the forecast batch</span></div>
           <div class="card stat"><span class="v">≤ 400</span><span class="l">simulations per planning cycle</span></div>
           <div class="card stat"><span class="v"><i class="m">τ</i> = 0.9</span><span class="l">confidence threshold in all experiments</span></div></div>
         <div class="card grow"><ul class="list">
-          <li>UCB1 selection, expansion and random rollout restricted to the ensured actions of the node</li>
-          <li>Final action: best ensured action at the root</li>
+          <li>UCB1 ${R("auer2002finite")} selection, expansion and random rollout restricted to the ensured actions of the node</li>
+          <li>Final action: best ensured action at the root ${R("silver_monte-carlo_2010")}</li>
           <li>Belief rebuilt at every cycle from the world model, no second filtering</li>
           <li>Intentions estimated by a Gaussian naive Bayes classifier on position and speed</li></ul></div>` },
 
@@ -1183,7 +1182,7 @@
           <p class="small mute" style="margin-top:16px">Explored states in the plane of speed and perception range, at four moments and for three margins.</p></div></div>` },
 
     { id: "b-rss", cite: ["shwartz2017RSS", "hasuo2022rss"], sec: "backup", kicker: "Appendix", title: "Sense skill parameters for the lane change",
-      html: `<div class="row grow"><div class="card col grow">${fig("ranges.png", "Required perception ranges")}<p class="small mute">RSS worst case about 300 m at 130 km/h. Both vehicles at 100 km/h: about 56 m.</p></div>
+      html: `<div class="row grow"><div class="card col grow">${fig("ranges.png", "Required perception ranges")}<p class="small mute">RSS ${R("shwartz2017RSS", "hasuo2022rss")} worst case about 300 m at 130 km/h. Both vehicles at 100 km/h: about 56 m.</p></div>
         <table class="tbl" style="flex:0.7 1 0;align-self:flex-start"><tr><th>Parameter</th><th class="c">Value</th></tr>
           <tr><td>Response time, front zones</td><td class="c">0.5 s</td></tr><tr><td>Response time, rear zone</td><td class="c">1 s</td></tr>
           <tr><td>Maximum acceleration</td><td class="c">2 m/s²</td></tr><tr><td>Maximum braking</td><td class="c">7.5 m/s²</td></tr>
@@ -1202,7 +1201,7 @@
 
     { id: "b-learning", cite: ["hoel2019combiningdeep", "alshiekh2018shielding"], sec: "backup", kicker: "Appendix", title: "Why model-based, and not learned end to end",
       html: `<div class="row grow">
-          <div class="card grow"><h3>Learning-based decision-making</h3><ul class="list">
+          <div class="card grow"><h3>Learning-based decision-making ${R("hoel2019combiningdeep")}</h3><ul class="list">
             <li>Scales well and handles unseen situations</li>
             <li>Remains a black box, with no safety guarantee for critical decisions</li>
             <li>Depends on data quality, needs many training episodes, and suffers from the sim-to-real gap</li>
@@ -1210,7 +1209,7 @@
           <div class="card navy grow"><h3>In ODD-aptive</h3><ul class="list">
             <li>Each skill is a requirement on the operational domain: decisions are traceable</li>
             <li>Each decision can be explained against keep lane, term by term (${go("b-explain", "appendix")})</li>
-            <li>The filter excludes non-ensured maneuvers by construction</li>
+            <li>The filter excludes non-ensured maneuvers by construction ${R("alshiekh2018shielding")}</li>
             <li>Learning fits where the skills rely on trained components: learn where the vehicle is capable, and detect when it is no longer (introspective approaches)</li></ul></div></div>` },
 
     { id: "b-conf", sec: "backup", kicker: "Appendix", title: "Statistical confidence of the main proportions",
@@ -1227,11 +1226,11 @@
           <tr class="hl"><td>ODD-POMDP</td><td class="c">19 / 20</td><td class="c">75 – 100 %</td></tr></table>
         <p class="small mute" style="margin:0">Exact Clopper–Pearson intervals. Both planners run on the same seeds, so a paired test would be sharper.</p>` },
 
-    { id: "b-takeover", cite: ["sae2021taxonomy", "kuehn2017takeover"], sec: "backup", kicker: "Appendix", title: "Driver takeover and automation levels",
+    { id: "b-takeover", cite: ["kuehn2017takeover", "sae2021taxonomy"], sec: "backup", kicker: "Appendix", title: "Driver takeover and automation levels",
       html: `<div class="card grow"><ul class="list">
           <li><b>Level 2:</b> fail-operational decisions can reduce unplanned disengagements when the context shifts</li>
-          <li><b>Level 3:</b> the system must issue a timely request to intervene, 12 to 15 s ahead, and drivers are often unaware of the system limits</li>
-          <li><b>Above Level 3:</b> the system reaches a minimal risk condition by itself</li>
+          <li><b>Level 3:</b> the system must issue a timely request to intervene, 12 to 15 s ahead ${R("kuehn2017takeover")}, and drivers are often unaware of the system limits</li>
+          <li><b>Above Level 3:</b> the system reaches a minimal risk condition by itself ${R("sae2021taxonomy")}</li>
           <li>In ODD-aptive, the fallback is a guarantee held in reserve rather than the default behavior. Depending on the level, it is an MRM or a timely takeover request</li>
           <li>Scenario 1 uses a time budget of 20 s to reach a minimal risk condition, consistent with Level 3</li></ul></div>` },
 
@@ -1253,16 +1252,21 @@
           <li>Speed almost constant at ≈ 60 km/h</li></ul></div>` },
   ];
 
-  // references pages: every work cited on a slide, alphabetical, a few per page
-  const cited = [...new Set(slides.concat(backups).flatMap((x) => x.cite || []))]
-    .sort((a, b) => BIB[a][0].localeCompare(BIB[b][0]));
-  const PER = 10, refpage = {};
-  for (let j = 0; j < cited.length; j += PER) {
-    const part = cited.slice(j, j + PER), id = `b-refs-${j / PER + 1}`;
-    const first = (k) => BIB[k][0].split(/[ ,&]/)[0];
+  // citations numbered in order of first appearance over the defense, as in an article: the
+  // in-text markers of a slide first, then its cite list. The References pages close the appendix.
+  const NUM = {}, ORDER = [];
+  slides.concat(backups).forEach((x) => {
+    const inText = [...String(x.html || "").matchAll(/data-k="([^"]+)"/g)].flatMap((m) => m[1].split(","));
+    x.refs = [...new Set(inText.concat(x.cite || []))].filter((k) => BIB[k]);
+    x.refs.forEach((k) => { if (!NUM[k]) { ORDER.push(k); NUM[k] = ORDER.length; } });
+    x.refs.sort((p, q) => NUM[p] - NUM[q]);
+  });
+  const PER = 7, refpage = {};
+  for (let j = 0; j < ORDER.length; j += PER) {
+    const part = ORDER.slice(j, j + PER), id = `b-refs-${j / PER + 1}`;
     part.forEach((k) => { refpage[k] = id; });
-    backups.push({ id, sec: "backup", kicker: "Appendix", title: `References · ${first(part[0])} to ${first(part[part.length - 1])}`,
-      html: `<div class="refs">${part.map((k) => `<p><b>${BIB[k][0]}</b>${BIB[k][1]}</p>`).join("")}</div>` });
+    backups.push({ id, sec: "backup", kicker: "Appendix", title: `References [${j + 1}]–[${j + part.length}]`,
+      html: `<ol class="refs">${part.map((k) => `<li><span class="n">[${NUM[k]}]</span><span>${BIB[k][1]}</span></li>`).join("")}</ol>` });
   }
 
   // appendix index: one link per appendix slide
@@ -1271,6 +1275,6 @@
 
   window.TALK = {
     footer: "Rhandy Cardenas  ·  Fail-operational decision-making for intelligent vehicles",
-    sections, slides, backups, bib: BIB, refpage,
+    sections, slides, backups, bib: BIB, bibnum: NUM, refpage,
   };
 })();

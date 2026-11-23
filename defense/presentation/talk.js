@@ -91,11 +91,24 @@
     return html;
   }
 
-  // references of a slide, at its foot; each one opens its page in the appendix
+  // references of a slide, at its foot, as in an article: [n] authors, "title," venue, year.
+  // Numbered over the whole defense (T.bibnum); each number opens the References pages at the end.
   function cites(s) {
-    const ks = (s.cite || []).filter((k) => T.bib && T.bib[k]);
+    const ks = (s.refs || []).filter((k) => T.bib && T.bib[k]);
     if (!ks.length || s.type === "video" || s.dark) return "";
-    return `<div class="cites"><span>References</span>` + ks.map((k) => `<a data-go="${T.refpage[k]}" title="${esc(T.bib[k][1].replace(/<[^>]+>/g, "").replace(/^ — /, ""))}">${esc(T.bib[k][0])}</a>`).join("<i>·</i>") + `</div>`;
+    return `<div class="cites${ks.length > 2 ? " two" : ""}">` +
+      ks.map((k) => `<p><a data-go="${T.refpage[k]}">[${T.bibnum[k]}]</a> ${T.bib[k][0]}</p>`).join("") + `</div>`;
+  }
+
+  // in-text citations: each marker gets its numbers, [3] or [3, 7], and opens the References
+  function citeNumbers(el) {
+    el.querySelectorAll("cite.cref").forEach((c) => {
+      const ks = c.dataset.k.split(",").filter((k) => T.bibnum && T.bibnum[k]).sort((a, b) => T.bibnum[a] - T.bibnum[b]);
+      if (!ks.length) { c.remove(); return; }
+      c.textContent = `[${ks.map((k) => T.bibnum[k]).join(", ")}]`;
+      c.title = ks.map((k) => `[${T.bibnum[k]}] ` + T.bib[k][1].replace(/<[^>]+>/g, "")).join(" · ");
+      c.dataset.go = T.refpage[ks[0]];
+    });
   }
 
   function build(s) {
@@ -115,7 +128,7 @@
       const rows = T.sections.filter((x) => x.c).map((x) => `<a data-go="${x.page}" href="#/${x.page}">` +
         `<div class="num-badge ${x.c[0].toLowerCase()}">${x.c[0]}</div>` +
         `<div class="t">${esc(x.title)}<small>${esc(x.sub || "")}</small></div>` +
-        `<div class="m">${(x.pubs || []).map((p) => `<span class="pill line">${esc(p)}</span>`).join("")}</div>` +
+        `<div class="m">${(x.pubs || []).map((p) => `<span class="pill line">${esc(p)}</span>`).join("")}${x.pubk ? `<cite class="cref" data-k="${x.pubk}"></cite>` : ""}</div>` +
         `<span class="arrow">→</span></a>`).join("");
       inner = header(s) + `<div class="body"><div class="outl">${rows}</div>${s.html || ""}</div>` + cites(s) + footer(s);
     } else if (s.type === "section") {
@@ -140,10 +153,21 @@
       inner = header(s) + (bk ? `<div class="bk">${bk}</div>` : "") + `<div class="body">${s.html}</div>` + cites(s) + footer(s);
     }
     el.innerHTML = inner;
+    citeNumbers(el);
     return el;
   }
 
   const els = ALL.map((s) => { const el = build(s); stage.appendChild(el); applySteps(el, 0); return el; });
+
+  // the foot references take the room they need: the body ends just above them
+  function fitCites() {
+    els.forEach((el) => {
+      const c = el.querySelector(":scope > .cites"), b = el.querySelector(":scope > .body");
+      if (c && b) b.style.bottom = `${Math.ceil(66 + c.offsetHeight + 14)}px`;
+    });
+  }
+  fitCites();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCites);
 
   // header titles: shrink until they fit on one line
   function fitTitles(root) {
