@@ -176,7 +176,7 @@
     { id: "v-problem-a", type: "video", sec: "intro", ref: "§1.3", time: 45,
       title: "Problem: a sequence of admissible decisions can leave no fallback",
       notes: "Current systems check the ODD as a monitor: each maneuver is admissible when it is chosen. Yet the sequence narrows operability until no fallback is left, without any single decision being incorrect.",
-      video: { src: A + "problem.mp4", parts: [[0.0, "Each decision is checked when it is taken"], [9.0, "Yet the sequence leaves no fallback"]], end: 16.0 } },
+      video: { src: A + "problem.mp4?v=2", parts: [[0.0, "Each decision is checked when it is taken"], [9.0, "Yet the sequence leaves no fallback"]], end: 16.0 } },
 
     { id: "question", sec: "intro", kicker: "Problem statement", ref: "§1.3", time: 75, steps: 3,
       title: "Research question",
@@ -206,9 +206,9 @@
           <div data-step="3">Anticipating it, DM<sub>2</sub> <b>reduces the speed</b>: OD<sub>t2</sub> stays within the ODD</div></div>` },
 
     { id: "v-problem-b", type: "video", sec: "intro", ref: "§1.3", time: 40,
-      title: "Anticipate: a fallback always within reach",
-      notes: "The answer of the thesis: anticipate the loss of capability, so that a fallback always stays within reach. This is fail-operational decision-making.",
-      video: { src: A + "problem.mp4", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a fallback always reachable"]] } },
+      title: "Anticipate: the policy can always reach a refuge",
+      notes: "The answer of the thesis: anticipate the loss of capability. Under the rain the vehicle keeps fewer options, but its policy can always lead it to a refuge state, through a fallback maneuver. This is fail-operational decision-making.",
+      video: { src: A + "problem.mp4?v=2", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: the policy can always reach a refuge"]] } },
 
     { id: "failop", sec: "intro", kicker: "The aim", ref: "§1.3, §2.2.1", time: 60, steps: 2,
       title: "Fail-operational: keep driving with fewer capabilities, a fallback always reachable",
