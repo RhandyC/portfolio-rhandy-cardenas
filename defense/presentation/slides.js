@@ -899,23 +899,6 @@
       notes: "The strongest evidence of the defense: a real vehicle executing the decisions. Let the video run without talking over it for the first seconds.",
       video: { src: V + "vil.mp4", parts: [[12.0, "A real vehicle, with virtual traffic"], [21.25, "Is returning to the right lane worthwhile?"], [33.0, "The run: one overtaking sequence past the whole group"]] } },
 
-    { id: "vil-result", sec: "c4", c: ["C4"], kicker: "Long-term overtaking on the prototype vehicle", ref: "§6.3.2", time: 50,
-      title: "On the prototype, one overtaking sequence passes the whole group",
-      notes: "A one-maneuver planner tends to return as soon as it passes a vehicle. ODD-aptive tells the cases apart: it returns after a single overtaking, and passes the whole group when the vehicles are close. The planner only represents the nearest vehicles, so passing the group comes from successive planning updates.",
-      backups: ["b-vil"],
-      html: `<div class="row grow">
-        <div class="col" style="flex:1 1 0">
-          <div class="card tight">${fig("overtaking_policies.jpg", "Single and multiple overtaking policies", 220)}</div>
-          <div class="card grow"><ul class="list small">
-            <li>Requested speed 65 km/h on a 1.5 km straight, four virtual vehicles at ≈ 35 km/h</li>
-            <li>Returns ≈ 1 s after passing the first truck, alone ahead</li>
-            <li>Then keeps the left lane past two cars and the second truck, back right after ≈ 77 s</li>
-            <li>At 53.9 s, Keep Lane is valued 17.34 against 14.80 for a lane change right</li>
-            <li>Four smooth lane changes, lateral acceleration below ≈ 1.2 m/s²</li></ul></div>
-        </div>
-        <div class="card col" style="flex:1 1 0"><h4>Camera and RViz views, from 15 s to 77 s</h4>${fig("overtaking_sequence.jpg", "Overtaking sequence on the prototype")}</div>
-        </div>` },
-
     { id: "v-fog", type: "video", sec: "c4", c: ["C2", "C4"], ref: "§6.4.2", time: 135,
       title: "Scenario 1: reduced visibility",
       notes: "The hypotheses of the fog scenario, then the reference planner with a single decision step against ODD-aptive with four steps, on the same traffic.",
@@ -1068,7 +1051,7 @@
           <tr><td><span class="num-badge c1" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C1</span><b>Maneuver Capability Estimator</b></td><td>Ensured maneuvers in the current and predicted states, each loss traced to a change of context</td><td>${go("fog-a", "Deceleration 455 to 478 m before the fog, instead of 170 m")}</td></tr>
           <tr><td><span class="num-badge c2" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C2</span><b>ODD-MDP</b></td><td>Decisions only among ensured maneuvers over 14 to 20 s, with a reachable MRM</td><td>${go("fog-a", "100 of 100 runs without MRM in fog, against 0 with one step")}. ${go("exit", "Exit taken in 100 of 100 runs")}</td></tr>
           <tr><td><span class="num-badge c3" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C3</span><b>ODD-POMDP</b></td><td>The same principle under uncertainty, with a probabilistic guarantee <i class="m">τ</i></td><td>${go("r-forecast", "Forecast errors: fog passed in 19 of 20 runs, against 10")}. ${go("r-noisy", "Noisy perception: 94 against 85 operable")}</td></tr>
-          <tr><td><span class="num-badge c4" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C4</span><b>Validation</b></td><td>Integration into an industrial prototyping architecture</td><td>${go("vil-result", "Vehicle-in-the-loop on a Mégane E-Tech: one overtaking sequence past a whole group")}</td></tr></table>
+          <tr><td><span class="num-badge c4" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C4</span><b>Validation</b></td><td>Integration into an industrial prototyping architecture</td><td>${go("v-vil", "Vehicle-in-the-loop on a Mégane E-Tech: one overtaking sequence past a whole group")}</td></tr></table>
         <div class="takeaway" style="margin-top:auto"><b>Capability precedes choice:</b> anticipation changes the decisions and keeps the vehicle fail-operational, without making it overly conservative.</div>` },
 
     { id: "perspectives", cite: ["kuhn2021introspective", "rabiee2023introspective", "krajewski2018highd", "alshiekh2018shielding", "krasowski2020safe"], sec: "concl", kicker: "Future directions", ref: "§7.1 – §7.2", time: 75,
