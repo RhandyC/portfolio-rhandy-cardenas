@@ -97,13 +97,13 @@
       ch: "Contribution 1", where: "Chapter 4", c: ["C1"], pubs: ["IFAC IAV 2025"],
       sub: "The ODD-aptive architecture and the Maneuver Capability Estimator (MCE)", goal: "Which maneuvers are ensured, in the current and in the predicted states",
       ag: "The ODD-aptive architecture, ensured maneuvers and levels of operability, the skills of a maneuver, the strategic margin" },
-    { id: "c2", part: "Part II · Chapters 4 – 5", cpc: "cho", short: "C2", n: 4, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "How to decide without losing the fallback?", toc: "C2 · How to decide without losing the fallback?",
+    { id: "c2", part: "Part II · Chapters 4 – 5", cpc: "cho", short: "C2", n: 4, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "Which sequence of ensured maneuvers to choose?", toc: "C2 · Which sequence of ensured maneuvers to choose?",
       ch: "Contribution 2", where: "Chapter 5 (§5.2) · validated in §6.3 – §6.4", c: ["C2"], pubs: ["IEEE IV 2025"],
       sub: "The ODD-constrained MDP", goal: "Decisions only among ensured maneuvers, over the whole planning horizon",
       ag: "The ODD-MDP: formalism, resolution on the tree of ensured states, reward, safe states" },
-    { id: "c3", part: "Part II · Chapters 4 – 5", cpc: "cho", short: "C3", n: 5, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "And when the vehicle is uncertain?", toc: "C3 · And when the vehicle is uncertain?",
+    { id: "c3", part: "Part II · Chapters 4 – 5", cpc: "cho", short: "C3", n: 5, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "What if the information is uncertain?", toc: "C3 · What if the information is uncertain?",
       ch: "Contribution 3", where: "Chapter 5 (§5.3) · validated in §6.5", c: ["C3"],
-      sub: "The ODD-constrained POMDP", goal: "Capability before choice, under uncertain states, forecasts and intentions",
+      sub: "The ODD-constrained POMDP", goal: "Capability before choice, with noisy measurements, hidden intentions and uncertain forecasts",
       ag: "The ODD-POMDP: sources of uncertainty, belief, ensured actions on the belief, Monte Carlo planning" },
     { id: "c4", part: "Part III · Chapter 6", cpc: "cap cho", short: "C4", n: 6, page: "sec-c4", kicker: "C4 · Validation", title: "Does it hold, in simulation and on a real vehicle?", toc: "C4 · Validation, in simulation and on a real vehicle",
       ch: "Contribution 4", where: "Chapter 6", c: ["C4"],
@@ -688,10 +688,10 @@
         <ul class="chk"><li class="y"><b>Capability</b>: the MCE tells which maneuvers are ensured in a given state, current or predicted</li>
           <li class="n">A maneuver ensured now can lead to a state where no fallback is ensured, ${go("v-problem-a", "as in the problem")}</li>
           <li class="to"><b>Choice</b>: chain maneuvers among the ensured ones, and check every predicted state</li></ul>
-        <a class="next" data-go="sec-c2" href="#/sec-c2"><span class="cbadge solid">C2</span> How to decide without losing the fallback? →</a></div>` },
+        <a class="next" data-go="sec-c2" href="#/sec-c2"><span class="cbadge solid">C2</span> Which sequence of ensured maneuvers to choose? →</a></div>` },
 
     // ================================================================ 4. C2 · choice: ODD-constrained MDP (part II, chapter 5, §5.2)
-    { id: "sec-c2", type: "section", sec: "c2", dark: true, title: "C2 · How to decide without losing the fallback?", time: 10 },
+    { id: "sec-c2", type: "section", sec: "c2", dark: true, title: "C2 · Which sequence of ensured maneuvers to choose?", time: 10 },
 
     { id: "odd-mdp", cite: ["bellman1957MDP", "11097482"], sec: "c2", c: ["C2"], kicker: "Formalism", ref: "§5.2.1 – §5.2.3", time: 80,
       title: "The ODD-MDP: capability enters the Bellman equation",
@@ -788,10 +788,10 @@
         <ul class="chk"><li class="y"><b>Choice</b> only among ensured maneuvers, with a fallback kept reachable over the whole horizon</li>
           <li class="n">The perceived state is taken as exact: noisy positions and speeds, an uncertain fog forecast, hidden intentions</li>
           <li class="to">Keep capability before choice when the state is uncertain</li></ul>
-        <a class="next" data-go="sec-c3" href="#/sec-c3"><span class="cbadge solid">C3</span> And when the vehicle is uncertain? →</a></div>` },
+        <a class="next" data-go="sec-c3" href="#/sec-c3"><span class="cbadge solid">C3</span> What if the information is uncertain? →</a></div>` },
 
     // ================================================================ 5. C3 · choice under uncertainty: ODD-constrained POMDP (part II, chapter 5, §5.3)
-    { id: "sec-c3", type: "section", sec: "c3", dark: true, title: "C3 · And when the vehicle is uncertain?", time: 10 },
+    { id: "sec-c3", type: "section", sec: "c3", dark: true, title: "C3 · What if the information is uncertain?", time: 10 },
 
     { id: "pomdp-sources", cite: ["zhang2020efficient", "chen2025intention"], sec: "c3", c: ["C3"], kicker: "Extension to partial observability", ref: "§5.3.1 – §5.3.2", time: 55,
       title: "Three sources of uncertainty, one belief over particles",
