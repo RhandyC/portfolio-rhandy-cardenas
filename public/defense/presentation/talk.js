@@ -70,11 +70,10 @@
     const secs = T.sections.map((x) =>
       `<button type="button" data-go="${x.page}" class="${x.id === s.sec ? "on" : ""}" title="${esc(x.toc || x.title)}">${esc(x.short || x.n)}</button>`).join("") +
       `<button type="button" class="part ${s.main ? "" : "on"}" data-go="bindex" title="Appendix">Appendix</button>`;
-    const ref = s.ref ? `<span class="ref" title="Section of the manuscript">${esc(s.ref)}</span>` : "";
     const num = s.type === "title" ? "" : fullLabel(s);
     return `<div class="ftr"><div class="secs">${secs}</div>` +
       (s.type === "video" ? "" : `<div class="who">${esc(T.footer)}</div>`) +
-      `<div class="nav">${ref}<button type="button" class="ret" data-ret hidden title="Return (R)"></button>` +
+      `<div class="nav"><button type="button" class="ret" data-ret hidden title="Return (R)"></button>` +
       `<button type="button" data-cmd="prev" title="Previous (←)" aria-label="Previous">${ICON.prev}</button>` +
       `<button type="button" data-cmd="overview" title="All slides (O)" aria-label="All slides">${ICON.grid}</button>` +
       `<button type="button" data-cmd="next" title="Next (→)" aria-label="Next">${ICON.next}</button>` +
@@ -84,10 +83,8 @@
   }
 
   function tocHTML(onSec) {
-    let html = "", part = null;
+    let html = "";
     T.sections.forEach((x) => {
-      if (x.part && x.part !== part) { html += `<div class="part">${esc(x.part)}</div>`; }
-      part = x.part;
       const done = onSec && T.sections.findIndex((y) => y.id === onSec) > T.sections.indexOf(x);
       html += `<a data-go="${x.page}" class="${x.id === onSec ? "on" : (done ? "done" : "")}"><span>${x.n}</span><span>${esc(x.toc || x.title)}</span></a>`;
     });
@@ -110,25 +107,15 @@
     if (s.type === "title") {
       inner = s.html + footer(s);
     } else if (s.type === "agenda") {
-      // every section, grouped by part of the manuscript; each row opens its section page
-      let rows = "", r = 1;
-      T.sections.forEach((x, k) => {
-        const span = T.sections.slice(k).findIndex((y) => y.part !== x.part);
-        if (!k || T.sections[k - 1].part !== x.part) {
-          rows += `<div class="ag-part" style="grid-row:${r} / span ${span < 0 ? T.sections.length - k : span}">${(x.part || "").split(" · ").map(esc).join("<br>")}</div>`;
-        }
-        const cs = (x.c || []).map((c) => `<span class="cbadge solid">${c}</span>`).join("");
-        const cpc = x.c ? [["cap", "Capability", "pill amber"], ["cho", "Choice", "pill"]].filter(([k]) => (x.cpc || "").includes(k))
-          .map(([, t, cl]) => `<span class="${cl}">${t}</span>`).join("") : "";
-        rows += `<a class="ag-row" style="grid-row:${r++}" data-go="${x.page}" href="#/${x.page}"><span class="n">${x.n}</span>` +
-          `<div class="t">${esc(x.toc || x.title)}<small>${esc(x.ag || x.sub || "")}</small></div><div class="m">${cpc}${cs}</div></a>`;
-      });
+      // the title of every section, nothing else; each row opens its section page
+      const rows = T.sections.map((x) => `<a class="ag-row" data-go="${x.page}" href="#/${x.page}"><span class="n">${x.n}</span>` +
+        `<div class="t">${esc(x.toc || x.title)}</div></a>`).join("");
       inner = header(s) + `<div class="body"><div class="agenda">${rows}</div>${s.html || ""}</div>` + footer(s);
     } else if (s.type === "outline") {
       const rows = T.sections.filter((x) => x.c).map((x) => `<a data-go="${x.page}" href="#/${x.page}">` +
         `<div class="num-badge ${x.c[0].toLowerCase()}">${x.c[0]}</div>` +
         `<div class="t">${esc(x.title)}<small>${esc(x.sub || "")}</small></div>` +
-        `<div class="m"><span>${esc(x.where)}</span>${(x.pubs || []).map((p) => `<span class="pill line">${esc(p)}</span>`).join("")}</div>` +
+        `<div class="m">${(x.pubs || []).map((p) => `<span class="pill line">${esc(p)}</span>`).join("")}</div>` +
         `<span class="arrow">→</span></a>`).join("");
       inner = header(s) + `<div class="body"><div class="outl">${rows}</div>${s.html || ""}</div>` + cites(s) + footer(s);
     } else if (s.type === "section") {
@@ -136,7 +123,7 @@
       const cs = (x.c || []).map((c) => `<a class="cbadge solid" data-go="contrib">${c}</a>`).join("");
       const pubs = (x.pubs || []).map((p) => `<span class="pill">${esc(p)}</span>`).join("");
       const cpc = x.cpc ? `<div class="cpcstrip"><span class="${/cap/.test(x.cpc) ? "on" : ""}">Capability</span><span class="pre">precedes</span><span class="${/cho/.test(x.cpc) ? "on" : ""}">choice</span></div>` : "";
-      inner = `<div class="sec"><div class="main">${cpc}<div class="k">${esc(x.ch)}${x.where ? " · " + esc(x.where) : ""}</div>` +
+      inner = `<div class="sec"><div class="main">${cpc}<div class="k">${esc(x.ch)}</div>` +
         `<div class="big">${esc(x.title)}</div>${x.sub ? `<div class="sub">${x.sub}</div>` : ""}` +
         `${x.goal ? `<div class="goal">${x.goal}</div>` : ""}${cs || pubs ? `<div class="cs">${cs}${pubs}</div>` : ""}</div>` +
         `<div class="side">${tocHTML(s.sec)}</div></div>` + footer(s);
@@ -476,7 +463,7 @@
       if (!g.items.length) return;
       html += `<div class="grp">${esc(g.name)}</div><div class="items">` + g.items.map((s) =>
         `<button type="button" data-ov="${s.i}"><span class="k">${label(s)}</span><span>${s.title.replace(/<[^>]+>/g, "")}` +
-        (isVideo(s) ? `<span class="v">▶ video · ${s.video.parts.length} scenes</span>` : (s.ref ? `<span class="v">${esc(s.ref)}</span>` : "")) +
+        (isVideo(s) ? `<span class="v">▶ video · ${s.video.parts.length} scenes</span>` : "") +
         `</span></button>`).join("") + `</div>`;
     });
     overview.innerHTML = html;
@@ -622,7 +609,7 @@
     if (more && !isVideo(s)) cloneSlide(i, k + 1, document.querySelector("#pv .nxt"));
     else cloneSlide(more ? i : i + 1, more ? k + 1 : 0, document.querySelector("#pv .nxt"));
     document.querySelector("#pv .nlab").textContent = more ? (isVideo(s) ? `Next: scene ${k + 2} of this video` : "Next: next step of this slide") : "Next slide";
-    let notes = `<div class="meta">${esc(fullLabel(s))}${s.ref ? " · " + esc(s.ref) : ""}${s.time ? " · planned " + fmt(s.time * 1000) : ""}</div>`;
+    let notes = `<div class="meta">${esc(fullLabel(s))}${s.time ? " · planned " + fmt(s.time * 1000) : ""}</div>`;
     if (isVideo(s)) {
       notes += `<div class="vctl"><button type="button" data-cmd="vby:-5">−5 s (J)</button><button type="button" data-cmd="vtoggle">Pause / play (K)</button><button type="button" data-cmd="vby:5">+5 s (L)</button></div>`;
       notes += `<div class="scenes">${s.video.parts.map((p, j) => `<button type="button" data-cmd="vpart:${j}" class="${j === k ? "on" : ""}">${j + 1}. ${esc(p[1])}${j === k && isPlaying ? " (playing)" : ""}</button>`).join("")}</div>`;
