@@ -219,33 +219,15 @@
       notes: "Why is checking the ODD at each decision not enough? Current systems check the ODD as a monitor: each maneuver is admissible when it is chosen. Yet the sequence narrows operability until no fallback is left, without any single decision being incorrect.",
       video: { src: A + "problem.mp4?v=4", parts: [[0.0, "Each decision is checked when it is taken"], [9.0, "Yet the sequence leaves no fallback"]], end: 16.0 } },
 
-    { id: "question", th: "The research question", sec: "intro", kicker: "Problem statement", ref: "§1.3", time: 75, steps: 3,
+    { id: "question", th: "The research question", sec: "intro", kicker: "Problem statement", ref: "§1.3", time: 50, steps: 1,
       title: "Research question",
-      notes: "Hence the research question. The research question. The figure gives what an answer must achieve, in two views of the same situation: on the left, the operational conditions as a point in the space of conditions, with the ODD as the region where the system was designed to operate; on the right, the road. (0) At t0, the conditions lie within the ODD. (1) A first decision, DM1, leads to t1, still within the ODD. (2) Rain reduces the visibility ahead: if nothing changes, the next state would leave the ODD. (3) Anticipating it, the second decision reduces the speed, and the vehicle stays within its ODD. The decision is taken before the limit, not after it.",
-      html: `<div class="card" style="padding:20px 36px"><div class="quote" style="font-size:32px">“How can an intelligent vehicle ensure ODD-compliant decision-making as its operational context continuously evolves?”</div></div>
-        <div class="row grow" style="align-items:stretch">
-          <div class="card col" style="flex:0 0 640px;padding:14px 18px"><h4 style="margin:0">In the space of operational conditions</h4>
-            <svg class="odsp" viewBox="0 0 640 520" aria-hidden="true">
-              <defs><marker id="odsp-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1d1d1d"/></marker></defs>
-              <path class="blob" d="M70 130 C 50 50, 210 20, 310 45 C 430 75, 560 30, 575 160 C 585 260, 548 330, 560 420 C 572 500, 430 505, 310 488 C 190 470, 70 505, 48 400 C 32 300, 85 220, 70 130 Z"/>
-              <text class="oddl" x="96" y="112">ODD</text>
-              <g class="odb"><rect x="80" y="300" width="150" height="100" rx="6"/><text x="155" y="352">OD<tspan class="sb" dy="12">t0</tspan></text></g>
-              <g data-step="1"><path class="dm" d="M168 404 Q 228 476 296 424" marker-end="url(#odsp-a)"/><text class="dml" x="138" y="470">DM<tspan class="sb" dy="8">1</tspan></text>
-                <g class="odb"><rect x="300" y="330" width="150" height="100" rx="6"/><text x="375" y="382">OD<tspan class="sb" dy="12">t1</tspan></text></g></g>
-              <g data-step="2"><rect class="out" x="561" y="296" width="46" height="108"/><rect class="odd2" x="430" y="296" width="177" height="108" rx="6"/>
-                <text class="odl2" x="600" y="438">OD<tspan class="sb" dy="12">t1′</tspan></text>
-                <text class="rain" x="606" y="476" text-anchor="end">rain: visibility drops</text></g>
-              <g data-step="3"><path class="dm" d="M372 328 Q 350 258 396 199" marker-end="url(#odsp-a)"/><text class="dml" x="272" y="268">DM<tspan class="sb" dy="8">2</tspan></text>
-                <g class="odb"><rect x="330" y="95" width="150" height="100" rx="6"/><text x="405" y="147">OD<tspan class="sb" dy="12">t2</tspan></text></g></g>
-            </svg></div>
-          <div class="card col grow" style="padding:14px 18px;align-items:center"><h4 style="margin:0;align-self:flex-start">On the road</h4>
-            <div class="wipe"><img class="w0" src="${F}anticipation.jpg" alt=""><div class="wp" data-dim="1"><div data-dim="2"><div data-dim="3"><img class="w1" src="${F}anticipation.jpg" alt="Anticipatory decision-making: the vehicle reduces its speed before the visibility drops"></div></div></div></div></div>
-        </div>
-        <div class="capt"><div data-until="1">At <i class="m">t</i><sub>0</sub>, the operational conditions lie within the ODD</div>
-          <div data-step="1"><div data-until="2">Decision DM<sub>1</sub>: at <i class="m">t</i><sub>1</sub>, the conditions are still within the ODD</div></div>
-          <div data-step="2"><div data-until="3">Rain reduces the visibility: <b>if nothing changes</b>, the next state OD<sub>t1′</sub> leaves the ODD</div></div>
-          <div data-step="3">Anticipating it, DM<sub>2</sub> <b>reduces the speed</b>: OD<sub>t2</sub> stays within the ODD</div></div>` },
-
+      notes: "Hence the research question, as stated in the manuscript: how can an intelligent vehicle ensure ODD-compliant decision-making as its operational context continuously evolves? (1) One term needs to be made precise. In this thesis, an ODD-compliant decision is not only a maneuver that is admissible when it is chosen: it keeps the vehicle within its ODD throughout its execution, and it leads to future states from which the vehicle can keep operating. This is exactly what the reactive sequence of the previous video failed to do.",
+      html: `<div class="card navy rq"><div class="quote">How can an intelligent vehicle ensure <b>ODD-compliant</b> decision-making as its operational context <b>continuously evolves</b>?</div></div>
+        <div class="row rqdef" data-step="1">
+          <div class="card col grow"><h4>ODD-compliant decision, in this thesis</h4>
+            <p>It accounts for the current <b>and anticipated</b> conditions, keeps the vehicle within its ODD <b>throughout its execution</b>, and leads to future states from which it can <b>keep operating</b>.</p></div>
+          <div class="card col rqnot"><h4>Not only</h4><p>a maneuver admissible at the instant it is chosen, as in the reactive sequence</p></div>
+        </div>` },
     { id: "principle", th: "Capability precedes choice", sec: "intro", kicker: "Guiding principle of the thesis", ref: "§1.2", time: 60, steps: 1,
       title: "To answer it, one principle: capability precedes choice",
       notes: "To answer this question, the thesis follows one principle, which guides all its contributions: a system can only make the right choice if it first understands what it is capable of, and within which operational limits. (1) Two steps, in this order. First, capability: what can the vehicle still do safely, now and in the situations its decisions lead to. Then, choice: among those options only, which maneuvers, in which order, keeping a minimal risk condition within reach.",

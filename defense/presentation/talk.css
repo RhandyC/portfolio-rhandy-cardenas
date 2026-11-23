@@ -720,3 +720,12 @@ body.presenter #cmt-panel, body.presenter #cmt-layer { display: none !important;
 .refs { display: flex; flex-direction: column; gap: 12px; font-size: 21px; line-height: 1.35; }
 .refs p { margin: 0; padding-left: 18px; border-left: 4px solid var(--chip); }
 .refs b { color: var(--navy); }
+
+/* research question: one statement, then what ODD-compliant means */
+.card.rq { padding: 56px 80px; }
+.card.rq .quote { font-size: 50px; line-height: 1.35; color: #fff; border-color: var(--amber); font-style: normal; font-weight: 600; }
+.card.rq .quote b { color: var(--amber); }
+.rqdef { gap: 28px; }
+.rqdef .card p { font-size: 30px; line-height: 1.45; margin: 0; }
+.rqdef .rqnot { flex: 0 0 520px; background: #f7f8fa; box-shadow: none; border: 2px dashed #cfd5dd; }
+.rqdef .rqnot p { font-size: 26px; color: var(--mute); }
