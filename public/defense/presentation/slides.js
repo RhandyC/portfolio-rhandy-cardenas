@@ -536,14 +536,14 @@
 
     { id: "skills", cite: ["reschka2015ability", "jatzkowski2021knowledge"], sec: "c1", c: ["C1"], kicker: "Assessing the decisional capability", ref: "§4.5.1 – §4.5.2", time: 60,
       title: "A maneuver is ensured when all its skills are fulfilled",
-      notes: "Sense, Think, Act, after Pfeifer. Each skill is a requirement expressed on the operational domain, so it can be evaluated on a predicted context, which is what makes anticipation possible.",
+      notes: "The skills are organized after the Sense, Think, Act paradigm of Pfeifer. Sense: the acquisition of the information required to assess and support the maneuver. Think: the ability to process and interpret this information for decision-making. Act: the ability to execute the maneuver once selected. Each skill k has an evaluation function f_k of the state, equal to 1 when it is fulfilled; it is expressed on the operational domain, so it can be evaluated on a predicted state, which is what makes anticipation possible. A maneuver is ensured when all its skills are fulfilled.",
       html: `<div class="row grow">
         <div class="card col" style="flex:1.25 1 0"><h4>Maneuver Capability Estimator (MCE)</h4>${fig("skills.png", "Skills of the Maneuver Capability Estimator")}</div>
         <div class="col grow">
-          <div class="card eqbox"><div class="eq"><i>u<sub>i</sub></i> ∈ ${Uens()} ⇔ ∀<i>k</i> ∈ 𝒦(<i>u<sub>i</sub></i>), <i>f<sub>k</sub></i>(<i>S</i>) = 1</div><div class="xs mute">𝒦(<i>u</i>): the skills required by the maneuver <i>u</i></div></div>
-          <div class="card tight"><span class="pill">Sense</span> <span class="small">acquire the information the maneuver needs: vehicles in the areas of interest, lane markings</span></div>
-          <div class="card tight"><span class="pill">Think</span> <span class="small">process it for the decision: types the predictor supports, traffic density</span></div>
-          <div class="card tight"><span class="pill gray">Act</span> <span class="small">execute the maneuver: assumed fulfilled in this work</span></div>
+          <div class="card eqbox"><div class="eq"><i>u<sub>i</sub></i> ∈ ${Uens()} ⇔ ∀<i>k</i> ∈ 𝒦(<i>u<sub>i</sub></i>), <i>f<sub>k</sub></i>(<i>S</i>) = 1</div><div class="xs mute">𝒦(<i>u</i>): the skills required by the maneuver <i>u</i> · <i>f<sub>k</sub></i>(<i>S</i>) ∈ {0, 1}: skill <i>k</i> fulfilled in the state <i>S</i>, current or predicted</div></div>
+          <div class="card tight"><span class="pill">Sense</span> <span class="small">the <b>acquisition of the information</b> required to assess and support the maneuver</span></div>
+          <div class="card tight"><span class="pill">Think</span> <span class="small">the ability to <b>process and interpret</b> this information for decision-making</span></div>
+          <div class="card tight"><span class="pill gray">Act</span> <span class="small">the ability to <b>execute the maneuver</b> once selected (assumed fulfilled in this work)</span></div>
           <p class="small" style="margin:0">Skills are organized in graphs and shared between maneuvers. Every loss can be traced back to an identified change of context.</p>
         </div></div>` },
 
@@ -551,6 +551,17 @@
       title: "The Maneuver Capability Estimator",
       notes: "Skill graphs per maneuver, evaluation in S_i, one skill lost (partial operability), a shared skill lost (MRM required), traceability back to the context.",
       video: { src: A + "mce.mp4", parts: [[0.0, "Each maneuver relies on its own skill graph"], [12.5, "A maneuver is ensured when all its skills are fulfilled"], [21.0, "A change of context affects only the maneuvers that need the skill"], [32.5, "A shared skill is lost: every maneuver that needs it is lost"], [44.5, "Every loss is traced back to a change of context"]] } },
+
+    { id: "sense-zones", cite: ["bussemaker2014SensingRF", "CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Sense skills", ref: "§4.5.3", time: 55,
+      title: "Sense: what must the vehicle see to decide correctly?",
+      notes: "Take the Sense skills. The question they answer is: what must the vehicle see to decide correctly? Each maneuver has key zones, whose information it needs. Entering a roundabout, the part of the ring from which the cars arrive. Overtaking a stopped bus, the oncoming lane, but also the zone in front of the bus, where a pedestrian may cross. Changing lane, three zones around the vehicle. The Sense skill holds when the perception envelope covers these zones, with little uncertainty. In fog the envelope shrinks, a key zone is no longer covered, and the maneuver is no longer ensured. Let us now take one of them in detail: the lane change.",
+      html: `<div class="card tight" style="font-size:27px;padding:18px 30px">Each maneuver has <b>key zones</b> whose information it needs. Its Sense skill holds when the <b>perception envelope</b> covers them, with little uncertainty.</div>
+        <div class="sloops">${[["sense_roundabout", "Entering a roundabout", "the ring upstream of the entry"],
+          ["sense_bus", "Overtaking a stopped bus", "the oncoming lane, and the zone in front of the bus"],
+          ["sense_lane", "Changing lane", "zones A, B and C around the vehicle"]].map(([v, t, z]) =>
+          `<div class="card sl"><video class="bg" muted playsinline preload="none" data-src="${A}${v}.mp4" aria-label="${t}: key zones covered, then fog"></video>
+            <div class="cap"><b>${t}</b><span>Key zones: ${z}</span></div></div>`).join("")}</div>
+        <div class="card navy tight" style="font-size:25px;padding:16px 30px">In fog, the envelope shrinks: a key zone is no longer covered, and the maneuver is no longer ensured. <b style="color:var(--amber)">Next: the lane change, in detail.</b></div>` },
 
     { id: "lc-example", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 50,
       title: "An example: the skills of a lane change",
