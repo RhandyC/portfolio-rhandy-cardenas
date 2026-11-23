@@ -71,7 +71,7 @@
       `<button type="button" data-go="${x.page}" class="${x.id === s.sec ? "on" : ""}" title="${esc(x.toc || x.title)}">${esc(x.short || x.n)}</button>`).join("") +
       `<button type="button" class="part ${s.main ? "" : "on"}" data-go="bindex" title="Appendix">Appendix</button>`;
     const ref = s.ref ? `<span class="ref" title="Section of the manuscript">${esc(s.ref)}</span>` : "";
-    const num = s.type === "title" ? "" : label(s);
+    const num = s.type === "title" ? "" : fullLabel(s);
     return `<div class="ftr"><div class="secs">${secs}</div>` +
       (s.type === "video" ? "" : `<div class="who">${esc(T.footer)}</div>`) +
       `<div class="nav">${ref}<button type="button" class="ret" data-ret hidden title="Return (R)"></button>` +
