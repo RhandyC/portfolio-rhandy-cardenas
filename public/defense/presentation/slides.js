@@ -3,6 +3,7 @@
    type: title | agenda | outline | section | content (default) | video | bridge | thanks | bindex
    cpc (sections): which half of 'capability precedes choice' the part answers
    ref: section of the manuscript · c: contributions shown in the header
+   cite: references at the foot of the slide (keys of BIB) · th: step of the guiding thread of its section
    time: planned seconds (presenter view) · backups: links to appendix slides
    video.parts: [start (s), title]; a part stops on the frame before the next start. */
 (function () {
@@ -15,6 +16,67 @@
   const Uens = (s = "S") => `<i>U</i><sub>ens</sub>(<i>${s}</i>)`;
   const Aens = (s = "s") => `<i>A</i><sub>ens</sub>(<i>${s}</i>)`;
 
+  // references: [short label, full reference], from the manuscript's bibliography (HDSThesis.bbl)
+  const BIB = {
+    "11097482": ["Cardenas et al., IEEE IV 2025", " — Cardenas, Adouane, Zinoune, et al. <i>ODD-Based Long-Term Decision-Making for Intelligent Vehicles</i>. 2025 IEEE Intelligent Vehicles Symposium (IV), 2025."],
+    "AVSC2021BehavioralCompetencies": ["AVSC, 2021", " — Automated Vehicle Safety Consortium. <i>AVSC Best Practice for Evaluation of Behavioral Competencies for Automated Driving System Dedicated Vehicles (ADS-DVs)</i>. SAE Industry Technologies Consortia, 2021."],
+    "CARDENAS2025162": ["Cardenas et al., IFAC 2025", " — Cardenas, Adouane, Zinoune, et al. <i>Assessing the Decisional Capability for an ODD-Compliant Automatic Lane Change System via Sense-Think-Act Paradigm</i>. IFAC-PapersOnLine, 2025."],
+    "Farah2021Awareness": ["Farah et al., IEEE T-ITS 2021", " — Farah, Bhusari, Gent, et al. <i>An Empirical Analysis to Assess the Operational Design Domain of Lane Keeping System Equipped Vehicles Combining Objective and Subjective Risk Measures</i>. IEEE Transactions on Intelligent Transportation Systems, 2021."],
+    "WANG2021surrogate": ["Wang et al., Accid. Anal. Prev. 2021", " — Wang, Xie, Huang, et al. <i>A review of surrogate safety measures and their applications in connected and automated vehicles safety modeling</i>. Accident Analysis Prevention, 2021."],
+    "alshiekh2018shielding": ["Alshiekh et al., AAAI 2018", " — Alshiekh, Bloem, Ehlers, et al. <i>Safe Reinforcement Learning via Shielding</i>. Proceedings of the AAAI Conference on Artificial Intelligence, 2018."],
+    "armand2014ontology": ["Armand et al., IEEE IV 2014", " — Armand, Filliat, Ibañez-Guzman. <i>Ontology-based context awareness for driving assistance systems</i>. 2014 IEEE Intelligent Vehicles Symposium Proceedings, 2014."],
+    "auer2002finite": ["Auer et al., Mach. Learn. 2002", " — Auer, Cesa-Bianchi, Fischer. <i>Finite-time Analysis of the Multiarmed Bandit Problem</i>. Machine Learning, 2002."],
+    "avizienis2004taxonomy": ["Avizienis et al., IEEE TDSC 2004", " — Avizienis, Laprie, Randell, et al. <i>Basic concepts and taxonomy of dependable and secure computing</i>. IEEE Transactions on Dependable and Secure Computing, 2004."],
+    "bellman1957MDP": ["Bellman, J. Math. Mech. 1957", " — Bellman. <i>A markovian decision process</i>. Journal of Mathematics and Mechanics, 1957."],
+    "bellman1957dynamic": ["Bellman, Princeton UP 1957", " — Bellman. <i>Dynamic Programming</i>. Princeton University Press, 1957."],
+    "bussemaker2014SensingRF": ["Bussemaker, thesis, TU Delft 2014", " — Bussemaker. <i>Sensing requirements for an automated vehicle for highway and rural environments</i>. TU Delft, 2014."],
+    "cardenas2025context_aware": ["Cardenas et al., IEEE T-IV 2025", " — Cardenas, Adouane, Zinoune, et al. <i>Context-Aware and Reliable Long-Term Decision-Making for Safe Intelligent Vehicles: A Survey</i>. IEEE Transactions on Intelligent Vehicles, 2025."],
+    "charmet2024monitoring": ["Charmet et al., IEEE ITSC 2024", " — Charmet, Cherfaoui, Ibanez-Guzman, et al. <i>Operational Design Domain Monitoring with Uncertain Measurements</i>. 2024 IEEE 27th International Conference on Intelligent Transportation Systems (ITSC), 2024."],
+    "chen2025intention": ["Chen et al., IEEE T-ITS 2025", " — Chen, Yan, Yu, et al. <i>Intention-Guided Heuristic Partially Observable Monte Carlo Planning for Off-Ramp Decision-Making of Autonomous Vehicles</i>. IEEE Transactions on Intelligent Transportation Systems, 2025."],
+    "cnn2026waymo": ["CNN, 2026", " — Lah. <i>Waymo robotaxis have run red lights, driven into closed and flooded roads, CNN finds</i>. CNN Investigates, 2026."],
+    "colwell_automated_2018": ["Colwell et al., IEEE IV 2018", " — Colwell, Phan, Saleem, et al. <i>An Automated Vehicle Safety Concept Based on Runtime Restriction of the Operational Design Domain</i>. 2018 IEEE Intelligent Vehicles Symposium (IV), 2018."],
+    "czarnecki2018operational": ["Czarnecki, WISE Lab 2018", " — Czarnecki. <i>Operational Design Domain for Automated Driving Systems: Taxonomy of Basic Terms</i>. Waterloo Intelligent Systems Engineering (WISE) Lab, University of Waterloo, Canada, 2018."],
+    "donges2015behaviormodels": ["Donges, 2014", " — Donges. <i>Driver Behavior Models</i>. Handbook of Driver Assistance Systems: Basic Information, Components and Systems for Active Safety and Comfort, 2014."],
+    "fail2022Stolte": ["Stolte et al., IEEE T-IV 2022", " — Stolte, Ackermann, Graubohm, et al. <i>Taxonomy to Unify Fault Tolerance Regimes for Automotive Systems: Defining Fail-Operational, Fail-Degraded, and Fail-Safe</i>. IEEE Transactions on Intelligent Vehicles, 2022."],
+    "fiedler2022hybrid": ["Fiedler et al., IEEE ITSC 2022", " — Fiedler, Gerwien, Knoll. <i>A Hybrid Tactical Decision-Making Approach in Automated Driving Combining Knowledge-Based Systems and Reinforcement Learning</i>. 2022 IEEE 25th ITSC, 2022."],
+    "glaser2010ttctiv": ["Glaser et al., IEEE T-ITS 2010", " — Glaser, Vanholme, Mammar, et al. <i>Maneuver-Based Trajectory Planning for Highly Autonomous Vehicles on Real Road With Traffic and Driver Interaction</i>. IEEE Transactions on Intelligent Transportation Systems, 2010."],
+    "hang2021gametheoric": ["Hang et al., IEEE T-ITS 2021", " — Hang, Lv, Xing, et al. <i>Human-Like Decision Making for Autonomous Driving: A Noncooperative Game Theoretic Approach</i>. IEEE T-ITS, 2021."],
+    "hasuo2022rss": ["Hasuo, arXiv 2022", " — Hasuo. <i>Responsibility-Sensitive Safety: an Introduction with an Eye to Logical Foundations and Formalization</i>. 2022."],
+    "hoel2019combiningdeep": ["Hoel et al., IEEE T-IV 2020", " — Hoel, Driggs-Campbell, Wolff, et al. <i>Combining Planning and Deep Reinforcement Learning in Tactical Decision Making for Autonomous Driving</i>. IEEE Transactions on Intelligent Vehicles, 2020."],
+    "hubmann2018uncertainty": ["Hubmann et al., IEEE T-IV 2018", " — Hubmann, Schulz, Becker, et al. <i>Automated Driving in Uncertain Environments: Planning With Interaction and Uncertain Maneuver Prediction</i>. IEEE Transactions on Intelligent Vehicles, 2018."],
+    "hullermeier2021aleatoric": ["Hüllermeier & Waegeman, Mach. Learn. 2021", " — Hüllermeier, Waegeman. <i>Aleatoric and epistemic uncertainty in machine learning: an introduction to concepts and methods</i>. Machine Learning, 2021."],
+    "ipgCarMaker": ["IPG CarMaker, 2024", " — IPG Automotive. <i>CarMaker 13.0.1</i>. 2024."],
+    "iso2018iso26262": ["ISO 26262, 2018", " — ISO. <i>Road Vehicles—Functional Safety</i>. International Organization for Standardization, 2018."],
+    "iso2020iso4804": ["ISO/TR 4804, 2020", " — ISO. <i>Road vehicles — Safety and cybersecurity for automated driving systems — Design, verification and validation</i>. International Organization for Standardization, 2020."],
+    "iso2023iso34503": ["ISO 34503, 2023", " — ISO. <i>Road Vehicles—Test Scenarios for Automated Driving Systems—Specification for Operational Design Domain</i>. International Organization for Standardization, 2023."],
+    "jatzkowski2021knowledge": ["Jatzkowski et al., IEEE IV 2021", " — Jatzkowski, Menzel, Bock, et al. <i>A Knowledge-based Approach for the Automatic Construction of Skill Graphs for Online Monitoring</i>. 2021 IEEE Intelligent Vehicles Symposium (IV), 2021."],
+    "krajewski2018highd": ["Krajewski et al., IEEE ITSC 2018", " — Krajewski, Bock, Kloeker, et al. <i>The highD Dataset: A Drone Dataset of Naturalistic Vehicle Trajectories on German Highways for Validation of Highly Automated Driving Systems</i>. IEEE International Conference on Intelligent Transportation Systems (ITSC), 2018."],
+    "krasowski2020safe": ["Krasowski et al., IEEE ITSC 2020", " — Krasowski, Wang, Althoff. <i>Safe Reinforcement Learning for Autonomous Lane Changing Using Set-Based Prediction</i>. IEEE International Conference on Intelligent Transportation Systems (ITSC), 2020."],
+    "kuehn2017takeover": ["Kuehn et al., ESV 2017", " — Kuehn, Vogelpohl, Vollrath. <i>Takeover Times in Highly Automated Driving (Level 3)</i>. Proceedings of the 25th International Technical Conference on the Enhanced Safety of Vehicles (ESV), 2017."],
+    "kuhn2021introspective": ["Kuhn et al., IEEE T-ITS 2021", " — Kuhn, Hofbauer, Petrovic, et al. <i>Introspective Failure Prediction for Autonomous Driving Using Late Fusion of State and Camera Information</i>. IEEE Transactions on Intelligent Transportation Systems, 2021."],
+    "li2021lcduration": ["Li et al., 2021", " — Li, Li, Ni. <i>Exploration of lane-changing duration for heavy vehicles and passenger cars: a survival analysis approach</i>. 2021."],
+    "michon1985critical": ["Michon, 1985", " — Michon. <i>A Critical View of Driver Behavior Models: What Do We Know, What Should We Do?</i>. Human Behavior and Traffic Safety, 1985."],
+    "murphy2012machine": ["Murphy, MIT Press 2012", " — Murphy. <i>Machine Learning: A Probabilistic Perspective</i>. MIT Press, 2012."],
+    "olsson2016BT": ["Olsson, thesis, KTH 2016", " — Olsson. <i>Behavior Trees for decision-making in Autonomous Driving</i>. KTH Royal Institute of Technology, 2016."],
+    "pior2020behaviorbased": ["Orzechowski et al., IEEE IV 2020", " — Orzechowski, Burger, Lauer. <i>Decision-Making for Automated Vehicles Using a Hierarchical Behavior-Based Arbitration Scheme</i>. 2020 IEEE IV Symposium, 2020."],
+    "rabiee2023introspective": ["Rabiee & Biswas, Artif. Intell. 2023", " — Rabiee, Biswas. <i>Introspective Perception for Mobile Robots</i>. Artificial Intelligence, 2023."],
+    "ref_claim_GM": ["Forbes, 2018", " — <i>Look, Ma. No Pedals No Steering Wheel! Autonomous Car Coming From GM in 2019</i>. Forbes. 2018."],
+    "ref_claim_Nissan": ["Nissan, 2013", " — <i>Nissan Announces Unprecedented Autonomous Drive Benchmarks</i>. Nissan Motor Co. News. 2013."],
+    "ref_claim_toyota": ["The Wall Street Journal, 2015", " — <i>Toyota Aims to Make Self-Driving Cars by 2020</i>. The Wall Street Journal. 2015."],
+    "renault2022cta": ["Renault Group, 2022", " — Deca, Rosain-Boussiquet. <i>Centre technique d'Aubevoye : 40 ans d'histoire(s) et de passion automobile</i>. Renault Group Magazine, 2022."],
+    "reschka2015ability": ["Reschka et al., IEEE IV 2015", " — Reschka, Bagschik, Ulbrich, et al. <i>Ability and skill graphs for system modeling, online monitoring, and decision support for vehicle guidance systems</i>. 2015 IEEE Intelligent Vehicles Symposium (IV), 2015."],
+    "sae2021taxonomy": ["SAE J3016, 2021", " — SAE International. <i>Taxonomy and Definitions for Terms Related to Driving Automation Systems for On-Road Motor Vehicles</i>. SAE Standard J3016_202104, 2021."],
+    "salvi2022fuzzy": ["Salvi et al., IEEE IV 2022", " — Salvi, Weiss, Trapp, et al. <i>Fuzzy Interpretation of Operational Design Domains in Autonomous Driving</i>. 2022 IEEE Intelligent Vehicles Symposium (IV), 2022."],
+    "schlatow2017selfawareness": ["Schlatow et al., DATE 2017", " — Schlatow, Moostl, Ernst, et al. <i>Self-awareness in autonomous automotive systems</i>. Design, Automation Test in Europe Conference Exhibition (DATE), 2017, 2017."],
+    "shwartz2017RSS": ["Shalev-Shwartz et al., arXiv 2017", " — Shalev-Shwartz, Shammah, Shashua. <i>On a Formal Model of Safe and Scalable Self-driving Cars</i>. CoRR, 2017."],
+    "silver_monte-carlo_2010": ["Silver & Veness, NeurIPS 2010", " — Silver, Veness. <i>Monte-Carlo Planning in Large POMDPs</i>. Advances in Neural Information Processing Systems, 2010."],
+    "sun2022operational": ["Sun, thesis, U. Waterloo 2022", " — Sun. <i>Operational Design Domain Monitoring and Augmentation for Autonomous Driving</i>. Univ. of Waterloo, 2022."],
+    "treiber2000congested": ["Treiber et al., Phys. Rev. E 2000", " — Treiber, Hennecke, Helbing. <i>Congested traffic states in empirical observations and microscopic simulations</i>. Physical Review E, 2000."],
+    "ulbrich2015pomdp": ["Ulbrich & Maurer, IEEE ITSC 2015", " — Ulbrich, Maurer. <i>Towards Tactical Lane Change Behavior Planning for Automated Vehicles</i>. 2015 IEEE 18th International Conference on Intelligent Transportation Systems, 2015."],
+    "woerter2021enhanced": ["Woerter et al., CARS 2021", " — Woerter, Kreutz, Salvi, et al. <i>Enhanced system awareness as basis for resilience of autonomous vehicles</i>. CARS 2021 6th International Workshop on Critical Automotive Applications: Robustness Safety, 2021."],
+    "zhang2020efficient": ["Zhang et al., IEEE ICRA 2020", " — Zhang, Ding, Chen, et al. <i>Efficient Uncertainty-aware Decision-making for Automated Driving Using Guided Branching</i>. 2020 IEEE International Conference on Robotics and Automation (ICRA), 2020."],
+  };
+
   // Structure of the defense: the order of the manuscript. The introduction (chapter 1), the
   // fundamentals and the state of the art (part I), the method (part II: C1 in chapter 4, C2 and C3
   // in chapter 5, each illustrated by its animations), the validation (part III, chapter 6, C4),
@@ -24,6 +86,7 @@
   const sections = [
     { id: "intro", part: "Chapter 1", short: "Intro", n: 1, page: "sec-intro", kicker: "Introduction", title: "Introduction", toc: "Introduction",
       ch: "Introduction", where: "Chapter 1",
+      thread: ["Driverless", "Its limits: the ODD", "Who watches them", "A changing context", "Capability precedes choice", "The problem", "The research question", "The aim", "The contributions"],
       sub: "Why the operational design domain must enter the decision", goal: "The motivation, the problem, the research question and the four contributions",
       ag: "The ODD and who is responsible, the guiding principle, the problem and the research question, the four contributions" },
     { id: "sota", part: "Part I · Chapters 2 – 3", short: "SotA", n: 2, page: "sec-sota", kicker: "Fundamentals and state of the art", title: "What exists today?", toc: "Fundamentals and state of the art",
@@ -82,9 +145,9 @@
     // ================================================================ 1. introduction (chapter 1): the news, the ODD, who is responsible, the changing context, the principle, the problem, the aim, the contributions
     { id: "sec-intro", type: "section", sec: "intro", dark: true, title: "Introduction", time: 10 },
 
-    { id: "news", sec: "intro", kicker: "In the news", ref: "§2.3", time: 60,
+    { id: "news", cite: ["cnn2026waymo"], th: "Driverless", sec: "intro", kicker: "In the news", ref: "§2.3", time: 60,
       title: "No driver on board: the vehicle alone must judge its own limits",
-      notes: "Two scenes from this year. In Phoenix, in January, a robotaxi stops on the light rail tracks; its passenger gets out as a train approaches, and the car keeps driving on the tracks. In Atlanta, in May, during a flash flood, an empty robotaxi drives into a flooded street. Two days later the operator suspends its service in six cities. A month earlier, after a similar case in San Antonio, its recall filing said that the vehicle had detected the flood water, and proceeded at reduced speed. These incidents may have several causes. But they show the point of this thesis: perceiving the conditions is not enough; with no driver on board, the vehicle itself must know what it can still do there.",
+      notes: "Two scenes from this year. In Phoenix, in January, a robotaxi stops on the light rail tracks; its passenger gets out as a train approaches, and the car keeps driving on the tracks. In Atlanta, in May, during a flash flood, an empty robotaxi drives into a flooded street. Two days later the operator suspends its service in six cities. A month earlier, after a similar case in San Antonio, its recall filing said that the vehicle had detected the flood water, and proceeded at reduced speed. These incidents may have several causes. But they show the point of this thesis: perceiving the conditions is not enough; with no driver on board, the vehicle itself must know what it can still do there. What are these limits? They have a name.",
       html: `<div class="g2 grow">
         ${[["news_lightrail_phoenix", "Phoenix · 7 January 2026", "A robotaxi stops on the light rail tracks. Its passenger gets out as a train approaches, and the car keeps driving on the tracks.", "Video: Luis_Central_Tires, via 12 News"],
            ["news_flood_atlanta", "Atlanta · 20 May 2026", "During a flash flood, an empty robotaxi drives into a flooded street, water almost up to its headlights. Two days later, the service is suspended in six cities.", "Video: @_SirLuke, via Atlanta News First"]]
@@ -98,9 +161,9 @@
             <p class="xs" style="margin:8px 0 0 38px;color:#c7d3e3">Waymo, safety recall of 3,791 robotaxis filed with NHTSA, May 2026, after a flooded road in San Antonio</p></div>
           <div style="flex:0 0 560px;font-size:28px;font-weight:600;line-height:1.4">Perceiving the conditions was not enough: the vehicle had to know <span style="color:var(--amber)">what it could still do</span> there.</div></div></div>` },
 
-    { id: "odd", sec: "intro", kicker: "Motivation · what is the ODD?", ref: "§2.2", time: 75, steps: 2,
-      title: "The Operational Design Domain: where a function is designed to operate",
-      notes: "Before talking about levels and responsibility, the key notion. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
+    { id: "odd", cite: ["sae2021taxonomy", "iso2023iso34503", "czarnecki2018operational"], th: "Its limits: the ODD", sec: "intro", kicker: "Motivation · what is the ODD?", ref: "§2.2", time: 75, steps: 2,
+      title: "These limits have a name: the Operational Design Domain",
+      notes: "These limits have a name. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
       html: `<div class="row grow">
         <div class="col grow" style="flex:1 1 0">
           <div class="card" style="padding:28px 36px"><div class="quote" style="font-size:27px">“Operating conditions under which a given driving automation system or feature thereof is specifically designed to function, including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
@@ -125,9 +188,9 @@
             <div><h4 style="margin-bottom:8px">Deployed example: Mercedes-Benz Drive Pilot</h4><p class="small" style="margin:0">The first Level 3 system approved in Europe. Its ODD is a driving scene: separated highway, HD map, moderate to heavy traffic, detectable lane markings, no inclement weather.</p></div></div>
         </div></div>` },
 
-    { id: "responsibility", sec: "intro", kicker: "Motivation · who is responsible?", ref: "§1.2", time: 60,
+    { id: "responsibility", cite: ["sae2021taxonomy", "ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan", "Farah2021Awareness", "kuehn2017takeover"], th: "Who watches them", sec: "intro", kicker: "Motivation · who is responsible?", ref: "§1.2", time: 60,
       title: "Who watches the ODD? From Level 3, the vehicle itself",
-      notes: "Every automated feature has its own ODD; the automation level says who is responsible for it. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed, and automation now advances level by level. The decisive step is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its ODD: it must monitor its own limits and request a takeover in time, 12 to 15 seconds ahead. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. The higher the level, the more the vehicle itself must know what it can do.",
+      notes: "Who must watch these limits? It depends on the level of automation. Every automated feature has its own ODD; the automation level says who is responsible for it. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed, and automation now advances level by level. The decisive step is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its ODD: it must monitor its own limits and request a takeover in time, 12 to 15 seconds ahead. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. The higher the level, the more the vehicle itself must know what it can do.",
       html: `<div class="card tight row" style="align-items:center;gap:22px"><span class="pill amber">2018</span><p class="small" style="margin:0">Fully self-driving fleets announced for 2019 – 2020 by General Motors, Toyota and Nissan. The task proved harder than assumed: automation now advances <b>level by level</b>.</p></div>
         <div class="row grow">
           <div class="card col" style="flex:1.3 1 0"><h4>Each feature has its own ODD</h4>${fig("sae_levels.png", "Automation levels and examples of ODD")}</div>
@@ -138,9 +201,9 @@
           </div></div>
         <div class="takeaway">The higher the level, the more the vehicle itself must know <b>what it can do</b>, and under which conditions.</div>` },
 
-    { id: "context", sec: "intro", kicker: "Motivation · a changing context", ref: "§1.2, §2.2", time: 60, steps: 2,
-      title: "Along a route, the context keeps changing; the ODD does not",
-      notes: "Along one route, the context keeps changing: a highway exit, road works, missing lane markings, a tunnel, a traffic jam, a curve, rain expected ahead. The ODD, fixed by design, does not change. What changes is the operational domain, OD, the current conditions; staying in the ODD means keeping the OD inside it, now and on the route ahead. (1) Today, ODD monitoring is mostly a set of isolated condition checks, rarely part of the decision: the limit is noticed once it is crossed, with an abrupt deactivation, an emergency stop or, for a fleet, a suspended service. (2) What is needed is the opposite: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation.",
+    { id: "context", cite: ["sun2022operational", "cardenas2025context_aware"], th: "A changing context", sec: "intro", kicker: "Motivation · a changing context", ref: "§1.2, §2.2", time: 60, steps: 2,
+      title: "The context keeps changing; today, a limit is noticed only once crossed",
+      notes: "Watching the ODD would be simple if the context were fixed. It is not. Along one route, the context keeps changing: a highway exit, road works, missing lane markings, a tunnel, a traffic jam, a curve, rain expected ahead. The ODD, fixed by design, does not change. What changes is the operational domain, OD, the current conditions; staying in the ODD means keeping the OD inside it, now and on the route ahead. (1) Today, ODD monitoring is mostly a set of isolated condition checks, rarely part of the decision: the limit is noticed once it is crossed, with an abrupt deactivation, an emergency stop or, for a fleet, a suspended service. (2) What is needed is the opposite: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation.",
       html: `<div class="row grow">
         <div class="card col" style="flex:0 0 700px;padding:20px 26px"><h4>One route, many context changes</h4>${fig("context_changes.png", "Target route with context changes: highway exit, road works, missing lane markings, tunnel, traffic jam, curved road, expected rain")}</div>
         <div class="col grow">
@@ -155,9 +218,9 @@
             <li>Start the fallback while it is still feasible: <b>graceful degradation</b></li></ul></div>
         </div></div>` },
 
-    { id: "principle", sec: "intro", kicker: "Guiding principle of the thesis", ref: "§1.2", time: 60, steps: 2,
-      title: "Capability precedes choice",
-      notes: "The motivation in one line. Automated driving proved harder than announced, so automation advances level by level. From Level 3, the vehicle answers for its own limits; it must therefore be aware of its ODD, now and ahead, and use it to decide: avoid ODD exits, and degrade safely when needed. (1) This is the guiding principle of the whole thesis: a system can only make the right choice if it first understands what it is capable of, and within which operational limits. (2) Two steps, in this order. First, capability: what can the vehicle still do safely, now and in the situations its decisions lead to. Then, choice: among those options only, which maneuvers, in which order, keeping a fallback within reach.",
+    { id: "principle", th: "Capability precedes choice", sec: "intro", kicker: "Guiding principle of the thesis", ref: "§1.2", time: 60, steps: 2,
+      title: "So, before choosing, know what it can do: capability precedes choice",
+      notes: "So, if the vehicle answers for its limits while the context changes, it must know what it can do before it chooses. The motivation in one line. Automated driving proved harder than announced, so automation advances level by level. From Level 3, the vehicle answers for its own limits; it must therefore be aware of its ODD, now and ahead, and use it to decide: avoid ODD exits, and degrade safely when needed. (1) This is the guiding principle of the whole thesis: a system can only make the right choice if it first understands what it is capable of, and within which operational limits. (2) Two steps, in this order. First, capability: what can the vehicle still do safely, now and in the situations its decisions lead to. Then, choice: among those options only, which maneuvers, in which order, keeping a fallback within reach.",
       html: `<div class="chain">
           <div class="st"><span class="n">1</span>Driving proved harder than announced</div><div class="ar2">→</div>
           <div class="st"><span class="n">2</span>Automation advances level by level</div><div class="ar2">→</div>
@@ -173,14 +236,14 @@
             <p style="font-size:33px">Among <b>those options only</b>, which maneuvers, in which order, keeping a fallback within reach?</p></div>
         </div>` },
 
-    { id: "v-problem-a", type: "video", sec: "intro", ref: "§1.3", time: 45,
+    { id: "v-problem-a", th: "The problem", type: "video", sec: "intro", ref: "§1.3", time: 45,
       title: "Problem: a sequence of admissible decisions can leave no fallback",
-      notes: "Current systems check the ODD as a monitor: each maneuver is admissible when it is chosen. Yet the sequence narrows operability until no fallback is left, without any single decision being incorrect.",
-      video: { src: A + "problem.mp4?v=2", parts: [[0.0, "Each decision is checked when it is taken"], [9.0, "Yet the sequence leaves no fallback"]], end: 16.0 } },
+      notes: "Why is checking the ODD at each decision not enough? Current systems check the ODD as a monitor: each maneuver is admissible when it is chosen. Yet the sequence narrows operability until no fallback is left, without any single decision being incorrect.",
+      video: { src: A + "problem.mp4?v=4", parts: [[0.0, "Each decision is checked when it is taken"], [9.0, "Yet the sequence leaves no fallback"]], end: 16.0 } },
 
-    { id: "question", sec: "intro", kicker: "Problem statement", ref: "§1.3", time: 75, steps: 3,
+    { id: "question", th: "The research question", sec: "intro", kicker: "Problem statement", ref: "§1.3", time: 75, steps: 3,
       title: "Research question",
-      notes: "The research question. The figure gives what an answer must achieve, in two views of the same situation: on the left, the operational conditions as a point in the space of conditions, with the ODD as the region where the system was designed to operate; on the right, the road. (0) At t0, the conditions lie within the ODD. (1) A first decision, DM1, leads to t1, still within the ODD. (2) Rain reduces the visibility ahead: if nothing changes, the next state would leave the ODD. (3) Anticipating it, the second decision reduces the speed, and the vehicle stays within its ODD. The decision is taken before the limit, not after it.",
+      notes: "Hence the research question. The research question. The figure gives what an answer must achieve, in two views of the same situation: on the left, the operational conditions as a point in the space of conditions, with the ODD as the region where the system was designed to operate; on the right, the road. (0) At t0, the conditions lie within the ODD. (1) A first decision, DM1, leads to t1, still within the ODD. (2) Rain reduces the visibility ahead: if nothing changes, the next state would leave the ODD. (3) Anticipating it, the second decision reduces the speed, and the vehicle stays within its ODD. The decision is taken before the limit, not after it.",
       html: `<div class="card" style="padding:20px 36px"><div class="quote" style="font-size:32px">“How can an intelligent vehicle ensure ODD-compliant decision-making as its operational context continuously evolves?”</div></div>
         <div class="row grow" style="align-items:stretch">
           <div class="card col" style="flex:0 0 640px;padding:14px 18px"><h4 style="margin:0">In the space of operational conditions</h4>
@@ -205,14 +268,14 @@
           <div data-step="2"><div data-until="3">Rain reduces the visibility: <b>if nothing changes</b>, the next state OD<sub>t1′</sub> leaves the ODD</div></div>
           <div data-step="3">Anticipating it, DM<sub>2</sub> <b>reduces the speed</b>: OD<sub>t2</sub> stays within the ODD</div></div>` },
 
-    { id: "v-problem-b", type: "video", sec: "intro", ref: "§1.3", time: 40,
-      title: "Anticipate: the policy can always reach a refuge",
-      notes: "The answer of the thesis: anticipate the loss of capability. Under the rain the vehicle keeps fewer options, but its policy can always lead it to a refuge state, through a fallback maneuver. This is fail-operational decision-making.",
-      video: { src: A + "problem.mp4?v=2", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: the policy can always reach a refuge"]] } },
+    { id: "v-problem-b", th: "The aim", type: "video", sec: "intro", ref: "§1.3", time: 40,
+      title: "Anticipate: a minimal risk condition always within reach",
+      notes: "What we want instead: The answer of the thesis: anticipate the loss of capability. Under the rain the vehicle keeps fewer options, but its policy can always lead it to a minimal risk condition, through a fallback maneuver. This is fail-operational decision-making.",
+      video: { src: A + "problem.mp4?v=4", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a minimal risk condition always within reach"]] } },
 
-    { id: "failop", sec: "intro", kicker: "The aim", ref: "§1.3, §2.2.1", time: 60, steps: 2,
-      title: "Fail-operational: keep driving with fewer capabilities, a fallback always reachable",
-      notes: "What we aim for, on a simple example from chapter 2: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable. The scope of the thesis is this kind of degradation, such as fog, that reduces capabilities without any fault.",
+    { id: "failop", cite: ["avizienis2004taxonomy", "fail2022Stolte", "iso2018iso26262"], th: "The aim", sec: "intro", kicker: "The aim", ref: "§1.3, §2.2.1", time: 60, steps: 2,
+      title: "The aim: fail-operational, keep driving with fewer capabilities",
+      notes: "Named, this is the aim of the thesis. What we aim for, on a simple example from chapter 2: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable. The scope of the thesis is this kind of degradation, such as fog, that reduces capabilities without any fault.",
       html: `<div class="card row" style="gap:30px;align-items:center;padding:18px 28px">
           <img src="${F}failop_a.png" alt="The LiDAR range is reduced; the nominal range is dashed" style="width:640px;border-radius:10px">
           <div><h4 style="margin-bottom:8px">Example: the primary LiDAR loses range</h4><p style="margin:0">Highway, 130 km/h. The perception horizon shrinks <span class="mute">(nominal range dashed)</span>. What should the vehicle do?</p></div></div>
@@ -224,15 +287,15 @@
         </div>
         <div class="takeaway" data-step="2">Scope of the thesis: degradations, such as fog, that reduce capabilities <b>without any fault</b>.</div>` },
 
-    { id: "contrib", type: "outline", sec: "intro", kicker: "Contributions and outline", ref: "§1.4", time: 60,
-      title: "Four contributions, integrated into one architecture: ODD-aptive",
-      notes: "Four contributions, one principle: capability precedes choice. Each one answers a question. The first three are the method, in chapters 4 and 5, each illustrated with its animations; the fourth is the validation of all of them, in chapter 6, in simulation and on a prototype vehicle. Each line links to its part.",
+    { id: "contrib", cite: ["cardenas2025context_aware", "CARDENAS2025162", "11097482"], th: "The contributions", type: "outline", sec: "intro", kicker: "Contributions and outline", ref: "§1.4", time: 60,
+      title: "Four contributions, one principle, one architecture: ODD-aptive",
+      notes: "How the thesis gets there. Four contributions, one principle: capability precedes choice. Each one answers a question. The first three are the method, in chapters 4 and 5, each illustrated with its animations; the fourth is the validation of all of them, in chapter 6, in simulation and on a prototype vehicle. Each line links to its part.",
       html: `<div class="card navy"><h3>Capability precedes choice</h3><p>A maneuver must be assessed as ensured in the corresponding state before the policy planner can consider it, throughout the planning horizon.</p></div>` },
 
     // ================================================================ 2. fundamentals and state of the art (part I, chapters 2 and 3)
     { id: "sec-sota", type: "section", sec: "sota", dark: true, title: "Fundamentals and state of the art", time: 10 },
 
-    { id: "awareness", sec: "sota", kicker: "Background · awareness and the ODD", ref: "§2.2.2 – §2.4", time: 60,
+    { id: "awareness", cite: ["schlatow2017selfawareness", "woerter2021enhanced", "armand2014ontology", "salvi2022fuzzy"], sec: "sota", kicker: "Background · awareness and the ODD", ref: "§2.2.2 – §2.4", time: 60,
       title: "What must the vehicle know about itself and its context?",
       notes: "The synthesis of chapter 2. Self-awareness: an explicit representation of the vehicle's own capabilities. Context-awareness: the external conditions. The ODD links both. Its limits: uncertainty requires margins, and discontinuities at the boundaries require anticipation. That is the task of a fail-operational system.",
       html: `<div class="card tight" style="height:440px">${fig("awareness.png", "Context-awareness and self-awareness", 404)}</div>
@@ -244,23 +307,23 @@
         </div>
         <div class="takeaway">A fail-operational vehicle must know <b>what it can still do</b> in the context ahead, not only whether it is inside its ODD now.</div>` },
 
-    { id: "rw-c1", sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", ref: "§2.2, §3.4", time: 70,
+    { id: "rw-c1", cite: ["reschka2015ability", "ulbrich2015pomdp", "colwell_automated_2018", "pior2020behaviorbased", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", ref: "§2.2, §3.4", time: 70,
       title: "How is the capability of the vehicle assessed today?",
       notes: "Three families. Ability and skill graphs decompose a behavior into skills with a level of performance, and have been used to trigger a lane change or not. The restricted operational domain removes the maneuvers that a lost capability no longer supports. The arbitration graph checks every function against the ODD before deciding. Monitoring estimates the time to exit the ODD. All of them assess the current state, and adapt once a condition is detected. The MCE assesses each maneuver, in the predicted states too.",
       html: `<div class="g3" style="height:250px">
           <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<p class="xs mute" style="margin:0;text-align:center">Ability graph (Reschka, 2015)</p></div>
           <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<p class="xs mute" style="margin:0;text-align:center">Restricted Operational Domain (Colwell, 2018)</p></div>
-          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<p class="xs mute" style="margin:0;text-align:center">Arbitration graph (Pior, 2020)</p></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<p class="xs mute" style="margin:0;text-align:center">Arbitration graph (Orzechowski, 2020)</p></div>
         </div>
         <table class="tbl chkt"><tr><th style="width:430px">Work</th><th style="width:170px">Level</th><th>What it brings</th><th>What is missing</th></tr>
           <tr><td><b>Ability and skill graphs</b> <span class="mute">Reschka, 2015 · Ulbrich, 2015</span></td><td>Tactical</td><td class="y">Skills with a level of performance; trigger a lane change or not</td><td class="n">Current state only</td></tr>
           <tr><td><b>Restricted Operational Domain</b> <span class="mute">Colwell, 2018</span></td><td>Monitoring</td><td class="y">A lost capability removes some maneuvers and keeps others</td><td class="n">Current state only, reactive</td></tr>
-          <tr><td><b>Arbitration graph</b> <span class="mute">Pior, 2020</span></td><td>Tactical</td><td class="y">Every function checked against the ODD before deciding</td><td class="n">No prediction of the future state</td></tr>
+          <tr><td><b>Arbitration graph</b> <span class="mute">Orzechowski, 2020</span></td><td>Tactical</td><td class="y">Every function checked against the ODD before deciding</td><td class="n">No prediction of the future state</td></tr>
           <tr><td><b>Time to exit the ODD</b> <span class="mute">Charmet, 2024</span></td><td>Monitoring</td><td class="y">Anticipates the exit, with measurement uncertainty</td><td class="n">Triggers a takeover or an MRM, not the maneuver</td></tr>
           <tr><td><b>μODDs</b> <span class="mute">Salvi, 2022</span></td><td>Operational</td><td class="y">Speed reduced as the rain increases</td><td class="n">One dimension, one maneuver</td></tr>
           <tr class="hl"><td><b>MCE, this thesis</b> <span class="cbadge ink" style="height:26px;font-size:15px;min-width:40px;margin-left:6px">C1</span></td><td>Tactical</td><td class="y" colspan="2">Each maneuver, in the current <b>and in the predicted states</b>, every loss traced back to a change of context</td></tr></table>` },
 
-    { id: "levels", sec: "sota", kicker: "State of the art · decision levels", ref: "§3.2", time: 50,
+    { id: "levels", cite: ["michon1985critical", "donges2015behaviormodels"], sec: "sota", kicker: "State of the art · decision levels", ref: "§3.2", time: 50,
       title: "Which decision? The tactical level: which maneuver, and when",
       notes: "Three decision levels after Michon. The tactical level answers what maneuver to perform, when and how, over a few seconds. The industrial starting point is a set of ADAS features already validated.",
       html: `<div class="row grow">
@@ -272,7 +335,7 @@
           <div class="card navy"><h3>Contribution of the thesis</h3><p>An anticipatory tactical layer that keeps the vehicle within what it can ensure, over ADAS features already validated.</p></div>
         </div></div>` },
 
-    { id: "methods", sec: "sota", kicker: "State of the art · tactical decision-making", ref: "§3.3", time: 60,
+    { id: "methods", cite: ["olsson2016BT", "hang2021gametheoric", "ulbrich2015pomdp", "hubmann2018uncertainty", "hoel2019combiningdeep", "fiedler2022hybrid"], sec: "sota", kicker: "State of the art · tactical decision-making", ref: "§3.3", time: 60,
       title: "How do existing methods decide?",
       notes: "The state of the art in one table, the synthesis of the survey, table of chapter 3. Probabilistic methods handle uncertainty and long horizons at a computational cost, which online sampling solvers mitigate. Learning-based methods scale but give no guarantee. In all families, the context describes the scene.",
       html: `<table class="tbl" style="font-size:24px"><tr><th>Method</th><th class="c">Uncert.</th><th class="c">Scal.</th><th class="c">Unseen</th><th class="c">Horizon</th><th class="c">Explain.</th><th class="c">Cost</th><th class="c">Real time</th><th>Main limitation</th></tr>
@@ -292,7 +355,7 @@
         </div>`,
       backups: ["b-learning"] },
 
-    { id: "rw-c3", sec: "sota", c: ["C3"], kicker: "Related work · partial observability", ref: "§3.3", time: 60,
+    { id: "rw-c3", cite: ["ulbrich2015pomdp", "hubmann2018uncertainty", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep", "chen2025intention"], sec: "sota", c: ["C3"], kicker: "Related work · partial observability", ref: "§3.3", time: 60,
       title: "How do POMDP planners handle uncertainty?",
       notes: "POMDPs are the standard frame for tactical decisions under partial observability: lane changes, merging, intersections. Online Monte Carlo search with belief updates makes them tractable, and POMCP represents the belief with particles. What they keep uncertain is the traffic. The capability of the vehicle is assessed, at best, in the current state. The ODD-POMDP adds the capability check in every particle.",
       html: `<div class="card tight col" style="height:410px;gap:8px">${fig("rw_pomdp.png", "Partially observable driving scenarios")}
@@ -307,13 +370,13 @@
             <li class="to">ODD-POMDP: an action is kept when a share <i class="m">τ</i> of the particles ensures it, in every node of the search</li></ul></div>
         </div>` },
 
-    { id: "positioning", sec: "sota", kicker: "Positioning", ref: "§3.4 – §3.5", time: 75,
+    { id: "positioning", cite: ["cardenas2025context_aware"], sec: "sota", kicker: "Positioning", ref: "§3.4 – §3.5", time: 75,
       title: "What is missing in the state of the art?",
       notes: "The four gaps identified at the end of the survey, published in IEEE Transactions on Intelligent Vehicles in 2025. For each, what exists, what is missing, and the contribution that addresses it. Each badge links to its part.",
       backups: ["b-learning"],
       html: `<div class="g2 grow">
         ${[["Long-term, sequential decisions", "MDPs and POMDPs plan sequences of maneuvers, under uncertainty <span class=\"mute\">(Brechtel, 2014; Hubmann, 2018; Hoel, 2019)</span>", "Rule-based and most learning-based methods select one maneuver at a time", ["C2", "C3"]],
-           ["Capability in future states", "Ability and skill graphs, restricted domains and arbitration graphs assess what the vehicle can do <span class=\"mute\">(Reschka, 2015; Colwell, 2018; Pior, 2020)</span>", "Only in the current state: the logic remains reactive", ["C1", "C2"]],
+           ["Capability in future states", "Ability and skill graphs, restricted domains and arbitration graphs assess what the vehicle can do <span class=\"mute\">(Reschka, 2015; Colwell, 2018; Orzechowski, 2020)</span>", "Only in the current state: the logic remains reactive", ["C1", "C2"]],
            ["Situation awareness enriched by the ODD", "Monitoring tells how far the operational domain is inside the ODD, and even the time left before exiting it <span class=\"mute\">(Charmet, 2024)</span>", "The context describes the scene, not whether the vehicle remains capable in it", ["C1"]],
            ["Interdependent ODD dimensions", "Weather, road type and density are each monitored, for instance rain through μODDs <span class=\"mute\">(Salvi, 2022)</span>", "One dimension at a time, while the admissible speed depends on visibility or friction", ["C1"]]]
           .map(([t, y, n, cs], j) => `<div class="card col" style="gap:20px;padding:30px 36px"><div class="row" style="align-items:center;gap:18px"><div class="num-badge" style="width:50px;height:50px;font-size:24px">${j + 1}</div><h3 style="margin:0;font-size:31px">${t}</h3></div>
@@ -344,7 +407,7 @@
           <li>Highway driving, with the conditions ahead announced by the electronic horizon</li></ul></div>
         </div>` },
 
-    { id: "architecture", sec: "c1", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 150, steps: 5,
+    { id: "architecture", cite: ["michon1985critical"], sec: "c1", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 150, steps: 5,
       title: "ODD-aptive: three decision layers, and inside the tactical one",
       notes: "The architecture of chapter 4, Figure 4.1, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. (1) Zoom into the tactical layer. The current state, or belief, becomes the root s0 of the planning horizon builder. (2) For each state, the builder queries the MCE, which monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (3) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead; query and prediction repeat up to the horizon H. (4) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (5) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state.",
       html: `<div class="ar zm">
@@ -488,7 +551,7 @@
         <div class="sig t" data-step="5" style="left:1470px;top:758px;line-height:1.2">current action, to the<br>ADAS features selector (F1)</div>
       </div>` },
 
-    { id: "maneuvers", sec: "c1", c: ["C1"], kicker: "Mapping the ODD to the behavioral level", ref: "§4.4.1 – §4.4.2", time: 55,
+    { id: "maneuvers", cite: ["AVSC2021BehavioralCompetencies", "iso2023iso34503", "colwell_automated_2018"], sec: "c1", c: ["C1"], kicker: "Mapping the ODD to the behavioral level", ref: "§4.4.1 – §4.4.2", time: 55,
       title: "The driving task is decomposed into maneuvers, each with its own boundaries",
       notes: "Asking whether the whole vehicle is within its ODD is too coarse. The task is decomposed into maneuvers, and the question is asked for each of them. Each maneuver has its own boundaries in the space of the operational constraints.",
       html: `<div class="card col" style="flex:1.3 1 0">${fig("decomposition.jpg", "Decomposition of the driving task into maneuvers")}</div>
@@ -498,7 +561,7 @@
           <div class="card"><h4>Constraints</h4><p class="small"><b>Continuous</b> ones (visibility, density, speed) allow margins and gradual anticipation. <b>Discrete</b> ones (road type, works) change abruptly: their transitions must be predicted.</p></div>
         </div>` },
 
-    { id: "operability", sec: "c1", c: ["C1"], kicker: "Ensured maneuvers and levels of operability", ref: "§4.4.3", time: 45,
+    { id: "operability", cite: ["colwell_automated_2018", "charmet2024monitoring"], sec: "c1", c: ["C1"], kicker: "Ensured maneuvers and levels of operability", ref: "§4.4.3", time: 45,
       title: "Three levels of operability, from the set of ensured maneuvers",
       notes: "Three levels of operability. Degradation is per maneuver, not an intermediate level: a maneuver can remain ensured with a reduced performance range. The same assessment runs on predicted states, fed by the electronic horizon.",
       html: `<div class="g3">
@@ -509,7 +572,7 @@
         <div class="card amber"><p>Degradation is <b>per maneuver</b>, not an intermediate level: a maneuver can remain ensured with a reduced performance range.</p></div>
         <div class="takeaway">The same assessment runs on <b>predicted states</b>, fed by the electronic horizon. This is what makes anticipation possible.</div>` },
 
-    { id: "skills", sec: "c1", c: ["C1"], kicker: "Assessing the decisional capability", ref: "§4.5.1 – §4.5.2", time: 60,
+    { id: "skills", cite: ["reschka2015ability", "jatzkowski2021knowledge"], sec: "c1", c: ["C1"], kicker: "Assessing the decisional capability", ref: "§4.5.1 – §4.5.2", time: 60,
       title: "A maneuver is ensured when all its skills are fulfilled",
       notes: "Sense, Think, Act, after Pfeifer. Each skill is a requirement expressed on the operational domain, so it can be evaluated on a predicted context, which is what makes anticipation possible.",
       html: `<div class="row grow">
@@ -532,7 +595,7 @@
       notes: "The safe distance of RSS: enough to stop in time, and enough for the ACC to settle in smoothly behind a vehicle that slows down. It builds the required perception range of the Sense skill.",
       video: { src: A + "rss.mp4", parts: [[0.0, "How much distance to stop in time?"], [16.91, "How much distance to settle in smoothly behind it?"]] } },
 
-    { id: "sense", sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 60,
+    { id: "sense", cite: ["shwartz2017RSS", "CARDENAS2025162", "bussemaker2014SensingRF"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 60,
       title: "Sense: the perception range must cover the RSS distance in each zone",
       notes: "The lane change needs to see vehicles in zones A, B and C. The requirement depends on the speeds, through the RSS distance. Below about 67 m of visibility the lane change window vanishes, while Keep Lane remains ensured at a lower speed.",
       backups: ["b-rss"],
@@ -552,7 +615,7 @@
       notes: "The perception range required in three zones defines a speed window for the lane change. Fog narrows it until it closes, while keeping the lane remains ensured.",
       video: { src: A + "window.mp4", parts: [[0.0, "Required perception range: one RSS rule, three zones"], [6.0, "Speed trades the rear zone against the front zones"], [14.5, "Above both curves, the lane change is ensured"], [18.5, "Fog shrinks the envelope: the speed window narrows"], [27.0, "Too slow or too fast: a zone is no longer covered"], [36.0, "Below ≈ 67 m: Keep Lane ensured, lane change not ensured"], [46.5, "Uncertainty on the traffic speed: the limit rises to ≈ 81 m"]] } },
 
-    { id: "other-skills", sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 45,
+    { id: "other-skills", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 45,
       title: "Lane markings, prediction and interaction complete the skill graph",
       notes: "Three other skills. The density skill is the one used for the congestion before the exit. Degradation is per maneuver: Keep Lane can remain ensured with a reduced performance range.",
       html: `<div class="g3">
@@ -562,7 +625,7 @@
         </div>
         <div class="card ok"><p><b>Keep Lane</b> does not need the rear zone, and its forward requirement drops with the speed. It stays ensured, in a degraded mode, when the lane change is lost.</p></div>` },
 
-    { id: "margin", sec: "c1", c: ["C1"], kicker: "Strategic margin", ref: "§4.5, §5.2.5", time: 60, steps: 3,
+    { id: "margin", cite: ["salvi2022fuzzy", "hullermeier2021aleatoric"], sec: "c1", c: ["C1"], kicker: "Strategic margin", ref: "§4.5, §5.2.5", time: 60, steps: 3,
       title: "Ensured, but how close to the boundary? The strategic margin",
       notes: "The plane of chapter 4. Each point is a state of the vehicle: its speed, and the perception range it has. Above the blue curve the forward sensing skill is fulfilled; the curve is the boundary. Ensured is binary, but the distance between the point and the boundary tells how close the maneuver is to being lost. We measure it with the ratio of the available range to the required one, 1 on the boundary. Here S, at 110 km/h with 120 m, is far from it. (1) In fog, with 50 m, at 90 km/h, the point is still above the boundary: ensured, but on the edge, a ratio of about 1.02. A little less visibility and it is lost. (2) The strategic margin m, chosen by the designer, defines a preferred region, here m = 1.5, the dashed curve. The normalized margin w goes from 0 on the boundary to 1 in this region, and an action is as close as its most constrained skill. So the planner prefers to slow down, to about 56 km/h. (3) This enters the operability term of the reward. No maneuver is removed: the margin is a preference, not a second boundary.",
       backups: ["b-margin"],
@@ -627,7 +690,7 @@
     // ================================================================ 4. C2 · choice: ODD-constrained MDP (part II, chapter 5, §5.2)
     { id: "sec-c2", type: "section", sec: "c2", dark: true, title: "C2 · How to decide without losing the fallback?", time: 10 },
 
-    { id: "odd-mdp", sec: "c2", c: ["C2"], kicker: "Formalism", ref: "§5.2.1 – §5.2.3", time: 80,
+    { id: "odd-mdp", cite: ["bellman1957MDP", "11097482"], sec: "c2", c: ["C2"], kicker: "Formalism", ref: "§5.2.1 – §5.2.3", time: 80,
       title: "The ODD-MDP: capability enters the Bellman equation",
       notes: "Why an MDP. It represents sequential decisions over a horizon. It handles uncertainty in the transitions and extends to partial observability, which the third contribution uses. Tactical maneuvers form a discrete set of actions. And its elements can be tuned from data, as in reinforcement learning. The state joins the operational domain, the ego vehicle and the surrounding vehicles: including the OD is what lets the filter and the reward depend on the context. An action pairs a maneuver with a set speed change. The MCE returns the ensured actions of a state, in every predicted state. The only change to the Bellman equation: the maximum runs over the ensured actions. Capability precedes choice is written into the equation, and the policy is ODD-compliant by construction, not by verification.",
       html: `<div class="row" style="gap:24px">
@@ -653,7 +716,7 @@
       notes: "How far to explore, where to explore once the MCE prunes what leaves the ODD, the best ensured sequence, and the search that starts again after each action.",
       video: { src: A + "search.mp4", parts: [[0.0, "Deciding means exploring possible futures"], [6.5, "How far to explore: the planning horizon"], [17.0, "Where to explore: pruning with the MCE"], [28.5, "Among the ensured futures, the best sequence"], [36.0, "Execute the first action, then explore again"]] } },
 
-    { id: "mdp-solve", sec: "c2", c: ["C2"], kicker: "Resolution", ref: "§5.2.4, §5.2.7", time: 60,
+    { id: "mdp-solve", cite: ["bellman1957dynamic"], sec: "c2", c: ["C2"], kicker: "Resolution", ref: "§5.2.4, §5.2.7", time: 60,
       title: "Predict each ensured action, then solve the tree by value iteration",
       notes: "How the model is built and solved. The surrounding vehicles follow a constant acceleration model in their lane, without interactions. The ego vehicle follows the kinematics of the maneuver, with ACC behind a leader. The operational domain ahead is not predicted: it is read from the electronic horizon. The state predictor returns one successor for each ensured action, and the MCE is called again on each successor: this builds the tree of ensured state-action pairs. Value iteration then runs on that tree, with the maximum over the ensured actions only. Only the first action is executed, and the whole tree is rebuilt at the next cycle.",
       backups: ["b-transition", "b-vi"],
@@ -675,7 +738,7 @@
             <li>Only the first action is executed; the tree is rebuilt every 200 to 300 ms</li></ul></div>
         </div>` },
 
-    { id: "reward", sec: "c2", c: ["C2"], kicker: "Reward function", ref: "§5.2.5", time: 70,
+    { id: "reward", cite: ["WANG2021surrogate", "glaser2010ttctiv"], sec: "c2", c: ["C2"], kicker: "Reward function", ref: "§5.2.5", time: 70,
       title: "Among the ensured maneuvers, the reward ranks the options",
       notes: "Five objectives: safety, legal compliance, progress, the route, and operability. The first terms are classical. The operability terms are what makes the policy anticipate. The first one counts the ensured actions, each weighted by its margin to the boundary of its most constrained skill: the planner prefers states where the remaining maneuvers are comfortably ensured. The second one penalizes predicted states, beyond a time threshold, from which no minimal risk maneuver is reachable, more as they are later. The weights put collision first, then the reachable fallback, then operability. And because the model is explicit and the reward is a sum of named terms, every decision can be explained: compared with simply keeping the lane, term by term, now and over the horizon, which gives its main reason and what it costs. The details are in the appendix.",
       backups: ["b-reward", "b-fallback"],
@@ -697,7 +760,7 @@
               <p>Each term is known in every predicted state. Compared with <b>keep lane</b>, term by term, a decision gives its <b>main reason</b> and its <b>trade-off</b>, now and over the horizon. ${go("b-explain", "Appendix →")}</p></div>
           </div></div>` },
 
-    { id: "safe", sec: "c2", c: ["C2"], kicker: "Safe states and fail-operational strategies", ref: "§5.2.6", time: 60,
+    { id: "safe", cite: ["sae2021taxonomy", "iso2020iso4804"], sec: "c2", c: ["C2"], kicker: "Safe states and fail-operational strategies", ref: "§5.2.6", time: 60,
       title: "Fail-operational: every predicted state keeps a fallback available",
       notes: "The fail-operational property, made explicit. It is pursued by the filter and the reward together. On the right, two policies in the plane of speed and perception range: only the anticipatory one keeps every state inside the skill-fulfilled region.",
       backups: ["b-mrm"],
@@ -727,7 +790,7 @@
     // ================================================================ 5. C3 · choice under uncertainty: ODD-constrained POMDP (part II, chapter 5, §5.3)
     { id: "sec-c3", type: "section", sec: "c3", dark: true, title: "C3 · And when the vehicle is uncertain?", time: 10 },
 
-    { id: "pomdp-sources", sec: "c3", c: ["C3"], kicker: "Extension to partial observability", ref: "§5.3.1 – §5.3.2", time: 55,
+    { id: "pomdp-sources", cite: ["zhang2020efficient", "chen2025intention"], sec: "c3", c: ["C3"], kicker: "Extension to partial observability", ref: "§5.3.1 – §5.3.2", time: 55,
       title: "Three sources of uncertainty, one belief over particles",
       notes: "Three sources, which do not play the same role. Noise on the vehicles changes which gap looks acceptable. The forecast uncertainty enters the skills, so this is where the capability reasoning matters most. Intentions stay hidden whatever the sensor quality. Each card links to its experiment, in the validation of chapter 6.",
       html: `<div class="card tight" style="height:250px">${fig("uncertainty.png", "Three sources of uncertainty", 214)}</div>
@@ -740,7 +803,7 @@
               <p class="small" style="margin-top:auto"><b class="mute">Experiment:</b> ${go(to, e + " →")}</p></div>`).join("")}
         </div>` },
 
-    { id: "pomdp", sec: "c3", c: ["C3"], kicker: "Formalism", ref: "§5.3.1 – §5.3.4", time: 60,
+    { id: "pomdp", cite: ["silver_monte-carlo_2010", "murphy2012machine"], sec: "c3", c: ["C3"], kicker: "Formalism", ref: "§5.3.1 – §5.3.4", time: 60,
       title: "The ODD-POMDP: the belief replaces the state, the principle stays",
       notes: "The POMDP adds the observations and their model to the tuple. The vehicle no longer knows the state: it maintains a belief, represented by particles. The observations are the estimated kinematic states of the surrounding vehicles, Gaussian around the true state, and their intentions, estimated by a Gaussian naive Bayes classifier on four features. Each element of the ODD-MDP has its counterpart. The ensured set is now defined on the belief, with a threshold tau, and value iteration gives way to Monte Carlo planning. Capability still precedes choice, now in probability.",
       html: `<div class="row" style="gap:24px">
@@ -762,7 +825,7 @@
       notes: "The current state is only estimated: noisy position and speed, uncertain intentions, an uncertain fog forecast. The belief keeps several possible states, the particles. The MCE checks the action in every particle: it is ensured only if a share τ of the particles ensures it.",
       video: { src: A + "pomcp.mp4", parts: [[0.0, "Under uncertainty, the current state becomes a belief"], [19.0, "An action is ensured when a share τ of the particles ensures it"]], end: 30.6 } },
 
-    { id: "belief", sec: "c3", c: ["C3"], kicker: "Ensured actions at the belief level", ref: "§5.3.3 – §5.3.4", time: 45,
+    { id: "belief", cite: ["zhang2020efficient", "chen2025intention"], sec: "c3", c: ["C3"], kicker: "Ensured actions at the belief level", ref: "§5.3.3 – §5.3.4", time: 45,
       title: "An action is ensured when a share τ of the particles ensures it",
       notes: "The ensured set is now defined on the belief. An action is kept when the share of particles in which it is ensured reaches the threshold tau. The guarantee becomes probabilistic, and tau an explicit design parameter, 0.9 in the experiments.",
       html: `<div class="row grow">
@@ -787,7 +850,7 @@
       notes: "Each simulation draws one particle and follows ensured actions up to the horizon. Simulation after simulation, the tree grows toward the most promising ensured actions. Only the best ensured action is executed, the belief is rebuilt and the search starts again.",
       video: { src: A + "pomcp.mp4", parts: [[30.6, "Monte Carlo search: one simulation at a time"], [46.0, "Many simulations: the tree grows where it matters"], [59.37, "Execute the best ensured action, rebuild the belief, search again"]] } },
 
-    { id: "pomcp", sec: "c3", c: ["C3"], kicker: "Resolution through Monte Carlo planning", ref: "§5.3.5 – §5.3.6", time: 50,
+    { id: "pomcp", cite: ["silver_monte-carlo_2010", "auer2002finite"], sec: "c3", c: ["C3"], kicker: "Resolution through Monte Carlo planning", ref: "§5.3.5 – §5.3.6", time: 50,
       title: "ODD-constrained POMCP: the MCE filters selection, expansion and rollout",
       notes: "POMCP with the capability filter at the three stages where actions are chosen. The final action is the best ensured action at the root. For the ODD-MDP, intentions enter through a tactical risk term; in the ODD-POMDP, the particles carry them.",
       backups: ["b-pomcp", "b-cost"],
@@ -817,7 +880,7 @@
     // ================================================================ 6. C4 · validation in simulation and on the vehicle (part III, chapter 6): setup §6.2, nominal §6.3, fail-operational §6.4, uncertainty §6.5
     { id: "sec-c4", type: "section", sec: "c4", dark: true, title: "C4 · Does it run on a real vehicle?", time: 10 },
 
-    { id: "setup", sec: "c4", c: ["C4"], kicker: "Experimental platform", ref: "§6.2", time: 50,
+    { id: "setup", cite: ["ipgCarMaker", "renault2022cta"], sec: "c4", c: ["C4"], kicker: "Experimental platform", ref: "§6.2", time: 50,
       title: "The same planner, from simulation to a real prototype",
       notes: "Three loops that progressively replace simulated elements by real ones. The results that follow come from the software-in-the-loop, except the overtaking on the prototype, which is the vehicle-in-the-loop. In both, ODD-aptive runs unchanged.",
       html: `<div class="row grow">
@@ -830,7 +893,7 @@
           <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period; only the first maneuver is executed</span></div>
         </div></div>` },
 
-    { id: "nominal-lc", sec: "c4", c: ["C2", "C4"], kicker: "Nominal tactical behavior", ref: "§6.3.1", time: 50,
+    { id: "nominal-lc", cite: ["treiber2000congested", "li2021lcduration"], sec: "c4", c: ["C2", "C4"], kicker: "Nominal tactical behavior", ref: "§6.3.1", time: 50,
       title: "Nominal lane change: safe gaps, and a plan revised every 200 ms",
       notes: "Before any degradation, the planner must do what any tactical planner does. The horizon covers four maneuvers, but the tree is rebuilt every 200 ms, so a plan is never followed blindly.",
       html: `<div class="row grow">
@@ -1024,7 +1087,7 @@
           <tr><td><span class="num-badge c4" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C4</span><b>Validation</b></td><td>Integration into an industrial prototyping architecture</td><td>${go("vil-result", "Vehicle-in-the-loop on a Mégane E-Tech: one overtaking sequence past a whole group")}</td></tr></table>
         <div class="takeaway" style="margin-top:auto"><b>Capability precedes choice:</b> anticipation changes the decisions and keeps the vehicle fail-operational, without making it overly conservative.</div>` },
 
-    { id: "perspectives", sec: "concl", kicker: "Future directions", ref: "§7.1 – §7.2", time: 75,
+    { id: "perspectives", cite: ["kuhn2021introspective", "rabiee2023introspective", "krajewski2018highd", "alshiekh2018shielding", "krasowski2020safe"], sec: "concl", kicker: "Future directions", ref: "§7.1 – §7.2", time: 75,
       title: "Limitations, and where the work goes next",
       notes: "The main limitation: the planner acts at the last admissible instant, for instance when it returns to the right lane just before the fog. Monitoring the maneuver during its execution is the first perspective that addresses it.",
       html: `<div class="row grow">
@@ -1070,7 +1133,7 @@
           <div class="card stat"><span class="v">0.3 s</span><span class="l">time budget of the ODD-POMDP cycle</span></div></div>
         <div class="takeaway">Both planners run within the replanning period of 200 to 300 ms.</div>` },
 
-    { id: "b-mrm", sec: "backup", kicker: "Appendix", title: "Three notions of MRM, and how they relate",
+    { id: "b-mrm", cite: ["sae2021taxonomy", "iso2020iso4804"], sec: "backup", kicker: "Appendix", title: "Three notions of MRM, and how they relate",
       html: `<div class="g2 grow">
           <div class="card ok"><h3>Ensured MRM</h3><div class="eq">MRM ∈ ${Aens()}</div><p>Its skills are fulfilled in <i class="m">s</i>, so <i class="m">s</i> is a safe state (Eq. 5.35).</p></div>
           <div class="card accent"><h3>Reachable MRM</h3><div class="eq">𝟙<sub>MRM</sub>(<i>s</i>) = 1</div><p>An MRM is reachable from <i class="m">s</i>. Used by the fallback term after the time threshold (Eq. 5.32).</p></div>
@@ -1100,7 +1163,7 @@
             <li>Uncertainty on states, intentions and forecasts is handled by the ${go("pomdp-sources", "ODD-POMDP")}</li></ul></div></div>
         <div class="card col grow">${fig("state_frame.jpg", "State frame")}</div></div>` },
 
-    { id: "b-vi", sec: "backup", kicker: "Appendix", title: "Value iteration on the tree of ensured states",
+    { id: "b-vi", cite: ["bellman1957dynamic"], sec: "backup", kicker: "Appendix", title: "Value iteration on the tree of ensured states",
       html: `<div class="row grow"><div class="card grow"><ul class="list">
           <li>The tree is built first: root, ensured actions, predicted successors, up to four steps</li>
           <li>The reward is evaluated on the successor state</li>
@@ -1156,7 +1219,7 @@
           <tr><td><b>Minor terms</b></td><td>lane change cost, and a penalty for overtaking on the right</td></tr></table>
         <p class="small mute">Weights: collision much larger than fallback, then operability, risk, legal and speed.</p>` },
 
-    { id: "b-pomcp", sec: "backup", kicker: "Appendix", title: "ODD-constrained POMCP in practice",
+    { id: "b-pomcp", cite: ["silver_monte-carlo_2010", "auer2002finite"], sec: "backup", kicker: "Appendix", title: "ODD-constrained POMCP in practice",
       html: `<div class="g4">
           <div class="card stat"><span class="v">16</span><span class="l">particles in the noisy perception batch</span></div>
           <div class="card stat"><span class="v">32</span><span class="l">hypotheses on the fog in the forecast batch</span></div>
@@ -1177,7 +1240,7 @@
           <li>At 620 m only <i class="m">m</i> = 1.5 already plans a deceleration. At 460 m, Keep Lane would leave the ensured region for <i class="m">m</i> = 1 and 1.2</li></ul>
           <p class="small mute" style="margin-top:16px">Explored states in the plane of speed and perception range, at four moments and for three margins.</p></div></div>` },
 
-    { id: "b-rss", sec: "backup", kicker: "Appendix", title: "Sense skill parameters for the lane change",
+    { id: "b-rss", cite: ["shwartz2017RSS", "hasuo2022rss"], sec: "backup", kicker: "Appendix", title: "Sense skill parameters for the lane change",
       html: `<div class="row grow"><div class="card col grow">${fig("ranges.png", "Required perception ranges")}<p class="small mute">RSS worst case about 300 m at 130 km/h. Both vehicles at 100 km/h: about 56 m.</p></div>
         <table class="tbl" style="flex:0.7 1 0;align-self:flex-start"><tr><th>Parameter</th><th class="c">Value</th></tr>
           <tr><td>Response time, front zones</td><td class="c">0.5 s</td></tr><tr><td>Response time, rear zone</td><td class="c">1 s</td></tr>
@@ -1195,7 +1258,7 @@
           <div class="card col tight grow"><h4>Overtaking</h4>${fig("exit_overtakings.png", "Overtakings per run")}</div></div>
         <div class="card col tight grow"><h4>Rule compliance</h4>${fig("exit_compliance.png", "Overtaking on the right and time headway")}</div>` },
 
-    { id: "b-learning", sec: "backup", kicker: "Appendix", title: "Why model-based, and not learned end to end",
+    { id: "b-learning", cite: ["hoel2019combiningdeep", "alshiekh2018shielding"], sec: "backup", kicker: "Appendix", title: "Why model-based, and not learned end to end",
       html: `<div class="row grow">
           <div class="card grow"><h3>Learning-based decision-making</h3><ul class="list">
             <li>Scales well and handles unseen situations</li>
@@ -1222,7 +1285,7 @@
           <tr class="hl"><td>ODD-POMDP</td><td class="c">19 / 20</td><td class="c">75 – 100 %</td></tr></table>
         <p class="small mute" style="margin:0">Exact Clopper–Pearson intervals. Both planners run on the same seeds, so a paired test would be sharper.</p>` },
 
-    { id: "b-takeover", sec: "backup", kicker: "Appendix", title: "Driver takeover and automation levels",
+    { id: "b-takeover", cite: ["sae2021taxonomy", "kuehn2017takeover"], sec: "backup", kicker: "Appendix", title: "Driver takeover and automation levels",
       html: `<div class="card grow"><ul class="list">
           <li><b>Level 2:</b> fail-operational decisions can reduce unplanned disengagements when the context shifts</li>
           <li><b>Level 3:</b> the system must issue a timely request to intervene, 12 to 15 s ahead, and drivers are often unaware of the system limits</li>
@@ -1248,12 +1311,24 @@
           <li>Speed almost constant at ≈ 60 km/h</li></ul></div>` },
   ];
 
+  // references pages: every work cited on a slide, alphabetical, a few per page
+  const cited = [...new Set(slides.concat(backups).flatMap((x) => x.cite || []))]
+    .sort((a, b) => BIB[a][0].localeCompare(BIB[b][0]));
+  const PER = 10, refpage = {};
+  for (let j = 0; j < cited.length; j += PER) {
+    const part = cited.slice(j, j + PER), id = `b-refs-${j / PER + 1}`;
+    const first = (k) => BIB[k][0].split(/[ ,&]/)[0];
+    part.forEach((k) => { refpage[k] = id; });
+    backups.push({ id, sec: "backup", kicker: "Appendix", title: `References · ${first(part[0])} to ${first(part[part.length - 1])}`,
+      html: `<div class="refs">${part.map((k) => `<p><b>${BIB[k][0]}</b>${BIB[k][1]}</p>`).join("")}</div>` });
+  }
+
   // appendix index: one link per appendix slide
   backups[0].html = `<div class="body"><div class="bindex">${backups.slice(1).map((b, j) =>
     `<a data-go="${b.id}"><b>A${j + 1}</b><span>${b.title}</span></a>`).join("")}</div></div>`;
 
   window.TALK = {
     footer: "Rhandy Cardenas  ·  Fail-operational decision-making for intelligent vehicles",
-    sections, slides, backups,
+    sections, slides, backups, bib: BIB, refpage,
   };
 })();
