@@ -670,22 +670,33 @@ body.cmt-open #cmt-panel { display: flex; }
 #cmt-hint .tx { flex: 1 1 360px; }
 body.presenter #cmt-panel, body.presenter #cmt-layer { display: none !important; }
 
-/* strategic margin: how close to the boundary of a skill */
-.mgbar { padding: 22px 32px 16px; }
-.mg-scale { position: relative; display: flex; height: 120px; margin: 54px 0 0; }
-.mg-scale .seg { display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 0 24px; color: #fff; font-size: 21px; line-height: 1.3; min-width: 0; }
-.mg-scale .seg b { font-size: 28px; }
-.mg-scale .seg.ok { background: var(--ok); border-radius: 14px 0 0 14px; }
-.mg-scale .seg.near { background: linear-gradient(90deg, #f6cf62, var(--deg)); color: var(--navy); }
-.mg-scale .seg.out { background: var(--bad); border-radius: 0 14px 14px 0; }
-.mg-scale .tick { position: absolute; top: -48px; bottom: -10px; border-left: 4px solid var(--navy); }
-.mg-scale .tick span { position: absolute; top: 2px; left: 12px; white-space: nowrap; font-size: 24px; color: var(--navy); }
-.mg-probe { position: relative; height: 52px; }
-.mg-probe .end { position: absolute; left: 0; top: 10px; font-size: 18px; font-weight: 600; color: var(--mute); }
-.mg-probe .end.r { left: auto; right: 0; }
-.mg-probe .pr { position: absolute; top: 0; padding-top: 18px; white-space: nowrap; font-size: 22px; color: var(--ink); transform: translateX(-14px); }
-.mg-probe .pr::before { content: ""; position: absolute; left: 4px; top: 0; border: 10px solid transparent; border-top: 0; border-bottom: 14px solid var(--ok); }
-.mg-probe .pr.near::before { border-bottom-color: var(--deg); }
+/* strategic margin: a state point and the capability boundary, as in the figures of chapter 4 */
+.mgcard { gap: 6px; padding: 20px 24px 14px; }
+.mgplot { flex: 1 1 0; min-height: 0; width: 100%; font-family: "Montserrat", "Segoe UI", Arial, sans-serif; }
+.mgplot .reg { fill: #e1ecf6; }
+.mgplot .preg { fill: #d3ecd9; }
+.mgplot .grid line { stroke: #000; stroke-opacity: 0.07; stroke-width: 1.5; }
+.mgplot .ax line { stroke: #262626; stroke-width: 2.5; }
+.mgplot .tk text { font-size: 22px; fill: #262626; }
+.mgplot .axl { font-size: 24px; font-weight: 600; fill: #262626; }
+.mgplot .bnd { fill: none; stroke: #1f77b4; stroke-width: 5; }
+.mgplot .pref { fill: none; stroke: var(--ok); stroke-width: 4; stroke-dasharray: 14 9; }
+.mgplot .lab { font-size: 24px; font-weight: 600; fill: var(--navy); }
+.mgplot .lab.sm { font-size: 22px; }
+.mgplot .lab.bl { fill: #1f77b4; }
+.mgplot .lab.pf { fill: var(--ok); }
+.mgplot .lab.fu { fill: #1f77b4; font-weight: 700; }
+.mgplot .lab.nf { fill: var(--bad); font-weight: 700; }
+.mgplot .lab.fg { fill: var(--mute); }
+.mgplot .mi { font-family: var(--math); font-style: italic; font-weight: 400; font-size: 1.12em; }
+.mgplot .sb { font-size: 0.68em; }
+.mgplot .pt { fill: var(--ok); stroke: #fff; stroke-width: 3; }
+.mgplot .pt.edge { fill: var(--deg); }
+.mgplot .sl { font-size: 32px; fill: var(--ok); }
+.mgplot .gap { stroke: var(--navy); stroke-width: 3; }
+.mgplot .mv { fill: none; stroke: var(--navy); stroke-width: 3; stroke-dasharray: 8 7; }
+.mgplot .fog { stroke: var(--mute); stroke-width: 2.5; stroke-dasharray: 4 6; }
+.mgplot .cross { stroke: #1f77b4; stroke-width: 4; }
 .eq .fr { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; font-size: 0.82em; line-height: 1.2; }
 .eq .fr > span:first-child { border-bottom: 2px solid currentColor; padding: 0 6px 2px; }
 .eq .fr > span:last-child { padding-top: 2px; }
