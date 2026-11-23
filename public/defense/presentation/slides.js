@@ -718,28 +718,29 @@
       notes: "How far to explore, where to explore once the MCE prunes what leaves the ODD, the best ensured sequence, and the search that starts again after each action.",
       video: { src: A + "search.mp4", parts: [[0.0, "Deciding means exploring possible futures"], [6.5, "How far to explore: the planning horizon"], [17.0, "Where to explore: pruning with the MCE"], [28.5, "Among the ensured futures, the best sequence"], [36.0, "Execute the first action, then explore again"]] } },
 
-    { id: "mdp-solve", cite: ["bellman1957dynamic"], sec: "c2", c: ["C2"], kicker: "Resolution", ref: "§5.2.4, §5.2.7", time: 60,
-      title: "Predict each ensured action, then solve the tree by value iteration",
-      notes: "How the model is built and solved. The surrounding vehicles follow a constant acceleration model in their lane, without interactions. The ego vehicle follows the kinematics of the maneuver, with ACC behind a leader. The operational domain ahead is not predicted: it is read from the electronic horizon. The state predictor returns one successor for each ensured action, and the MCE is called again on each successor: this builds the tree of ensured state-action pairs. Value iteration then runs on that tree, with the maximum over the ensured actions only. Only the first action is executed, and the whole tree is rebuilt at the next cycle.",
+    { id: "mdp-solve", cite: ["bellman1957dynamic"], sec: "c2", c: ["C2"], kicker: "Transition and resolution", ref: "§5.2.4, §5.2.7", time: 70,
+      title: "Predict the next state, scene and OD, then solve the tree by value iteration",
+      notes: "Two steps. First the transition: for each ensured action, the state predictor gives the next state, and the state has two parts. The scene: the ego vehicle follows the kinematics of its maneuver, with its ACC behind a leader, and the surrounding vehicles keep a constant acceleration in their lane, without interactions. And the operational domain: what it will be at the predicted position and time, the fog ahead for instance, comes from the electronic horizon and V2X; the planner uses this forecast, it does not compute it. The MCE is called again on each predicted state, which builds the tree of ensured state-action pairs. Second, the resolution: value iteration on that tree. Three advantages. The whole MDP is known, since we built it, so value iteration gives the optimal values exactly. The maximum runs over the ensured actions only, so the policy is ODD-compliant by construction: nothing has to be checked afterwards. And the tree, pruned by the MCE, stays small enough to be solved at every planning cycle; only the first action is executed.",
       backups: ["b-transition", "b-vi"],
       html: `<div class="row grow">
-        <div class="col" style="flex:1.12 1 0">
-          <div class="card col" style="gap:8px"><h4>Transition and prediction</h4>
-            <div class="eqrow"><div class="eq"><i>p</i><sub><i>i</i>,<i>t</i>+1</sub> = <i>F</i> <i>p</i><sub><i>i</i>,<i>t</i></sub> + <i>G</i> (<i>ẍ</i><sub><i>i</i>,<i>t</i></sub>, <i>ÿ</i><sub><i>i</i>,<i>t</i></sub>)<sup>⊤</sup></div><span>surrounding vehicles: constant acceleration, in their lane</span></div>
-            <div class="eqrow"><div class="eq"><i>p</i><sub>ego,<i>t</i>+1</sub> = <i>f</i>(<i>p</i><sub>ego,<i>t</i></sub>, <i>a<sub>t</sub></i>)</div><span>ego: kinematics of the maneuver, ACC behind a leader</span></div>
-            <div class="eqrow"><div class="eq"><i>Ŝ</i><sub><i>t</i>+1</sub><sup><i>a</i></sup> = <i>f</i>(<i>S<sub>t</sub></i>, <i>a</i>), &nbsp;<i>a</i> ∈ ${Aens("S<sub>t</sub>")}</div><span>one successor per ensured action</span></div>
-            <p class="xs mute" style="margin:2px 0 0">Operational domain ahead: read from the electronic horizon, not predicted</p></div>
-          <div class="card col grow" style="gap:8px"><h4>Resolution: value iteration restricted to the ensured actions</h4>
-            <div class="eq"><i>Q</i>(<i>s</i>, <i>a</i>) = <i>R</i>(<i>s</i>, <i>a</i>) + <i>γ</i> Σ<sub><i>s</i>′</sub> <i>P</i>(<i>s</i>′ | <i>s</i>, <i>a</i>) <i>V</i>(<i>s</i>′), &nbsp; <i>a</i> ∈ ${Aens()}</div>
-            <div class="eq"><i>V</i>(<i>s</i>) ← max<sub><i>a</i> ∈ ${Aens()}</sub> <i>Q</i>(<i>s</i>, <i>a</i>) &nbsp; until &nbsp;max<sub><i>s</i></sub> |Δ<i>V</i>| &lt; <i>ε</i></div>
-            <div class="eq"><i>a<sub>t</sub></i> = <i>π</i>*(<i>s</i><sub>0</sub>) = argmax<sub><i>a</i> ∈ ${Aens("s<sub>0</sub>")}</sub> <i>Q</i>(<i>s</i><sub>0</sub>, <i>a</i>)</div></div>
-        </div>
-        <div class="card col grow">${fig("tree.png", "Tree of ensured state-action pairs")}
-          <ul class="list xs" style="margin-top:8px">
-            <li>Horizon of four maneuvers, 14 to 20 s; an action pairs a maneuver with a set speed step of 10 km/h</li>
-            <li>Only the first action is executed; the tree is rebuilt every 200 to 300 ms</li></ul></div>
+        <div class="card col" style="flex:1.05 1 0;gap:12px"><h4>Transition: what will the state be after each ensured action?</h4>
+          <div class="tpair">
+            <figure><img src="${F}arch_e3in.jpg" alt="Current state, with a lane change to the left"><figcaption>State <i class="m">S<sub>t</sub></i> and an ensured action <i class="m">a</i></figcaption></figure>
+            <span class="tpa">→</span>
+            <figure><img src="${F}arch_e3out.jpg" alt="Predicted state after the lane change, fog ahead"><figcaption>Predicted state <i class="m">Ŝ</i><sub><i class="m">t</i>+1</sub><sup><i class="m">a</i></sup></figcaption></figure></div>
+          <div class="eqbox"><div class="eq" style="font-size:30px"><i>Ŝ</i><sub><i>t</i>+1</sub><sup><i>a</i></sup> = <i>f</i>(<i>S<sub>t</sub></i>, <i>a</i>), &nbsp; <i>a</i> ∈ ${Aens("S<sub>t</sub>")}, &nbsp; <i>S</i> = OD × scene</div></div>
+          <div class="tprow"><span class="pill">Scene</span><span>The ego vehicle follows the kinematics of its maneuver, with its ACC behind a leader; the surrounding vehicles keep a constant acceleration in their lane</span></div>
+          <div class="tprow"><span class="pill ok">OD</span><span>What it will be at the predicted position and time, the fog ahead for instance, from the electronic horizon and V2X</span></div>
+          <p class="xs mute" style="margin:0">The MCE is called again on every predicted state: this builds the tree of ensured state-action pairs</p></div>
+        <div class="card col" style="flex:0.95 1 0;gap:12px"><h4>Resolution: value iteration on the tree</h4>
+          <div class="eqbox" style="text-align:left"><div class="eq" style="font-size:28px"><i>V</i>(<i>s</i>) ← max<sub><i>a</i> ∈ ${Aens()}</sub> [ <i>R</i>(<i>s</i>, <i>a</i>) + <i>γ</i> Σ<sub><i>s</i>′</sub> <i>P</i>(<i>s</i>′ | <i>s</i>, <i>a</i>) <i>V</i>(<i>s</i>′) ]</div>
+            <div class="eq" style="font-size:28px"><i>a<sub>t</sub></i> = argmax<sub><i>a</i> ∈ ${Aens("s<sub>0</sub>")}</sub> <i>Q</i>(<i>s</i><sub>0</sub>, <i>a</i>)</div></div>
+          <h4 style="margin-top:4px">Why value iteration</h4>
+          <ul class="list" style="font-size:24px;gap:12px">
+            <li><b>The whole MDP is known</b>, since the tree is built by the MCE and the predictor: the optimal values are computed exactly</li>
+            <li><b>ODD-compliant by construction</b>: the maximum runs over the ensured actions only, nothing has to be checked afterwards</li>
+            <li><b>Small enough to solve at every cycle</b>, since the MCE prunes the tree; only the first action is executed</li></ul></div>
         </div>` },
-
     { id: "reward", cite: ["WANG2021surrogate", "glaser2010ttctiv"], sec: "c2", c: ["C2"], kicker: "Reward function", ref: "§5.2.5", time: 70,
       title: "Among the ensured maneuvers, the reward ranks the options",
       notes: "Five objectives: safety, legal compliance, progress, the route, and operability. The first terms are classical. The operability terms are what makes the policy anticipate. The first one counts the ensured actions, each weighted by its margin to the boundary of its most constrained skill: the planner prefers states where the remaining maneuvers are comfortably ensured. The second one penalizes predicted states, beyond a time threshold, from which no minimal risk maneuver is reachable, more as they are later. The weights put collision first, then the reachable fallback, then operability. And because the model is explicit and the reward is a sum of named terms, every decision can be explained: compared with simply keeping the lane, term by term, now and over the horizon, which gives its main reason and what it costs. The details are in the appendix.",
@@ -762,23 +763,27 @@
               <p>Each term is known in every predicted state. Compared with <b>keep lane</b>, term by term, a decision gives its <b>main reason</b> and its <b>trade-off</b>, now and over the horizon. ${go("b-explain", "Appendix →")}</p></div>
           </div></div>` },
 
-    { id: "safe", cite: ["sae2021taxonomy", "iso2020iso4804"], sec: "c2", c: ["C2"], kicker: "Safe states and fail-operational strategies", ref: "§5.2.6", time: 60,
-      title: "Fail-operational: every predicted state keeps a fallback available",
-      notes: "The fail-operational property, made explicit. It is pursued by the filter and the reward together. On the right, two policies in the plane of speed and perception range: only the anticipatory one keeps every state inside the skill-fulfilled region.",
-      backups: ["b-mrm"],
+    { id: "safe", cite: ["sae2021taxonomy", "iso2020iso4804"], sec: "c2", c: ["C2"], kicker: "Safe states and fail-operational strategies", ref: "§5.2.5, §5.2.6", time: 60,
+      title: "Fail-operational: the policy always keeps a minimal risk condition within reach",
+      notes: "The fail-operational property, made explicit. A minimal risk maneuver, MRM, brings the vehicle to a minimal risk condition, such as stopped on the hard shoulder. A state is safe when the MRM is ensured from it. The planner does not fall back by default: it keeps operating, and keeps a way to a minimal risk condition open. The term R_time penalizes the predicted states, beyond a time threshold, from which no MRM can be reached, more and more as they get further. Two mechanisms act together: the filter excludes what is not ensured, and the reward prefers the plans that keep margin and an MRM within reach. On the right, the same idea as in the animation of the introduction: the plan keeps a way to a minimal risk condition.",
+      backups: ["b-mrm", "b-fallback"],
       html: `<div class="row grow">
-        <div class="col grow">
-          <div class="card eqbox"><div class="eq"><i>s</i> ∈ <i>S</i><sub>safe</sub> ⇔ MRM ∈ ${Aens()}</div><div class="eq">∀<i>k</i> ∈ {0, …, <i>H</i>}, &nbsp;<i>s<sub>k</sub></i> ∈ <i>S</i><sub>safe</sub></div></div>
-          <div class="card grow"><p>A state is safe when a fallback remains available from it. The policy seeks to keep every state reached over the horizon in that set.</p>
-            <h4 style="margin-top:12px">Two mechanisms act jointly</h4><ul class="list small">
+        <div class="col" style="flex:0.95 1 0;gap:16px">
+          <div class="card col" style="gap:8px"><h4>Safe state</h4>
+            <div class="eqbox"><div class="eq" style="font-size:30px"><i>s</i> ∈ <i>S</i><sub>safe</sub> ⇔ MRM ∈ ${Uens("s")}</div></div>
+            <p class="small" style="margin:0">From <i class="m">s</i>, the minimal risk maneuver is ensured: it can bring the vehicle to a <b>minimal risk condition</b></p></div>
+          <div class="card col" style="gap:8px"><h4>Kept within reach by the reward</h4>
+            <div class="eqbox"><div class="eq" style="font-size:28px"><i>R</i><sub>time</sub>(<i>s</i>) = −[ <i>t</i><sub>pred</sub>(<i>s</i>) − <i>T</i><sub>thr</sub> ]<sub>+</sub> ( 1 − 𝟙<sub>MRM</sub>(<i>s</i>) )</div></div>
+            <p class="small" style="margin:0">Beyond <i class="m">T</i><sub>thr</sub>, a predicted state from which no MRM can be reached is penalized, more and more as it gets further</p></div>
+          <div class="card col grow" style="gap:8px"><h4>Two mechanisms act together</h4><ul class="list small">
             <li>The <b>filter</b> excludes what is not ensured</li>
-            <li>The <b>operability terms</b> prefer margin and a reachable MRM, so the policy anticipates the boundaries</li></ul>
-            <p class="small navyt" style="margin-top:12px"><b>The filter alone does not anticipate. The reward alone does not exclude.</b></p></div>
+            <li>The <b>reward</b> prefers the plans that keep margin and an MRM within reach</li></ul>
+            <p class="small navyt" style="margin:4px 0 0"><b>The filter alone does not anticipate; the reward alone does not exclude.</b></p></div>
         </div>
-        <div class="card col" style="flex:1.05 1 0">${fig("policy_plane.png", "Two policies in the speed and perception range plane")}
-          <p class="xs mute">Both start at 90 km/h with 200 m of range; visibility falls to 40 m. The non-anticipatory policy reaches ≈ 117 km/h and crosses the boundary. The anticipatory one holds ≈ 95 km/h, then slows to ≈ 55 km/h.</p></div>
+        <div class="card col" style="flex:1.05 1 0;gap:16px;justify-content:center"><h4>The plan keeps a way to a minimal risk condition</h4>
+          <img src="${F}mrc_policy.jpg" alt="The policy, highlighted in green, can always reach a minimal risk condition" style="width:100%;border-radius:12px">
+          <p class="small" style="margin:0">As in the introduction: the vehicle keeps operating, with fewer options under the rain, and from its plan a fallback maneuver still leads to a minimal risk condition.</p></div>
         </div>` },
-
     { id: "bridge-c2", type: "bridge", sec: "c2", dark: true, kicker: "Limitation", time: 30,
       title: "What if the perceived state is wrong?",
       notes: "The ODD-MDP decides among ensured maneuvers and keeps a fallback reachable over the whole horizon. But it takes the perceived state as exact. Positions and speeds are noisy, the fog forecast can be wrong, and the intentions of the other drivers are hidden. The third contribution keeps the same principle under this uncertainty.",
