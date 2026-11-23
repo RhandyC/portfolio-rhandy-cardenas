@@ -704,7 +704,7 @@
           <div class="card grow defs">
             <span class="pill">Model</span><div class="eq"><i>M</i> = (<i>S</i>, <i>A</i>, <i>P</i>, <i>R</i>, <i>γ</i>)</div>
             <span class="pill">State</span><div class="eq"><i>S</i> = OD × <i>p</i><sub>ego</sub> × {<i>p<sub>i</sub></i>}<sub><i>i</i>=1</sub><sup><i>N</i></sup>, &nbsp; <i>p<sub>i</sub></i> = (<i>x<sub>i</sub></i>, <i>ẋ<sub>i</sub></i>, <i>ẍ<sub>i</sub></i>, <i>y<sub>i</sub></i>, <i>ẏ<sub>i</sub></i>, <i>ÿ<sub>i</sub></i>)</div>
-            <span class="pill">Actions</span><div class="eq"><i>A</i> = {KL, INC, DEC, LCL, LCR, MRM}, &nbsp; <i>a</i> = (<i>m</i>, <i>θ</i>)</div>
+            <span class="pill">Actions</span><div class="eq"><i>A</i> = {KL, INC, DEC, LCL, LCR, MRM}</div>
             <span class="pill ok">Capability</span><div class="eq"><i>g</i>(<i>s</i>) = ${Aens()} ⊆ <i>A</i> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">the MCE, in every predicted state</span></div>
           </div></div>
         <div class="card bellman">
