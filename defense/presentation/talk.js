@@ -47,7 +47,7 @@
     const sec = SEC[s.sec];
     const kick = sec ? `<a data-go="${sec.page}" title="Section page">${esc(sec.kicker)}</a>` : "";
     const sub = s.kicker ? (sec ? " · " : "") + esc(s.kicker) : "";
-    const peers = secSlides(s.sec);
+    const peers = s.sec ? secSlides(s.sec) : [];
     const mini = peers.length > 1 ? `<div class="mini">${peers.map((p) =>
       `<button type="button" data-go="${p.id}" title="${esc(label(p) + " · " + p.title)}" class="${p.i === s.i ? "on" : ""}"></button>`).join("")}</div>` : "";
     const cs = (s.c || []).map((c) => `<a class="cbadge" data-go="contrib" title="Contribution ${c}">${c}</a>`).join("");
@@ -90,6 +90,21 @@
     let inner = "";
     if (s.type === "title") {
       inner = s.html + footer(s);
+    } else if (s.type === "agenda") {
+      // every section, grouped by part of the manuscript; each row opens its section page
+      let rows = "", r = 1;
+      T.sections.forEach((x, k) => {
+        const span = T.sections.slice(k).findIndex((y) => y.part !== x.part);
+        if (!k || T.sections[k - 1].part !== x.part) {
+          rows += `<div class="ag-part" style="grid-row:${r} / span ${span < 0 ? T.sections.length - k : span}">${(x.part || "").split(" · ").map(esc).join("<br>")}</div>`;
+        }
+        const cs = (x.c || []).map((c) => `<span class="cbadge solid">${c}</span>`).join("");
+        const cpc = x.c ? [["cap", "Capability", "pill amber"], ["cho", "Choice", "pill"]].filter(([k]) => (x.cpc || "").includes(k))
+          .map(([, t, cl]) => `<span class="${cl}">${t}</span>`).join("") : "";
+        rows += `<a class="ag-row" style="grid-row:${r++}" data-go="${x.page}" href="#/${x.page}"><span class="n">${x.n}</span>` +
+          `<div class="t">${esc(x.toc || x.title)}<small>${esc(x.ag || x.sub || "")}</small></div><div class="m">${cpc}${cs}</div></a>`;
+      });
+      inner = header(s) + `<div class="body"><div class="agenda">${rows}</div>${s.html || ""}</div>` + footer(s);
     } else if (s.type === "outline") {
       const rows = T.sections.filter((x) => x.c).map((x) => `<a data-go="${x.page}" href="#/${x.page}">` +
         `<div class="num-badge ${x.c[0].toLowerCase()}">${x.c[0]}</div>` +
