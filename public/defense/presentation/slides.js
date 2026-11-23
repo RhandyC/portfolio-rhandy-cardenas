@@ -1,7 +1,6 @@
 /* Content of the PhD defense: introduction, fundamentals and state
    of the art, the method (C1 to C3, each illustrated by its animations), the validation (C4), conclusion.
    type: title | agenda | outline | section | content (default) | video | bridge | thanks | bindex
-   cpc (sections): which half of 'capability precedes choice' the part answers
    c: contributions shown in the header
    cite: references at the foot of the slide (keys of BIB) · th: step of the guiding thread of its section
    time: planned seconds (presenter view) · backups: links to appendix slides
@@ -85,23 +84,23 @@
     { id: "intro", short: "Intro", n: 1, page: "sec-intro", kicker: "Introduction", title: "Introduction", toc: "Introduction",
       ch: "Introduction",
       thread: ["Level by level", "Its limits: the ODD", "Monitored, not decided", "The problem", "The idea", "The aim", "The contributions"],
-      sub: "Why the operational design domain must enter the decision", goal: "The motivation, the problem, the research question and the four contributions" },
+      sub: "Why the operational design domain must enter the decision" },
     { id: "sota", short: "SotA", n: 2, page: "sec-sota", kicker: "Fundamentals and state of the art", title: "What exists today?", toc: "Fundamentals",
       ch: "Fundamentals and state of the art",
-      sub: "Awareness, the ODD and the capability of the vehicle; decision-making for driving", goal: "What the vehicle must know about itself, how capability is assessed and tactical decisions are taken today, and what is missing" },
-    { id: "c1", cpc: "cap", short: "C1", n: 3, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
+      sub: "Awareness, the ODD and the capability of the vehicle; decision-making for driving" },
+    { id: "c1", short: "C1", n: 3, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
       ch: "Contribution 1", c: ["C1"], pubs: ["IFAC IAV 2025"],
-      sub: "The ODD-aptive architecture and the Maneuver Capability Estimator (MCE)", goal: "Which maneuvers are ensured, in the current and in the predicted states" },
-    { id: "c2", cpc: "cho", short: "C2", n: 4, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "Which sequence of ensured maneuvers to choose?", toc: "C2 · Which sequence of ensured maneuvers to choose?",
+      sub: "The ODD-aptive architecture and the Maneuver Capability Estimator (MCE)" },
+    { id: "c2", short: "C2", n: 4, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "Which sequence of ensured maneuvers to choose?", toc: "C2 · Which sequence of ensured maneuvers to choose?",
       ch: "Contribution 2", c: ["C2"], pubs: ["IEEE IV 2025"],
-      sub: "The ODD-constrained MDP", goal: "Decisions only among ensured maneuvers, over the whole planning horizon" },
-    { id: "c3", cpc: "cho", short: "C3", n: 5, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "What if the information is uncertain?", toc: "C3 · What if the information is uncertain?",
+      sub: "The ODD-constrained MDP" },
+    { id: "c3", short: "C3", n: 5, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "What if the information is uncertain?", toc: "C3 · What if the information is uncertain?",
       ch: "Contribution 3", c: ["C3"],
-      sub: "The ODD-constrained POMDP", goal: "Capability before choice, with noisy measurements, hidden intentions and uncertain forecasts" },
-    { id: "c4", cpc: "cap cho", short: "C4", n: 6, page: "sec-c4", kicker: "C4 · Validation", title: "Does it hold, in simulation and on a real vehicle?", toc: "C4 · Validation, in simulation and on a real vehicle",
+      sub: "The ODD-constrained POMDP" },
+    { id: "c4", short: "C4", n: 6, page: "sec-c4", kicker: "C4 · Validation", title: "Does it hold, in simulation and on a real vehicle?", toc: "C4 · Validation, in simulation and on a real vehicle",
       ch: "Contribution 4", c: ["C4"],
-      sub: "Validation, from IPG CarMaker to a Mégane E-Tech prototype", goal: "The nominal behavior, the fail-operational behavior in fog and before a highway exit, the results under uncertainty, and the same planner, unchanged, on a real vehicle" },
-    { id: "concl", cpc: "cap cho", short: "Conclusion", n: 7, page: "sec-concl", kicker: "Conclusion", title: "Conclusions and perspectives", toc: "Conclusions and perspectives",
+      sub: "Validation, from IPG CarMaker to a Mégane E-Tech prototype" },
+    { id: "concl", short: "Conclusion", n: 7, page: "sec-concl", kicker: "Conclusion", title: "Conclusions and perspectives", toc: "Conclusions and perspectives",
       ch: "Conclusion",
       sub: "Contributions, evidence, limitations and future directions" },
   ];

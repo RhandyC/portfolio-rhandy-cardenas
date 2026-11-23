@@ -119,13 +119,13 @@
         `<span class="arrow">→</span></a>`).join("");
       inner = header(s) + `<div class="body"><div class="outl">${rows}</div>${s.html || ""}</div>` + cites(s) + footer(s);
     } else if (s.type === "section") {
+      // the part, its question and its publication; nothing repeated (no C badge, no principle strip, no goal line)
       const x = SEC[s.sec];
-      const cs = (x.c || []).map((c) => `<a class="cbadge solid" data-go="contrib">${c}</a>`).join("");
       const pubs = (x.pubs || []).map((p) => `<span class="pill">${esc(p)}</span>`).join("");
-      const cpc = x.cpc ? `<div class="cpcstrip"><span class="${/cap/.test(x.cpc) ? "on" : ""}">Capability</span><span class="pre">precedes</span><span class="${/cho/.test(x.cpc) ? "on" : ""}">choice</span></div>` : "";
-      inner = `<div class="sec"><div class="main">${cpc}<div class="k">${esc(x.ch)}</div>` +
-        `<div class="big">${esc(x.title)}</div>${x.sub ? `<div class="sub">${x.sub}</div>` : ""}` +
-        `${x.goal ? `<div class="goal">${x.goal}</div>` : ""}${cs || pubs ? `<div class="cs">${cs}${pubs}</div>` : ""}</div>` +
+      const kick = x.title.toLowerCase().startsWith(x.ch.toLowerCase()) ? "" : `<div class="k">${esc(x.ch)}</div>`;
+      inner = `<div class="sec"><div class="main">${kick}` +
+        `<div class="big">${esc(x.title.replace(/^C\d+ · /, ""))}</div>${x.sub ? `<div class="sub">${x.sub}</div>` : ""}` +
+        `${pubs ? `<div class="cs">${pubs}</div>` : ""}</div>` +
         `<div class="side">${tocHTML(s.sec)}</div></div>` + footer(s);
     } else if (s.type === "video") {
       inner = `<video muted playsinline preload="none" data-src="${esc(s.video.src)}" aria-label="${esc(s.title)}"></video>` +
