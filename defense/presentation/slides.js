@@ -86,13 +86,13 @@
   const sections = [
     { id: "intro", part: "Chapter 1", short: "Intro", n: 1, page: "sec-intro", kicker: "Introduction", title: "Introduction", toc: "Introduction",
       ch: "Introduction", where: "Chapter 1",
-      thread: ["Driverless", "Its limits: the ODD", "Who watches them", "A changing context", "Capability precedes choice", "The problem", "The research question", "The aim", "The contributions"],
+      thread: ["Deciding", "Its context: the ODD", "Who watches it", "A changing context", "The problem", "The research question", "Capability precedes choice", "The aim", "The contributions"],
       sub: "Why the operational design domain must enter the decision", goal: "The motivation, the problem, the research question and the four contributions",
-      ag: "The ODD and who is responsible, the guiding principle, the problem and the research question, the four contributions" },
+      ag: "Where the vehicle decides, the ODD and who watches it, a changing context, the problem, the research question, the guiding principle, the four contributions" },
     { id: "sota", part: "Part I · Chapters 2 – 3", short: "SotA", n: 2, page: "sec-sota", kicker: "Fundamentals and state of the art", title: "What exists today?", toc: "Fundamentals and state of the art",
       ch: "Fundamentals and state of the art", where: "Chapters 2 and 3",
       sub: "Awareness, the ODD and the capability of the vehicle; decision-making for driving", goal: "What the vehicle must know about itself, how capability is assessed and tactical decisions are taken today, and what is missing",
-      ag: "Self- and context-awareness, capability assessment, decision levels, tactical decision-making, the four gaps" },
+      ag: "Self- and context-awareness, capability assessment, tactical decision-making, partial observability, the four gaps" },
     { id: "c1", part: "Part II · Chapters 4 – 5", cpc: "cap", short: "C1", n: 3, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
       ch: "Contribution 1", where: "Chapter 4", c: ["C1"], pubs: ["IFAC IAV 2025"],
       sub: "The ODD-aptive architecture and the Maneuver Capability Estimator (MCE)", goal: "Which maneuvers are ensured, in the current and in the predicted states",
@@ -142,28 +142,24 @@
       title: "Agenda",
       notes: "The defense follows the order of the manuscript. After the introduction come the foundations and the state of the art. Then the ODD-aptive architecture and its method: first the capability of the vehicle, then the choice, with an MDP and then a POMDP; each step is illustrated with its animations. The validation, in simulation and on the prototype vehicle, comes at the end, before the conclusion. Each line links to its part." },
 
-    // ================================================================ 1. introduction (chapter 1): the news, the ODD, who is responsible, the changing context, the principle, the problem, the aim, the contributions
+    // ================================================================ 1. introduction (chapter 1): where the vehicle decides, the ODD, who watches it, the changing context, the problem, the question, the principle, the aim, the contributions
     { id: "sec-intro", type: "section", sec: "intro", dark: true, title: "Introduction", time: 10 },
 
-    { id: "news", cite: ["cnn2026waymo"], th: "Driverless", sec: "intro", kicker: "In the news", ref: "§2.3", time: 60,
-      title: "No driver on board: the vehicle alone must judge its own limits",
-      notes: "Two scenes from this year. In Phoenix, in January, a robotaxi stops on the light rail tracks; its passenger gets out as a train approaches, and the car keeps driving on the tracks. In Atlanta, in May, during a flash flood, an empty robotaxi drives into a flooded street. Two days later the operator suspends its service in six cities. A month earlier, after a similar case in San Antonio, its recall filing said that the vehicle had detected the flood water, and proceeded at reduced speed. These incidents may have several causes. But they show the point of this thesis: perceiving the conditions is not enough; with no driver on board, the vehicle itself must know what it can still do there. What are these limits? They have a name.",
-      html: `<div class="g2 grow">
-        ${[["news_lightrail_phoenix", "Phoenix · 7 January 2026", "A robotaxi stops on the light rail tracks. Its passenger gets out as a train approaches, and the car keeps driving on the tracks.", "Video: Luis_Central_Tires, via 12 News"],
-           ["news_flood_atlanta", "Atlanta · 20 May 2026", "During a flash flood, an empty robotaxi drives into a flooded street, water almost up to its headlights. Two days later, the service is suspended in six cities.", "Video: @_SirLuke, via Atlanta News First"]]
-          .map(([v, d, t, c]) => `<div class="card col news">
-            <video class="bg loop" muted playsinline preload="none" poster="${V}${v}.jpg" data-src="${V}${v}.mp4" aria-label="${t}"></video>
-            <div class="row" style="align-items:baseline;justify-content:space-between;gap:12px"><b class="navyt" style="font-size:25px">${d}</b><span class="xs mute">${c}</span></div>
-            <p class="small" style="margin:0">${t}</p></div>`).join("")}
-        </div>
-        <div class="card navy" style="padding:22px 36px"><div class="row" style="align-items:center;gap:34px">
-          <div style="flex:1"><div class="quote" style="color:#fff;font-size:28px">The vehicle “detected potentially untraversable flood water and proceeded at reduced speed.”</div>
-            <p class="xs" style="margin:8px 0 0 38px;color:#c7d3e3">Waymo, safety recall of 3,791 robotaxis filed with NHTSA, May 2026, after a flooded road in San Antonio</p></div>
-          <div style="flex:0 0 560px;font-size:28px;font-weight:600;line-height:1.4">Perceiving the conditions was not enough: the vehicle had to know <span style="color:var(--amber)">what it could still do</span> there.</div></div></div>` },
+    { id: "levels", cite: ["michon1985critical", "donges2015behaviormodels"], th: "Deciding", sec: "intro", kicker: "Motivation · where does the vehicle decide?", ref: "§3.2", time: 50,
+      title: "Driving is a chain of decisions; this thesis works at the tactical level",
+      notes: "Where does an intelligent vehicle decide? Driving is usually described at three levels, after Michon. Strategic: the route, over hours to minutes. Tactical: which maneuver, and when, from a minute to a second. Operational: the trajectory and its control, below the second. This thesis works at the tactical level, over ADAS features already validated. Every system built at these levels has one point in common: it is designed for a precise context.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.2 1 0"><h4>Michon's three levels</h4>${fig("michon.png", "Michon's levels of the driving task")}</div>
+        <div class="col grow">
+          <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
+          <div class="card tight amber"><span class="pill amber">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
+          <div class="card tight"><span class="pill gray">Operational · 1 s to 10 ms</span><p class="small" style="margin-top:8px">Trajectory, control and stabilization</p></div>
+          <div class="card navy"><h3>Contribution of the thesis</h3><p>An anticipatory tactical layer that keeps the vehicle within what it can ensure, over ADAS features already validated.</p></div>
+        </div></div>` },
 
-    { id: "odd", cite: ["sae2021taxonomy", "iso2023iso34503", "czarnecki2018operational"], th: "Its limits: the ODD", sec: "intro", kicker: "Motivation · what is the ODD?", ref: "§2.2", time: 75, steps: 2,
-      title: "These limits have a name: the Operational Design Domain",
-      notes: "These limits have a name. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
+    { id: "odd", cite: ["sae2021taxonomy", "iso2023iso34503", "czarnecki2018operational"], th: "Its context: the ODD", sec: "intro", kicker: "Motivation · what is the ODD?", ref: "§2.2", time: 75, steps: 2,
+      title: "Every automated function is designed for a precise context: its ODD",
+      notes: "That context has a name: the Operational Design Domain. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
       html: `<div class="row grow">
         <div class="col grow" style="flex:1 1 0">
           <div class="card" style="padding:28px 36px"><div class="quote" style="font-size:27px">“Operating conditions under which a given driving automation system or feature thereof is specifically designed to function, including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
@@ -188,9 +184,9 @@
             <div><h4 style="margin-bottom:8px">Deployed example: Mercedes-Benz Drive Pilot</h4><p class="small" style="margin:0">The first Level 3 system approved in Europe. Its ODD is a driving scene: separated highway, HD map, moderate to heavy traffic, detectable lane markings, no inclement weather.</p></div></div>
         </div></div>` },
 
-    { id: "responsibility", cite: ["sae2021taxonomy", "ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan", "Farah2021Awareness", "kuehn2017takeover"], th: "Who watches them", sec: "intro", kicker: "Motivation · who is responsible?", ref: "§1.2", time: 60,
+    { id: "responsibility", cite: ["sae2021taxonomy", "ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan", "Farah2021Awareness", "kuehn2017takeover"], th: "Who watches it", sec: "intro", kicker: "Motivation · who is responsible?", ref: "§1.2", time: 60,
       title: "Who watches the ODD? From Level 3, the vehicle itself",
-      notes: "Who must watch these limits? It depends on the level of automation. Every automated feature has its own ODD; the automation level says who is responsible for it. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed, and automation now advances level by level. The decisive step is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its ODD: it must monitor its own limits and request a takeover in time, 12 to 15 seconds ahead. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. The higher the level, the more the vehicle itself must know what it can do.",
+      notes: "Who must watch this context? It depends on the level of automation. Every automated feature has its own ODD; the automation level says who is responsible for it. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed, and automation now advances level by level. The decisive step is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its ODD: it must monitor its own limits and request a takeover in time, 12 to 15 seconds ahead. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. The higher the level, the more the vehicle itself must know what it can do.",
       html: `<div class="card tight row" style="align-items:center;gap:22px"><span class="pill amber">2018</span><p class="small" style="margin:0">Fully self-driving fleets announced for 2019 – 2020 by General Motors, Toyota and Nissan. The task proved harder than assumed: automation now advances <b>level by level</b>.</p></div>
         <div class="row grow">
           <div class="card col" style="flex:1.3 1 0"><h4>Each feature has its own ODD</h4>${fig("sae_levels.png", "Automation levels and examples of ODD")}</div>
@@ -217,24 +213,6 @@
             <li>Keep operating with fewer capabilities while it is safe</li>
             <li>Start the fallback while it is still feasible: <b>graceful degradation</b></li></ul></div>
         </div></div>` },
-
-    { id: "principle", th: "Capability precedes choice", sec: "intro", kicker: "Guiding principle of the thesis", ref: "§1.2", time: 60, steps: 2,
-      title: "So, before choosing, know what it can do: capability precedes choice",
-      notes: "So, if the vehicle answers for its limits while the context changes, it must know what it can do before it chooses. The motivation in one line. Automated driving proved harder than announced, so automation advances level by level. From Level 3, the vehicle answers for its own limits; it must therefore be aware of its ODD, now and ahead, and use it to decide: avoid ODD exits, and degrade safely when needed. (1) This is the guiding principle of the whole thesis: a system can only make the right choice if it first understands what it is capable of, and within which operational limits. (2) Two steps, in this order. First, capability: what can the vehicle still do safely, now and in the situations its decisions lead to. Then, choice: among those options only, which maneuvers, in which order, keeping a fallback within reach.",
-      html: `<div class="chain">
-          <div class="st"><span class="n">1</span>Driving proved harder than announced</div><div class="ar2">→</div>
-          <div class="st"><span class="n">2</span>Automation advances level by level</div><div class="ar2">→</div>
-          <div class="st"><span class="n">3</span>From Level 3, the vehicle answers for its own limits</div><div class="ar2">→</div>
-          <div class="st"><span class="n">4</span>It must be aware of its ODD, now and ahead</div><div class="ar2">→</div>
-          <div class="st"><span class="n">5</span>And use it to decide: avoid ODD exits, degrade safely</div></div>
-        <div class="card navy" data-step="1" style="padding:40px 64px"><div class="quote" style="font-size:42px;color:#fff;border-color:var(--amber)">A system can only make the right choice if it first understands what it is capable of, and within which operational limits.</div></div>
-        <div class="cpcflow grow" data-step="2">
-          <div class="card ok col" style="gap:14px;justify-content:center"><h3 style="margin:0;font-size:44px">1 · Capability</h3>
-            <p style="font-size:33px">What can the vehicle still do <b>safely</b>, now and in the situations its decisions lead to?</p></div>
-          <div class="arrow-big">→</div>
-          <div class="card col" style="gap:14px;justify-content:center;border-left:10px solid var(--blue)"><h3 style="margin:0;font-size:44px">2 · Choice</h3>
-            <p style="font-size:33px">Among <b>those options only</b>, which maneuvers, in which order, keeping a fallback within reach?</p></div>
-        </div>` },
 
     { id: "v-problem-a", th: "The problem", type: "video", sec: "intro", ref: "§1.3", time: 45,
       title: "Problem: a sequence of admissible decisions can leave no fallback",
@@ -267,6 +245,18 @@
           <div data-step="1"><div data-until="2">Decision DM<sub>1</sub>: at <i class="m">t</i><sub>1</sub>, the conditions are still within the ODD</div></div>
           <div data-step="2"><div data-until="3">Rain reduces the visibility: <b>if nothing changes</b>, the next state OD<sub>t1′</sub> leaves the ODD</div></div>
           <div data-step="3">Anticipating it, DM<sub>2</sub> <b>reduces the speed</b>: OD<sub>t2</sub> stays within the ODD</div></div>` },
+
+    { id: "principle", th: "Capability precedes choice", sec: "intro", kicker: "Guiding principle of the thesis", ref: "§1.2", time: 60, steps: 1,
+      title: "To answer it, one principle: capability precedes choice",
+      notes: "To answer this question, the thesis follows one principle, which guides all its contributions: a system can only make the right choice if it first understands what it is capable of, and within which operational limits. (1) Two steps, in this order. First, capability: what can the vehicle still do safely, now and in the situations its decisions lead to. Then, choice: among those options only, which maneuvers, in which order, keeping a minimal risk condition within reach.",
+      html: `<div class="card navy" style="padding:48px 64px"><div class="quote" style="font-size:42px;color:#fff;border-color:var(--amber)">A system can only make the right choice if it first understands what it is capable of, and within which operational limits.</div></div>
+        <div class="cpcflow grow" data-step="1">
+          <div class="card ok col" style="gap:14px;justify-content:center"><h3 style="margin:0;font-size:44px">1 · Capability</h3>
+            <p style="font-size:33px">What can the vehicle still do <b>safely</b>, now and in the situations its decisions lead to?</p></div>
+          <div class="arrow-big">→</div>
+          <div class="card col" style="gap:14px;justify-content:center;border-left:10px solid var(--blue)"><h3 style="margin:0;font-size:44px">2 · Choice</h3>
+            <p style="font-size:33px">Among <b>those options only</b>, which maneuvers, in which order, keeping a minimal risk condition within reach?</p></div>
+        </div>` },
 
     { id: "v-problem-b", th: "The aim", type: "video", sec: "intro", ref: "§1.3", time: 40,
       title: "Anticipate: a minimal risk condition always within reach",
@@ -322,18 +312,6 @@
           <tr><td><b>Time to exit the ODD</b> <span class="mute">Charmet, 2024</span></td><td>Monitoring</td><td class="y">Anticipates the exit, with measurement uncertainty</td><td class="n">Triggers a takeover or an MRM, not the maneuver</td></tr>
           <tr><td><b>μODDs</b> <span class="mute">Salvi, 2022</span></td><td>Operational</td><td class="y">Speed reduced as the rain increases</td><td class="n">One dimension, one maneuver</td></tr>
           <tr class="hl"><td><b>MCE, this thesis</b> <span class="cbadge ink" style="height:26px;font-size:15px;min-width:40px;margin-left:6px">C1</span></td><td>Tactical</td><td class="y" colspan="2">Each maneuver, in the current <b>and in the predicted states</b>, every loss traced back to a change of context</td></tr></table>` },
-
-    { id: "levels", cite: ["michon1985critical", "donges2015behaviormodels"], sec: "sota", kicker: "State of the art · decision levels", ref: "§3.2", time: 50,
-      title: "Which decision? The tactical level: which maneuver, and when",
-      notes: "Three decision levels after Michon. The tactical level answers what maneuver to perform, when and how, over a few seconds. The industrial starting point is a set of ADAS features already validated.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.2 1 0"><h4>Michon's three levels</h4>${fig("michon.png", "Michon's levels of the driving task")}</div>
-        <div class="col grow">
-          <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
-          <div class="card tight amber"><span class="pill amber">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
-          <div class="card tight"><span class="pill gray">Operational · 1 s to 10 ms</span><p class="small" style="margin-top:8px">Trajectory, control and stabilization</p></div>
-          <div class="card navy"><h3>Contribution of the thesis</h3><p>An anticipatory tactical layer that keeps the vehicle within what it can ensure, over ADAS features already validated.</p></div>
-        </div></div>` },
 
     { id: "methods", cite: ["olsson2016BT", "hang2021gametheoric", "ulbrich2015pomdp", "hubmann2018uncertainty", "hoel2019combiningdeep", "fiedler2022hybrid"], sec: "sota", kicker: "State of the art · tactical decision-making", ref: "§3.3", time: 60,
       title: "How do existing methods decide?",
