@@ -746,9 +746,27 @@ body.presenter #cmt-panel, body.presenter #cmt-layer { display: none !important;
 .lcsk .nx { margin-left: auto; font-size: 16px; padding: 3px 12px; }
 
 /* Sense: three looping examples of key zones */
-.sloops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; flex: 1 1 0; min-height: 0; }
+.sloops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; flex: 1 1 0; min-height: 0; align-content: center; }
 .sloops .sl { padding: 12px 12px 14px; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
 .sloops video { width: 100%; aspect-ratio: 4 / 3; border-radius: 12px; background: #eef0f3; display: block; object-fit: cover; }
 .sloops .cap { display: flex; flex-direction: column; gap: 2px; padding: 0 6px; line-height: 1.3; }
 .sloops .cap b { color: var(--navy); font-size: 25px; }
-.sloops .cap span { color: var(--mute); font-size: 20px; }
+.sloops .cap span { color: var(--mute); font-size: 19px; }
+.sloops .cap em { align-self: flex-start; margin-top: 6px; font-style: normal; font-size: 16px; font-weight: 700; padding: 2px 12px; border-radius: 8px; color: #fff; }
+.sloops .cap em.fog { background: #7d8791; } .sloops .cap em.occ { background: var(--navy); }
+
+/* awareness: context and self, each with its examples at a readable size */
+.awr { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1 1 0; min-height: 0; }
+.aw { gap: 10px; padding: 18px 22px 14px; min-height: 0; }
+.aw h3 { margin: 0; font-size: 30px; }
+.aw.ctx h3 { color: #c62828; } .aw.self h3 { color: var(--navy); }
+.awp { display: flex; gap: 10px; flex-wrap: wrap; }
+.awp span { font-size: 19px; font-weight: 600; padding: 4px 14px; border-radius: 10px; }
+.aw.ctx .awp span { background: #fde3e1; color: #9b1c1c; } .aw.self .awp span { background: #dfe8f6; color: var(--navy); }
+.awg { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 10px 16px; flex: 1 1 0; min-height: 0; }
+.awg figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; }
+.awg figure.w2 { grid-column: span 2; }
+.awg img { flex: 1 1 0; min-height: 0; max-width: 100%; object-fit: contain; }
+.awg figcaption { font-size: 18px; color: var(--mute); text-align: center; line-height: 1.25; }
+.awodd { font-size: 24px; padding: 16px 28px; }
+.aw.self .awg { grid-template-rows: 0.8fr 1.2fr; grid-auto-rows: auto; }

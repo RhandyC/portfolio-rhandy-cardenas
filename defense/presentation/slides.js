@@ -267,33 +267,39 @@
     // ================================================================ 2. fundamentals and state of the art (part I, chapters 2 and 3)
     { id: "sec-sota", type: "section", sec: "sota", dark: true, title: "Fundamentals and state of the art", time: 10 },
 
-    { id: "awareness", cite: ["schlatow2017selfawareness", "woerter2021enhanced", "armand2014ontology", "salvi2022fuzzy"], sec: "sota", kicker: "Background · awareness and the ODD", ref: "§2.2.2 – §2.4", time: 60,
-      title: "What must the vehicle know about itself and its context?",
-      notes: "The synthesis of chapter 2. Self-awareness: an explicit representation of the vehicle's own capabilities. Context-awareness: the external conditions. The ODD links both. Its limits: uncertainty requires margins, and discontinuities at the boundaries require anticipation. That is the task of a fail-operational system.",
-      html: `<div class="card tight" style="height:440px">${fig("awareness.png", "Context-awareness and self-awareness", 404)}</div>
-        <div class="g4">
-          <div class="card tight ok"><h4>Self-awareness</h4><p class="small">The vehicle's own capabilities: what it can achieve now, and after a given action, each with a degree of performance.</p></div>
-          <div class="card tight" style="border-left:10px solid var(--blue)"><h4>Context-awareness</h4><p class="small">The external conditions, from the relations between road users to the road topology and the traffic rules.</p></div>
-          <div class="card tight accent"><h4>The ODD</h4><p class="small">Links the capabilities of the system to a structured representation of the context. Its monitoring can support the decision.</p></div>
-          <div class="card tight bad"><h4>Its limits</h4><p class="small">Uncertainty on the perceived context requires margins. Discontinuities at the boundaries require <b>anticipation</b>.</p></div>
+    { id: "awareness", cite: ["schlatow2017selfawareness", "woerter2021enhanced", "armand2014ontology", "salvi2022fuzzy"], sec: "sota", kicker: "Background · awareness and the ODD", ref: "§2.2.2 – §2.4", time: 70, steps: 2,
+      title: "What must the vehicle know about its context, and about itself?",
+      notes: "The synthesis of chapter 2, in two kinds of awareness. Context awareness: the knowledge associated with the context, semantic, such as road users and crossings, or aggregated, such as a school zone, its speed limit and the time of day; and the risk associated with the context, here a risk map around a vehicle. (1) Self awareness: the impact of actions on oneself, for instance what the vehicle can still see after a lane change, and the dependencies of the system, for instance the capability graph of an ACC, whose behaviors rest on lower-level capabilities. (2) The ODD links both: the capabilities of the system, and a structured representation of the context. Its limits: the perceived context is uncertain, so margins are needed, and the boundaries are discontinuous, so they must be anticipated.",
+      html: `<div class="awr">
+          <div class="card col aw ctx"><h3>Context awareness</h3>
+            <div class="awp"><span>Knowledge associated with the context</span><span>Risk associated with the context</span></div>
+            <div class="awg">
+              <figure><img src="${F}aw_semantic.png" alt="Road with vehicles and a pedestrian crossing"><figcaption>Semantic: road users, a crossing</figcaption></figure>
+              <figure><img src="${F}aw_aggregated.png" alt="School zone at 30, and the time of day"><figcaption>Aggregated: a school zone, the time of day</figcaption></figure>
+              <figure class="w2"><img src="${F}aw_risk.png" alt="Risk map around a vehicle"><figcaption>Context-based risk estimation</figcaption></figure>
+            </div></div>
+          <div class="card col aw self" data-step="1"><h3>Self awareness</h3>
+            <div class="awp"><span>Impact of actions on oneself</span><span>System dependencies</span></div>
+            <div class="awg">
+              <figure class="w2"><img src="${F}aw_vision.png" alt="What the vehicle can see before and after a lane change"><figcaption>What it can still see, before and after a lane change</figcaption></figure>
+              <figure class="w2"><img src="${F}aw_graph.png" alt="Capability graph of an ACC"><figcaption>The capability graph of an ACC: behaviors resting on lower-level capabilities</figcaption></figure>
+            </div></div>
         </div>
-        <div class="takeaway">A fail-operational vehicle must know <b>what it can still do</b> in the context ahead, not only whether it is inside its ODD now.</div>` },
-
+        <div class="card navy awodd" data-step="2"><b>The ODD links both</b>: the capabilities of the system, and a structured representation of its context. The context is uncertain, so <b>margins</b> are needed; the boundaries are discontinuous, so they must be <b>anticipated</b>.</div>` },
     { id: "rw-c1", cite: ["reschka2015ability", "ulbrich2015pomdp", "colwell_automated_2018", "pior2020behaviorbased", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", ref: "§2.2, §3.4", time: 70,
       title: "How is the capability of the vehicle assessed today?",
       notes: "Three families. Ability and skill graphs decompose a behavior into skills with a level of performance, and have been used to trigger a lane change or not. The restricted operational domain removes the maneuvers that a lost capability no longer supports. The arbitration graph checks every function against the ODD before deciding. Monitoring estimates the time to exit the ODD. All of them assess the current state, and adapt once a condition is detected. The MCE assesses each maneuver, in the predicted states too.",
-      html: `<div class="g3" style="height:250px">
+      html: `<div class="g3" style="height:350px">
           <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<p class="xs mute" style="margin:0;text-align:center">Ability graph (Reschka, 2015)</p></div>
           <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<p class="xs mute" style="margin:0;text-align:center">Restricted Operational Domain (Colwell, 2018)</p></div>
           <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<p class="xs mute" style="margin:0;text-align:center">Arbitration graph (Orzechowski, 2020)</p></div>
         </div>
-        <table class="tbl chkt"><tr><th style="width:430px">Work</th><th style="width:170px">Level</th><th>What it brings</th><th>What is missing</th></tr>
-          <tr><td><b>Ability and skill graphs</b> <span class="mute">Reschka, 2015 · Ulbrich, 2015</span></td><td>Tactical</td><td class="y">Skills with a level of performance; trigger a lane change or not</td><td class="n">Current state only</td></tr>
-          <tr><td><b>Restricted Operational Domain</b> <span class="mute">Colwell, 2018</span></td><td>Monitoring</td><td class="y">A lost capability removes some maneuvers and keeps others</td><td class="n">Current state only, reactive</td></tr>
-          <tr><td><b>Arbitration graph</b> <span class="mute">Orzechowski, 2020</span></td><td>Tactical</td><td class="y">Every function checked against the ODD before deciding</td><td class="n">No prediction of the future state</td></tr>
-          <tr><td><b>Time to exit the ODD</b> <span class="mute">Charmet, 2024</span></td><td>Monitoring</td><td class="y">Anticipates the exit, with measurement uncertainty</td><td class="n">Triggers a takeover or an MRM, not the maneuver</td></tr>
-          <tr><td><b>μODDs</b> <span class="mute">Salvi, 2022</span></td><td>Operational</td><td class="y">Speed reduced as the rain increases</td><td class="n">One dimension, one maneuver</td></tr>
-          <tr class="hl"><td><b>MCE, this thesis</b> <span class="cbadge ink" style="height:26px;font-size:15px;min-width:40px;margin-left:6px">C1</span></td><td>Tactical</td><td class="y" colspan="2">Each maneuver, in the current <b>and in the predicted states</b>, every loss traced back to a change of context</td></tr></table>` },
+        <table class="tbl chkt"><tr><th style="width:470px">Work</th><th>What it brings</th><th>What is missing</th></tr>
+          <tr><td><b>Ability and skill graphs</b> <span class="mute">Reschka, 2015 · Ulbrich, 2015</span></td><td class="y">Skills with a level of performance; trigger a lane change or not</td><td class="n">Current state only</td></tr>
+          <tr><td><b>Restricted Operational Domain</b> <span class="mute">Colwell, 2018</span></td><td class="y">A lost capability removes some maneuvers and keeps others</td><td class="n">Current state only, reactive</td></tr>
+          <tr><td><b>Arbitration graph</b> <span class="mute">Orzechowski, 2020</span></td><td class="y">Every function checked against the ODD before deciding</td><td class="n">No prediction of the future state</td></tr>
+          <tr><td><b>Time to exit the ODD</b> <span class="mute">Charmet, 2024</span></td><td class="y">Anticipates the exit, with measurement uncertainty</td><td class="n">Triggers a takeover or an MRM, not the maneuver</td></tr>
+          <tr><td><b>μODDs</b> <span class="mute">Salvi, 2022</span></td><td class="y">Speed reduced as the rain increases</td><td class="n">One dimension, one maneuver</td></tr></table>` },
 
     { id: "methods", cite: ["olsson2016BT", "hang2021gametheoric", "ulbrich2015pomdp", "hubmann2018uncertainty", "hoel2019combiningdeep", "fiedler2022hybrid"], sec: "sota", kicker: "State of the art · tactical decision-making", ref: "§3.3", time: 60,
       title: "How do existing methods decide?",
@@ -552,17 +558,17 @@
       notes: "Skill graphs per maneuver, evaluation in S_i, one skill lost (partial operability), a shared skill lost (MRM required), traceability back to the context.",
       video: { src: A + "mce.mp4", parts: [[0.0, "Each maneuver relies on its own skill graph"], [12.5, "A maneuver is ensured when all its skills are fulfilled"], [21.0, "A change of context affects only the maneuvers that need the skill"], [32.5, "A shared skill is lost: every maneuver that needs it is lost"], [44.5, "Every loss is traced back to a change of context"]] } },
 
-    { id: "sense-zones", cite: ["bussemaker2014SensingRF", "CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Sense skills", ref: "§4.5.3", time: 55,
-      title: "Sense: what must the vehicle see to decide correctly?",
-      notes: "Take the Sense skills. The question they answer is: what must the vehicle see to decide correctly? Each maneuver has key zones, whose information it needs. Entering a roundabout, the part of the ring from which the cars arrive. Overtaking a stopped bus, the oncoming lane, but also the zone in front of the bus, where a pedestrian may cross. Changing lane, three zones around the vehicle. The Sense skill holds when the perception envelope covers these zones, with little uncertainty. In fog the envelope shrinks, a key zone is no longer covered, and the maneuver is no longer ensured. Let us now take one of them in detail: the lane change.",
-      html: `<div class="card tight" style="font-size:27px;padding:18px 30px">Each maneuver has <b>key zones</b> whose information it needs. Its Sense skill holds when the <b>perception envelope</b> covers them, with little uncertainty.</div>
-        <div class="sloops">${[["sense_roundabout", "Entering a roundabout", "the ring upstream of the entry"],
-          ["sense_bus", "Overtaking a stopped bus", "the oncoming lane, and the zone in front of the bus"],
-          ["sense_lane", "Changing lane", "zones A, B and C around the vehicle"]].map(([v, t, z]) =>
-          `<div class="card sl"><video class="bg" muted playsinline preload="none" data-src="${A}${v}.mp4" aria-label="${t}: key zones covered, then fog"></video>
-            <div class="cap"><b>${t}</b><span>Key zones: ${z}</span></div></div>`).join("")}</div>
-        <div class="card navy tight" style="font-size:25px;padding:16px 30px">In fog, the envelope shrinks: a key zone is no longer covered, and the maneuver is no longer ensured. <b style="color:var(--amber)">Next: the lane change, in detail.</b></div>` },
-
+    { id: "sense-zones", cite: ["bussemaker2014SensingRF", "CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Sense skills", ref: "§4.5.3", time: 60,
+      title: "Sense: before engaging, does the vehicle see all it needs?",
+      notes: "Take the Sense skills. The question they answer: before engaging in a maneuver, does the vehicle see all it needs? Each maneuver has key zones whose content the vehicle must know first. Entering a roundabout: the part of the ring from which the cars arrive. Crossing an intersection: the crossing road, in both directions. Overtaking a stopped bus: the zone in front of the bus, where a pedestrian may cross. Changing lane: three zones around the vehicle. A key zone counts only if it is inside what the vehicle perceives, and its perception envelope is reduced in two ways: fog shrinks it, as in the roundabout and the lane change; obstacles occlude it, as the buildings at the intersection, until the vehicle reaches the stop line, or the bus, as the vehicle comes closer behind it. A key zone that is not perceived: the maneuver is not ensured. Let us now take one of them in detail: the lane change.",
+      html: `<div class="card tight" style="font-size:27px;padding:18px 30px">Before engaging, the vehicle must know what is in the <b>key zones</b> of the maneuver. They count only if they are inside its <b>perception envelope</b>: fog shrinks it, obstacles occlude it.</div>
+        <div class="sloops">${[["sense_roundabout", "Entering a roundabout", "the ring upstream of the entry", "Fog"],
+          ["sense_intersection", "Crossing an intersection", "the crossing road, both ways", "Occlusion"],
+          ["sense_bus", "Overtaking a stopped bus", "the zone in front of the bus", "Occlusion"],
+          ["sense_lane", "Changing lane", "zones A, B and C", "Fog"]].map(([v, t, z, c]) =>
+          `<div class="card sl"><video class="bg" muted playsinline preload="none" data-src="${A}${v}.mp4?v=2" aria-label="${t}: key zones, then ${c.toLowerCase()}"></video>
+            <div class="cap"><b>${t}</b><span>Key zones: ${z}</span><em class="${c === "Fog" ? "fog" : "occ"}">${c}</em></div></div>`).join("")}</div>
+        <div class="card navy tight" style="font-size:25px;padding:16px 30px">A key zone that is not perceived: the maneuver is <b>not ensured</b>. <b style="color:var(--amber)">Next: the lane change, in detail.</b></div>` },
     { id: "lc-example", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 50,
       title: "An example: the skills of a lane change",
       notes: "From the general estimator to one example: the lane change, the maneuver of chapter 4. It is ensured when all its skills hold. Sense: the vehicles in three zones, A behind us in the target lane, B ahead in the target lane, C ahead in our lane, and the lane markings of the target lane. Think: the predictor models every perceived vehicle, and the traffic is fluid enough for the function. Act is assumed fulfilled in this work. We develop the first skill: how much perception range does each zone need? The answer comes from a safe distance, RSS.",
