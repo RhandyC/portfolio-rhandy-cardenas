@@ -562,17 +562,35 @@
         </div>
         <div class="card ok"><p><b>Keep Lane</b> does not need the rear zone, and its forward requirement drops with the speed. It stays ensured, in a degraded mode, when the lane change is lost.</p></div>` },
 
-    { id: "margin", sec: "c1", c: ["C1"], kicker: "Strategic margin", ref: "§4.5", time: 45,
-      title: "A strategic margin: a preference, not a second boundary",
-      notes: "The strategic margin is fixed by the designer. It defines a preferred region away from the skill boundary and enters the decision through the reward, so it never removes a maneuver. With m equal to 1.5, the preferred speed in dense fog is about 56 km/h, but the vehicle may still drive up to the boundary.",
+    { id: "margin", sec: "c1", c: ["C1"], kicker: "Strategic margin", ref: "§4.5, §5.2.5", time: 60, steps: 2,
+      title: "Ensured, but how close to the boundary? The strategic margin",
+      notes: "Ensured is binary: it says whether a maneuver is available, not how close it is to being lost. With 50 m of visibility, Keep Lane is ensured up to about 95 km/h. At 50 km/h it is far from the boundary. At 90 km/h it is still ensured, but on the edge: a little less visibility and it is lost. The strategic margin measures this distance. (1) For each skill, the ratio of the available quantity to the required one, for instance the perception range we have over the range we need: 1 on the boundary. The designer chooses m: from m on, the skill is comfortably fulfilled. The normalized margin w goes from 0 on the boundary to 1 in this preferred region, and an action is as close to the boundary as its most constrained skill. (2) This distance enters the operability term of the reward: each ensured action counts with its margin. The planner then prefers states far from the boundaries, so it slows down earlier in fog, and completes its lane changes before a dense section. But a maneuver close to its boundary is never removed: the margin is a preference, not a second boundary.",
       backups: ["b-margin"],
-      html: `<div class="row grow">
-        <div class="card col grow"><div class="eqbox"><div class="eq"><i>g<sub>k</sub></i><sup>av</sup> ≥ <i>m<sub>k</sub></i> · <i>g<sub>k</sub></i><sup>req</sup>, &nbsp; <i>m<sub>k</sub></i> ≥ 1</div></div>
-          <p>Fixed by the designer, it defines a <b>preferred region</b> away from the skill boundary.</p>
-          <p>It enters the decision through the <b>reward</b>, so it never removes a maneuver.</p>
-          <h4 style="margin-top:10px">Examples</h4><div class="eq" style="font-size:29px"><i>d</i><sub>PE</sub> ≥ <i>m</i> · <i>d</i><sub>req</sub>(<i>v</i><sub>ego</sub>) &nbsp;&nbsp;·&nbsp;&nbsp; <i>ρ</i>(<i>S</i>) ≤ <i>ρ</i><sub>max</sub> / <i>m</i></div></div>
-        <div class="card col center grow" style="text-align:center"><div class="stat"><span class="v" style="font-size:84px">95 → 56 km/h</span><span class="l" style="font-size:24px">with 50 m of visibility: the Keep Lane boundary, then the speed preferred with <i class="m">m</i> = 1.5</span></div></div>
-        </div>` },
+      html: `<div class="col grow">
+        <div class="card mgbar"><h4>Keep Lane with 50 m of visibility: at each speed of the ego vehicle, how close to the boundary?</h4>
+          <div class="mg-scale">
+            <div class="seg ok" style="width:43.08%"><b>Preferred region</b><span>far from the boundary · <i class="m">w</i> = 1</span></div>
+            <div class="seg near" style="width:30%"><b>Ensured, but close</b><span>closer and closer · <i class="m">w</i>: 1 → 0</span></div>
+            <div class="seg out" style="width:26.92%"><b>Not ensured</b><span>beyond the boundary</span></div>
+            <div class="tick" style="left:43.08%"><span><b>56 km/h</b> · <i class="m">ρ</i> = <i class="m">m</i> = 1.5</span></div>
+            <div class="tick" style="left:73.08%"><span><b>95 km/h</b> · boundary, <i class="m">ρ</i> = 1</span></div>
+          </div>
+          <div class="mg-probe"><div class="pr" style="left:38.46%"><b>50 km/h</b>: far from the boundary</div>
+            <div class="pr near" style="left:69.23%"><b>90 km/h</b>: still ensured, but on the edge</div>
+            <span class="end">0 km/h</span><span class="end r">130 km/h</span></div></div>
+        <div class="row grow">
+          <div class="card col grow" data-step="1" style="gap:12px"><h4>Measure: how far from the boundary</h4>
+            <div class="eqbox"><div class="eq"><i>ρ<sub>k</sub></i>(<i>s</i>) = <span class="fr"><span><i>g<sub>k</sub></i><sup>av</sup>(<i>s</i>)</span><span><i>g<sub>k</sub></i><sup>req</sup>(<i>s</i>)</span></span>
+              &nbsp;&nbsp; <i>w<sub>k</sub></i>(<i>s</i>) = min(1, <span class="fr"><span><i>ρ<sub>k</sub></i>(<i>s</i>) − 1</span><span><i>m<sub>k</sub></i> − 1</span></span>)</div></div>
+            <ul class="list"><li>Available over required, for instance the perception range we have over the range we need: <b>1 on the boundary</b></li>
+              <li><i class="m">w<sub>k</sub></i> = 0 on the boundary, 1 from <i class="m">m<sub>k</sub></i> on: the preferred region</li>
+              <li>An action is as close as its most constrained skill: <i class="m">w<sub>a</sub></i> = min<sub><i class="m">k</i></sub> <i class="m">w<sub>k</sub></i></li></ul></div>
+          <div class="card col grow" data-step="2" style="gap:12px"><h4>Use: a preference in the reward, not a second boundary</h4>
+            <div class="eqbox"><div class="eq"><i>R</i><sub>op</sub>(<i>s</i>) = −( 1 − <sup>1</sup>⁄<sub>|<i>A</i>|</sub> Σ<sub><i>a</i> ∈ ${Aens()}</sub> <i>w<sub>a</sub></i>(<i>s</i>) )</div></div>
+            <ul class="list"><li>Each ensured action counts with its margin: the planner prefers states far from the boundaries, and slows down earlier in fog</li>
+              <li>No maneuver is removed: ${Aens()} is unchanged</li>
+              <li><i class="m">m<sub>k</sub></i> ≥ 1, chosen by the designer: room for what the models do not represent, at the cost of a more conservative behavior</li></ul></div>
+        </div></div>` },
 
     { id: "bridge-c1", type: "bridge", sec: "c1", dark: true, kicker: "Limitation", time: 30,
       title: "Ensured now, but what about the states the decision leads to?",
