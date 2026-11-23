@@ -820,3 +820,10 @@ body.presenter #cmt-panel, body.presenter #cmt-layer { display: none !important;
 .si em.fog { background: #7d8791; } .si em.occ { background: var(--navy); }
 .si.dim { opacity: 0.35; }
 .si:not(.hidden):not(.dim) { outline: 3px solid var(--amber); }
+
+/* named equations: the name and what it does, then the formula */
+.eqn { display: grid; grid-template-columns: 400px 1fr; align-items: center; gap: 24px; }
+.eqn .nm { font-size: 27px; font-weight: 700; color: var(--navy); line-height: 1.2; }
+.eqn .nm small { display: block; font-size: 20px; font-weight: 500; color: var(--mute); }
+.eqn .eq { font-size: 36px; white-space: nowrap; }
+.setupr .stat { flex: 1 1 0; justify-content: center; }

@@ -831,7 +831,7 @@
 
     { id: "pomcp", cite: ["silver_monte-carlo_2010", "auer2002finite"], sec: "c3", c: ["C3"], kicker: "Resolution through Monte Carlo planning", ref: "§5.3.5 – §5.3.6", time: 50,
       title: "ODD-constrained POMCP: the MCE filters selection, expansion and rollout",
-      notes: "POMCP with the capability filter at the three stages where actions are chosen. The final action is the best ensured action at the root. For the ODD-MDP, intentions enter through a tactical risk term; in the ODD-POMDP, the particles carry them.",
+      notes: "POMCP with the capability filter at the three stages where actions are chosen. The final action is the best ensured action at the root. The particles carry the intentions of the other drivers.",
       backups: ["b-pomcp", "b-cost"],
       html: `<div class="g4">
           ${[["Selection", "UCB1 among the ensured actions of the node", 1], ["Expansion", "new nodes only for ensured actions", 1], ["Rollout", "random policy drawn from the ensured actions", 1], ["Backpropagation", "the return updates values and visit counts", 0]]
@@ -839,13 +839,13 @@
               <p class="small">${d}</p>${f ? '<span class="pill ok" style="align-self:flex-start;margin-top:auto">MCE filter</span>' : ""}</div>`).join("")}
         </div>
         <div class="row grow">
-          <div class="card col grow" style="justify-content:center"><div class="eq" style="font-size:30px"><i>a</i> = argmax<sub><i>a</i> ∈ ${Aens("b<sub>h</sub>")}</sub> [ <i>Q</i>(<i>h</i>, <i>a</i>) + <i>c</i> √( ln <i>N</i>(<i>h</i>) / <i>N</i>(<i>h</i>, <i>a</i>) ) ]</div>
-            <div class="eq" style="font-size:30px"><i>G</i> = Σ<sub><i>k</i>=0</sub><sup><i>H</i></sup> <i>γ</i><sup><i>k</i></sup> <i>R</i>(<i>s<sub>k</sub></i>, <i>a<sub>k</sub></i>), &nbsp; <i>Q</i>(<i>h</i>, <i>a</i>) ← <i>Q</i>(<i>h</i>, <i>a</i>) + (<i>G</i> − <i>Q</i>(<i>h</i>, <i>a</i>)) / <i>N</i>(<i>h</i>, <i>a</i>)</div>
-            <div class="eq" style="font-size:30px"><i>a<sub>t</sub></i> = argmax<sub><i>a</i> ∈ ${Aens("b<sub>t</sub>")}</sub> <i>Q</i>(<i>h</i><sub>0</sub>, <i>a</i>)</div>
-            <p class="small mute">The tree is built over sequences of actions, each node holding the particles propagated along its sequence. Replanned every 200 to 300 ms.</p></div>
-          <div class="card amber col" style="flex:0.75 1 0"><h3>Intentions in the ODD-MDP</h3><p class="small">A tactical risk term brings them into the reward:</p><div class="eq" style="font-size:31px"><i>R<sub>i</sub></i><sup>LC</sup> = <i>P<sub>i</sub></i><sup>LC</sup> · <i>R<sub>i</sub></i><sup>hyp</sup></div><p class="small">In the ODD-POMDP, the particles carry them.</p></div>
+          <div class="card col grow" style="justify-content:center;gap:22px;padding:26px 60px">
+            <div class="eqn"><span class="nm">Selection · UCB1<small>good actions, and rarely tried ones</small></span><div class="eq"><i>a</i> = argmax<sub><i>a</i> ∈ ${Aens("b<sub>h</sub>")}</sub> [ <i>Q</i>(<i>h</i>, <i>a</i>) + <i>c</i> √( ln <i>N</i>(<i>h</i>) / <i>N</i>(<i>h</i>, <i>a</i>) ) ]</div></div>
+            <div class="eqn"><span class="nm">Return of a simulation<small>discounted sum of rewards</small></span><div class="eq"><i>G</i> = Σ<sub><i>k</i>=0</sub><sup><i>H</i></sup> <i>γ</i><sup><i>k</i></sup> <i>R</i>(<i>s<sub>k</sub></i>, <i>a<sub>k</sub></i>)</div></div>
+            <div class="eqn"><span class="nm">Value update<small>running mean of the returns</small></span><div class="eq"><i>Q</i>(<i>h</i>, <i>a</i>) ← <i>Q</i>(<i>h</i>, <i>a</i>) + ( <i>G</i> − <i>Q</i>(<i>h</i>, <i>a</i>) ) / <i>N</i>(<i>h</i>, <i>a</i>)</div></div>
+            <div class="eqn"><span class="nm">Decision<small>the best ensured action at the root</small></span><div class="eq"><i>a<sub>t</sub></i> = argmax<sub><i>a</i> ∈ ${Aens("b<sub>t</sub>")}</sub> <i>Q</i>(<i>h</i><sub>0</sub>, <i>a</i>)</div></div>
+            <p class="small mute" style="margin:8px 0 0"><i class="m">h</i>: a node of the tree, the sequence of actions from the root · <i class="m">b<sub>h</sub></i>: its particles · <i class="m">Q</i>(<i class="m">h</i>, <i class="m">a</i>): estimated value of action <i class="m">a</i> there · <i class="m">N</i>: visit counts · <i class="m">c</i>: exploration weight · <i class="m">γ</i>: discount · <i class="m">H</i>: horizon. Replanned at every cycle; only the first action is executed.</p></div>
         </div>` },
-
     { id: "bridge-c3", type: "bridge", sec: "c3", dark: true, kicker: "From the method to its validation", time: 25,
       title: "Does it hold, in simulation and on a real vehicle?",
       notes: "Capability precedes choice is now formalized: the MCE assesses the maneuvers, and the ODD-MDP and the ODD-POMDP choose among the ensured ones. So far, the animations have illustrated each step on one situation. Chapter 6 evaluates the whole: in IPG CarMaker, over hundreds of runs, and with the same planner, unchanged, on a Mégane E-Tech prototype.",
@@ -865,7 +865,7 @@
       html: `<div class="row grow">
         <div class="card col" style="flex:1.2 1 0"><h4>From software-in-the-loop to vehicle-in-the-loop</h4>${fig("v_cycle.png", "Validation loops")}
           <p class="small">Vehicle-in-the-loop: a Mégane E-Tech prototype on a test track. Its RTK position is replicated in CarMaker, the virtual traffic is perceived as if it were real, and the real ADAS features execute the requests.</p></div>
-        <div class="col grow">
+        <div class="col grow setupr">
           <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker</span><span class="l">software-in-the-loop: road, traffic, conditions and vehicle dynamics</span></div>
           <div class="card tight stat"><span class="v" style="font-size:40px">ROS node</span><span class="l">ODD-aptive sends a target lane and a set speed to the ADAS features</span></div>
           <div class="card tight stat"><span class="v" style="font-size:40px">5 s · 3.5 s</span><span class="l">one lane change · one keep-lane or ±10 km/h step</span></div>
