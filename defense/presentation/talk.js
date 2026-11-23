@@ -52,7 +52,18 @@
       `<button type="button" data-go="${p.id}" title="${esc(label(p) + " · " + p.title)}" class="${p.i === s.i ? "on" : ""}"></button>`).join("")}</div>` : "";
     const cs = (s.c || []).map((c) => `<a class="cbadge" data-go="contrib" title="Contribution ${c}">${c}</a>`).join("");
     return `<div class="hdr"><div class="contrib">${cs}</div><div class="kicker">${kick}${sub}</div>` +
-      `<div class="title">${s.title}</div>${mini}</div>`;
+      `<div class="title">${s.title}</div>${mini}</div>` + thread(s);
+  }
+
+  // the guiding thread of a section (the introduction): its steps, the current one marked
+  function thread(s) {
+    const sec = SEC[s.sec];
+    if (!s.th || !sec || !sec.thread) return "";
+    const k = sec.thread.indexOf(s.th);
+    return `<div class="thr">` + sec.thread.map((lab, j) => {
+      const to = ALL.find((x) => x.sec === s.sec && x.th === lab);
+      return `<a${to ? ` data-go="${to.id}"` : ""} class="${j < k ? "done" : (j === k ? "on" : "")}">${esc(lab)}</a>`;
+    }).join("<i>›</i>") + `</div>`;
   }
 
   function footer(s) {
@@ -83,9 +94,17 @@
     return html;
   }
 
+  // references of a slide, at its foot; each one opens its page in the appendix
+  function cites(s) {
+    const ks = (s.cite || []).filter((k) => T.bib && T.bib[k]);
+    if (!ks.length || s.type === "video" || s.dark) return "";
+    return `<div class="cites"><span>References</span>` + ks.map((k) => `<a data-go="${T.refpage[k]}" title="${esc(T.bib[k][1].replace(/<[^>]+>/g, "").replace(/^ — /, ""))}">${esc(T.bib[k][0])}</a>`).join("<i>·</i>") + `</div>`;
+  }
+
   function build(s) {
     const el = document.createElement("section");
-    el.className = "slide " + (s.type || "content") + (s.dark ? " dark" : "");
+    el.className = "slide " + (s.type || "content") + (s.dark ? " dark" : "") + (s.th && !s.dark && s.type !== "video" ? " thr-on" : "") +
+      (cites(s) ? " has-cites" : "");
     el.dataset.i = s.i;
     let inner = "";
     if (s.type === "title") {
@@ -111,7 +130,7 @@
         `<div class="t">${esc(x.title)}<small>${esc(x.sub || "")}</small></div>` +
         `<div class="m"><span>${esc(x.where)}</span>${(x.pubs || []).map((p) => `<span class="pill line">${esc(p)}</span>`).join("")}</div>` +
         `<span class="arrow">→</span></a>`).join("");
-      inner = header(s) + `<div class="body"><div class="outl">${rows}</div>${s.html || ""}</div>` + footer(s);
+      inner = header(s) + `<div class="body"><div class="outl">${rows}</div>${s.html || ""}</div>` + cites(s) + footer(s);
     } else if (s.type === "section") {
       const x = SEC[s.sec];
       const cs = (x.c || []).map((c) => `<a class="cbadge solid" data-go="contrib">${c}</a>`).join("");
@@ -131,7 +150,7 @@
       inner = (s.type === "bindex" ? header(s) : "") + s.html + footer(s);
     } else {
       const bk = (s.backups || []).map((b) => `<a data-go="${b}">Appendix ${label(ALL[IDX[b]])} · ${esc(ALL[IDX[b]].title)}</a>`).join("");
-      inner = header(s) + (bk ? `<div class="bk">${bk}</div>` : "") + `<div class="body">${s.html}</div>` + footer(s);
+      inner = header(s) + (bk ? `<div class="bk">${bk}</div>` : "") + `<div class="body">${s.html}</div>` + cites(s) + footer(s);
     }
     el.innerHTML = inner;
     return el;
