@@ -834,3 +834,12 @@ cite.cref:hover { opacity: 1; text-decoration: underline; text-underline-offset:
 .sloops.seq .sl { opacity: 0.45; transition: opacity 300ms, outline-color 300ms; outline: 3px solid transparent; }
 .sloops.seq .sl.on { opacity: 1; outline-color: var(--amber); }
 .sloops .cap b .k { display: inline-grid; place-items: center; width: 30px; height: 30px; margin-right: 10px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 17px; vertical-align: 2px; }
+
+/* notation legend: the symbol, then its meaning, without colons */
+.lgd { display: grid; grid-template-columns: max-content 1fr max-content 1fr; column-gap: 14px; row-gap: 2px; align-items: baseline; font-size: 19px; line-height: 1.35; color: var(--mute); }
+.lgd.one { grid-template-columns: max-content 1fr; }
+.lgd > .s { font-family: var(--math); font-size: 21px; color: var(--ink); text-align: right; white-space: nowrap; }
+.lgd > .s i { font-style: italic; }
+/* short lines, one idea each */
+.lines { display: flex; flex-direction: column; gap: 10px; margin: 0; }
+.lines > div { line-height: 1.3; }
