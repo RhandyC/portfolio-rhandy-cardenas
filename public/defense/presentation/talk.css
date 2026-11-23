@@ -491,7 +491,7 @@ table.chkt td.n::before { content: "✗"; background: var(--bad); }
 .outl .arrow { font-size: 34px; font-weight: 700; color: var(--navy); }
 
 /* agenda: the title of every section of the defense, nothing else */
-.agenda { flex: 1 1 0; display: grid; grid-auto-rows: 1fr; row-gap: 14px; width: 1240px; max-width: 100%; margin: 0 auto; }
+.body > .agenda { flex: 1 1 0; display: grid; grid-auto-rows: 1fr; row-gap: 14px; width: 1240px; max-width: 100%; margin: 0 auto; }
 .agenda .ag-row { display: grid; grid-template-columns: 54px 1fr; align-items: center; gap: 28px; background: #fff; border-radius: 16px; padding: 8px 26px; text-decoration: none; cursor: pointer; box-shadow: 0 6px 24px rgba(0,0,0,0.055), 0 2px 8px rgba(0,0,0,0.04); }
 .agenda .ag-row:hover { outline: 3px solid var(--amber); }
 .agenda .n { width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--navy); color: var(--navy); display: grid; place-items: center; font-size: 22px; font-weight: 700; }
