@@ -779,5 +779,12 @@ body.presenter #cmt-panel, body.presenter #cmt-layer { display: none !important;
 .tpair .tpa { font-size: 46px; font-weight: 700; color: var(--navy); }
 .tprow { display: flex; align-items: flex-start; gap: 14px; font-size: 22px; line-height: 1.35; }
 .tprow .pill { flex: none; min-width: 84px; justify-content: center; font-size: 18px; }
-.cpch { font-size: 30px; font-weight: 600; color: var(--navy); text-align: center; }
-.cpch b { color: var(--navy); font-weight: 800; }
+.cpch { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--navy); text-align: center; }
+.cpch span { font-size: 24px; font-weight: 500; color: var(--mute); }
+.cpch b { font-size: 40px; font-weight: 800; }
+.cpc2 { display: flex; align-items: center; gap: 30px; padding: 26px 34px; }
+.cpc2 .cpi { flex: none; width: 96px; height: 96px; color: var(--ok); }
+.cpc2.cho { border-left: 10px solid var(--blue); }
+.cpc2.cho .cpi { color: var(--blue); }
+.cpc2 h3 { margin: 0 0 10px; font-size: 38px; }
+.cpc2 p { margin: 0; font-size: 28px; line-height: 1.4; }

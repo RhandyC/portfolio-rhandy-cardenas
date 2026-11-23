@@ -213,13 +213,13 @@
       notes: "Hence the research question: how can an intelligent vehicle ensure ODD-compliant decision-making as its operational context continuously evolves? ODD-compliant means more than admissible when chosen: the decision keeps the vehicle within its ODD throughout its execution, and leads to states from which it can keep operating. (1) Our idea is to bring the ODD into the decision, with one principle that guides all the contributions: capability precedes choice. First, capability: what can the vehicle still do safely, now and in the situations its decisions lead to. Then, choice: among those options only, which maneuvers, in which order, keeping a minimal risk condition within reach.",
       html: `<div class="card navy rq" style="padding:40px 64px"><div class="quote" style="font-size:42px">How can an intelligent vehicle ensure <b>ODD-compliant</b> decision-making as its operational context <b>continuously evolves</b>?</div></div>
         <div class="col grow" data-step="1" style="gap:16px">
-          <div class="cpch">The principle that answers it: <b>capability precedes choice</b></div>
+          <div class="cpch"><span>To answer it, we propose one guiding thread for the whole thesis</span><b>Capability precedes choice</b></div>
           <div class="cpcflow grow">
-            <div class="card ok col" style="gap:12px;justify-content:center"><h3 style="margin:0;font-size:40px">1 · Capability</h3>
-              <p style="font-size:30px;margin:0">What can the vehicle still do <b>safely</b>, now and in the situations its decisions lead to?</p></div>
+            <div class="card ok cpc2"><svg class="cpi" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M23.5 25a8.5 8.5 0 1 1 12.6 7.4c-2.6 1.5-4.1 3.2-4.1 6.1v1.5" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/><circle cx="32" cy="47" r="3" fill="currentColor"/></svg><div><h3>1 · Capability</h3>
+              <p>What can the vehicle still do <b>safely</b>, now and in the situations its decisions lead to?</p></div></div>
             <div class="arrow-big">→</div>
-            <div class="card col" style="gap:12px;justify-content:center;border-left:10px solid var(--blue)"><h3 style="margin:0;font-size:40px">2 · Choice</h3>
-              <p style="font-size:30px;margin:0">Among <b>those options only</b>, which maneuvers, in which order, keeping a minimal risk condition within reach?</p></div>
+            <div class="card cpc2 cho"><svg class="cpi" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 58V36M32 36L15 15M32 36l17-21" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 26V13h13M51 26V13H38" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div><h3>2 · Choice</h3>
+              <p>Among <b>those options only</b>, which maneuvers, in which order, keeping a minimal risk condition within reach?</p></div></div>
           </div></div>` },
 
     { id: "v-problem-b", th: "The aim", type: "video", sec: "intro", ref: "§1.3", time: 40,
