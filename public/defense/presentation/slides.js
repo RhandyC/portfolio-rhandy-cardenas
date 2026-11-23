@@ -682,12 +682,11 @@
 
     { id: "bridge-c1", type: "bridge", sec: "c1", dark: true, kicker: "Limitation", time: 30,
       title: "Ensured now, but what about the states the decision leads to?",
-      notes: "The MCE answers a question about one state. A decision is a sequence: a maneuver ensured now can lead to a state where nothing is ensured, as in the problem shown at the start. So the decision must chain maneuvers and check every predicted state. This is the second contribution.",
+      notes: "The MCE answers a question about one state. A decision is a sequence: a maneuver ensured now can lead to a state where nothing is ensured, as in the problem shown at the start. This is the second contribution.",
       html: `<div class="bridge"><div class="k">Limitation of the assessment alone</div>
         <div class="q">Ensured now, but what about the states the decision leads to?</div>
         <ul class="chk"><li class="y"><b>Capability</b>: the MCE tells which maneuvers are ensured in a given state, current or predicted</li>
-          <li class="n">A maneuver ensured now can lead to a state where no fallback is ensured, ${go("v-problem-a", "as in the problem")}</li>
-          <li class="to"><b>Choice</b>: chain maneuvers among the ensured ones, and check every predicted state</li></ul>
+          <li class="n">A maneuver ensured now can lead to a state where no fallback is ensured, ${go("v-problem-a", "as in the problem")}</li></ul>
         <a class="next" data-go="sec-c2" href="#/sec-c2"><span class="cbadge solid">C2</span> Which sequence of ensured maneuvers to choose? →</a></div>` },
 
     // ================================================================ 4. C2 · choice: ODD-constrained MDP (part II, chapter 5, §5.2)
