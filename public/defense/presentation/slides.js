@@ -552,30 +552,54 @@
       notes: "Skill graphs per maneuver, evaluation in S_i, one skill lost (partial operability), a shared skill lost (MRM required), traceability back to the context.",
       video: { src: A + "mce.mp4", parts: [[0.0, "Each maneuver relies on its own skill graph"], [12.5, "A maneuver is ensured when all its skills are fulfilled"], [21.0, "A change of context affects only the maneuvers that need the skill"], [32.5, "A shared skill is lost: every maneuver that needs it is lost"], [44.5, "Every loss is traced back to a change of context"]] } },
 
+    { id: "lc-example", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 50,
+      title: "An example: the skills of a lane change",
+      notes: "From the general estimator to one example: the lane change, the maneuver of chapter 4. It is ensured when all its skills hold. Sense: the vehicles in three zones, A behind us in the target lane, B ahead in the target lane, C ahead in our lane, and the lane markings of the target lane. Think: the predictor models every perceived vehicle, and the traffic is fluid enough for the function. Act is assumed fulfilled in this work. We develop the first skill: how much perception range does each zone need? The answer comes from a safe distance, RSS.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:0.82 1 0"><h4>Zones of interest of a lane change to the left</h4>${fig("zones.jpg", "Zones A, B and C of the lane change")}
+          <p class="small" style="margin:0">The lane change uses <b>A</b>, behind in the target lane, <b>B</b>, ahead in the target lane, and <b>C</b>, ahead in the ego lane. PE: perception envelope, smaller in fog</p></div>
+        <div class="col grow" style="gap:14px;justify-content:center">
+          <div class="card eqbox"><div class="eq" style="font-size:29px">LC ∈ ${Uens()} ⇔ <i>f</i><sub>veh</sub>(<i>S</i>) = <i>f</i><sub>lane</sub>(<i>S</i>) = <i>f</i><sub>pred</sub>(<i>S</i>) = <i>f</i><sub>inter</sub>(<i>S</i>) = 1</div>
+            <div class="xs mute">The lane change is ensured when all its skills are fulfilled</div></div>
+          <div class="card tight lcsk on"><span class="pill">Sense</span><span><b>Vehicles</b>: the perception range covers the distance needed in zones A, B and C</span><span class="pill amber nx">developed next</span></div>
+          <div class="card tight lcsk"><span class="pill">Sense</span><span><b>Lane markings</b> of the target lane are detected</span></div>
+          <div class="card tight lcsk"><span class="pill">Think</span><span><b>Prediction</b>: every perceived vehicle is of a type the predictor models</span></div>
+          <div class="card tight lcsk"><span class="pill">Think</span><span><b>Interaction</b>: the traffic is fluid enough for this function</span></div>
+          <div class="card tight lcsk"><span class="pill gray">Act</span><span>Assumed fulfilled in this work</span></div>
+        </div></div>` },
+
     { id: "v-rss", type: "video", sec: "c1", c: ["C1"], ref: "§4.5.3", time: 40,
       title: "Application to a lane change: what distance to keep behind the front vehicle",
       notes: "The safe distance of RSS: enough to stop in time, and enough for the ACC to settle in smoothly behind a vehicle that slows down. It builds the required perception range of the Sense skill.",
       video: { src: A + "rss.mp4", parts: [[0.0, "How much distance to stop in time?"], [16.91, "How much distance to settle in smoothly behind it?"]] } },
 
-    { id: "sense", cite: ["shwartz2017RSS", "CARDENAS2025162", "bussemaker2014SensingRF"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 60,
-      title: "Sense: the perception range must cover the RSS distance in each zone",
-      notes: "The lane change needs to see vehicles in zones A, B and C. The requirement depends on the speeds, through the RSS distance. Below about 67 m of visibility the lane change window vanishes, while Keep Lane remains ensured at a lower speed.",
+    { id: "sense", cite: ["shwartz2017RSS", "CARDENAS2025162", "bussemaker2014SensingRF"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 70,
+      title: "Sense: the perception range must cover a safe distance in each zone",
+      notes: "The formulation behind the video. RSS, from Shalev-Shwartz et al., gives the minimum distance for a rear vehicle to avoid a collision even if the front vehicle brakes as hard as it can until it stops: a reaction, then braking. For a lane change this worst case is an emergency, handled by the minimal risk maneuver, and it is too restrictive. Following our IFAC paper, the front vehicle only slows down to a fraction R of its speed, and the rear vehicle must then keep a time gap T. The same rule gives every zone its requirement, with the roles swapped: ahead, in B and C, the ego vehicle is the rear vehicle; in zone A, the car behind is. The skill holds when the perception envelope covers the requirement in every zone. Ahead, the requirement grows with our speed; behind, it grows when we are slower. So only a window of speeds covers every zone, and fog narrows it: the next video.",
       backups: ["b-rss"],
       html: `<div class="row grow">
-        <div class="card col" style="flex:0.62 1 0"><h4>Zones of interest</h4>${fig("zones.jpg", "Zones A, B and C of the lane change")}</div>
-        <div class="card col" style="flex:1 1 0"><h4>Required range per zone</h4>${fig("required_range.png", "Required perception range per zone")}</div>
-        <div class="col" style="flex:0.85 1 0">
-          <div class="card eqbox"><div class="eq" style="font-size:27px"><i>f</i><sub>veh</sub>(<i>S</i>) = 1 ⇔ <i>d</i><sub>PE</sub><sup><i>z</i></sup>(<i>S</i>) ≥ <i>d</i><sub>req</sub><sup><i>z</i></sup>(<i>S</i>), <i>z</i> ∈ {A, B, C}</div>
-            <div class="xs mute">Built on the RSS safe distance, traffic speed 110 km/h ± 10 %</div></div>
-          <div class="card tight stat"><span class="v">≈ 67 m</span><span class="l">of visibility: below it, the lane change is no longer ensured (≈ 114 km/h)</span></div>
-          <div class="card tight stat"><span class="v">≈ 81 m</span><span class="l">the same limit with the uncertainty margins</span></div>
-          <div class="card tight stat"><span class="v">≈ 95 km/h</span><span class="l">highest speed for Keep Lane with 50 m of visibility</span></div>
+        <div class="col" style="flex:1.18 1 0;gap:18px">
+          <div class="card col" style="gap:10px"><h4>RSS: minimum safe distance between a rear and a front vehicle</h4>
+            <div class="eqbox"><div class="eq" style="font-size:31px"><i>d</i><sub>min</sub><sup>RSS</sup> = [ <i>v<sub>r</sub> ρ</i> + ½ <i>a</i><sub>max</sub><i>ρ</i><sup>2</sup> + <span class="fr"><span>(<i>v<sub>r</sub></i> + <i>ρ a</i><sub>max</sub>)<sup>2</sup></span><span>2 <i>b</i><sub>min</sub></span></span> − <span class="fr"><span><i>v<sub>f</sub></i><sup>2</sup></span><span>2 <i>b</i><sub>max</sub></span></span> ]<sub>+</sub></div></div>
+            <p class="small" style="margin:0"><i class="m">v<sub>r</sub></i>, <i class="m">v<sub>f</sub></i>: rear and front speeds · <i class="m">ρ</i>: response time · <i class="m">a</i><sub>max</sub>: acceleration during the response · <i class="m">b</i><sub>min</sub>: braking of the rear vehicle · <i class="m">b</i><sub>max</sub>: braking of the front vehicle</p></div>
+          <div class="card col grow" style="gap:10px"><h4>For a lane change: a smooth insertion, not an emergency stop</h4>
+            <div class="eqbox"><div class="eq" style="font-size:31px"><i>d</i><sub>req</sub> = <i>T R v<sub>f</sub></i> + <i>d</i><sub>min</sub><sup>RSS</sup>( <i>v<sub>r</sub></i> − <i>R v<sub>f</sub></i> , (1 − <i>R</i>) <i>v<sub>f</sub></i> )</div></div>
+            <ul class="list small"><li>The front vehicle slows down to a fraction <i class="m">R</i> of its speed, instead of stopping</li>
+              <li>The rear vehicle then keeps a time gap <i class="m">T</i> behind it</li></ul></div>
+        </div>
+        <div class="col" style="flex:0.82 1 0;gap:18px">
+          <div class="card col" style="gap:8px"><h4>The same rule in every zone, roles swapped</h4>
+            <table class="tbl" style="font-size:22px"><tr><th>Zone</th><th>Rear vehicle</th><th>Requirement</th></tr>
+              <tr><td>B, C, ahead</td><td>the ego vehicle</td><td><i class="m">d</i><sub>req</sub>(<i class="m">v</i><sub>ego</sub>, <i class="m">v</i><sub>front</sub>)</td></tr>
+              <tr><td>A, behind</td><td>the car behind</td><td><i class="m">d</i><sub>req</sub>(<i class="m">v</i><sub>rear</sub>, <i class="m">v</i><sub>ego</sub>)</td></tr></table></div>
+          <div class="card eqbox"><div class="eq" style="font-size:27px"><i>f</i><sub>veh</sub>(<i>S</i>) = 1 ⇔ <i>d</i><sub>PE</sub><sup><i>z</i></sup>(<i>S</i>) ≥ <i>d</i><sub>req</sub><sup><i>z</i></sup>(<i>S</i>), ∀<i>z</i> ∈ {A, B, C}</div>
+            <div class="xs mute">The perception envelope must cover the requirement in every zone</div></div>
+          <div class="card navy grow" style="display:flex;flex-direction:column;justify-content:center"><h4>What follows</h4><p style="margin:0">Ahead, the requirement grows with the speed; behind, it grows when the ego vehicle is slower. Only a <b>window of speeds</b> covers every zone, and fog narrows it.</p></div>
         </div></div>` },
-
     { id: "v-window", type: "video", sec: "c1", c: ["C1"], ref: "§4.5.3", time: 65,
       title: "The lane change window closes in the fog",
-      notes: "The perception range required in three zones defines a speed window for the lane change. Fog narrows it until it closes, while keeping the lane remains ensured.",
-      video: { src: A + "window.mp4", parts: [[0.0, "Required perception range: one RSS rule, three zones"], [6.0, "Speed trades the rear zone against the front zones"], [14.5, "Above both curves, the lane change is ensured"], [18.5, "Fog shrinks the envelope: the speed window narrows"], [27.0, "Too slow or too fast: a zone is no longer covered"], [36.0, "Below ≈ 67 m: Keep Lane ensured, lane change not ensured"], [46.5, "Uncertainty on the traffic speed: the limit rises to ≈ 81 m"]] } },
+      notes: "The perception range required in three zones defines a window of speeds for the lane change. Fog narrows it until it closes, while Keep Lane, which only needs the zone ahead, remains ensured at a lower speed. An uncertainty margin on the traffic speed raises the limit.",
+      video: { src: A + "window.mp4?v=2", parts: [[0.0, "Required perception range: one RSS rule, three zones"], [6.0, "Speed trades the rear zone against the front zones"], [14.5, "Above both curves, the lane change is ensured"], [18.5, "Fog shrinks the envelope: the speed window narrows"], [27.0, "Too slow or too fast: a zone is no longer covered"], [36.0, "Below a visibility limit: Keep Lane ensured, lane change not ensured"], [46.5, "Uncertainty on the traffic speed: the limit rises"]] } },
 
     { id: "other-skills", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 45,
       title: "Lane markings, prediction and interaction complete the skill graph",

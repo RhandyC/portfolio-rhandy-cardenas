@@ -738,3 +738,9 @@ body.presenter #cmt-panel, body.presenter #cmt-layer { display: none !important;
 .ar.dim .dt { transform: translate(430px, 262px) scale(0.524554); }
 .ar.dim .pn.tac { background: #fff; }
 @media (prefers-reduced-motion: reduce) { .ar .dt { transition: none; } }
+
+/* the lane change example: its skills, the one developed next highlighted */
+.lcsk { display: flex; align-items: center; gap: 16px; font-size: 23px; }
+.lcsk .pill { flex: none; min-width: 92px; justify-content: center; }
+.lcsk.on { outline: 3px solid var(--amber); }
+.lcsk .nx { margin-left: auto; font-size: 16px; padding: 3px 12px; }
