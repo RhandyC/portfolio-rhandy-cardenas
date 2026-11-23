@@ -367,10 +367,10 @@
           <li>Highway driving, with the conditions ahead announced by the electronic horizon</li></ul></div>
         </div>` },
 
-    { id: "architecture", cite: ["michon1985critical"], sec: "c1", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 150, steps: 5,
+    { id: "architecture", cite: ["michon1985critical"], sec: "c1", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 170, steps: 6,
       title: "ODD-aptive: three decision layers, and inside the tactical one",
-      notes: "The architecture of chapter 4, Figure 4.1, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. (1) Zoom into the tactical layer. The current state, or belief, becomes the root s0 of the planning horizon builder. (2) For each state, the builder queries the MCE, which monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (3) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead; query and prediction repeat up to the horizon H. (4) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (5) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state.",
-      html: `<div class="ar zm">
+      notes: "The architecture of chapter 4, Figure 4.1, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. (1) Zoom into the tactical layer. The current state, or belief, becomes the root s0 of the planning horizon builder. (2) For each state, the builder queries the MCE, which monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (3) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead; query and prediction repeat up to the horizon H. (4) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (5) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state. (6) Back to the whole architecture, now with the tactical layer filled: the capability estimator, the horizon builder, the state predictor, the MDP or POMDP and the policy planner, between the state from the world model and the action sent to the operational layer.",
+      html: `<div class="ar zm" data-dim="6">
         <div class="ov" data-dim="1">
         <div class="frm" style="left:0;top:0;width:340px;height:712px"><span class="frt">Input preparation</span></div>
         <div class="pn" style="left:14px;top:40px;width:312px;height:160px"><div class="ph"><span class="k">A</span>Context sources</div>
@@ -407,13 +407,14 @@
         <div class="sig" style="left:346px;top:466px">Current<br>state <i>s</i><sub>0</sub></div>
         <div class="sig" style="left:914px;top:214px">Route plan <i>𝓡</i>: road segments, upcoming exit, destination</div>
         <div class="sig zh" style="left:1080px;top:344px;width:282px;text-align:right">Current action <i>a<sub>t</sub></i> = (<i>m<sub>t</sub></i>, <i>θ<sub>t</sub></i>)</div>
-        <div class="sig" style="left:1638px;top:470px">Selected feature + <i>θ<sub>t</sub></i></div>
-        <div class="sig" style="left:1638px;top:596px">Reference trajectory <i>T</i></div>
+        <div class="sig" style="left:1634px;top:471px;font-size:13.5px">Selected feature + <i>θ<sub>t</sub></i></div>
+        <div class="sig" style="left:1634px;top:597px;font-size:13.5px">Reference trajectory <i>T</i></div>
         <div class="sig" style="left:1180px;top:778px">Control commands <i>u<sub>t</sub></i></div>
         <div class="sig" style="left:182px;top:722px">Measurements</div>
         </div>
         <div class="q" data-until="1" style="left:430px;top:372px;width:940px"><div class="qm">?</div><div class="qt">Which maneuver, and when?</div></div>
 
+        <div class="dt">
         <div class="pn after" data-step="1" style="left:110px;top:386px;width:552px;height:240px"><div class="ph"><span class="k">E2</span>Planning horizon builder<span class="s">states (MDP) · beliefs (POMDP)</span></div></div>
 
         <div class="pn" data-step="2" style="left:110px;top:96px;width:552px;height:240px"><div class="ph"><span class="k">E1</span>Maneuver Capability Estimator<span class="tag cap">Monitoring</span></div>
@@ -509,6 +510,7 @@
         <div class="sig" data-step="5" style="left:1342px;top:630px">policy <i>π</i></div>
         <div class="sig" data-step="5" style="left:1490px;top:714px"><i>a<sub>t</sub></i> = (<i>m<sub>t</sub></i>, <i>θ<sub>t</sub></i>)</div>
         <div class="sig t" data-step="5" style="left:1470px;top:758px;line-height:1.2">current action, to the<br>ADAS features selector (F1)</div>
+        </div>
       </div>` },
 
     { id: "maneuvers", cite: ["AVSC2021BehavioralCompetencies", "iso2023iso34503", "colwell_automated_2018"], sec: "c1", c: ["C1"], kicker: "Mapping the ODD to the behavioral level", ref: "§4.4.1 – §4.4.2", time: 55,
