@@ -285,11 +285,11 @@
     { id: "levels", cite: ["michon1985critical", "donges2015behaviormodels"], sec: "sota", kicker: "State of the art · decision levels", ref: "§3.2", time: 50,
       title: "Which decision? The tactical level: which maneuver, and when",
       notes: "Three decision levels after Michon. Strategic: the route, over hours to minutes. Tactical: which maneuver, and when, from a minute to a second. Operational: the trajectory and its control, below the second. This thesis works at the tactical level, over ADAS features already validated.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.2 1 0"><h4>Michon's three levels</h4>${fig("michon.png", "Michon's levels of the driving task")}</div>
-        <div class="col grow">
+      html: `<div class="row grow" style="align-items:stretch">
+        <div class="card col" style="flex:1.2 1 0;justify-content:center"><h4>Michon's three levels</h4>${fig("michon_focus.png", "Michon's levels of the driving task, the tactical level in focus")}</div>
+        <div class="col grow" style="justify-content:center">
           <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
-          <div class="card tight amber"><span class="pill amber">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
+          <div class="card tight ok"><span class="pill ok">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
           <div class="card tight"><span class="pill gray">Operational · 1 s to 10 ms</span><p class="small" style="margin-top:8px">Trajectory, control and stabilization</p></div>
           <div class="card navy"><h3>Contribution of the thesis</h3><p>An anticipatory tactical layer that keeps the vehicle within what it can ensure, over ADAS features already validated.</p></div>
         </div></div>` },
@@ -347,25 +347,20 @@
     // ================================================================ 3. C1 · capability: the architecture and the MCE (part II, chapter 4), illustrated by its animations
     { id: "sec-c1", type: "section", sec: "c1", dark: true, title: "C1 · What can the vehicle still ensure?", time: 10 },
 
-    { id: "assumptions", sec: "c1", c: ["C1"], kicker: "Problem statement and working assumptions", ref: "§4.2", time: 60,
-      title: "A tactical layer that orchestrates the existing driving functions",
-      notes: "Where the work sits: between route planning and control, at the tactical level. ODD-aptive does not redesign the driving functions. And the assumptions, stated up front: they are design choices that keep the focus on the decision.",
-      html: `<div class="row grow">
-        <div class="col grow">
-          <div class="card tight"><span class="pill gray">Strategic</span> <span class="small">Route: road segments, exits, destination</span></div>
-          <div class="card tight amber"><span class="pill amber">Tactical</span> <span class="small"><b>Which maneuver, and when: ODD-aptive</b></span></div>
-          <div class="card tight"><span class="pill gray">Operational</span> <span class="small">Trajectory and control</span></div>
-          <div class="card grow"><p>ODD-aptive does not redesign the driving functions. It orchestrates commercially validated ADAS features, each with its own operating envelope: ACC, lane centering (LCA), semi-autonomous lane change (SALC), and the MRM execution.</p></div>
-        </div>
-        <div class="card grow"><h3>Working assumptions</h3><ul class="list">
-          <li>The ODD and its requirements are specified in advance. Only the decisions adapt</li>
-          <li>A predefined set of maneuvers, whose availability is assessed in each situation</li>
-          <li>Ego, traffic and context come from upstream perception, localization, maps and fusion</li>
-          <li>Capabilities that are not assessed, Act skills included, are assumed fulfilled</li>
-          <li>Prediction models exist over a finite horizon; future operability is conditional on them</li>
-          <li>Highway driving, with the conditions ahead announced by the electronic horizon</li></ul></div>
-        </div>` },
-
+    { id: "assumptions", sec: "c1", c: ["C1"], kicker: "What we want to analyse", ref: "§4.2", time: 50,
+      title: "Which maneuvers can the vehicle ensure, now and after its decisions?",
+      notes: "What we want to analyse. The ODD does not change, but the context and the driving situation do, so the maneuvers the vehicle can ensure change along the journey. And a maneuver ensured now may lead to a state where the next ones are no longer ensured. So the capability must be assessed now, and in the situations the decisions lead to. For that, we first need three things: the maneuvers, and the conditions each one requires, which is the ODD brought down to the maneuvers; the skills that let us assess a maneuver in a given state; and the predicted states, on which the same assessment is repeated. The working assumptions are in the appendix.",
+      backups: ["b-assumptions"],
+      html: `<div class="card tight" style="font-size:28px;padding:20px 32px">The ODD does not change, but the context does: the maneuvers the vehicle can ensure <b>change along the journey</b>, and a maneuver ensured now may lead to a state where <b>the next ones are not</b>.</div>
+        <div class="c1need">
+          <div class="cpch"><span>To analyse it, we first need</span></div>
+          <div class="c1steps">
+            <a class="card c1s" data-go="maneuvers"><span class="n">1</span><b>The maneuvers, and what each one requires</b><span class="t">The ODD brought down to the maneuvers</span></a>
+            <span class="c1a">→</span>
+            <a class="card c1s" data-go="skills"><span class="n">2</span><b>Skills to assess a maneuver in a state</b><span class="t">Sense, Think, Act</span></a>
+            <span class="c1a">→</span>
+            <a class="card c1s" data-go="v-mce"><span class="n">3</span><b>The same assessment in the predicted states</b><span class="t">Now, and after each decision</span></a>
+          </div></div>` },
     { id: "architecture", cite: ["michon1985critical"], sec: "c1", kicker: "Our answer: ODD-aptive", ref: "§4.3", time: 170, steps: 6,
       title: "ODD-aptive: three decision layers, and inside the tactical one",
       notes: "The architecture of chapter 4, Figure 4.1, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. (1) Zoom into the tactical layer. The current state, or belief, becomes the root s0 of the planning horizon builder. (2) For each state, the builder queries the MCE, which monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (3) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead; query and prediction repeat up to the horizon H. (4) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (5) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state. (6) Back to the whole architecture, now with the tactical layer filled: the capability estimator, the horizon builder, the state predictor, the MDP or POMDP and the policy planner, between the state from the world model and the action sent to the operational layer.",
@@ -534,9 +529,10 @@
         <div class="takeaway">The same assessment runs on <b>predicted states</b>, fed by the electronic horizon. This is what makes anticipation possible.</div>` },
 
     { id: "skills", cite: ["reschka2015ability", "jatzkowski2021knowledge"], sec: "c1", c: ["C1"], kicker: "Assessing the decisional capability", ref: "§4.5.1 – §4.5.2", time: 60,
-      title: "A maneuver is ensured when all its skills are fulfilled",
-      notes: "The skills are organized after the Sense, Think, Act paradigm of Pfeifer. Sense: the acquisition of the information required to assess and support the maneuver. Think: the ability to process and interpret this information for decision-making. Act: the ability to execute the maneuver once selected. Each skill k has an evaluation function f_k of the state, equal to 1 when it is fulfilled; it is expressed on the operational domain, so it can be evaluated on a predicted state, which is what makes anticipation possible. A maneuver is ensured when all its skills are fulfilled.",
-      html: `<div class="row grow">
+      title: "Each maneuver relies on skills; it is ensured when all of them are fulfilled",
+      notes: "We decomposed the driving behavior into maneuvers; now each maneuver is decomposed into skills. A maneuver can only be performed if the vehicle can perceive, interpret and act as it requires: these are its skills. They are organized after the Sense, Think, Act paradigm of Pfeifer. Sense: the acquisition of the information required to assess and support the maneuver. Think: the ability to process and interpret this information for decision-making. Act: the ability to execute the maneuver once selected. Each skill k has an evaluation function f_k of the state, equal to 1 when it is fulfilled; it is expressed on the operational domain, so it can be evaluated on a predicted state, which is what makes anticipation possible. A maneuver is ensured when all its skills are fulfilled.",
+      html: `<div class="hier"><a class="h" data-go="maneuvers">Driving behavior</a><i>→</i><a class="h" data-go="maneuvers">Maneuvers <small>KL · LCL · LCR · MRM</small></a><i>→</i><span class="h on">Skills <small>Sense · Think · Act</small></span></div>
+        <div class="row grow">
         <div class="card col" style="flex:1.25 1 0"><h4>Maneuver Capability Estimator (MCE)</h4>${fig("skills.png", "Skills of the Maneuver Capability Estimator")}</div>
         <div class="col grow">
           <div class="card eqbox"><div class="eq"><i>u<sub>i</sub></i> ∈ ${Uens()} ⇔ ∀<i>k</i> ∈ 𝒦(<i>u<sub>i</sub></i>), <i>f<sub>k</sub></i>(<i>S</i>) = 1</div><div class="xs mute">𝒦(<i>u</i>): the skills required by the maneuver <i>u</i> · <i>f<sub>k</sub></i>(<i>S</i>) ∈ {0, 1}: skill <i>k</i> fulfilled in the state <i>S</i>, current or predicted</div></div>
@@ -1090,6 +1086,15 @@
   // ================================================================ appendix
   const backups = [
     { id: "bindex", type: "bindex", sec: "backup", title: "Appendix", kicker: "For the questions" },
+
+    { id: "b-assumptions", sec: "backup", kicker: "Appendix", title: "Working assumptions of the thesis",
+      html: `<div class="card grow"><ul class="list" style="font-size:27px;gap:18px">
+          <li>The ODD and its requirements are specified in advance. Only the decisions adapt</li>
+          <li>A predefined set of maneuvers, whose availability is assessed in each situation</li>
+          <li>Ego, traffic and context come from upstream perception, localization, maps and fusion</li>
+          <li>Capabilities that are not assessed, Act skills included, are assumed fulfilled</li>
+          <li>Prediction models exist over a finite horizon; future operability is conditional on them</li>
+          <li>Tactical decisions only: trajectory generation and low-level control are downstream</li></ul></div>` },
 
     { id: "b-cost", sec: "backup", kicker: "Appendix", title: "Computational cost of one planning cycle",
       html: `<div class="g4">
