@@ -237,7 +237,7 @@
 
     { id: "failop", cite: ["avizienis2004taxonomy", "fail2022Stolte", "iso2018iso26262"], sec: "sota", kicker: "Background · fail-operational systems", ref: "§2.2.1", time: 60, steps: 2,
       title: "Fail-safe or fail-operational: keep driving with fewer capabilities",
-      notes: "First, what fail-operational means, on a simple example from chapter 2: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable. The scope of the thesis is this kind of degradation, such as fog, that reduces capabilities without any fault.",
+      notes: "First, what fail-operational means, on a simple example from chapter 2: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable.",
       html: `<div class="card row" style="gap:30px;align-items:center;padding:18px 28px">
           <img src="${F}failop_a.png" alt="The LiDAR range is reduced; the nominal range is dashed" style="width:640px;border-radius:10px">
           <div><h4 style="margin-bottom:8px">Example: the primary LiDAR loses range</h4><p style="margin:0">Highway, 130 km/h. The perception horizon shrinks <span class="mute">(nominal range dashed)</span>. What should the vehicle do?</p></div></div>
@@ -246,8 +246,7 @@
             <p style="margin:0;font-size:27px">Reaches a minimal risk condition, here a stop on the hard shoulder: <b>the mission is aborted</b>.</p></div>
           <div class="card col ok" data-step="2" style="gap:12px"><h3 style="margin:0">Fail-operational</h3><img src="${F}failop_f.png" alt="Fail-operational: the vehicle continues at a reduced speed, the lane change is no longer ensured" style="width:100%;border-radius:10px">
             <p style="margin:0;font-size:27px">Updates its capabilities and <b>keeps driving</b> at a reduced speed, without the lane change no longer ensured, a fallback always reachable.</p></div>
-        </div>
-        <div class="takeaway" data-step="2">Scope of the thesis: degradations, such as fog, that reduce capabilities <b>without any fault</b>.</div>` },
+        </div>` },
 
     { id: "awareness", cite: ["schlatow2017selfawareness", "woerter2021enhanced", "armand2014ontology", "salvi2022fuzzy"], sec: "sota", kicker: "Background · awareness and the ODD", ref: "§2.2.2 – §2.4", time: 70, steps: 2,
       title: "What must the vehicle know about its context, and about itself?",
