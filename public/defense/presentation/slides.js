@@ -803,13 +803,14 @@
 
     { id: "pomdp", cite: ["silver_monte-carlo_2010", "murphy2012machine"], sec: "c3", c: ["C3"], kicker: "Formalism", ref: "§5.3.1 – §5.3.4", time: 60,
       title: "The ODD-POMDP: the belief replaces the state, the principle stays",
-      notes: "The POMDP adds the observations and their model to the tuple. The vehicle no longer knows the state: it maintains a belief, represented by particles. The observations are the estimated kinematic states of the surrounding vehicles, Gaussian around the true state, and their intentions, estimated by a Gaussian naive Bayes classifier on four features. Each element of the ODD-MDP has its counterpart. The ensured set is now defined on the belief, with a threshold tau, and value iteration gives way to Monte Carlo planning. Capability still precedes choice, now in probability.",
+      notes: "The POMDP adds the observations and their model to the tuple. The vehicle no longer knows the state: it maintains a belief, represented by particles. The observations are the estimated kinematic states of the surrounding vehicles, Gaussian around the true state, and their intentions, estimated by a Gaussian naive Bayes classifier on four features. Each element of the ODD-MDP has its counterpart. The ensured set is now defined on the belief: an action is kept when the share of particles in which it is ensured reaches the threshold tau, an explicit design parameter; the guarantee becomes probabilistic. Value iteration gives way to Monte Carlo planning. Capability still precedes choice, now in probability.",
       html: `<div class="row" style="gap:24px">
           <div class="card defs grow">
             <span class="pill">Model</span><div class="eq">𝒫 = (<i>S</i>, <i>A</i>, <i>T</i>, <i>R</i>, <i>O</i>, <i>Z</i>, <i>γ</i>)</div>
             <span class="pill">Belief</span><div class="eq"><i>b<sub>t</sub></i> ≈ {<i>s<sub>t</sub></i><sup>(<i>i</i>)</sup>}<sub><i>i</i>=1</sub><sup><i>N</i></sup> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">particles</span></div>
             <span class="pill">Observation</span><div class="eq"><i>o<sub>t</sub></i> = {(<i>p̂<sub>i</sub></i><sup>kin</sup>(<i>t</i>), <i>û<sub>i</sub></i>(<i>t</i>))}<sub><i>i</i>=1</sub><sup><i>N</i><sub>veh</sub></sup>, &nbsp; <i>p̂<sub>i</sub></i><sup>kin</sup> ~ 𝒩(<i>p<sub>i</sub></i><sup>kin</sup>, <i>Σ<sub>i</sub></i>)</div>
             <span class="pill">Intention</span><div class="eq"><i>P</i>(<i>u</i> | <i>z</i>) ∝ <i>P</i>(<i>u</i>) Π<sub><i>k</i>=1</sub><sup>4</sup> 𝒩(<i>z<sub>k</sub></i> | <i>μ<sub>u,k</sub></i>, <i>σ</i><sup>2</sup><sub><i>u,k</i></sub>)</div>
+            <span class="pill ok">Ensured</span><div class="eq"><i>P</i>(<i>a</i> ensured | <i>b<sub>t</sub></i>) ≈ <sup>1</sup>⁄<sub><i>N</i></sub> Σ<sub><i>i</i></sub> 𝟙[<i>a</i> ∈ ${Aens("s<sub>t</sub><sup>(i)</sup>")}] ≥ <i>τ</i> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">share of particles</span></div>
           </div></div>
         <table class="tbl grow" style="font-size:22px"><tr><th style="width:230px"></th><th>ODD-MDP</th><th>ODD-POMDP</th></tr>
           <tr><td><b>State</b></td><td>fully observed, <i class="m">s</i></td><td>belief over particles, <i class="m">b<sub>t</sub></i></td></tr>
@@ -822,26 +823,6 @@
       title: "The belief, and an action ensured for a share τ of the particles",
       notes: "The current state is only estimated: noisy position and speed, uncertain intentions, an uncertain fog forecast. The belief keeps several possible states, the particles. The MCE checks the action in every particle: it is ensured only if a share τ of the particles ensures it.",
       video: { src: A + "pomcp.mp4", parts: [[0.0, "Under uncertainty, the current state becomes a belief"], [19.0, "An action is ensured when a share τ of the particles ensures it"]], end: 30.6 } },
-
-    { id: "belief", cite: ["zhang2020efficient", "chen2025intention"], sec: "c3", c: ["C3"], kicker: "Ensured actions at the belief level", ref: "§5.3.3 – §5.3.4", time: 45,
-      title: "An action is ensured when a share τ of the particles ensures it",
-      notes: "The ensured set is now defined on the belief. An action is kept when the share of particles in which it is ensured reaches the threshold tau. The guarantee becomes probabilistic, and tau an explicit design parameter, 0.9 in the experiments.",
-      html: `<div class="row grow">
-        <div class="col grow">
-          <div class="card col" style="gap:14px"><div class="row" style="justify-content:space-between;align-items:center"><h3 style="margin:0">Keep Lane</h3><span class="pill ok">ensured</span></div>
-            <div class="cloud">${"<i></i>".repeat(18)}${'<i class="x"></i>'.repeat(2)}</div><div class="eq" style="text-align:center;font-size:30px">18 / 20 = 0.90 ≥ <i>τ</i></div></div>
-          <div class="card col" style="gap:14px"><div class="row" style="justify-content:space-between;align-items:center"><h3 style="margin:0">Lane change left</h3><span class="pill bad">not ensured</span></div>
-            <div class="cloud">${"<i></i>".repeat(14)}${'<i class="x"></i>'.repeat(6)}</div><div class="eq" style="text-align:center;font-size:30px">14 / 20 = 0.70 &lt; <i>τ</i></div></div>
-          <p class="xs mute" style="margin:0">Illustration with <i class="m">N</i> = 20 particles and <i class="m">τ</i> = 0.9. Green: the action is ensured in that particle.</p>
-        </div>
-        <div class="col grow">
-          <div class="card eqbox" style="text-align:left"><div class="eq" style="font-size:30px"><i>b<sub>t</sub></i> ≈ {<i>s<sub>t</sub></i><sup>(<i>i</i>)</sup>}, &nbsp;<i>i</i> = 1, …, <i>N</i></div>
-            <div class="eq" style="font-size:30px"><i>P</i>(<i>a</i> ensured | <i>b<sub>t</sub></i>) ≈ (1/<i>N</i>) Σ<sub><i>i</i></sub> 𝟙[<i>a</i> ∈ ${Aens("s<sub>t</sub><sup>(i)</sup>")}]</div>
-            <div class="eq" style="font-size:30px">${Aens("b<sub>t</sub>")} = {<i>a</i> | <i>P</i>(<i>a</i> ensured | <i>b<sub>t</sub></i>) ≥ <i>τ</i>}</div></div>
-          <div class="card grow"><ul class="list small">
-            <li>The belief is rebuilt each cycle from the world model: one particle holds the estimated scene, the others are drawn with the measurement noise and the estimated intentions</li>
-            <li>The guarantee becomes probabilistic, and <i class="m">τ</i> an explicit design parameter, 0.9 in the experiments</li></ul></div>
-        </div></div>` },
 
     { id: "v-pomcp-b", type: "video", sec: "c3", c: ["C3"], ref: "§5.3.6", time: 55,
       title: "The ODD-constrained Monte Carlo search",
