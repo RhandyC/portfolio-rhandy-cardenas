@@ -729,3 +729,12 @@ body.presenter #cmt-panel, body.presenter #cmt-layer { display: none !important;
 .rqdef .card p { font-size: 30px; line-height: 1.45; margin: 0; }
 .rqdef .rqnot { flex: 0 0 520px; background: #f7f8fa; box-shadow: none; border: 2px dashed #cfd5dd; }
 .rqdef .rqnot p { font-size: 26px; color: var(--mute); }
+
+/* last step of the architecture: back to the whole figure, the tactical details shrunk inside E
+   (the inverse of the zoom: E is 940 x 447 at 430, 262, the details are drawn on 1792 x 852) */
+.ar .dt > * { position: absolute; }
+.ar .dt { position: absolute; left: 0; top: 0; width: 1792px; height: 852px; transform-origin: 0 0; transition: transform 950ms cubic-bezier(0.45, 0, 0.2, 1); }
+.ar.dim .ov.dim { transform: none; }
+.ar.dim .dt { transform: translate(430px, 262px) scale(0.524554); }
+.ar.dim .pn.tac { background: #fff; }
+@media (prefers-reduced-motion: reduce) { .ar .dt { transition: none; } }
