@@ -551,15 +551,13 @@
       title: "Sense: before engaging, does the vehicle see all it needs?",
       notes: "Take the Sense skills. The question they answer: before engaging in a maneuver, does the vehicle see all it needs? Each maneuver has key zones whose content the vehicle must know first. Entering a roundabout: the part of the ring from which the cars arrive. Crossing an intersection: the crossing road, in both directions. Overtaking a stopped bus: the zone in front of the bus, where a pedestrian may cross. Changing lane: three zones around the vehicle. A key zone counts only if it is inside what the vehicle perceives, and its perception envelope is reduced in two ways: fog shrinks it, as in the roundabout and the lane change; obstacles occlude it, as the buildings at the intersection, until the vehicle reaches the stop line, or the bus, as the vehicle comes closer behind it. A key zone that is not perceived: the maneuver is not ensured. Let us now take one of them in detail: the lane change.",
       html: `<div class="card tight" style="font-size:26px;padding:16px 30px">Before engaging, the vehicle must know what is in the <b>key zones</b> of the maneuver. They count only if they are inside its <b>perception envelope</b>: fog shrinks it, obstacles occlude it.</div>
-        ${(() => { const ex = [["sense_roundabout", "Entering a roundabout", "the ring upstream of the entry", "Fog"],
+        <div class="sloops seq">${[["sense_roundabout", "Entering a roundabout", "the ring upstream of the entry", "Fog"],
           ["sense_intersection", "Crossing an intersection", "the crossing road, both ways", "Occlusion"],
           ["sense_bus", "Passing a stopped bus", "the crossing in front of the bus", "Occlusion"],
-          ["sense_lane", "Changing lane", "zones A, B and C", "Fog"]];
-          return `<div class="s1"><div class="card s1v">${ex.map(([v, t], k) =>
-            `<video class="bg" muted playsinline preload="none" data-src="${A}${v}.mp4?v=3" aria-label="${t}"${k ? ` data-step="${k}"` : ""}${k < 3 ? ` data-until="${k + 1}"` : ""}></video>`).join("")}</div>
-          <div class="s1l">${ex.map(([v, t, z, c], k) =>
-            `<div class="card si"${k ? ` data-step="${k}"` : ""} data-dim="${k + 1}"><span class="n">${k + 1}</span><div><b>${t}</b><span>Key zones: ${z}</span></div><em class="${c === "Fog" ? "fog" : "occ"}">${c}</em></div>`).join("")}
-            <div class="card navy tight" data-step="3" style="font-size:22px;padding:14px 22px">A key zone that is not perceived: the maneuver is <b>not ensured</b>. <b style="color:var(--amber)">Next: the lane change, in detail.</b></div></div></div>`; })()}` },
+          ["sense_lane", "Changing lane", "zones A, B and C", "Fog"]].map(([v, t, z, c], k) =>
+          `<div class="card sl"><video class="bg" muted playsinline preload="auto" data-src="${A}${v}.mp4?v=3" data-on="${k}" data-rate="1.8" data-still="1.5" aria-label="${t}: key zones, then ${c.toLowerCase()}"></video>
+            <div class="cap"><b><span class="k">${k + 1}</span>${t}</b><span>Key zones: ${z}</span><em class="${c === "Fog" ? "fog" : "occ"}">${c}</em></div></div>`).join("")}</div>
+        <div class="card navy tight" style="font-size:25px;padding:16px 30px">A key zone that is not perceived: the maneuver is <b>not ensured</b>. <b style="color:var(--amber)">Next: the lane change, in detail.</b></div>` },
     { id: "lc-example", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", ref: "§4.5.3", time: 50,
       title: "An example: the skills of a lane change",
       notes: "From the general estimator to one example: the lane change, the maneuver of chapter 4. It is ensured when all its skills hold. Sense: the vehicles in three zones, A behind us in the target lane, B ahead in the target lane, C ahead in our lane, and the lane markings of the target lane. Think: the predictor models every perceived vehicle, and the traffic is fluid enough for the function. Act is assumed fulfilled in this work. We develop the first skill: how much perception range does each zone need? The answer comes from a safe distance, RSS.",

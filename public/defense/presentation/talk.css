@@ -827,3 +827,8 @@ body.presenter #cmt-panel, body.presenter #cmt-layer { display: none !important;
 .eqn .nm small { display: block; font-size: 20px; font-weight: 500; color: var(--mute); }
 .eqn .eq { font-size: 36px; white-space: nowrap; }
 .setupr .stat { flex: 1 1 0; justify-content: center; }
+
+/* Sense loops side by side, played one after another (data-on) */
+.sloops.seq .sl { opacity: 0.45; transition: opacity 300ms, outline-color 300ms; outline: 3px solid transparent; }
+.sloops.seq .sl.on { opacity: 1; outline-color: var(--amber); }
+.sloops .cap b .k { display: inline-grid; place-items: center; width: 30px; height: 30px; margin-right: 10px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 17px; vertical-align: 2px; }

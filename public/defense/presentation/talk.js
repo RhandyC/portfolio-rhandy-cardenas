@@ -366,6 +366,24 @@
         b.addEventListener("loadedmetadata", () => { b.currentTime = t0; }, { once: true });
         b.addEventListener("ended", () => { b.currentTime = t0; b.play().catch(() => {}); });
       }
+      if (b.dataset.rate) b.playbackRate = +b.dataset.rate;
+      // data-on: this loop plays only at that step of the slide, the others wait paused
+      if (b.dataset.on !== undefined) {
+        const on = +b.dataset.on === step;
+        const card = b.closest(".sl");
+        const was = card ? card.classList.contains("on") : !b.paused;
+        if (card) card.classList.toggle("on", on);
+        if (!on) {
+          b.pause();
+          // a waiting loop shows a representative frame of its scene (data-still, in seconds)
+          if (b.dataset.still) {
+            if (b.readyState > 0) b.currentTime = +b.dataset.still;
+            else b.addEventListener("loadeddata", () => { if (b.paused) b.currentTime = +b.dataset.still; }, { once: true });
+          }
+          return;
+        }
+        if (!was && b.readyState > 0) b.currentTime = t0;     // each loop starts from its beginning
+      }
       b.play().catch(() => {});
     }));
     if (history.replaceState && !PRESENTER) history.replaceState(null, "", "#/" + s.id);
