@@ -46,7 +46,8 @@
   function header(s) {
     const sec = SEC[s.sec];
     const kick = sec ? `<a data-go="${sec.page}" title="Section page">${esc(sec.kicker)}</a>` : "";
-    const sub = s.kicker ? (sec ? " · " : "") + esc(s.kicker) : "";
+    // only the part is named above the title; the slide's own kicker repeated the title
+    const sub = !sec && s.kicker ? esc(s.kicker) : "";
     const peers = s.sec ? secSlides(s.sec) : [];
     const mini = peers.length > 1 ? `<div class="mini">${peers.map((p) =>
       `<button type="button" data-go="${p.id}" title="${esc(label(p) + " · " + p.title)}" class="${p.i === s.i ? "on" : ""}"></button>`).join("")}</div>` : "";
