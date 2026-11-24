@@ -114,8 +114,10 @@
 
   function build(s) {
     const el = document.createElement("section");
+    // the scene bar is only for the validation videos (C4), where the jury may ask to stop at a given moment;
+    // the animations of the method play part by part without it
     el.className = "slide " + (s.type || "content") + (s.dark ? " dark" : "") + (s.th && !s.dark && s.type !== "video" ? " thr-on" : "") +
-      (cites(s) ? " has-cites" : "");
+      (cites(s) ? " has-cites" : "") + (s.type === "video" && s.sec !== "c4" ? " noscrub" : "");
     el.dataset.i = s.i;
     let inner = "";
     if (s.type === "title") {

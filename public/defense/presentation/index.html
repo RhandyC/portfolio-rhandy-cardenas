@@ -7,7 +7,7 @@
 <title>PhD defense · Rhandy Cardenas</title>
 <meta name="description" content="Fail-operational decision-making for intelligent vehicles: the PhD defense of Rhandy Cardenas.">
 <link rel="icon" type="image/png" href="../../favicon.png">
-<link rel="stylesheet" href="talk.css?v=20261124p">
+<link rel="stylesheet" href="talk.css?v=20261124q">
 <script src="../gate.js"></script>
 </head>
 <body>
@@ -20,7 +20,7 @@
 <tr><td><kbd>←</kbd><kbd>PgUp</kbd></td><td>previous step</td></tr>
 <tr><td><kbd>O</kbd></td><td>all slides, grouped by part</td></tr>
 <tr><td>number + <kbd>Enter</kbd></td><td>go to a slide</td></tr>
-<tr><td><kbd>K</kbd> or the scene bar</td><td>video: pause and play; move the mouse to show the bar, drag it or click a scene dot</td></tr>
+<tr><td><kbd>K</kbd> or the scene bar</td><td>video: pause and play; on the validation videos, move the mouse to show the bar, drag it or click a scene dot</td></tr>
 <tr><td><kbd>J</kbd><kbd>L</kbd></td><td>video: five seconds back, forward</td></tr>
 <tr><td><kbd>R</kbd></td><td>return after following a link (appendix)</td></tr>
 <tr><td><kbd>P</kbd></td><td>presenter view in a second window: next slide, notes, timer</td></tr>
@@ -33,7 +33,7 @@
   // the slides load only once the password has been entered
   window.defenseGate.whenUnlocked(function () {
     var load = function (src, next) { var e = document.createElement("script"); e.src = src; e.onload = next; document.body.appendChild(e); };
-    var v = "?v=20261124p";  // bump to refresh the browser caches after a change
+    var v = "?v=20261124q";  // bump to refresh the browser caches after a change
     load("slides.js" + v, function () { load("talk.js" + v, function () { load("review.js" + v); }); });
   });
 </script>

@@ -82,7 +82,8 @@ body.blank #stage::after { content: ""; position: absolute; inset: 0; background
 .vui .slide.video.current .vstep { opacity: 1; }
 .vui .slide.video.current:has(.scrub .track:hover) .vstep { opacity: 0; }
 
-/* scene bar: pause and play, drag to any time, one dot per scene; shown when the mouse moves */
+/* scene bar: pause and play, drag to any time, one dot per scene; shown when the mouse moves, on the validation videos only */
+.slide.video.noscrub .scrub, .slide.video.noscrub .vstep { display: none; }
 .scrub { position: absolute; left: 96px; right: 96px; bottom: 74px; height: 64px; z-index: 8; display: flex; align-items: center; gap: 18px; padding: 0 24px 0 10px; background: #fffffff0; border-radius: 18px; box-shadow: 0 8px 28px rgba(6,54,105,0.2); opacity: 0; pointer-events: none; transition: opacity 220ms; }
 .vui .slide.video.current .scrub { opacity: 1; pointer-events: auto; }
 .scrub .pp { flex: none; width: 46px; height: 46px; border-radius: 50%; border: 0; padding: 0; background: var(--navy); color: #fff; display: grid; place-items: center; cursor: pointer; }
