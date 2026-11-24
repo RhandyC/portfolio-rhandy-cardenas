@@ -137,58 +137,40 @@
     { id: "responsibility", cite: ["ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan", "sae2021taxonomy", "Farah2021Awareness", "kuehn2017takeover"], th: "Level by level", sec: "intro", kicker: "Motivation · automation, level by level", time: 60,
       title: "Level by level, the frontier lies between Level 2 and Level 3",
       notes: "Automated driving advances, but level by level. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed. The decisive frontier is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its operational design domain: it must monitor its own limits and request a takeover in time. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. So, to cross this frontier, the vehicle itself must know what it can do.",
-      html: `<div class="card tight row" style="align-items:center;gap:22px"><span class="pill amber">2018</span><p class="small" style="margin:0">Driverless fleets announced for 2019 – 2020 ${R("ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan")}</p></div>
-        <div class="row grow">
-          <div class="card col" style="flex:1.3 1 0"><h4>Each feature has its own ODD ${R("sae2021taxonomy")}</h4>${fig("sae_levels.png", "Automation levels and examples of ODD")}</div>
-          <div class="col grow">
-            <div class="card tight grow"><h4>Up to Level 2</h4><p>The <b>driver</b> supervises, often unaware of the ODD ${R("Farah2021Awareness")}</p></div>
-            <div class="card tight accent grow"><h4>Level 3 · the frontier</h4><p>The <b>system</b> drives within its ODD<br>Takeover requested <b>12 – 15 s</b> ahead ${R("kuehn2017takeover")}</p></div>
-            <div class="card tight ok grow"><h4>Level 4 and above</h4><p>Nobody takes over<br>The system reaches a <b>minimal risk condition</b></p></div>
-          </div></div>
-        <div class="takeaway">The higher the level, the more the vehicle must know <b>its own limits</b></div>` },
+      html: `<div class="row grow">
+          <div class="card col" style="flex:1.5 1 0">${fig("sae_levels.png", "Automation levels and examples of ODD")}<p class="xs mute" style="margin:0">SAE J3016 ${R("sae2021taxonomy")} · fleets announced for 2019 – 2020 ${R("ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan")}</p></div>
+          <div class="col grow" style="justify-content:center;gap:26px">
+            <div class="card tight"><h3 style="margin:0">Level 2 · the driver watches ${R("Farah2021Awareness")}</h3></div>
+            <div class="card tight accent"><h3 style="margin:0">Level 3 · the system drives ${R("kuehn2017takeover")}</h3></div>
+            <div class="card tight ok"><h3 style="margin:0">Level 4 · nobody takes over</h3></div>
+          </div></div>` },
 
     { id: "odd", cite: ["sae2021taxonomy", "czarnecki2018operational", "iso2023iso34503"], th: "The ODD", sec: "intro", kicker: "Motivation · what is the ODD?", time: 75, steps: 2,
       title: "To cross it, the vehicle must know its own limits, the ODD",
       notes: "To cross this frontier, the vehicle must know its own limits, and they have a name: the Operational Design Domain. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
       html: `<div class="row grow">
-        <div class="col grow" style="flex:1 1 0">
-          <div class="card" style="padding:28px 36px"><h3>Operational Design Domain</h3><div class="quote" style="font-size:30px">“Operating conditions under which a given driving automation system […] is specifically designed to function”</div>
-            <p class="xs mute" style="margin:10px 0 0 38px">SAE J3016 ${R("sae2021taxonomy")}</p></div>
-          <div class="card grow"><h3>What is it for?</h3><ul class="list" style="gap:22px;font-size:28px">
-            <li>Where the function was <b>designed and validated</b></li>
-            <li>Outside, <b>beyond its limits</b></li>
-            <li>An ACC for free-flowing highways, not for heavy rain</li></ul></div>
+        <div class="col grow" style="flex:1 1 0;justify-content:center">
+          <div class="card" style="padding:34px 40px"><div class="quote" style="font-size:36px">“Operating conditions under which a […] system is specifically designed to function”</div>
+            <p class="xs mute" style="margin:14px 0 0 38px">SAE J3016 ${R("sae2021taxonomy")}</p></div>
+          <div class="card" data-step="1"><div class="oddtax">
+              <div><b>Infrastructure</b></div><div><b>Operational constraints</b></div><div><b>Objects</b></div>
+              <div><b>Connectivity</b></div><div><b>Environment</b></div><div><b>Zones</b></div>
+            </div><p class="xs mute" style="margin:10px 0 0">A taxonomy ${R("czarnecki2018operational", "iso2023iso34503")}</p></div>
         </div>
-        <div class="col grow" style="flex:1.05 1 0">
-          <div class="card" data-step="1"><h3 style="margin-bottom:12px">A hierarchical taxonomy ${R("czarnecki2018operational")}</h3>
-            <div class="oddtax">
-              <div><b>Physical infrastructure</b><span>road type, surface, geometry</span></div>
-              <div><b>Operational constraints</b><span>speed limit, traffic conditions</span></div>
-              <div><b>Objects</b><span>signage, road users, obstacles</span></div>
-              <div><b>Connectivity</b><span>V2X, fleet, infrastructure</span></div>
-              <div><b>Environmental conditions</b><span>weather, light</span></div>
-              <div><b>Zones</b><span>geofencing, school and work zones</span></div>
-            </div><p class="xs mute" style="margin:10px 0 0">NHTSA top levels, each with sublevels · ISO 34503 ${R("iso2023iso34503")}</p></div>
-          <div class="card row grow" data-step="2" style="gap:22px;align-items:center;padding:18px 22px">
-            <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="height:300px;border-radius:10px">
-            <div><h4 style="margin-bottom:8px">Mercedes-Benz Drive Pilot</h4><p class="small" style="margin:0">First Level 3 approved in Europe<br>Its ODD, one driving scene</p></div></div>
-        </div></div>` },
+        <div class="card col" data-step="2" style="flex:1 1 0;gap:12px">
+          <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="width:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px">
+          <h4 style="margin:0;text-align:center">Drive Pilot, the first Level 3 in Europe</h4></div>
+        </div>` },
 
     { id: "context", cite: ["sun2022operational", "cardenas2025context_aware"], th: "Monitored, not decided", sec: "intro", kicker: "Motivation · how the ODD is used today", time: 60, steps: 2,
       title: "Today, the ODD is monitored but does not enter the decision",
       notes: "How is the ODD used today? Watching it would be simple if the context were fixed. It is not. Along one route, the context keeps changing: a highway exit, road works, missing lane markings, a tunnel, a traffic jam, a curve, rain expected ahead. The ODD, fixed by design, does not change. What changes is the operational domain, OD, the current conditions; staying in the ODD means keeping the OD inside it, now and on the route ahead. (1) Today, the ODD is mostly monitored, with isolated condition checks and margins, but it rarely enters the decision process itself: decisions are taken without checking that the vehicle will be able to manage them, and the limit is noticed once it is crossed, with an abrupt deactivation, an emergency stop or, for a fleet, a suspended service. (2) What is needed is the opposite: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation.",
       html: `<div class="row grow">
         <div class="card col" style="flex:0 0 700px;padding:20px 26px"><h4>One route, many context changes</h4>${fig("context_changes.png", "Target route with context changes: highway exit, road works, missing lane markings, tunnel, traffic jam, curved road, expected rain")}</div>
-        <div class="col grow">
-          <div class="card accent"><h3>Keep the OD inside the ODD</h3><p><b>ODD</b> fixed by design<br><b>OD</b>, the current conditions, changing along the route</p></div>
-          <div class="card bad grow" data-step="1"><h3>Today, monitor then react</h3><ul class="list" style="gap:12px">
-            <li>Isolated checks and margins ${R("sun2022operational", "cardenas2025context_aware")}</li>
-            <li>Limit noticed once crossed</li>
-            <li>Abrupt deactivation or emergency stop</li></ul></div>
-          <div class="card ok grow" data-step="2"><h3>Needed, anticipation</h3><ul class="list" style="gap:12px">
-            <li>Foresee the limits of the next maneuvers</li>
-            <li>Keep operating with fewer capabilities</li>
-            <li>Fall back while still feasible</li></ul></div>
+        <div class="col grow" style="justify-content:center;gap:30px">
+          <div class="card accent"><h3 style="margin:0">The context keeps changing</h3></div>
+          <div class="card bad" data-step="1"><h3 style="margin:0">Today · monitor, then react ${R("sun2022operational", "cardenas2025context_aware")}</h3></div>
+          <div class="card ok" data-step="2"><h3 style="margin:0">Needed · anticipate</h3></div>
         </div></div>` },
 
     { id: "v-problem-a", th: "The problem", type: "video", sec: "intro", time: 45,
@@ -204,10 +186,10 @@
           <div class="cpch"><span>One guiding thread</span><b>Capability precedes choice</b></div>
           <div class="cpcflow grow">
             <div class="card ok cpc2"><svg class="cpi" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M23.5 25a8.5 8.5 0 1 1 12.6 7.4c-2.6 1.5-4.1 3.2-4.1 6.1v1.5" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/><circle cx="32" cy="47" r="3" fill="currentColor"/></svg><div><h3>1 · Capability</h3>
-              <p>What can the vehicle still do <b>safely</b>, now and after its decisions?</p></div></div>
+              <p>What can it still do <b>safely</b>?</p></div></div>
             <div class="arrow-big">→</div>
             <div class="card cpc2 cho"><svg class="cpi" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 58V36M32 36L15 15M32 36l17-21" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 26V13h13M51 26V13H38" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div><h3>2 · Choice</h3>
-              <p>Among <b>those only</b>, which maneuvers, in which order?</p></div></div>
+              <p>Among <b>those only</b>, which sequence?</p></div></div>
           </div></div>` },
 
     { id: "v-problem-b", th: "The aim", type: "video", sec: "intro", time: 40,
@@ -218,7 +200,7 @@
     { id: "contrib", cite: ["CARDENAS2025162", "11097482"], th: "The contributions", type: "outline", sec: "intro", kicker: "Contributions and outline", time: 60,
       title: "Four contributions, one principle, one architecture",
       notes: "How we get there. Four contributions, one principle: capability precedes choice. Each one answers a question. The first three are the method, each illustrated with its animations; the fourth is the validation of all of them, in simulation and on a prototype vehicle. Each line links to its part.",
-      html: `<div class="card navy"><h3>Capability precedes choice</h3><p>A maneuver enters the decision only once it is ensured, in every state of the horizon</p></div>` },
+      html: `<div class="card navy"><h3 style="margin:0">Capability precedes choice</h3></div>` },
 
     // ================================================================ 2. fundamentals and state of the art
     { id: "sec-sota", type: "section", sec: "sota", dark: true, title: "Fundamentals and state of the art", time: 10 },
@@ -228,88 +210,71 @@
       notes: "First, what fail-operational means, on a simple example: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable.",
       html: `<div class="card row" style="gap:30px;align-items:center;padding:18px 28px">
           <img src="${F}failop_a.png" alt="The LiDAR range is reduced; the nominal range is dashed" style="width:640px;border-radius:10px">
-          <div><h4 style="margin-bottom:8px">The primary LiDAR loses range</h4><p style="margin:0">Highway, 130 km/h<br>What should the vehicle do?</p></div></div>
+          <h3 style="margin:0">The LiDAR loses range<br>What now?</h3></div>
         <div class="g2 grow">
           <div class="card col" data-step="1" style="gap:12px"><h3 style="margin:0">Fail-safe ${R("avizienis2004taxonomy", "iso2018iso26262")}</h3><img src="${F}failop_e.png" alt="Fail-safe: the vehicle stops on the hard shoulder" style="width:100%;border-radius:10px">
-            <p style="margin:0;font-size:27px">Stops on the hard shoulder<br><b>Mission aborted</b></p></div>
+            <p style="margin:0;font-size:30px"><b>Stops</b></p></div>
           <div class="card col ok" data-step="2" style="gap:12px"><h3 style="margin:0">Fail-operational ${R("fail2022Stolte")}</h3><img src="${F}failop_f.png" alt="Fail-operational: the vehicle continues at a reduced speed, the lane change is no longer ensured" style="width:100%;border-radius:10px">
-            <p style="margin:0;font-size:27px">Slower, no lane change, a fallback within reach<br><b>Mission continues</b></p></div>
+            <p style="margin:0;font-size:30px"><b>Drives on</b>, with fewer capabilities</p></div>
         </div>` },
 
     { id: "awareness", cite: ["armand2014ontology", "salvi2022fuzzy", "woerter2021enhanced", "schlatow2017selfawareness"], sec: "sota", kicker: "Background · awareness and the ODD", time: 70, steps: 2,
       title: "What must the vehicle know about its context, and about itself?",
       notes: "What the vehicle must know, in two kinds of awareness. Context awareness: the knowledge associated with the context, semantic, such as road users and crossings, or aggregated, such as a school zone, its speed limit and the time of day; and the risk associated with the context, here a risk map around a vehicle. (1) Self awareness: the impact of actions on oneself, for instance what the vehicle can still see after a lane change, and the dependencies of the system, for instance the capability graph of an ACC, whose behaviors rest on lower-level capabilities. (2) The ODD links both: the capabilities of the system, and a structured representation of the context. Its limits: the perceived context is uncertain, so margins are needed, and the boundaries are discontinuous, so they must be anticipated.",
       html: `<div class="awr">
-          <div class="card col aw ctx"><h3>Context awareness</h3>
-            <div class="awp"><span>Knowledge of the context</span><span>Risk of the context</span></div>
+          <div class="card col aw ctx"><h3>The context</h3>
             <div class="awg">
-              <figure><img src="${F}aw_semantic.png" alt="Road with vehicles and a pedestrian crossing"><figcaption>Road users, a crossing ${R("armand2014ontology")}</figcaption></figure>
-              <figure><img src="${F}aw_aggregated.png" alt="School zone at 30, and the time of day"><figcaption>A school zone, the time of day ${R("salvi2022fuzzy")}</figcaption></figure>
-              <figure class="w2"><img src="${F}aw_risk.png" alt="Risk map around a vehicle"><figcaption>Risk map ${R("woerter2021enhanced")}</figcaption></figure>
+              <figure><img src="${F}aw_semantic.png" alt="Road with vehicles and a pedestrian crossing"><figcaption>${R("armand2014ontology")}</figcaption></figure>
+              <figure><img src="${F}aw_aggregated.png" alt="School zone at 30, and the time of day"><figcaption>${R("salvi2022fuzzy")}</figcaption></figure>
+              <figure class="w2"><img src="${F}aw_risk.png" alt="Risk map around a vehicle"><figcaption>${R("woerter2021enhanced")}</figcaption></figure>
             </div></div>
-          <div class="card col aw self" data-step="1"><h3>Self awareness ${R("schlatow2017selfawareness")}</h3>
-            <div class="awp"><span>Impact of its actions</span><span>Its dependencies</span></div>
+          <div class="card col aw self" data-step="1"><h3>Itself ${R("schlatow2017selfawareness")}</h3>
             <div class="awg">
-              <figure class="w2"><img src="${F}aw_vision.png" alt="What the vehicle can see before and after a lane change"><figcaption>What it still sees after a lane change</figcaption></figure>
-              <figure class="w2"><img src="${F}aw_graph.png" alt="Capability graph of an ACC"><figcaption>Capability graph of an ACC</figcaption></figure>
+              <figure class="w2"><img src="${F}aw_vision.png" alt="What the vehicle can see before and after a lane change"></figure>
+              <figure class="w2"><img src="${F}aw_graph.png" alt="Capability graph of an ACC"></figure>
             </div></div>
         </div>
-        <div class="card navy awodd" data-step="2"><b>The ODD links both</b> &nbsp;·&nbsp; uncertain context, so <b>margins</b> &nbsp;·&nbsp; abrupt boundaries, so <b>anticipation</b></div>` },
+        <div class="card navy awodd" data-step="2"><b>The ODD links both</b></div>` },
     { id: "rw-c1", cite: ["reschka2015ability", "colwell_automated_2018", "pior2020behaviorbased", "ulbrich2015pomdp", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", time: 70,
       title: "How is the capability of the vehicle assessed today?",
       notes: "Three families. Ability and skill graphs decompose a behavior into skills with a level of performance, and have been used to trigger a lane change or not. The restricted operational domain removes the maneuvers that a lost capability no longer supports. The arbitration graph checks every function against the ODD before deciding. Monitoring estimates the time to exit the ODD. All of them assess the current state, and adapt once a condition is detected. The MCE assesses each maneuver, in the predicted states too.",
-      html: `<div class="g3" style="height:350px">
-          <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<p class="xs mute" style="margin:0;text-align:center">Ability graph ${R("reschka2015ability")}</p></div>
-          <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<p class="xs mute" style="margin:0;text-align:center">Restricted Operational Domain ${R("colwell_automated_2018")}</p></div>
-          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<p class="xs mute" style="margin:0;text-align:center">Arbitration graph ${R("pior2020behaviorbased")}</p></div>
+      html: `<div class="g3 grow">
+          <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<h4 style="margin:0;text-align:center">Ability graphs ${R("reschka2015ability", "ulbrich2015pomdp")}</h4></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<h4 style="margin:0;text-align:center">Restricted domain ${R("colwell_automated_2018")}</h4></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<h4 style="margin:0;text-align:center">Arbitration graph ${R("pior2020behaviorbased")}</h4></div>
         </div>
-        <table class="tbl chkt"><tr><th style="width:470px">Work</th><th>What it brings</th><th>What is missing</th></tr>
-          <tr><td><b>Ability and skill graphs</b> ${R("reschka2015ability", "ulbrich2015pomdp")}</td><td class="y">Skills with a performance level</td><td class="n">Current state only</td></tr>
-          <tr><td><b>Restricted Operational Domain</b> ${R("colwell_automated_2018")}</td><td class="y">A lost capability removes maneuvers</td><td class="n">Current state, reactive</td></tr>
-          <tr><td><b>Arbitration graph</b> ${R("pior2020behaviorbased")}</td><td class="y">Every function checked against the ODD</td><td class="n">No future state</td></tr>
-          <tr><td><b>Time to exit the ODD</b> ${R("charmet2024monitoring")}</td><td class="y">Anticipates the exit</td><td class="n">Triggers a takeover, not a maneuver</td></tr>
-          <tr><td><b>μODDs</b> ${R("salvi2022fuzzy")}</td><td class="y">Slower as the rain increases</td><td class="n">One dimension, one maneuver</td></tr></table>` },
+        <div class="card bad"><h3 style="margin:0">The current state only, then react ${R("charmet2024monitoring", "salvi2022fuzzy")}</h3></div>` },
 
     { id: "levels", cite: ["michon1985critical", "donges2015behaviormodels"], sec: "sota", kicker: "State of the art · decision levels", time: 50,
       title: "We decide at the tactical level, which maneuver and when",
       notes: "Three decision levels after Michon. Strategic: the route, over hours to minutes. Tactical: which maneuver, and when, from a minute to a second. Operational: the trajectory and its control, below the second. We work at the tactical level, over ADAS features already validated.",
       html: `<div class="row grow" style="align-items:stretch">
         <div class="card col" style="flex:1.2 1 0;justify-content:center"><h4>Michon's three levels ${R("michon1985critical", "donges2015behaviormodels")}</h4>${fig("michon_focus.png", "Michon's levels of the driving task, the tactical level in focus")}</div>
-        <div class="col grow" style="justify-content:center">
-          <div class="card tight"><span class="pill gray">Strategic · 1 h to 1 min</span><p class="small" style="margin-top:8px">Route search and planning</p></div>
-          <div class="card tight ok"><span class="pill ok">Tactical · 1 min to 1 s</span><p class="small" style="margin-top:8px">Selection and coordination of maneuvers</p></div>
-          <div class="card tight"><span class="pill gray">Operational · 1 s to 10 ms</span><p class="small" style="margin-top:8px">Trajectory, control and stabilization</p></div>
-          <div class="card navy"><h3>Our layer</h3><p>Anticipatory tactical decisions, over validated ADAS features</p></div>
+        <div class="col grow" style="justify-content:center;gap:26px">
+          <div class="card tight"><h3 style="margin:0;color:var(--mute)">Strategic · the route</h3></div>
+          <div class="card tight ok"><h3 style="margin:0">Tactical · which maneuver, when</h3></div>
+          <div class="card tight"><h3 style="margin:0;color:var(--mute)">Operational · the control</h3></div>
         </div></div>` },
 
     { id: "methods", cite: ["olsson2016BT", "hang2021gametheoric", "ulbrich2015pomdp", "hubmann2018uncertainty", "hoel2019combiningdeep", "fiedler2022hybrid"], sec: "sota", kicker: "State of the art · tactical decision-making", time: 60,
       title: "How do existing methods decide?",
       notes: "The state of the art in one table, the synthesis of our survey. Probabilistic methods handle uncertainty and long horizons at a computational cost, which online sampling solvers mitigate. Learning-based methods scale but give no guarantee. In all families, the context describes the scene.",
-      html: `<table class="tbl" style="font-size:24px"><tr><th>Method</th><th class="c">Uncert.</th><th class="c">Scal.</th><th class="c">Unseen</th><th class="c">Horizon</th><th class="c">Explain.</th><th class="c">Cost</th><th class="c">Real time</th><th>Main limitation</th></tr>
+      html: `<table class="tbl" style="font-size:30px;margin:auto 0"><tr><th>Method</th><th class="c">Uncert.</th><th class="c">Scal.</th><th class="c">Unseen</th><th class="c">Horizon</th><th class="c">Explain.</th><th class="c">Cost</th><th class="c">Real time</th><th>Main limitation</th></tr>
         <tr><td><b>Rule-based</b> ${R("olsson2016BT")}</td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td>Encoded cases only</td></tr>
         <tr class="hl"><td><b>Probabilistic</b> ${R("hang2021gametheoric", "ulbrich2015pomdp", "hubmann2018uncertainty")}</td><td class="c">++</td><td class="c">+</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−</td><td class="c">+</td><td>Cost grows with the belief</td></tr>
         <tr><td><b>Learning-based</b> ${R("hoel2019combiningdeep")}</td><td class="c">+</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td class="c">−</td><td class="c">−</td><td class="c">+</td><td>Black box, no guarantee</td></tr>
         <tr><td><b>Hybrid</b> ${R("fiedler2022hybrid")}</td><td class="c">++</td><td class="c">−</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−−</td><td class="c">+</td><td>Scalability and cost</td></tr></table>
-        <div class="g2 grow">
-          <div class="card ok col" style="justify-content:center;padding:30px 44px"><h3>We keep</h3><p style="font-size:32px;line-height:1.35">Probabilistic planning, long horizon, explainable</p></div>
-          <div class="card bad col" style="justify-content:center;padding:30px 44px"><h3>Missing in every family</h3><p style="font-size:32px;line-height:1.35">The context describes the scene, not whether the vehicle <b>remains capable</b> in it</p></div>
-        </div>`,
+        <div class="card bad"><h3 style="margin:0">Missing everywhere · does the vehicle <b>remain capable</b>?</h3></div>`,
       backups: ["b-learning"] },
 
     { id: "rw-c3", cite: ["hubmann2018uncertainty", "chen2025intention", "ulbrich2015pomdp", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep"], sec: "sota", c: ["C3"], kicker: "Related work · partial observability", time: 60,
       title: "How do POMDP planners handle uncertainty?",
       notes: "POMDPs are the standard frame for tactical decisions under partial observability: lane changes, merging, intersections. Online Monte Carlo search with belief updates makes them tractable, and POMCP represents the belief with particles. What they keep uncertain is the traffic. The capability of the vehicle is assessed, at best, in the current state. The ODD-POMDP adds the capability check in every particle.",
-      html: `<div class="card tight col" style="height:410px;gap:8px">${fig("rw_pomdp.png", "Partially observable driving scenarios")}
-          <p class="xs mute" style="margin:0;text-align:center">Hidden intentions and sensor noise, at an intersection ${R("hubmann2018uncertainty")} and at a highway exit ${R("chen2025intention")}</p></div>
-        <div class="g2 grow">
-          <div class="card col" style="justify-content:center"><h3>What POMDP planners bring</h3><ul class="chk">
-            <li class="y">A belief over noise and intentions ${R("ulbrich2015pomdp", "hubmann2018uncertainty")}</li>
-            <li class="y">Online Monte Carlo search ${R("zhang2020efficient", "silver_monte-carlo_2010")}</li>
-            <li class="y">Deep reinforcement learning to scale ${R("hoel2019combiningdeep")}</li></ul></div>
-          <div class="card navy col" style="justify-content:center"><h3>What is missing</h3><ul class="chk">
-            <li class="n">Uncertainty on the traffic only</li>
-            <li class="n">Capability, at best, in the current state ${R("ulbrich2015pomdp")}</li>
-            <li class="to">C3 checks capability in every particle</li></ul></div>
+      html: `<div class="card tight col grow" style="gap:8px">${fig("rw_pomdp.png", "Partially observable driving scenarios")}
+          <p class="xs mute" style="margin:0;text-align:center">${R("hubmann2018uncertainty", "chen2025intention", "ulbrich2015pomdp", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep")}</p></div>
+        <div class="g2">
+          <div class="card ok"><h3 style="margin:0">Uncertain traffic ✓</h3></div>
+          <div class="card bad"><h3 style="margin:0">Uncertain capability ✗</h3></div>
         </div>` },
 
     { id: "positioning", cite: ["cardenas2025context_aware"], sec: "sota", kicker: "Positioning", time: 75,
@@ -321,9 +286,8 @@
            ["Capability in future states", "Skill graphs and restricted domains", "Current state only, reactive", ["C1", "C2"]],
            ["Situation awareness enriched by the ODD", "ODD monitoring, time to exit", "Scene described, capability not assessed", ["C1"]],
            ["Interdependent ODD dimensions", "Each dimension monitored", "One dimension at a time", ["C1"]]]
-          .map(([t, y, n, cs], j) => `<div class="card col" style="gap:20px;padding:30px 36px"><div class="row" style="align-items:center;gap:18px"><div class="num-badge" style="width:50px;height:50px;font-size:24px">${j + 1}</div><h3 style="margin:0;font-size:31px">${t}</h3></div>
-            <ul class="chk" style="gap:16px"><li class="y">${y}</li><li class="n">${n}</li></ul>
-            <div class="row" style="margin-top:auto;align-items:center;gap:10px"><span class="xs mute" style="font-weight:600">Addressed by</span>${cs.map((c) => `<a class="cbadge ink" data-go="sec-${c.toLowerCase()}" href="#/sec-${c.toLowerCase()}">${c}</a>`).join("")}</div></div>`).join("")}
+          .map(([t, y, n, cs], j) => `<div class="card col" style="gap:28px;padding:30px 44px;justify-content:center"><div class="row" style="align-items:center;gap:22px"><div class="num-badge" style="width:64px;height:64px;font-size:30px;flex:none">${j + 1}</div><h3 style="margin:0;font-size:40px">${t}</h3></div>
+            <div class="row" style="align-items:center;gap:12px;padding-left:86px">${cs.map((c) => `<a class="cbadge ink" data-go="sec-${c.toLowerCase()}" href="#/sec-${c.toLowerCase()}">${c}</a>`).join("")}</div></div>`).join("")}
         </div>
         <p class="xs mute" style="margin:0;text-align:right">Gaps identified in our survey ${R("cardenas2025context_aware")}</p>` },
 
