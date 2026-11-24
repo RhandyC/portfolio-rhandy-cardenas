@@ -688,7 +688,8 @@
     { id: "v-search", type: "video", sec: "c2", c: ["C2"], time: 55,
       title: "The search tree of the ODD-MDP",
       notes: "Deciding means exploring possible futures as a tree. (1) Every action leads to a predicted state, and the MCE checks that state. Inside the ODD it is ensured, and the search expands it. Beyond the barrier, outside the ODD, it is not ensured: it is not expanded, and none of its own futures is ever computed. (2) Level after level, up to the horizon, only the ensured states are expanded. (3) What we gain: everything in red is what would have hung from those states, explored for nothing without the MCE. With it, that time is never spent: the search narrows like a funnel. (4) Among the ensured futures, the best sequence. (5) Only the first action is executed, and the search starts again.",
-      video: { src: A + "search.mp4?v=3", parts: [[0.0, "Deciding means exploring possible futures"], [5.0, "The MCE checks every predicted state"], [13.4, "Only ensured states are expanded, up to the horizon"], [21.6, "What we gain: no time spent beyond the ODD"], [31.4, "Among the ensured futures, the best sequence"], [38.6, "Execute the first action, then explore again"]] } },
+      // one part: the tree is understood at once, so it plays straight through without stops
+      video: { src: A + "search.mp4?v=3", parts: [[0.0, "The search tree of the ODD-MDP"]] } },
 
     { id: "mdp-solve", cite: ["bellman1957dynamic"], sec: "c2", c: ["C2"], kicker: "Transition and resolution", time: 70,
       title: "Predict the next states, then solve the tree by value iteration",
