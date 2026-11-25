@@ -629,18 +629,20 @@
           <div class="card bad"><h3 style="margin:0">Uncertain capability ✗</h3></div>
         </div>` },
 
-    { id: "pomdp-sources", cite: ["zhang2020efficient", "chen2025intention"], sec: "c3", c: ["C3"], kicker: "Extension to partial observability", time: 55,
-      title: "Three sources of uncertainty, one belief over particles",
-      notes: "Three sources, which do not play the same role. Noise on the vehicles changes which gap looks acceptable. The forecast uncertainty enters the skills, so this is where the capability reasoning matters most. Intentions stay hidden whatever the sensor quality. Each card links to its experiment, in the validation.",
-      html: `<div class="card tight" style="height:250px">${fig("uncertainty.png", "Three sources of uncertainty", 214)}</div>
-        <div class="g3 grow">
-          ${[["1", "Surrounding vehicles", "Noisy position and speed " + R("zhang2020efficient"), "Into a platoon before the fog", "r-noisy"],
-             ["2", "Visibility forecast", "Where the fog starts, how dense", "Fog denser or lighter than announced", "r-forecast"],
-             ["3", "Tactical intentions", "Will a car cut in? " + R("chen2025intention"), "Truck cut-in", "r-cutin"]]
-            .map(([n, t, u, e, to]) => `<div class="card col" style="gap:8px"><div class="row" style="align-items:center;gap:16px"><div class="num-badge">${n}</div><h3 style="margin:0">${t}</h3></div>
-              <p>${u}</p>
-              <p class="small" style="margin-top:auto">${go(to, e + " →")}</p></div>`).join("")}
-        </div>` },
+    { id: "pomdp-sources", sec: "c3", c: ["C3"], kicker: "Extension to partial observability", time: 55,
+      title: "Three sources of uncertainty",
+      notes: "Three sources, which do not play the same role. First, the surrounding vehicles: their position and speed are measured with noise, which grows as the perception envelope degrades, and it changes which gap looks acceptable. Second, the visibility forecast: where the fog starts and how dense it is may differ from what is announced; it enters the skills, so this is where the capability reasoning matters most. Third, the tactical intentions of the other drivers, such as a cut-in: they stay hidden whatever the sensor quality. All three are carried by one belief, represented with particles. The experiments for each are in the appendix.",
+      backups: ["r-noisy", "r-forecast", "r-cutin"],
+      html: `<div class="col grow" style="gap:16px">
+          ${[["1", "Surrounding vehicles", "unc_noisy.png", "Noisy position and speed"],
+             ["2", "Visibility forecast", "unc_forecast.png", "Where the fog starts, how dense"],
+             ["3", "Tactical intentions", "unc_intent.png", "Will a car cut in?"]]
+            .map(([n, t, img, u]) => `<div class="card row" style="flex:1 1 0;min-height:0;gap:34px;align-items:center;padding:14px 34px">
+              <div class="num-badge">${n}</div>
+              <div class="col" style="flex:0 0 520px;gap:6px"><h3 style="margin:0;font-size:38px">${t}</h3><p style="margin:0;font-size:28px">${u}</p></div>
+              <div style="flex:1;align-self:stretch;min-height:0;display:flex;justify-content:center"><img src="${F}${img}" alt="${t}" style="height:100%;max-width:100%;object-fit:contain;border-radius:10px"></div></div>`).join("")}
+        </div>
+        <div class="card navy tight" style="text-align:center"><p style="margin:0;font-size:30px">One <b>belief</b>, represented with particles</p></div>` },
 
     { id: "pomdp", cite: ["silver_monte-carlo_2010", "murphy2012machine"], sec: "c3", c: ["C3"], kicker: "Formalism", time: 60,
       title: "In the ODD-POMDP, a belief replaces the state",
@@ -677,18 +679,20 @@
       title: "The same planner, from simulation to a real prototype",
       notes: "Three loops that progressively replace simulated elements by real ones: software-in-the-loop, everything simulated in IPG CarMaker; vehicle-in-the-loop, a real vehicle on a test track with virtual traffic; and the real vehicle. The results that follow come from the software-in-the-loop, except the overtaking and the fog on the prototype, which are vehicle-in-the-loop. In both, ODD-aptive runs unchanged. The prototype is a Mégane E-Tech; it cannot be shown for confidentiality reasons, so this is a reference image of the model. The tests ran on the CTA2 track of the Centre Technique d'Aubevoye, Renault Group, in Normandy.",
       html: `<div class="row grow">
-        <div class="card col" style="flex:1.1 1 0">${fig("v_cycle.png", "Validation loops")}
+        <div class="card col" style="flex:1.05 1 0;gap:14px">${fig("v_cycle.png", "Validation loops")}
           <div class="row" style="gap:10px;flex-wrap:wrap;justify-content:center">
             <span class="pill line"><b>SIL</b> · software-in-the-loop</span><span class="pill line"><b>VIL</b> · vehicle-in-the-loop</span><span class="pill line">Real vehicle</span></div></div>
-        <div class="col grow" style="flex:1 1 0;gap:16px">
-          <div class="g2 grow">
-            <div class="card tight col" style="gap:8px"><img src="${F}prototype_megane.png" alt="Reference image of the Mégane E-Tech" style="width:100%;flex:1;min-height:0;object-fit:cover;border-radius:10px"><p class="xs mute" style="margin:0;text-align:center">Mégane E-Tech prototype · reference image</p></div>
-            <div class="card tight col" style="gap:8px"><img src="${F}cta_test_track.png" alt="Aerial view of the Centre Technique d'Aubevoye" style="width:100%;flex:1;min-height:0;object-fit:cover;border-radius:10px"><p class="xs mute" style="margin:0;text-align:center">CTA test track, Aubevoye ${R("renault2022cta")}</p></div>
-          </div>
-          <div class="g2">
-            <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker ${R("ipgCarMaker")}</span><span class="l">road, traffic, weather, dynamics</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period</span></div>
-          </div></div></div>` },
+        <div class="col" style="flex:1 1 0;gap:16px">
+          <div class="card tight col" style="flex:1.15 1 0;gap:8px;min-height:0"><div style="flex:1;min-height:0;display:flex;justify-content:center"><img src="${F}cta_test_track.png" alt="Aerial view of the Centre Technique d'Aubevoye" style="height:100%;max-width:100%;object-fit:contain;border-radius:10px"></div>
+            <p class="xs mute" style="margin:0;text-align:center">CTA test track, Aubevoye ${R("renault2022cta")}</p></div>
+          <div class="row" style="flex:1 1 0;gap:16px;min-height:0">
+            <div class="card tight col" style="flex:1 1 0;gap:8px;min-height:0"><div style="flex:1;min-height:0;display:flex;justify-content:center"><img src="${F}prototype_megane.png" alt="Reference image of the Mégane E-Tech" style="height:100%;max-width:100%;object-fit:contain;border-radius:10px"></div>
+              <p class="xs mute" style="margin:0;text-align:center">Mégane E-Tech · reference image</p></div>
+            <div class="col" style="flex:1 1 0;gap:16px">
+              <div class="card tight stat grow" style="justify-content:center"><span class="v" style="font-size:34px">IPG CarMaker ${R("ipgCarMaker")}</span><span class="l">road, traffic, weather</span></div>
+              <div class="card tight stat grow" style="justify-content:center"><span class="v" style="font-size:34px">200–300 ms</span><span class="l">replanning period</span></div>
+            </div></div>
+        </div></div>` },
 
     { id: "v-vil", type: "video", sec: "c4", c: ["C4"], time: 95,
       title: "Long-term overtaking on the prototype vehicle",
