@@ -859,3 +859,12 @@ ol.nums.concl li { padding-left: 92px; min-height: 64px; display: flex; flex-dir
 ol.nums.concl li::before { width: 64px; height: 64px; font-size: 30px; top: 50%; transform: translateY(-50%); }
 ol.nums.concl li b { font-size: 42px; color: var(--navy); line-height: 1.2; }
 ol.nums.concl li span { font-size: 28px; color: var(--mute); font-weight: 600; margin-top: 4px; }
+
+/* RSS: each term of the equation and the card that explains it share a colour */
+.eq .rssa, .eq .rssb, .eq .rssc { border-radius: 8px; padding: 2px 6px; }
+.eq .rssa { background: rgba(240, 168, 48, 0.18); }
+.eq .rssb { background: rgba(43, 108, 176, 0.14); }
+.eq .rssc { background: rgba(214, 69, 69, 0.13); }
+.card.rssa { border-top: 6px solid rgba(240, 168, 48, 0.85); }
+.card.rssb { border-top: 6px solid rgba(43, 108, 176, 0.75); }
+.card.rssc { border-top: 6px solid rgba(214, 69, 69, 0.75); }
