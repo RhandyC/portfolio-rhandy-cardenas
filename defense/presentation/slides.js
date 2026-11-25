@@ -703,7 +703,8 @@
     { id: "v-vil-fog", type: "video", sec: "c4", c: ["C2", "C4"], time: 85,
       title: "Anticipating fog on the prototype vehicle",
       notes: "The same anticipation, now on the real prototype on the CTA2 track, with a virtual fog zone. The electronic horizon announces the fog; the question is when to slow down. ODD-aptive adapts before reaching the fog, while the lane change is still ensured, instead of reacting at the boundary. The message is qualitative: the decision anticipates the loss of capability on a real vehicle.",
-      video: { src: V + "vil_fog.mp4", parts: [[10.0, "A real vehicle, in a virtual fog"], [20.0, "The test track, with a virtual fog zone"], [30.0, "When should the vehicle slow down?"], [41.0, "ODD-aptive anticipates the fog"]] } },
+      // v3, without pauses: one part; the presenter pauses it (K or the scene bar) where wanted
+      video: { src: V + "vil_fog.mp4?v=3", parts: [[10.0, "Anticipating fog on the prototype vehicle"]] } },
 
     { id: "fog-a", sec: "c4", c: ["C2", "C4"], kicker: "Scenario 1: reduced visibility · configuration A", time: 60,
       title: "With four steps, no MRM before the fog in 100 of 100 runs",
