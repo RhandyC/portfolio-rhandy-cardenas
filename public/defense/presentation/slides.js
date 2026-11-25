@@ -82,14 +82,14 @@
   const sections = [
     { id: "intro", short: "Intro", n: 1, page: "sec-intro", kicker: "Introduction", title: "Introduction", toc: "Introduction",
       ch: "Introduction",
-      thread: ["Level by level", "The ODD", "Monitored, not decided", "The problem", "The idea", "The aim", "The contributions"],
-      sub: "Why the operational design domain must enter the decision" },
+      thread: ["The ODD", "Monitored, not decided", "The problem", "The idea", "The aim", "The contributions"],
+      sub: "As conditions change, can the vehicle keep deciding safely?" },
     { id: "sota", short: "SotA", n: 2, page: "sec-sota", kicker: "Fundamentals and state of the art", title: "What exists today?", toc: "Fundamentals",
       ch: "Fundamentals and state of the art",
-      sub: "Awareness, the ODD, capability and decision-making" },
+      sub: "How is the decision taken today, and where is the ODD?" },
     { id: "c1", short: "C1", n: 3, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
       ch: "Contribution 1", c: ["C1"], pubs: ["IFAC IAV 2025"], pubk: "CARDENAS2025162",
-      sub: "The ODD-aptive architecture and the Maneuver Capability Estimator (MCE)" },
+      sub: "Can the vehicle make a correct decision given the current context?" },
     { id: "c2", short: "C2", n: 4, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "Which sequence of ensured maneuvers to choose?", toc: "C2 · Which sequence of ensured maneuvers to choose?",
       ch: "Contribution 2", c: ["C2"], pubs: ["IEEE IV 2025"], pubk: "11097482",
       sub: "The ODD-constrained MDP" },
@@ -131,23 +131,12 @@
       title: "Agenda",
       notes: "The agenda. After the introduction come the fundamentals and the state of the art. Then the three contributions of the method: first the capability of the vehicle, then the choice, with an MDP and then a POMDP; each step is illustrated with its animations. The validation, in simulation and on the prototype vehicle, comes at the end, before the conclusions and perspectives. Each line links to its part." },
 
-    // ================================================================ 1. introduction: level by level, the ODD, monitored but not decided, the problem, the idea and the question, the aim, the contributions
+    // ================================================================ 1. introduction: the ODD, monitored but not decided, the problem, the idea and the question, the aim, the contributions
     { id: "sec-intro", type: "section", sec: "intro", dark: true, title: "Introduction", time: 10 },
 
-    { id: "responsibility", cite: ["ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan", "sae2021taxonomy", "Farah2021Awareness", "kuehn2017takeover"], th: "Level by level", sec: "intro", kicker: "Motivation · automation, level by level", time: 60,
-      title: "Level by level, the frontier lies between Level 2 and Level 3",
-      notes: "Automated driving advances, but level by level. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed. The decisive frontier is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its operational design domain: it must monitor its own limits and request a takeover in time. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. So, to cross this frontier, the vehicle itself must know what it can do.",
-      html: `<div class="row grow">
-          <div class="card col" style="flex:1.5 1 0">${fig("sae_levels.png", "Automation levels and examples of ODD")}<p class="xs mute" style="margin:0">SAE J3016 ${R("sae2021taxonomy")} · fleets announced for 2019 – 2020 ${R("ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan")}</p></div>
-          <div class="col grow" style="justify-content:center;gap:26px">
-            <div class="card tight"><h3 style="margin:0">Level 2 · the driver watches ${R("Farah2021Awareness")}</h3></div>
-            <div class="card tight accent"><h3 style="margin:0">Level 3 · the system drives ${R("kuehn2017takeover")}</h3></div>
-            <div class="card tight ok"><h3 style="margin:0">Level 4 · nobody takes over</h3></div>
-          </div></div>` },
-
     { id: "odd", cite: ["sae2021taxonomy", "czarnecki2018operational", "iso2023iso34503"], th: "The ODD", sec: "intro", kicker: "Motivation · what is the ODD?", time: 75, steps: 2,
-      title: "To cross it, the vehicle must know its own limits, the ODD",
-      notes: "To cross this frontier, the vehicle must know its own limits, and they have a name: the Operational Design Domain. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
+      title: "The ODD, the conditions the vehicle is designed for",
+      notes: "An automated vehicle must operate safely while its operating conditions change. The conditions it is designed for have a name: the Operational Design Domain. SAE J3016 defines the Operational Design Domain as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function: environmental, geographical and time-of-day restrictions, and the presence or absence of some traffic or roadway characteristics. What is it for? The designer knows the performance of the system and states the contexts in which it works correctly and safely. Outside the ODD, the system is beyond its operational limits. For instance, an ACC may be designed for highways in free-flowing traffic, and not validated with two-wheelers or in heavy rain. (1) How is it structured? As a hierarchical taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels; ISO 34503 sets the requirements for such a taxonomy. (2) A deployed example: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe, describes its ODD as a driving scene with five conditions.",
       html: `<div class="row grow">
         <div class="col grow" style="flex:1 1 0;justify-content:center">
           <div class="card" style="padding:34px 40px"><div class="quote" style="font-size:36px">“Operating conditions under which a […] system is specifically designed to function”</div>
@@ -205,46 +194,6 @@
     // ================================================================ 2. fundamentals and state of the art
     { id: "sec-sota", type: "section", sec: "sota", dark: true, title: "Fundamentals and state of the art", time: 10 },
 
-    { id: "failop", cite: ["avizienis2004taxonomy", "iso2018iso26262", "fail2022Stolte"], sec: "sota", kicker: "Background · fail-operational systems", time: 60, steps: 2,
-      title: "Fail-safe stops, fail-operational drives on with fewer capabilities",
-      notes: "First, what fail-operational means, on a simple example: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable.",
-      html: `<div class="card row" style="gap:30px;align-items:center;padding:18px 28px">
-          <img src="${F}failop_a.png" alt="The LiDAR range is reduced; the nominal range is dashed" style="width:640px;border-radius:10px">
-          <h3 style="margin:0">The LiDAR loses range<br>What now?</h3></div>
-        <div class="g2 grow">
-          <div class="card col" data-step="1" style="gap:12px"><h3 style="margin:0">Fail-safe ${R("avizienis2004taxonomy", "iso2018iso26262")}</h3><img src="${F}failop_e.png" alt="Fail-safe: the vehicle stops on the hard shoulder" style="width:100%;border-radius:10px">
-            <p style="margin:0;font-size:30px"><b>Stops</b></p></div>
-          <div class="card col ok" data-step="2" style="gap:12px"><h3 style="margin:0">Fail-operational ${R("fail2022Stolte")}</h3><img src="${F}failop_f.png" alt="Fail-operational: the vehicle continues at a reduced speed, the lane change is no longer ensured" style="width:100%;border-radius:10px">
-            <p style="margin:0;font-size:30px"><b>Drives on</b>, with fewer capabilities</p></div>
-        </div>` },
-
-    { id: "awareness", cite: ["armand2014ontology", "salvi2022fuzzy", "woerter2021enhanced", "schlatow2017selfawareness"], sec: "sota", kicker: "Background · awareness and the ODD", time: 70, steps: 2,
-      title: "What must the vehicle know about its context, and about itself?",
-      notes: "What the vehicle must know, in two kinds of awareness. Context awareness: the knowledge associated with the context, semantic, such as road users and crossings, or aggregated, such as a school zone, its speed limit and the time of day; and the risk associated with the context, here a risk map around a vehicle. (1) Self awareness: the impact of actions on oneself, for instance what the vehicle can still see after a lane change, and the dependencies of the system, for instance the capability graph of an ACC, whose behaviors rest on lower-level capabilities. (2) The ODD links both: the capabilities of the system, and a structured representation of the context. Its limits: the perceived context is uncertain, so margins are needed, and the boundaries are discontinuous, so they must be anticipated.",
-      html: `<div class="awr">
-          <div class="card col aw ctx"><h3>The context</h3>
-            <div class="awg">
-              <figure><img src="${F}aw_semantic.png" alt="Road with vehicles and a pedestrian crossing"><figcaption>${R("armand2014ontology")}</figcaption></figure>
-              <figure><img src="${F}aw_aggregated.png" alt="School zone at 30, and the time of day"><figcaption>${R("salvi2022fuzzy")}</figcaption></figure>
-              <figure class="w2"><img src="${F}aw_risk.png" alt="Risk map around a vehicle"><figcaption>${R("woerter2021enhanced")}</figcaption></figure>
-            </div></div>
-          <div class="card col aw self" data-step="1"><h3>Itself ${R("schlatow2017selfawareness")}</h3>
-            <div class="awg">
-              <figure class="w2"><img src="${F}aw_vision.png" alt="What the vehicle can see before and after a lane change"></figure>
-              <figure class="w2"><img src="${F}aw_graph.png" alt="Capability graph of an ACC"></figure>
-            </div></div>
-        </div>
-        <div class="card navy awodd" data-step="2"><b>The ODD links both</b></div>` },
-    { id: "rw-c1", cite: ["reschka2015ability", "colwell_automated_2018", "pior2020behaviorbased", "ulbrich2015pomdp", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", time: 70,
-      title: "How is the capability of the vehicle assessed today?",
-      notes: "Three families. Ability and skill graphs decompose a behavior into skills with a level of performance, and have been used to trigger a lane change or not. The restricted operational domain removes the maneuvers that a lost capability no longer supports. The arbitration graph checks every function against the ODD before deciding. Monitoring estimates the time to exit the ODD. All of them assess the current state, and adapt once a condition is detected. The MCE assesses each maneuver, in the predicted states too.",
-      html: `<div class="g3 grow">
-          <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<h4 style="margin:0;text-align:center">Ability graphs ${R("reschka2015ability", "ulbrich2015pomdp")}</h4></div>
-          <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<h4 style="margin:0;text-align:center">Restricted domain ${R("colwell_automated_2018")}</h4></div>
-          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<h4 style="margin:0;text-align:center">Arbitration graph ${R("pior2020behaviorbased")}</h4></div>
-        </div>
-        <div class="card bad"><h3 style="margin:0">The current state only, then react ${R("charmet2024monitoring", "salvi2022fuzzy")}</h3></div>` },
-
     { id: "levels", cite: ["michon1985critical", "donges2015behaviormodels"], sec: "sota", kicker: "State of the art · decision levels", time: 50,
       title: "We decide at the tactical level, which maneuver and when",
       notes: "Three decision levels after Michon. Strategic: the route, over hours to minutes. Tactical: which maneuver, and when, from a minute to a second. Operational: the trajectory and its control, below the second. We work at the tactical level, over ADAS features already validated.",
@@ -267,15 +216,15 @@
         <div class="card bad"><h3 style="margin:0">Missing everywhere · does the vehicle <b>remain capable</b>?</h3></div>`,
       backups: ["b-learning"] },
 
-    { id: "rw-c3", cite: ["hubmann2018uncertainty", "chen2025intention", "ulbrich2015pomdp", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep"], sec: "sota", c: ["C3"], kicker: "Related work · partial observability", time: 60,
-      title: "How do POMDP planners handle uncertainty?",
-      notes: "POMDPs are the standard frame for tactical decisions under partial observability: lane changes, merging, intersections. Online Monte Carlo search with belief updates makes them tractable, and POMCP represents the belief with particles. What they keep uncertain is the traffic. The capability of the vehicle is assessed, at best, in the current state. The ODD-POMDP adds the capability check in every particle.",
-      html: `<div class="card tight col grow" style="gap:8px">${fig("rw_pomdp.png", "Partially observable driving scenarios")}
-          <p class="xs mute" style="margin:0;text-align:center">${R("hubmann2018uncertainty", "chen2025intention", "ulbrich2015pomdp", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep")}</p></div>
-        <div class="g2">
-          <div class="card ok"><h3 style="margin:0">Uncertain traffic ✓</h3></div>
-          <div class="card bad"><h3 style="margin:0">Uncertain capability ✗</h3></div>
-        </div>` },
+    { id: "rw-c1", cite: ["reschka2015ability", "colwell_automated_2018", "pior2020behaviorbased", "ulbrich2015pomdp", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", time: 70,
+      title: "How is the capability of the vehicle assessed today?",
+      notes: "Three families. Ability and skill graphs decompose a behavior into skills with a level of performance, and have been used to trigger a lane change or not. The restricted operational domain removes the maneuvers that a lost capability no longer supports. The arbitration graph checks every function against the ODD before deciding. Monitoring estimates the time to exit the ODD. All of them assess the current state, and adapt once a condition is detected. The MCE assesses each maneuver, in the predicted states too.",
+      html: `<div class="g3 grow">
+          <div class="card tight col" style="gap:6px">${fig("rw_ability_graph.png", "Ability graph for an ACC behavior")}<h4 style="margin:0;text-align:center">Ability graphs ${R("reschka2015ability", "ulbrich2015pomdp")}</h4></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<h4 style="margin:0;text-align:center">Restricted domain ${R("colwell_automated_2018")}</h4></div>
+          <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<h4 style="margin:0;text-align:center">Arbitration graph ${R("pior2020behaviorbased")}</h4></div>
+        </div>
+        <div class="card bad"><h3 style="margin:0">The current state only, then react ${R("charmet2024monitoring", "salvi2022fuzzy")}</h3></div>` },
 
     { id: "positioning", cite: ["cardenas2025context_aware"], sec: "sota", kicker: "Positioning", time: 75,
       title: "What is missing in the state of the art?",
@@ -294,20 +243,6 @@
     // ================================================================ 3. C1 · capability: the architecture and the MCE, illustrated by its animations
     { id: "sec-c1", type: "section", sec: "c1", dark: true, title: "C1 · What can the vehicle still ensure?", time: 10 },
 
-    { id: "assumptions", sec: "c1", c: ["C1"], kicker: "What we want to analyse", time: 50,
-      title: "Which maneuvers can the vehicle ensure, now and after its decisions?",
-      notes: "What we want to analyse. The ODD does not change, but the context and the driving situation do, so the maneuvers the vehicle can ensure change along the journey. And a maneuver ensured now may lead to a state where the next ones are no longer ensured. So the capability must be assessed now, and in the situations the decisions lead to. For that, we first need three things: the maneuvers, and the conditions each one requires, which is the ODD brought down to the maneuvers; the skills that let us assess a maneuver in a given state; and the predicted states, on which the same assessment is repeated. The working assumptions are in the appendix.",
-      backups: ["b-assumptions"],
-      html: `<div class="card tight" style="font-size:28px;padding:20px 32px">The context changes, and so do the <b>ensured maneuvers</b><br>Ensured now can lead to a state where <b>the next ones are not</b></div>
-        <div class="c1need">
-          <div class="cpch"><span>To analyse it, we first need</span></div>
-          <div class="c1steps">
-            <a class="card c1s" data-go="maneuvers"><span class="n">1</span><b>The maneuvers, and what each one requires</b><span class="t">The ODD brought down to the maneuvers</span></a>
-            <span class="c1a">→</span>
-            <a class="card c1s" data-go="skills"><span class="n">2</span><b>Skills to assess a maneuver in a state</b><span class="t">Sense, Think, Act</span></a>
-            <span class="c1a">→</span>
-            <a class="card c1s" data-go="v-mce"><span class="n">3</span><b>The same assessment in the predicted states</b><span class="t">Now, and after each decision</span></a>
-          </div></div>` },
     { id: "architecture", sec: "c1", kicker: "Our answer: ODD-aptive", time: 170, steps: 6,
       title: "The ODD-aptive architecture, and its tactical layer",
       notes: "The ODD-aptive architecture, read as a loop. On the left, input preparation: the context sources (perception, V2X, map) feed the world model, which gives the tactical state s = OD × ego × surrounding vehicles. The decision follows Michon's three levels. The strategic layer plans the route from the map and the ego pose, and passes the route plan R. The tactical layer, our contribution, receives the current state s0 and the route plan, and decides which maneuver and when. Its current action a_t = (m_t, θ_t) goes to the operational layer: the ADAS features selector activates ACC, LCA, SALC or the MRM with its parameters, the trajectory planner gives the reference trajectory T, and low-level control sends the commands u_t to the vehicle. The measurements close the loop. (1) Zoom into the tactical layer. The current state, or belief, becomes the root s0 of the planning horizon builder. (2) For each state, the builder queries the MCE, which monitors the Sense, Think and Act skills each maneuver requires, and returns the ensured maneuvers A_ens(s). Here the lane change to the right is not ensured, so it is never expanded. (3) The state predictor computes the next state of each ensured maneuver, using the electronic horizon for the conditions ahead; query and prediction repeat up to the horizon H. (4) The result is an MDP, or a POMDP, whose actions are only ensured maneuvers: capability enters the model before the policy planner chooses. The reward combines safety, legal, progress, route and operability; the solver applies Bellman restricted to A_ens. (5) The output is a sequence of maneuvers, here keep lane, change left, then change right. Only the first one is executed, as an ADAS feature with its parameters; then the plan is rebuilt from the new state. (6) Back to the whole architecture, now with the tactical layer filled: the capability estimator, the horizon builder, the state predictor, the MDP or POMDP and the policy planner, between the state from the world model and the action sent to the operational layer.",
@@ -494,17 +429,6 @@
       notes: "Skill graphs per maneuver, evaluation in S_i, one skill lost (partial operability), a shared skill lost (MRM required), traceability back to the context.",
       video: { src: A + "mce.mp4", parts: [[0.0, "Each maneuver relies on its own skill graph"], [12.5, "A maneuver is ensured when all its skills are fulfilled"], [21.0, "A change of context affects only the maneuvers that need the skill"], [32.5, "A shared skill is lost: every maneuver that needs it is lost"], [44.5, "Every loss is traced back to a change of context"]] } },
 
-    { id: "sense-zones", cite: ["bussemaker2014SensingRF", "CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Sense skills", time: 70, steps: 3,
-      title: "Before engaging, does the vehicle see all it needs?",
-      notes: "Take the Sense skills. The question they answer: before engaging in a maneuver, does the vehicle see all it needs? Each maneuver has key zones whose content the vehicle must know first. Entering a roundabout: the part of the ring from which the cars arrive. Crossing an intersection: the crossing road, in both directions. Overtaking a stopped bus: the crossing in front of the bus, where a pedestrian may step out. Changing lane: three zones around the vehicle. A key zone counts only if it is inside what the vehicle perceives, and its perception envelope is reduced in two ways: fog shrinks it, as in the roundabout and the lane change; obstacles occlude it, as the buildings at the intersection, until the vehicle reaches the stop line, or the bus: the vehicle starts to overtake, its sight lines to the crossing stop on the bus, so it holds, sees a pedestrian step out, and creeps until it sees the whole crossing. A key zone that is not perceived: the maneuver is not ensured. Let us now take one of them in detail: the lane change.",
-      html: `<div class="card tight" style="font-size:26px;padding:16px 30px">Each maneuver has <b>key zones</b> ${R("bussemaker2014SensingRF")}, seen only inside the <b>perception envelope</b> ${R("CARDENAS2025162")}, shrunk by fog or occluded</div>
-        <div class="sloops seq">${[["sense_roundabout", "Entering a roundabout", "the ring upstream of the entry", "Fog"],
-          ["sense_intersection", "Crossing an intersection", "the crossing road, both ways", "Occlusion"],
-          ["sense_bus", "Overtaking a stopped bus", "the crossing in front of the bus", "Occlusion"],
-          ["sense_lane", "Changing lane", "zones A, B and C", "Fog"]].map(([v, t, z, c], k) =>
-          `<div class="card sl"><video class="bg" muted playsinline preload="auto" data-src="${A}${v}.mp4?v=4" data-on="${k}" data-rate="1.8" data-still="1.5" aria-label="${t}, key zones, then ${c.toLowerCase()}"></video>
-            <div class="cap"><b><span class="k">${k + 1}</span>${t}</b><span>${z}</span><em class="${c === "Fog" ? "fog" : "occ"}">${c}</em></div></div>`).join("")}</div>
-        <div class="card navy tight" style="font-size:25px;padding:16px 30px">A key zone not perceived, and the maneuver is <b>not ensured</b></div>` },
     { id: "lc-example", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", time: 50,
       title: "The skills of a lane change",
       notes: "From the general estimator to one example: the lane change. It is ensured when all its skills hold. Sense: the vehicles in three zones, A behind us in the target lane, B ahead in the target lane, C ahead in our lane, and the lane markings of the target lane. Think: the predictor models every perceived vehicle, and the traffic is fluid enough for the function. Act is assumed fulfilled in this work. We develop the first skill: how much perception range does each zone need? The answer comes from a safe distance, RSS.",
@@ -553,68 +477,6 @@
       title: "The lane change window closes in the fog",
       notes: "The perception range required in three zones defines a window of speeds for the lane change. Fog narrows it until it closes, while Keep Lane, which only needs the zone ahead, remains ensured at a lower speed. An uncertainty margin on the traffic speed raises the limit.",
       video: { src: A + "window.mp4?v=2", parts: [[0.0, "Required perception range: one RSS rule, three zones"], [6.0, "Speed trades the rear zone against the front zones"], [14.5, "Above both curves, the lane change is ensured"], [18.5, "Fog shrinks the envelope: the speed window narrows"], [27.0, "Too slow or too fast: a zone is no longer covered"], [36.0, "Below a visibility limit: Keep Lane ensured, lane change not ensured"], [46.5, "Uncertainty on the traffic speed: the limit rises"]] } },
-
-    { id: "other-skills", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", time: 45,
-      title: "Lane markings, prediction and interaction complete the skill graph",
-      notes: "Three other skills. The density skill is the one used for the congestion before the exit. Degradation is per maneuver: Keep Lane can remain ensured with a reduced performance range.",
-      html: `<div class="g3">
-          <div class="card col"><span class="pill" style="align-self:flex-start">Sense · lane markings</span> ${R("CARDENAS2025162")}<div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>lane</sub>(<i>S</i>) = 1 ⇔ <i>d</i><sub>PE</sub><sup>lane</sup>(<i>S</i>) ≥ <i>D</i><sub>min</sub>(<i>S</i>)</div><p class="small">Markings seen over the stopping distance</p></div>
-          <div class="card col"><span class="pill" style="align-self:flex-start">Think · prediction</span><div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>pred</sub>(<i>S</i>) = 1 ⇔ every perceived vehicle is regular</div><p class="small">No emergency vehicles, no two-wheelers</p></div>
-          <div class="card col"><span class="pill" style="align-self:flex-start">Think · interaction</span><div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>inter</sub>(<i>S</i>) = 1 ⇔ <i>ρ</i>(<i>S</i>) ≤ <i>ρ</i><sub>max</sub></div><p class="small">Fluid traffic only, density announced ahead</p></div>
-        </div>
-        <div class="card ok"><p><b>Keep Lane</b> needs no rear zone, so it stays ensured, slower, when the lane change is lost</p></div>` },
-
-    { id: "margin", cite: ["salvi2022fuzzy", "hullermeier2021aleatoric"], sec: "c1", c: ["C1"], kicker: "Strategic margin", time: 60, steps: 3,
-      title: "Ensured, but how close to the boundary?",
-      notes: "A plane of states. Each point is a state of the vehicle: its speed, and the perception range it has. Above the blue curve the forward sensing skill is fulfilled; the curve is the boundary. Ensured is binary, but the distance between the point and the boundary tells how close the maneuver is to being lost. We measure it with the ratio of the available range to the required one, 1 on the boundary. Here S, at 110 km/h with 120 m, is far from it. (1) In fog, with 50 m, at 90 km/h, the point is still above the boundary: ensured, but on the edge, a ratio of about 1.02. A little less visibility and it is lost. (2) The strategic margin m, chosen by the designer, defines a preferred region, here m = 1.5, the dashed curve. The normalized margin w goes from 0 on the boundary to 1 in this region, and an action is as close as its most constrained skill. So the planner prefers to slow down, to about 56 km/h. (3) This enters the operability term of the reward. No maneuver is removed: the margin is a preference, not a second boundary.",
-      backups: ["b-margin"],
-      html: `<div class="row grow">
-        <div class="card col mgcard" style="flex:1.3 1 0"><h4>Forward sensing skill, a state and its boundary</h4>
-          <svg class="mgplot" viewBox="0 0 1000 740" role="img" aria-label="State point and capability boundary in the plane of velocity and perception range">
-            <defs><marker id="mg-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#063669"/></marker></defs>
-            <path class="reg" d="M96.0,533.4 L98.2,532.8 L100.4,532.2 L102.6,531.6 L104.8,531.0 L107.0,530.4 L109.3,529.8 L111.5,529.1 L113.7,528.5 L115.9,527.9 L118.1,527.3 L120.3,526.7 L122.5,526.1 L124.7,525.5 L126.9,524.9 L129.2,524.3 L131.4,523.6 L133.6,523.0 L135.8,522.4 L138.0,521.8 L140.2,521.2 L142.4,520.6 L144.6,520.0 L146.8,519.4 L149.0,518.8 L151.2,518.1 L153.5,517.5 L155.7,516.9 L157.9,516.3 L160.1,515.7 L162.3,515.1 L164.5,514.5 L166.7,513.9 L168.9,513.3 L171.1,512.6 L173.3,512.0 L175.6,511.4 L177.8,510.8 L180.0,510.2 L182.2,509.6 L184.4,509.0 L186.6,508.4 L188.8,507.8 L191.0,507.1 L193.2,506.5 L195.4,505.9 L197.7,505.3 L199.9,504.7 L202.1,504.1 L204.3,503.5 L206.5,502.9 L208.7,502.3 L210.9,501.6 L213.1,501.0 L215.3,500.4 L217.6,499.8 L219.8,499.2 L222.0,498.6 L224.2,498.0 L226.4,497.4 L228.6,496.8 L230.8,496.1 L233.0,495.5 L235.2,494.9 L237.4,494.3 L239.7,493.7 L241.9,493.1 L244.1,492.5 L246.3,491.9 L248.5,491.3 L250.7,490.6 L252.9,490.0 L255.1,489.4 L257.3,488.8 L259.5,488.2 L261.8,487.6 L264.0,487.0 L266.2,486.4 L268.4,485.8 L270.6,485.1 L272.8,484.5 L275.0,483.9 L277.2,483.3 L279.4,482.7 L281.6,482.1 L283.9,481.5 L286.1,480.9 L288.3,480.3 L290.5,479.6 L292.7,479.0 L294.9,478.4 L297.1,477.8 L299.3,477.2 L301.5,476.6 L303.7,476.0 L305.9,475.4 L308.2,474.8 L310.4,474.1 L312.6,473.5 L314.8,472.9 L317.0,472.3 L319.2,471.7 L321.4,471.1 L323.6,470.5 L325.8,469.9 L328.1,469.3 L330.3,468.6 L332.5,468.0 L334.7,467.4 L336.9,466.8 L339.1,466.2 L341.3,465.6 L343.5,465.0 L345.7,464.4 L347.9,463.8 L350.1,463.1 L352.4,462.5 L354.6,461.9 L356.8,461.3 L359.0,460.7 L361.2,460.1 L363.4,459.5 L365.6,458.9 L367.8,458.3 L370.0,457.6 L372.2,457.0 L374.5,456.4 L376.7,455.8 L378.9,455.2 L381.1,454.6 L383.3,454.0 L385.5,453.4 L387.7,452.8 L389.9,452.1 L392.1,451.5 L394.4,450.9 L396.6,450.3 L398.8,449.7 L401.0,449.1 L403.2,448.5 L405.4,447.9 L407.6,447.3 L409.8,446.6 L412.0,446.0 L414.2,445.4 L416.4,444.8 L418.7,444.2 L420.9,443.6 L423.1,443.0 L425.3,442.4 L427.5,441.8 L429.7,441.1 L431.9,440.5 L434.1,439.9 L436.3,439.3 L438.6,438.7 L440.8,438.1 L443.0,437.5 L445.2,436.9 L447.4,436.3 L449.6,435.6 L451.8,435.0 L454.0,434.4 L456.2,433.8 L458.4,433.2 L460.6,432.6 L462.9,432.0 L465.1,431.4 L467.3,430.8 L469.5,430.1 L471.7,429.5 L473.9,428.9 L476.1,428.3 L478.3,427.7 L480.5,427.1 L482.8,426.5 L485.0,425.9 L487.2,425.3 L489.4,424.9 L491.6,424.9 L493.8,424.9 L496.0,424.9 L498.2,424.9 L500.4,424.9 L502.6,424.9 L504.9,424.9 L507.1,424.9 L509.3,424.9 L511.5,424.9 L513.7,424.9 L515.9,424.9 L518.1,424.9 L520.3,424.9 L522.5,424.9 L524.7,424.9 L527.0,424.9 L529.2,424.9 L531.4,424.9 L533.6,424.9 L535.8,424.9 L538.0,424.9 L540.2,424.9 L542.4,424.9 L544.6,424.9 L546.8,424.9 L549.0,424.9 L551.3,424.9 L553.5,424.9 L555.7,424.9 L557.9,424.9 L560.1,424.9 L562.3,424.9 L564.5,424.9 L566.7,424.9 L568.9,424.4 L571.1,423.8 L573.4,423.3 L575.6,422.7 L577.8,422.1 L580.0,421.5 L582.2,420.9 L584.4,420.3 L586.6,419.7 L588.8,419.1 L591.0,418.4 L593.2,417.8 L595.5,417.1 L597.7,416.5 L599.9,415.8 L602.1,415.1 L604.3,414.4 L606.5,413.7 L608.7,412.9 L610.9,412.2 L613.1,411.5 L615.4,410.7 L617.6,409.9 L619.8,409.2 L622.0,408.4 L624.2,407.6 L626.4,406.8 L628.6,405.9 L630.8,405.1 L633.0,404.3 L635.2,403.4 L637.5,402.5 L639.7,401.7 L641.9,400.8 L644.1,399.9 L646.3,399.0 L648.5,398.1 L650.7,397.1 L652.9,396.2 L655.1,395.3 L657.3,394.3 L659.5,393.3 L661.8,392.4 L664.0,391.4 L666.2,390.4 L668.4,389.4 L670.6,388.3 L672.8,387.3 L675.0,386.3 L677.2,385.2 L679.4,384.1 L681.6,383.1 L683.9,382.0 L686.1,380.9 L688.3,379.8 L690.5,378.7 L692.7,377.5 L694.9,376.4 L697.1,375.2 L699.3,374.1 L701.5,372.9 L703.8,371.7 L706.0,370.5 L708.2,369.3 L710.4,368.1 L712.6,366.9 L714.8,365.7 L717.0,364.4 L719.2,363.2 L721.4,361.9 L723.6,360.6 L725.9,359.3 L728.1,358.0 L730.3,356.7 L732.5,355.4 L734.7,354.1 L736.9,352.8 L739.1,351.4 L741.3,350.0 L743.5,348.7 L745.7,347.3 L748.0,345.9 L750.2,344.5 L752.4,343.1 L754.6,341.7 L756.8,340.2 L759.0,338.8 L761.2,337.3 L763.4,335.8 L765.6,334.4 L767.8,332.9 L770.0,331.4 L772.3,329.9 L774.5,328.3 L776.7,326.8 L778.9,325.3 L781.1,323.7 L783.3,322.2 L785.5,320.6 L787.7,319.0 L789.9,317.4 L792.1,315.8 L794.4,314.2 L796.6,312.6 L798.8,310.9 L801.0,309.3 L803.2,307.6 L805.4,306.0 L807.6,304.3 L809.8,302.6 L812.0,300.9 L814.2,299.2 L816.5,297.4 L818.7,295.7 L820.9,294.0 L823.1,292.2 L825.3,290.5 L827.5,288.7 L829.7,286.9 L831.9,285.1 L834.1,283.3 L836.4,281.5 L838.6,279.6 L840.8,277.8 L843.0,276.0 L845.2,274.1 L847.4,272.2 L849.6,270.3 L851.8,268.5 L854.0,266.6 L856.2,264.6 L858.5,262.7 L860.7,260.8 L862.9,258.8 L865.1,256.9 L867.3,254.9 L869.5,252.9 L871.7,251.0 L873.9,249.0 L876.1,246.9 L878.3,244.9 L880.5,242.9 L882.8,240.9 L885.0,238.8 L887.2,236.7 L889.4,234.7 L891.6,232.6 L893.8,230.5 L896.0,228.4 L898.2,226.3 L900.4,224.2 L902.6,222.0 L904.9,219.9 L907.1,217.7 L909.3,215.5 L911.5,213.4 L913.7,211.2 L915.9,209.0 L918.1,206.8 L920.3,204.5 L922.5,202.3 L924.8,200.1 L927.0,197.8 L929.2,195.6 L931.4,193.3 L933.6,191.0 L935.8,188.7 L938.0,186.4 L940.2,184.1 L942.4,181.8 L944.6,179.4 L946.9,177.1 L949.1,174.7 L951.3,172.3 L953.5,170.0 L955.7,167.6 L957.9,165.2 L960.1,162.8 L962.3,160.3 L964.5,157.9 L966.7,155.5 L969.0,153.0 L971.2,150.5 L973.4,148.1 L975.6,145.6 L977.8,143.1 L980.0,140.6 L980.0,24.0 L96.0,24.0 Z"/>
-            <g data-step="2"><path class="preg" d="M96.0,480.1 L98.2,479.2 L100.4,478.3 L102.6,477.4 L104.8,476.5 L107.0,475.6 L109.3,474.6 L111.5,473.7 L113.7,472.8 L115.9,471.9 L118.1,471.0 L120.3,470.0 L122.5,469.1 L124.7,468.2 L126.9,467.3 L129.2,466.4 L131.4,465.5 L133.6,464.6 L135.8,463.6 L138.0,462.7 L140.2,461.8 L142.4,460.9 L144.6,460.0 L146.8,459.0 L149.0,458.1 L151.2,457.2 L153.5,456.3 L155.7,455.4 L157.9,454.5 L160.1,453.6 L162.3,452.6 L164.5,451.7 L166.7,450.8 L168.9,449.9 L171.1,449.0 L173.3,448.1 L175.6,447.1 L177.8,446.2 L180.0,445.3 L182.2,444.4 L184.4,443.5 L186.6,442.5 L188.8,441.6 L191.0,440.7 L193.2,439.8 L195.4,438.9 L197.7,438.0 L199.9,437.1 L202.1,436.1 L204.3,435.2 L206.5,434.3 L208.7,433.4 L210.9,432.5 L213.1,431.5 L215.3,430.6 L217.6,429.7 L219.8,428.8 L222.0,427.9 L224.2,427.0 L226.4,426.1 L228.6,425.1 L230.8,424.2 L233.0,423.3 L235.2,422.4 L237.4,421.5 L239.7,420.5 L241.9,419.6 L244.1,418.7 L246.3,417.8 L248.5,416.9 L250.7,416.0 L252.9,415.1 L255.1,414.1 L257.3,413.2 L259.5,412.3 L261.8,411.4 L264.0,410.5 L266.2,409.6 L268.4,408.6 L270.6,407.7 L272.8,406.8 L275.0,405.9 L277.2,405.0 L279.4,404.0 L281.6,403.1 L283.9,402.2 L286.1,401.3 L288.3,400.4 L290.5,399.5 L292.7,398.6 L294.9,397.6 L297.1,396.7 L299.3,395.8 L301.5,394.9 L303.7,394.0 L305.9,393.0 L308.2,392.1 L310.4,391.2 L312.6,390.3 L314.8,389.4 L317.0,388.5 L319.2,387.6 L321.4,386.6 L323.6,385.7 L325.8,384.8 L328.1,383.9 L330.3,383.0 L332.5,382.1 L334.7,381.1 L336.9,380.2 L339.1,379.3 L341.3,378.4 L343.5,377.5 L345.7,376.6 L347.9,375.6 L350.1,374.7 L352.4,373.8 L354.6,372.9 L356.8,372.0 L359.0,371.1 L361.2,370.1 L363.4,369.2 L365.6,368.3 L367.8,367.4 L370.0,366.5 L372.2,365.6 L374.5,364.6 L376.7,363.7 L378.9,362.8 L381.1,361.9 L383.3,361.0 L385.5,360.1 L387.7,359.1 L389.9,358.2 L392.1,357.3 L394.4,356.4 L396.6,355.5 L398.8,354.6 L401.0,353.6 L403.2,352.7 L405.4,351.8 L407.6,350.9 L409.8,350.0 L412.0,349.1 L414.2,348.1 L416.4,347.2 L418.7,346.3 L420.9,345.4 L423.1,344.5 L425.3,343.6 L427.5,342.6 L429.7,341.7 L431.9,340.8 L434.1,339.9 L436.3,339.0 L438.6,338.1 L440.8,337.1 L443.0,336.2 L445.2,335.3 L447.4,334.4 L449.6,333.5 L451.8,332.6 L454.0,331.6 L456.2,330.7 L458.4,329.8 L460.6,328.9 L462.9,328.0 L465.1,327.1 L467.3,326.1 L469.5,325.2 L471.7,324.3 L473.9,323.4 L476.1,322.5 L478.3,321.5 L480.5,320.6 L482.8,319.7 L485.0,318.8 L487.2,317.9 L489.4,317.3 L491.6,317.3 L493.8,317.3 L496.0,317.3 L498.2,317.3 L500.4,317.3 L502.6,317.3 L504.9,317.3 L507.1,317.3 L509.3,317.3 L511.5,317.3 L513.7,317.3 L515.9,317.3 L518.1,317.3 L520.3,317.3 L522.5,317.3 L524.7,317.3 L527.0,317.3 L529.2,317.3 L531.4,317.3 L533.6,317.3 L535.8,317.3 L538.0,317.3 L540.2,317.3 L542.4,317.3 L544.6,317.3 L546.8,317.3 L549.0,317.3 L551.3,317.3 L553.5,317.3 L555.7,317.3 L557.9,317.3 L560.1,317.3 L562.3,317.3 L564.5,317.3 L566.7,317.3 L568.9,316.5 L571.1,315.7 L573.4,314.9 L575.6,314.0 L577.8,313.2 L580.0,312.3 L582.2,311.4 L584.4,310.5 L586.6,309.6 L588.8,308.6 L591.0,307.7 L593.2,306.7 L595.5,305.7 L597.7,304.7 L599.9,303.7 L602.1,302.6 L604.3,301.6 L606.5,300.5 L608.7,299.4 L610.9,298.3 L613.1,297.2 L615.4,296.0 L617.6,294.9 L619.8,293.7 L622.0,292.5 L624.2,291.3 L626.4,290.1 L628.6,288.9 L630.8,287.7 L633.0,286.4 L635.2,285.1 L637.5,283.8 L639.7,282.5 L641.9,281.2 L644.1,279.8 L646.3,278.5 L648.5,277.1 L650.7,275.7 L652.9,274.3 L655.1,272.9 L657.3,271.5 L659.5,270.0 L661.8,268.5 L664.0,267.1 L666.2,265.6 L668.4,264.0 L670.6,262.5 L672.8,261.0 L675.0,259.4 L677.2,257.8 L679.4,256.2 L681.6,254.6 L683.9,253.0 L686.1,251.3 L688.3,249.7 L690.5,248.0 L692.7,246.3 L694.9,244.6 L697.1,242.9 L699.3,241.1 L701.5,239.4 L703.8,237.6 L706.0,235.8 L708.2,234.0 L710.4,232.2 L712.6,230.4 L714.8,228.5 L717.0,226.6 L719.2,224.8 L721.4,222.9 L723.6,220.9 L725.9,219.0 L728.1,217.1 L730.3,215.1 L732.5,213.1 L734.7,211.1 L736.9,209.1 L739.1,207.1 L741.3,205.1 L743.5,203.0 L745.7,200.9 L748.0,198.8 L750.2,196.7 L752.4,194.6 L754.6,192.5 L756.8,190.3 L759.0,188.2 L761.2,186.0 L763.4,183.8 L765.6,181.6 L767.8,179.3 L770.0,177.1 L772.3,174.8 L774.5,172.5 L776.7,170.2 L778.9,167.9 L781.1,165.6 L783.3,163.2 L785.5,160.9 L787.7,158.5 L789.9,156.1 L792.1,153.7 L794.4,151.3 L796.6,148.8 L798.8,146.4 L801.0,143.9 L803.2,141.4 L805.4,138.9 L807.6,136.4 L809.8,133.9 L812.0,131.3 L814.2,128.8 L816.5,126.2 L818.7,123.6 L820.9,121.0 L823.1,118.3 L825.3,115.7 L827.5,113.0 L829.7,110.3 L831.9,107.6 L834.1,104.9 L836.4,102.2 L838.6,99.5 L840.8,96.7 L843.0,93.9 L845.2,91.1 L847.4,88.3 L849.6,85.5 L851.8,82.7 L854.0,79.8 L856.2,77.0 L858.5,74.1 L860.7,71.2 L862.9,68.3 L865.1,65.3 L867.3,62.4 L869.5,59.4 L871.7,56.4 L873.9,53.4 L876.1,50.4 L878.3,47.4 L880.5,44.3 L882.8,41.3 L885.0,38.2 L887.2,35.1 L889.4,32.0 L891.6,28.9 L893.8,25.7 L895.0,24.0 L895.0,24.0 L96.0,24.0 Z"/></g>
-            <g class="grid"><line x1="96.0" y1="24" x2="96.0" y2="640"/><line x1="272.8" y1="24" x2="272.8" y2="640"/><line x1="449.6" y1="24" x2="449.6" y2="640"/><line x1="626.4" y1="24" x2="626.4" y2="640"/><line x1="803.2" y1="24" x2="803.2" y2="640"/><line x1="980.0" y1="24" x2="980.0" y2="640"/><line x1="96" y1="640.0" x2="980" y2="640.0"/><line x1="96" y1="530.0" x2="980" y2="530.0"/><line x1="96" y1="420.0" x2="980" y2="420.0"/><line x1="96" y1="310.0" x2="980" y2="310.0"/><line x1="96" y1="200.0" x2="980" y2="200.0"/><line x1="96" y1="90.0" x2="980" y2="90.0"/></g>
-            <g data-step="2"><path class="pref" d="M96.0,480.1 L98.2,479.2 L100.4,478.3 L102.6,477.4 L104.8,476.5 L107.0,475.6 L109.3,474.6 L111.5,473.7 L113.7,472.8 L115.9,471.9 L118.1,471.0 L120.3,470.0 L122.5,469.1 L124.7,468.2 L126.9,467.3 L129.2,466.4 L131.4,465.5 L133.6,464.6 L135.8,463.6 L138.0,462.7 L140.2,461.8 L142.4,460.9 L144.6,460.0 L146.8,459.0 L149.0,458.1 L151.2,457.2 L153.5,456.3 L155.7,455.4 L157.9,454.5 L160.1,453.6 L162.3,452.6 L164.5,451.7 L166.7,450.8 L168.9,449.9 L171.1,449.0 L173.3,448.1 L175.6,447.1 L177.8,446.2 L180.0,445.3 L182.2,444.4 L184.4,443.5 L186.6,442.5 L188.8,441.6 L191.0,440.7 L193.2,439.8 L195.4,438.9 L197.7,438.0 L199.9,437.1 L202.1,436.1 L204.3,435.2 L206.5,434.3 L208.7,433.4 L210.9,432.5 L213.1,431.5 L215.3,430.6 L217.6,429.7 L219.8,428.8 L222.0,427.9 L224.2,427.0 L226.4,426.1 L228.6,425.1 L230.8,424.2 L233.0,423.3 L235.2,422.4 L237.4,421.5 L239.7,420.5 L241.9,419.6 L244.1,418.7 L246.3,417.8 L248.5,416.9 L250.7,416.0 L252.9,415.1 L255.1,414.1 L257.3,413.2 L259.5,412.3 L261.8,411.4 L264.0,410.5 L266.2,409.6 L268.4,408.6 L270.6,407.7 L272.8,406.8 L275.0,405.9 L277.2,405.0 L279.4,404.0 L281.6,403.1 L283.9,402.2 L286.1,401.3 L288.3,400.4 L290.5,399.5 L292.7,398.6 L294.9,397.6 L297.1,396.7 L299.3,395.8 L301.5,394.9 L303.7,394.0 L305.9,393.0 L308.2,392.1 L310.4,391.2 L312.6,390.3 L314.8,389.4 L317.0,388.5 L319.2,387.6 L321.4,386.6 L323.6,385.7 L325.8,384.8 L328.1,383.9 L330.3,383.0 L332.5,382.1 L334.7,381.1 L336.9,380.2 L339.1,379.3 L341.3,378.4 L343.5,377.5 L345.7,376.6 L347.9,375.6 L350.1,374.7 L352.4,373.8 L354.6,372.9 L356.8,372.0 L359.0,371.1 L361.2,370.1 L363.4,369.2 L365.6,368.3 L367.8,367.4 L370.0,366.5 L372.2,365.6 L374.5,364.6 L376.7,363.7 L378.9,362.8 L381.1,361.9 L383.3,361.0 L385.5,360.1 L387.7,359.1 L389.9,358.2 L392.1,357.3 L394.4,356.4 L396.6,355.5 L398.8,354.6 L401.0,353.6 L403.2,352.7 L405.4,351.8 L407.6,350.9 L409.8,350.0 L412.0,349.1 L414.2,348.1 L416.4,347.2 L418.7,346.3 L420.9,345.4 L423.1,344.5 L425.3,343.6 L427.5,342.6 L429.7,341.7 L431.9,340.8 L434.1,339.9 L436.3,339.0 L438.6,338.1 L440.8,337.1 L443.0,336.2 L445.2,335.3 L447.4,334.4 L449.6,333.5 L451.8,332.6 L454.0,331.6 L456.2,330.7 L458.4,329.8 L460.6,328.9 L462.9,328.0 L465.1,327.1 L467.3,326.1 L469.5,325.2 L471.7,324.3 L473.9,323.4 L476.1,322.5 L478.3,321.5 L480.5,320.6 L482.8,319.7 L485.0,318.8 L487.2,317.9 L489.4,317.3 L491.6,317.3 L493.8,317.3 L496.0,317.3 L498.2,317.3 L500.4,317.3 L502.6,317.3 L504.9,317.3 L507.1,317.3 L509.3,317.3 L511.5,317.3 L513.7,317.3 L515.9,317.3 L518.1,317.3 L520.3,317.3 L522.5,317.3 L524.7,317.3 L527.0,317.3 L529.2,317.3 L531.4,317.3 L533.6,317.3 L535.8,317.3 L538.0,317.3 L540.2,317.3 L542.4,317.3 L544.6,317.3 L546.8,317.3 L549.0,317.3 L551.3,317.3 L553.5,317.3 L555.7,317.3 L557.9,317.3 L560.1,317.3 L562.3,317.3 L564.5,317.3 L566.7,317.3 L568.9,316.5 L571.1,315.7 L573.4,314.9 L575.6,314.0 L577.8,313.2 L580.0,312.3 L582.2,311.4 L584.4,310.5 L586.6,309.6 L588.8,308.6 L591.0,307.7 L593.2,306.7 L595.5,305.7 L597.7,304.7 L599.9,303.7 L602.1,302.6 L604.3,301.6 L606.5,300.5 L608.7,299.4 L610.9,298.3 L613.1,297.2 L615.4,296.0 L617.6,294.9 L619.8,293.7 L622.0,292.5 L624.2,291.3 L626.4,290.1 L628.6,288.9 L630.8,287.7 L633.0,286.4 L635.2,285.1 L637.5,283.8 L639.7,282.5 L641.9,281.2 L644.1,279.8 L646.3,278.5 L648.5,277.1 L650.7,275.7 L652.9,274.3 L655.1,272.9 L657.3,271.5 L659.5,270.0 L661.8,268.5 L664.0,267.1 L666.2,265.6 L668.4,264.0 L670.6,262.5 L672.8,261.0 L675.0,259.4 L677.2,257.8 L679.4,256.2 L681.6,254.6 L683.9,253.0 L686.1,251.3 L688.3,249.7 L690.5,248.0 L692.7,246.3 L694.9,244.6 L697.1,242.9 L699.3,241.1 L701.5,239.4 L703.8,237.6 L706.0,235.8 L708.2,234.0 L710.4,232.2 L712.6,230.4 L714.8,228.5 L717.0,226.6 L719.2,224.8 L721.4,222.9 L723.6,220.9 L725.9,219.0 L728.1,217.1 L730.3,215.1 L732.5,213.1 L734.7,211.1 L736.9,209.1 L739.1,207.1 L741.3,205.1 L743.5,203.0 L745.7,200.9 L748.0,198.8 L750.2,196.7 L752.4,194.6 L754.6,192.5 L756.8,190.3 L759.0,188.2 L761.2,186.0 L763.4,183.8 L765.6,181.6 L767.8,179.3 L770.0,177.1 L772.3,174.8 L774.5,172.5 L776.7,170.2 L778.9,167.9 L781.1,165.6 L783.3,163.2 L785.5,160.9 L787.7,158.5 L789.9,156.1 L792.1,153.7 L794.4,151.3 L796.6,148.8 L798.8,146.4 L801.0,143.9 L803.2,141.4 L805.4,138.9 L807.6,136.4 L809.8,133.9 L812.0,131.3 L814.2,128.8 L816.5,126.2 L818.7,123.6 L820.9,121.0 L823.1,118.3 L825.3,115.7 L827.5,113.0 L829.7,110.3 L831.9,107.6 L834.1,104.9 L836.4,102.2 L838.6,99.5 L840.8,96.7 L843.0,93.9 L845.2,91.1 L847.4,88.3 L849.6,85.5 L851.8,82.7 L854.0,79.8 L856.2,77.0 L858.5,74.1 L860.7,71.2 L862.9,68.3 L865.1,65.3 L867.3,62.4 L869.5,59.4 L871.7,56.4 L873.9,53.4 L876.1,50.4 L878.3,47.4 L880.5,44.3 L882.8,41.3 L885.0,38.2 L887.2,35.1 L889.4,32.0 L891.6,28.9 L893.8,25.7 L895.0,24.0"/>
-              <text class="lab pf" x="122.5" y="76.8">preferred region, <tspan class="mi">m</tspan> = 1.5</text></g>
-            <path class="bnd" d="M96.0,533.4 L98.2,532.8 L100.4,532.2 L102.6,531.6 L104.8,531.0 L107.0,530.4 L109.3,529.8 L111.5,529.1 L113.7,528.5 L115.9,527.9 L118.1,527.3 L120.3,526.7 L122.5,526.1 L124.7,525.5 L126.9,524.9 L129.2,524.3 L131.4,523.6 L133.6,523.0 L135.8,522.4 L138.0,521.8 L140.2,521.2 L142.4,520.6 L144.6,520.0 L146.8,519.4 L149.0,518.8 L151.2,518.1 L153.5,517.5 L155.7,516.9 L157.9,516.3 L160.1,515.7 L162.3,515.1 L164.5,514.5 L166.7,513.9 L168.9,513.3 L171.1,512.6 L173.3,512.0 L175.6,511.4 L177.8,510.8 L180.0,510.2 L182.2,509.6 L184.4,509.0 L186.6,508.4 L188.8,507.8 L191.0,507.1 L193.2,506.5 L195.4,505.9 L197.7,505.3 L199.9,504.7 L202.1,504.1 L204.3,503.5 L206.5,502.9 L208.7,502.3 L210.9,501.6 L213.1,501.0 L215.3,500.4 L217.6,499.8 L219.8,499.2 L222.0,498.6 L224.2,498.0 L226.4,497.4 L228.6,496.8 L230.8,496.1 L233.0,495.5 L235.2,494.9 L237.4,494.3 L239.7,493.7 L241.9,493.1 L244.1,492.5 L246.3,491.9 L248.5,491.3 L250.7,490.6 L252.9,490.0 L255.1,489.4 L257.3,488.8 L259.5,488.2 L261.8,487.6 L264.0,487.0 L266.2,486.4 L268.4,485.8 L270.6,485.1 L272.8,484.5 L275.0,483.9 L277.2,483.3 L279.4,482.7 L281.6,482.1 L283.9,481.5 L286.1,480.9 L288.3,480.3 L290.5,479.6 L292.7,479.0 L294.9,478.4 L297.1,477.8 L299.3,477.2 L301.5,476.6 L303.7,476.0 L305.9,475.4 L308.2,474.8 L310.4,474.1 L312.6,473.5 L314.8,472.9 L317.0,472.3 L319.2,471.7 L321.4,471.1 L323.6,470.5 L325.8,469.9 L328.1,469.3 L330.3,468.6 L332.5,468.0 L334.7,467.4 L336.9,466.8 L339.1,466.2 L341.3,465.6 L343.5,465.0 L345.7,464.4 L347.9,463.8 L350.1,463.1 L352.4,462.5 L354.6,461.9 L356.8,461.3 L359.0,460.7 L361.2,460.1 L363.4,459.5 L365.6,458.9 L367.8,458.3 L370.0,457.6 L372.2,457.0 L374.5,456.4 L376.7,455.8 L378.9,455.2 L381.1,454.6 L383.3,454.0 L385.5,453.4 L387.7,452.8 L389.9,452.1 L392.1,451.5 L394.4,450.9 L396.6,450.3 L398.8,449.7 L401.0,449.1 L403.2,448.5 L405.4,447.9 L407.6,447.3 L409.8,446.6 L412.0,446.0 L414.2,445.4 L416.4,444.8 L418.7,444.2 L420.9,443.6 L423.1,443.0 L425.3,442.4 L427.5,441.8 L429.7,441.1 L431.9,440.5 L434.1,439.9 L436.3,439.3 L438.6,438.7 L440.8,438.1 L443.0,437.5 L445.2,436.9 L447.4,436.3 L449.6,435.6 L451.8,435.0 L454.0,434.4 L456.2,433.8 L458.4,433.2 L460.6,432.6 L462.9,432.0 L465.1,431.4 L467.3,430.8 L469.5,430.1 L471.7,429.5 L473.9,428.9 L476.1,428.3 L478.3,427.7 L480.5,427.1 L482.8,426.5 L485.0,425.9 L487.2,425.3 L489.4,424.9 L491.6,424.9 L493.8,424.9 L496.0,424.9 L498.2,424.9 L500.4,424.9 L502.6,424.9 L504.9,424.9 L507.1,424.9 L509.3,424.9 L511.5,424.9 L513.7,424.9 L515.9,424.9 L518.1,424.9 L520.3,424.9 L522.5,424.9 L524.7,424.9 L527.0,424.9 L529.2,424.9 L531.4,424.9 L533.6,424.9 L535.8,424.9 L538.0,424.9 L540.2,424.9 L542.4,424.9 L544.6,424.9 L546.8,424.9 L549.0,424.9 L551.3,424.9 L553.5,424.9 L555.7,424.9 L557.9,424.9 L560.1,424.9 L562.3,424.9 L564.5,424.9 L566.7,424.9 L568.9,424.4 L571.1,423.8 L573.4,423.3 L575.6,422.7 L577.8,422.1 L580.0,421.5 L582.2,420.9 L584.4,420.3 L586.6,419.7 L588.8,419.1 L591.0,418.4 L593.2,417.8 L595.5,417.1 L597.7,416.5 L599.9,415.8 L602.1,415.1 L604.3,414.4 L606.5,413.7 L608.7,412.9 L610.9,412.2 L613.1,411.5 L615.4,410.7 L617.6,409.9 L619.8,409.2 L622.0,408.4 L624.2,407.6 L626.4,406.8 L628.6,405.9 L630.8,405.1 L633.0,404.3 L635.2,403.4 L637.5,402.5 L639.7,401.7 L641.9,400.8 L644.1,399.9 L646.3,399.0 L648.5,398.1 L650.7,397.1 L652.9,396.2 L655.1,395.3 L657.3,394.3 L659.5,393.3 L661.8,392.4 L664.0,391.4 L666.2,390.4 L668.4,389.4 L670.6,388.3 L672.8,387.3 L675.0,386.3 L677.2,385.2 L679.4,384.1 L681.6,383.1 L683.9,382.0 L686.1,380.9 L688.3,379.8 L690.5,378.7 L692.7,377.5 L694.9,376.4 L697.1,375.2 L699.3,374.1 L701.5,372.9 L703.8,371.7 L706.0,370.5 L708.2,369.3 L710.4,368.1 L712.6,366.9 L714.8,365.7 L717.0,364.4 L719.2,363.2 L721.4,361.9 L723.6,360.6 L725.9,359.3 L728.1,358.0 L730.3,356.7 L732.5,355.4 L734.7,354.1 L736.9,352.8 L739.1,351.4 L741.3,350.0 L743.5,348.7 L745.7,347.3 L748.0,345.9 L750.2,344.5 L752.4,343.1 L754.6,341.7 L756.8,340.2 L759.0,338.8 L761.2,337.3 L763.4,335.8 L765.6,334.4 L767.8,332.9 L770.0,331.4 L772.3,329.9 L774.5,328.3 L776.7,326.8 L778.9,325.3 L781.1,323.7 L783.3,322.2 L785.5,320.6 L787.7,319.0 L789.9,317.4 L792.1,315.8 L794.4,314.2 L796.6,312.6 L798.8,310.9 L801.0,309.3 L803.2,307.6 L805.4,306.0 L807.6,304.3 L809.8,302.6 L812.0,300.9 L814.2,299.2 L816.5,297.4 L818.7,295.7 L820.9,294.0 L823.1,292.2 L825.3,290.5 L827.5,288.7 L829.7,286.9 L831.9,285.1 L834.1,283.3 L836.4,281.5 L838.6,279.6 L840.8,277.8 L843.0,276.0 L845.2,274.1 L847.4,272.2 L849.6,270.3 L851.8,268.5 L854.0,266.6 L856.2,264.6 L858.5,262.7 L860.7,260.8 L862.9,258.8 L865.1,256.9 L867.3,254.9 L869.5,252.9 L871.7,251.0 L873.9,249.0 L876.1,246.9 L878.3,244.9 L880.5,242.9 L882.8,240.9 L885.0,238.8 L887.2,236.7 L889.4,234.7 L891.6,232.6 L893.8,230.5 L896.0,228.4 L898.2,226.3 L900.4,224.2 L902.6,222.0 L904.9,219.9 L907.1,217.7 L909.3,215.5 L911.5,213.4 L913.7,211.2 L915.9,209.0 L918.1,206.8 L920.3,204.5 L922.5,202.3 L924.8,200.1 L927.0,197.8 L929.2,195.6 L931.4,193.3 L933.6,191.0 L935.8,188.7 L938.0,186.4 L940.2,184.1 L942.4,181.8 L944.6,179.4 L946.9,177.1 L949.1,174.7 L951.3,172.3 L953.5,170.0 L955.7,167.6 L957.9,165.2 L960.1,162.8 L962.3,160.3 L964.5,157.9 L966.7,155.5 L969.0,153.0 L971.2,150.5 L973.4,148.1 L975.6,145.6 L977.8,143.1 L980.0,140.6"/>
-            <text class="lab bl" x="741.3" y="384.0">capability boundary</text>
-            
-            <text class="lab fu" x="962.3" y="76.8" text-anchor="end">skill fulfilled</text>
-            <text class="lab nf" x="820.9" y="596.0" text-anchor="middle">not fulfilled</text>
-            <g class="ax"><line x1="96" y1="640" x2="980" y2="640"/><line x1="96" y1="24" x2="96" y2="640"/></g>
-            <g class="tk"><text x="96.0" y="670" text-anchor="middle">40</text><text x="272.8" y="670" text-anchor="middle">60</text><text x="449.6" y="670" text-anchor="middle">80</text><text x="626.4" y="670" text-anchor="middle">100</text><text x="803.2" y="670" text-anchor="middle">120</text><text x="980.0" y="670" text-anchor="middle">140</text><text x="84" y="648.0" text-anchor="end">0</text><text x="84" y="538.0" text-anchor="end">25</text><text x="84" y="428.0" text-anchor="end">50</text><text x="84" y="318.0" text-anchor="end">75</text><text x="84" y="208.0" text-anchor="end">100</text><text x="84" y="98.0" text-anchor="end">125</text></g>
-            <text class="axl" x="538.0" y="732" text-anchor="middle">ego-vehicle velocity <tspan class="mi">v</tspan><tspan class="sb" dy="6">ego</tspan><tspan dy="-6"> [km/h]</tspan></text>
-            <text class="axl" transform="translate(26,332.0) rotate(-90)" text-anchor="middle">available perception range <tspan class="mi">d</tspan><tspan class="sb" dy="6">PE</tspan><tspan dy="-6"> [m]</tspan></text>
-            <line class="gap" x1="714.8" y1="128.0" x2="714.8" y2="363.7" marker-end="url(#mg-ar)"/>
-            <text class="lab sm" x="730.8" y="234.8">far from the boundary</text>
-            <text class="lab sm" x="730.8" y="264.8"><tspan class="mi">ρ</tspan> ≈ 1.9</text>
-            <circle class="pt" cx="714.8" cy="112.0" r="13"/><text class="sl" x="692.8" y="94.0" text-anchor="end"><tspan class="mi">S</tspan></text>
-            <g data-step="1">
-              <line class="fog" x1="96" y1="420.0" x2="980" y2="420.0"/>
-              <text class="lab fg" x="972" y="450.0" text-anchor="end">fog, 50 m</text>
-              <path class="mv" d="M702.8,126.0 C654.8,252.0 628.0,300.0 548.0,404.0" marker-end="url(#mg-ar)"/>
-              <circle class="pt edge" cx="538.0" cy="420.0" r="13"/>
-              <text class="lab" x="530.0" y="486.0">90 km/h, on the edge, <tspan class="mi">ρ</tspan> ≈ 1.02</text>
-              <line class="cross" x1="585.6" y1="406.0" x2="585.6" y2="434.0"/>
-              <text class="lab sm bl" x="593.6" y="452.0">boundary at 95 km/h</text></g>
-            <g data-step="2">
-              <path class="mv" d="M520.0,394.0 L257.4,394.0" marker-end="url(#mg-ar)"/>
-              <text class="lab pf" x="122.5" y="244.0">slow down to 56 km/h</text><text class="lab pf sm" x="122.5" y="274.0"><tspan class="mi">ρ</tspan> = <tspan class="mi">m</tspan> = 1.5, <tspan class="mi">w</tspan> = 1</text>
-              <circle class="pt pr" cx="237.4" cy="420.0" r="13"/></g>
-          </svg>
-          <p class="xs mute" style="margin:0">Required range for zones B and C, traffic ahead at 110 km/h</p></div>
-        <div class="col" style="flex:1 1 0;gap:18px">
-          <div class="card tight col" style="gap:8px"><h4>How far from the boundary ${R("salvi2022fuzzy")}</h4>
-            <div class="eq" style="font-size:30px;text-align:center"><i>ρ<sub>k</sub></i>(<i>s</i>) = <span class="fr"><span><i>g<sub>k</sub></i><sup>av</sup>(<i>s</i>)</span><span><i>g<sub>k</sub></i><sup>req</sup>(<i>s</i>)</span></span> &nbsp;=&nbsp; <span class="fr"><span><i>d</i><sub>PE</sub></span><span><i>d</i><sub>req</sub>(<i>v</i><sub>ego</sub>)</span></span></div>
-            <p class="small" style="margin:0">Available over required, <b>1 on the boundary</b></p></div>
-          <div class="card tight col" data-step="2" style="gap:8px"><h4>Strategic margin ${R("hullermeier2021aleatoric")}</h4>
-            <div class="eq" style="font-size:30px;text-align:center"><i>w<sub>k</sub></i>(<i>s</i>) = min(1, <span class="fr"><span><i>ρ<sub>k</sub></i>(<i>s</i>) − 1</span><span><i>m<sub>k</sub></i> − 1</span></span>)</div>
-            <p class="small" style="margin:0">0 on the boundary, 1 in the preferred region<br><i class="m">w<sub>a</sub></i> = min<sub><i class="m">k</i></sub> <i class="m">w<sub>k</sub></i>, the most constrained skill</p></div>
-          <div class="card tight col grow" data-step="3" style="gap:8px"><h4>In the reward, not a second boundary</h4>
-            <div class="eq" style="font-size:28px;text-align:center"><i>R</i><sub>op</sub>(<i>s</i>) = −( 1 − <sup>1</sup>⁄<sub>|<i>A</i>|</sub> Σ<sub><i>a</i> ∈ ${Aens()}</sub> <i>w<sub>a</sub></i>(<i>s</i>) )</div>
-            <p class="small" style="margin:0">The planner slows down before the boundary<br>No maneuver is removed</p></div>
-        </div></div>` },
 
     { id: "bridge-c1", type: "bridge", sec: "c1", dark: true, kicker: "Limitation", time: 30,
       title: "Ensured now, but what about the states the decision leads to?",
@@ -733,6 +595,16 @@
     // ================================================================ 5. C3 · choice under uncertainty: ODD-constrained POMDP
     { id: "sec-c3", type: "section", sec: "c3", dark: true, title: "C3 · What if the information is uncertain?", time: 10 },
 
+    { id: "rw-c3", cite: ["hubmann2018uncertainty", "chen2025intention", "ulbrich2015pomdp", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep"], sec: "c3", c: ["C3"], kicker: "Related work · partial observability", time: 60,
+      title: "How do POMDP planners handle uncertainty?",
+      notes: "POMDPs are the standard frame for tactical decisions under partial observability: lane changes, merging, intersections. Online Monte Carlo search with belief updates makes them tractable, and POMCP represents the belief with particles. What they keep uncertain is the traffic. The capability of the vehicle is assessed, at best, in the current state. The ODD-POMDP adds the capability check in every particle.",
+      html: `<div class="card tight col grow" style="gap:8px">${fig("rw_pomdp.png", "Partially observable driving scenarios")}
+          <p class="xs mute" style="margin:0;text-align:center">${R("hubmann2018uncertainty", "chen2025intention", "ulbrich2015pomdp", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep")}</p></div>
+        <div class="g2">
+          <div class="card ok"><h3 style="margin:0">Uncertain traffic ✓</h3></div>
+          <div class="card bad"><h3 style="margin:0">Uncertain capability ✗</h3></div>
+        </div>` },
+
     { id: "pomdp-sources", cite: ["zhang2020efficient", "chen2025intention"], sec: "c3", c: ["C3"], kicker: "Extension to partial observability", time: 55,
       title: "Three sources of uncertainty, one belief over particles",
       notes: "Three sources, which do not play the same role. Noise on the vehicles changes which gap looks acceptable. The forecast uncertainty enters the skills, so this is where the capability reasoning matters most. Intentions stay hidden whatever the sensor quality. Each card links to its experiment, in the validation.",
@@ -774,34 +646,6 @@
       notes: "Each simulation draws one particle and follows ensured actions up to the horizon. Simulation after simulation, the tree grows toward the most promising ensured actions. Only the best ensured action is executed, the belief is rebuilt and the search starts again.",
       video: { src: A + "pomcp.mp4", parts: [[30.6, "Monte Carlo search: one simulation at a time"], [46.0, "Many simulations: the tree grows where it matters"], [59.37, "Execute the best ensured action, rebuild the belief, search again"]] } },
 
-    { id: "pomcp", cite: ["auer2002finite", "silver_monte-carlo_2010"], sec: "c3", c: ["C3"], kicker: "Resolution through Monte Carlo planning", time: 50,
-      title: "The MCE filters selection, expansion and rollout",
-      notes: "POMCP with the capability filter at the three stages where actions are chosen. The final action is the best ensured action at the root. The particles carry the intentions of the other drivers.",
-      backups: ["b-pomcp", "b-cost"],
-      html: `<div class="g4">
-          ${[["Selection", "UCB1 among ensured actions " + R("auer2002finite"), 1], ["Expansion", "Only ensured actions", 1], ["Rollout", "Random among ensured actions", 1], ["Backpropagation", "Values and visit counts " + R("silver_monte-carlo_2010"), 0]]
-            .map(([t, d, f], j) => `<div class="card col" style="gap:10px"><div class="row" style="align-items:center;gap:12px"><div class="num-badge" style="width:44px;height:44px;font-size:21px">${j + 1}</div><h3 style="margin:0">${t}</h3></div>
-              <p class="small">${d}</p>${f ? '<span class="pill ok" style="align-self:flex-start;margin-top:auto">MCE filter</span>' : ""}</div>`).join("")}
-        </div>
-        <div class="row grow">
-          <div class="card col grow" style="justify-content:center;gap:22px;padding:26px 60px">
-            <div class="eqn"><span class="nm">Selection · UCB1<small>good actions, and rarely tried ones</small></span><div class="eq"><i>a</i> = argmax<sub><i>a</i> ∈ ${Aens("b<sub>h</sub>")}</sub> [ <i>Q</i>(<i>h</i>, <i>a</i>) + <i>c</i> √( ln <i>N</i>(<i>h</i>) / <i>N</i>(<i>h</i>, <i>a</i>) ) ]</div></div>
-            <div class="eqn"><span class="nm">Return of a simulation<small>discounted sum of rewards</small></span><div class="eq"><i>G</i> = Σ<sub><i>k</i>=0</sub><sup><i>H</i></sup> <i>γ</i><sup><i>k</i></sup> <i>R</i>(<i>s<sub>k</sub></i>, <i>a<sub>k</sub></i>)</div></div>
-            <div class="eqn"><span class="nm">Value update<small>running mean of the returns</small></span><div class="eq"><i>Q</i>(<i>h</i>, <i>a</i>) ← <i>Q</i>(<i>h</i>, <i>a</i>) + ( <i>G</i> − <i>Q</i>(<i>h</i>, <i>a</i>) ) / <i>N</i>(<i>h</i>, <i>a</i>)</div></div>
-            <div class="eqn"><span class="nm">Decision<small>the best ensured action at the root</small></span><div class="eq"><i>a<sub>t</sub></i> = argmax<sub><i>a</i> ∈ ${Aens("b<sub>t</sub>")}</sub> <i>Q</i>(<i>h</i><sub>0</sub>, <i>a</i>)</div></div>
-            <div class="lgd" style="margin-top:6px"><span class="s"><i>h</i>, <i>b<sub>h</sub></i></span><span>a node and its particles</span><span class="s"><i>Q</i>, <i>N</i></span><span>value and visit counts</span>
-              <span class="s"><i>c</i></span><span>exploration weight</span><span class="s"><i>γ</i>, <i>H</i></span><span>discount and horizon</span></div></div>
-        </div>` },
-    { id: "bridge-c3", type: "bridge", sec: "c3", dark: true, kicker: "From the method to its validation", time: 25,
-      title: "Does it hold, in simulation and on a real vehicle?",
-      notes: "Capability precedes choice is now formalized: the MCE assesses the maneuvers, and the ODD-MDP and the ODD-POMDP choose among the ensured ones. So far, the animations have illustrated each step on one situation. The validation evaluates the whole: in IPG CarMaker, over hundreds of runs, and with the same planner, unchanged, on a Mégane E-Tech prototype.",
-      html: `<div class="bridge"><div class="k">From the method to its validation</div>
-        <div class="q">Does it hold, in simulation and on a real vehicle?</div>
-        <ul class="chk"><li class="y"><b>Capability</b> with the MCE, <b>choice</b> with the ODD-MDP and the ODD-POMDP</li>
-          <li class="n">So far, each step shown on one situation</li>
-          <li class="to">Hundreds of runs in IPG CarMaker, then a Mégane E-Tech prototype</li></ul>
-        <a class="next" data-go="sec-c4" href="#/sec-c4"><span class="cbadge solid">C4</span> Validation, in simulation and on a real vehicle →</a></div>` },
-
     // ================================================================ 6. C4 · validation in simulation and on the vehicle
     { id: "sec-c4", type: "section", sec: "c4", dark: true, title: "C4 · Does it run on a real vehicle?", time: 10 },
 
@@ -823,11 +667,6 @@
       notes: "The strongest evidence of the defense: a real vehicle executing the decisions. Let the video run without talking over it for the first seconds.",
       video: { src: V + "vil.mp4", parts: [[12.0, "A real vehicle, with virtual traffic"], [21.25, "Is returning to the right lane worthwhile?"], [33.0, "The run: one overtaking sequence past the whole group"]] } },
 
-    { id: "v-fog", type: "video", sec: "c4", c: ["C2", "C4"], time: 135,
-      title: "Scenario 1: reduced visibility",
-      notes: "The hypotheses of the fog scenario, then the reference planner with a single decision step against ODD-aptive with four steps, on the same traffic.",
-      video: { src: V + "fog.mp4", parts: [[12.0, "The electronic horizon announces the fog"], [18.5, "Fog reduces the perception envelope"], [29.0, "Keep Lane ensured, lane change not ensured"], [41.0, "The MRM requires the hard shoulder"], [48.5, "Keep the MRM reachable when the capabilities are degraded"], [61.5, "The simulations, and how to read the display"], [81.0, "One decision step against four, up to the fog"]] } },
-
     { id: "fog-a", sec: "c4", c: ["C2", "C4"], kicker: "Scenario 1: reduced visibility · configuration A", time: 60,
       title: "With four steps, no MRM before the fog in 100 of 100 runs",
       notes: "Configuration A. With one step, the set speed stays at 130 km/h until about 170 m before the fog and every run ends with an MRM. With four steps, the deceleration starts before the 300 m ramp: the vehicle reacts to the forecast degradation, not to the observed one. No collision in the 400 runs. The margin lowers the entry speed without a second boundary.",
@@ -843,23 +682,6 @@
             <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.5</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">478 m (470–488)</td><td class="c">70.1 km/h (68.8–72.3)</td></tr></table>
           <div class="card tight grow">${fig("fog_speed_profiles.png", "Speed profiles before the fog")}</div>
         </div></div>` },
-
-    { id: "fog-b", sec: "c4", c: ["C2", "C4"], kicker: "Scenario 1: reduced visibility · configuration B", time: 60,
-      title: "With traffic, more returns in time and more overtaking",
-      notes: "Configuration B. ODD-aptive plans the return in every run. Its remaining failures are mostly returns blocked by a vehicle alongside in the last 300 m. And it overtakes more, so anticipation is not conservative. One run with m = 1.2 is excluded, a simulator artefact.",
-      backups: ["b-outcomes", "b-conf"],
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.1 1 0"><h4>Lane occupied before the fog</h4>${fig("fog_lane_occupancy.png", "Lane occupancy before the fog")}</div>
-        <div class="card grow"><h4>Setup</h4><ul class="list small">
-          <li>Three lanes, slower trucks on the right</li>
-          <li>No lane change ensured in the fog</li>
-          <li>MRM on the hard shoulder, from the right lane</li>
-          <li>100 seeds per planner</li></ul></div>
-        </div>
-        <table class="tbl"><tr><th>Planner</th><th class="c">Right lane at the fog</th><th class="c">Blocked by traffic</th><th class="c">Planned too late</th><th class="c">Never planned</th><th class="c">Runs with overtaking</th><th class="c">Mean speed</th></tr>
-          <tr><td>Reference, one step</td><td class="c">76 / 100</td><td class="c">5</td><td class="c">10</td><td class="c">9</td><td class="c">45</td><td class="c">90.7 km/h</td></tr>
-          <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c"><b>90 / 100</b></td><td class="c">7</td><td class="c">3</td><td class="c"><b>0</b></td><td class="c"><b>82</b></td><td class="c">96.1 km/h</td></tr>
-          <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.2</td><td class="c"><b>92 / 99</b></td><td class="c">6</td><td class="c">1</td><td class="c"><b>0</b></td><td class="c">76</td><td class="c">94.3 km/h</td></tr></table>` },
 
     { id: "v-exit", type: "video", sec: "c4", c: ["C2", "C4"], time: 140,
       title: "Scenario 2: preparing a highway exit",
@@ -882,88 +704,6 @@
             <div class="card tight stat"><span class="v" style="font-size:30px">84 → 103 km/h</span><span class="l">mean speed, without then with overtaking</span></div>
           </div>
         </div></div>` },
-
-    { id: "congestion", sec: "c4", c: ["C2", "C4"], kicker: "Scenario 2: preparing a highway exit", time: 50,
-      title: "Announced congestion brings the return ≈ 400 m earlier",
-      notes: "The planner only models the nearest vehicles, so it cannot see the congestion before reaching it. The announced density is the only way to know that the lane changes will become harder. We frame it as a capability limit.",
-      html: `<div class="row">
-        <div class="card grow small">Density rises over the last 1.5 km, announced ahead</div>
-        <div class="card grow small">Lane change ensured only below a maximum density</div>
-        <div class="card grow small">Same 20 seeds, with and without the announcement</div></div>
-        <div class="card tight grow">${fig("congestion.png", "Returns with and without the announced density")}</div>
-        <div class="g4">
-          <div class="card tight stat"><span class="v" style="font-size:40px">471 → 876 m</span><span class="l">median final return, without then with</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">94 → 218 m</span><span class="l">latest return before the exit</span></div>
-          <div class="card tight stat"><span class="v ok" style="font-size:40px">20 / 20</span><span class="l">exits taken by both</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">83.4 → 85.0</span><span class="l">km/h mean speed, no loss</span></div>
-        </div>` },
-
-    { id: "r-noisy", sec: "c4", c: ["C3", "C4"], kicker: "Results under uncertainty · surrounding vehicles", time: 50,
-      title: "Under noisy perception, the belief keeps a safe gap",
-      notes: "With noise, the ODD-MDP is outside the right lane at the fog entry in 13 runs, the ODD-POMDP in 6. No collision in any run. The gain comes from evaluating each lane change over several hypotheses.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.25 1 0">${fig("noisy_frames.png", "Noisy perception frames, ODD-MDP and ODD-POMDP")}</div>
-        <div class="col grow">
-          <div class="card small">Car behind at 102 km/h, seen at 108<br><b>ODD-MDP</b> rejects the gap<br><b>ODD-POMDP</b> changes lane 430 m before the fog</div>
-          <div class="card tight stat"><span class="v" style="font-size:42px">13 → 6</span><span class="l">runs outside the right lane at the fog, MDP then POMDP</span></div>
-          <div class="card tight stat"><span class="v ok" style="font-size:42px">85 → 94</span><span class="l">runs in the right lane and operable</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:42px">236 → 367 m</span><span class="l">return starts earlier before the fog</span></div>
-          <p class="xs mute" style="margin:0">Same 100 seeds for both planners</p>
-        </div></div>` },
-
-    { id: "r-forecast-tau", sec: "c4", c: ["C3", "C4"], kicker: "Results under uncertainty · visibility forecast", time: 50,
-      title: "The threshold τ turns a probability into a boundary",
-      notes: "Top: share of hypotheses for which Keep Lane is ensured, in the plane of speed and forecast visibility. The threshold tau turns this probability into a boundary. Bottom: the higher tau, the earlier and smoother the slowdown.",
-      html: `<div class="row grow">
-        <div class="col" style="flex:1.2 1 0">
-          <div class="card tight grow">${fig("capability_plane.png", "Share of hypotheses where Keep Lane is ensured")}</div>
-          <div class="card tight grow">${fig("admissible_speed.png", "Admissible speed for several thresholds")}</div>
-        </div>
-        <div class="col grow">
-          <div class="card small">32 fog hypotheses, corrected on board as the fog nears</div>
-          <div class="card tight stat"><span class="v" style="font-size:42px">75 → 92 m</span><span class="l">visibility needed at 120 km/h, exact forecast then <i class="m">τ</i> = 0.9</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:42px">95 → 165 m</span><span class="l">slowdown starts earlier</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:42px"><i class="m">τ</i> = 0.9</span><span class="l">chosen, <i class="m">τ</i> = 1 too conservative</span></div>
-        </div></div>` },
-
-    { id: "r-forecast", sec: "c4", c: ["C3", "C4"], kicker: "Results under uncertainty · visibility forecast", time: 50,
-      title: "Despite forecast errors, the ODD-POMDP passes the fog in 19 of 20 runs",
-      notes: "The fog starts up to 150 m before or after the announced point. When it is denser than announced, the ODD-MDP arrives too fast and loses Keep Lane. The ODD-POMDP slows down progressively and passes every dense case. The cost is one precautionary MRM in a lighter fog.",
-      backups: ["b-conf"],
-      html: `<div class="row grow">
-        <div class="col grow">
-          <table class="tbl"><tr><th>Real fog</th><th>Planner</th><th class="c">Passed</th><th class="c">MRM</th></tr>
-            <tr><td rowspan="2"><b>All 20 seeds</b></td><td>ODD-MDP</td><td class="c">10</td><td class="c">10</td></tr>
-            <tr class="hl"><td>ODD-POMDP</td><td class="c"><b>19</b></td><td class="c">1</td></tr>
-            <tr class="sep"><td rowspan="2"><b>Denser (11)</b></td><td>ODD-MDP</td><td class="c">1</td><td class="c">10</td></tr>
-            <tr class="hl"><td>ODD-POMDP</td><td class="c"><b>11</b></td><td class="c">0</td></tr>
-            <tr class="sep"><td rowspan="2"><b>Lighter (9)</b></td><td>ODD-MDP</td><td class="c">9</td><td class="c">0</td></tr>
-            <tr class="hl"><td>ODD-POMDP</td><td class="c">8</td><td class="c">1</td></tr></table>
-          <div class="g2">
-            <div class="card tight stat"><span class="v bad" style="font-size:40px">+27.5 km/h</span><span class="l">ODD-MDP, largest excess over the admissible speed</span></div>
-            <div class="card tight stat"><span class="v ok" style="font-size:40px">0 runs</span><span class="l">ODD-POMDP above the admissible speed · no collision</span></div>
-          </div>
-        </div>
-        <div class="card col" style="flex:0.95 1 0">${fig("forecast_run.png", "Seed 8: real fog after the announced point")}
-          <p class="xs mute">Seed 8, fog later and denser than announced<br>ODD-POMDP enters at 73 km/h · ODD-MDP at 92 km/h, then MRM</p></div>
-        </div>` },
-
-    { id: "v-intentions", type: "video", sec: "c4", c: ["C3", "C4"], time: 95,
-      title: "Uncertain tactical intentions",
-      notes: "An intention cannot be measured: it is estimated from the kinematics. The particles hold the possible maneuvers, and each future is evaluated with its consequences. Two use cases: a cut-in, and a vehicle entering the highway.",
-      video: { src: V + "intentions.mp4", parts: [[12.0, "An intention cannot be measured"], [19.75, "The tactical state of each vehicle"], [29.25, "The belief: a set of particles"], [38.75, "Each future is evaluated with its consequences"], [52.5, "The simulations, and how to read the display"], [69.75, "A cut-in, and a vehicle entering the highway"]] } },
-
-    { id: "r-cutin", sec: "c4", c: ["C3", "C4"], kicker: "Results under uncertainty · tactical intentions", time: 45,
-      title: "The ODD-POMDP reacts to a cut-in before the car moves",
-      notes: "Reaction time measured from the start of the lateral motion of the car. The ODD-POMDP evaluates separately the futures with and without the cut-in, which explains its earlier reaction. Illustrative run only.",
-      html: `<p class="small" style="margin:0">Ego at 130 km/h, a car cuts in from behind a truck · same intention estimate for all, <i class="m">P</i> ≈ 0.35 – 0.39</p>
-        <div class="card tight col" style="gap:8px"><h4>ODD-MDP with tactical risk</h4><div class="g3">${fig("cutin_mdp_a.png", "ODD-MDP, a", 210)}${fig("cutin_mdp_b.png", "ODD-MDP, b", 210)}${fig("cutin_mdp_c.png", "ODD-MDP, c", 210)}</div></div>
-        <div class="card tight col" style="gap:8px"><h4>ODD-POMDP</h4><div class="g3">${fig("cutin_pomdp_a.png", "ODD-POMDP, a", 210)}${fig("cutin_pomdp_b.png", "ODD-POMDP, b", 210)}${fig("cutin_pomdp_c.png", "ODD-POMDP, c", 210)}</div></div>
-        <div class="g3">
-          <div class="card tight stat"><span class="v bad" style="font-size:40px">+2.4 s</span><span class="l">ODD-MDP without tactical risk, brakes to 102 km/h</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px;color:var(--deg)">+0.8 s</span><span class="l">ODD-MDP with tactical risk, brakes to 106 km/h</span></div>
-          <div class="card tight stat"><span class="v ok" style="font-size:40px">−2.8 s</span><span class="l">ODD-POMDP, changes lane first, keeps 130 km/h</span></div>
-        </div>` },
 
     // ================================================================ 7. conclusion
     { id: "sec-concl", type: "section", sec: "concl", dark: true, title: "Conclusion and perspectives", time: 10 },
@@ -1209,6 +949,261 @@
           <li>Both left lane changes appear in step 2 a few seconds before they become step 1</li>
           <li>Intermediate returns appear in step 2 around 50, 61 and 66 s, but never reach step 1</li>
           <li>Speed almost constant at ≈ 60 km/h</li></ul></div>` },
+
+    // ---------------------------------------------------------------- moved from the main part (45 min), for the questions
+    { id: "responsibility", cite: ["ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan", "sae2021taxonomy", "Farah2021Awareness", "kuehn2017takeover"], sec: "backup", kicker: "Appendix", time: 60,
+      title: "Level by level, the frontier lies between Level 2 and Level 3",
+      notes: "Automated driving advances, but level by level. Fully self-driving fleets were announced for 2019 and 2020, by General Motors, Toyota and Nissan. They did not arrive: driving proved harder than assumed. The decisive frontier is between Level 2 and Level 3. Up to Level 2, the driver supervises, and must know the limits of the system, which drivers often do not. From Level 3, the system performs the whole driving task within its operational design domain: it must monitor its own limits and request a takeover in time. From Level 4, nobody takes over: the system must reach a minimal risk condition by itself. So, to cross this frontier, the vehicle itself must know what it can do.",
+      html: `<div class="row grow">
+          <div class="card col" style="flex:1.5 1 0">${fig("sae_levels.png", "Automation levels and examples of ODD")}<p class="xs mute" style="margin:0">SAE J3016 ${R("sae2021taxonomy")} · fleets announced for 2019 – 2020 ${R("ref_claim_GM", "ref_claim_toyota", "ref_claim_Nissan")}</p></div>
+          <div class="col grow" style="justify-content:center;gap:26px">
+            <div class="card tight"><h3 style="margin:0">Level 2 · the driver watches ${R("Farah2021Awareness")}</h3></div>
+            <div class="card tight accent"><h3 style="margin:0">Level 3 · the system drives ${R("kuehn2017takeover")}</h3></div>
+            <div class="card tight ok"><h3 style="margin:0">Level 4 · nobody takes over</h3></div>
+          </div></div>` },
+
+    { id: "failop", cite: ["avizienis2004taxonomy", "iso2018iso26262", "fail2022Stolte"], sec: "backup", kicker: "Appendix", time: 60, steps: 2,
+      title: "Fail-safe stops, fail-operational drives on with fewer capabilities",
+      notes: "First, what fail-operational means, on a simple example: on a highway at 130 km/h, the primary LiDAR loses range, so the perception horizon shrinks. (1) A fail-safe system reaches a minimal risk condition: it stops on the hard shoulder, and the mission is aborted. (2) A fail-operational system updates its capabilities and replans: it continues at a reduced speed, without the lane change that is no longer ensured, while a minimal risk maneuver remains reachable.",
+      html: `<div class="card row" style="gap:30px;align-items:center;padding:18px 28px">
+          <img src="${F}failop_a.png" alt="The LiDAR range is reduced; the nominal range is dashed" style="width:640px;border-radius:10px">
+          <h3 style="margin:0">The LiDAR loses range<br>What now?</h3></div>
+        <div class="g2 grow">
+          <div class="card col" data-step="1" style="gap:12px"><h3 style="margin:0">Fail-safe ${R("avizienis2004taxonomy", "iso2018iso26262")}</h3><img src="${F}failop_e.png" alt="Fail-safe: the vehicle stops on the hard shoulder" style="width:100%;border-radius:10px">
+            <p style="margin:0;font-size:30px"><b>Stops</b></p></div>
+          <div class="card col ok" data-step="2" style="gap:12px"><h3 style="margin:0">Fail-operational ${R("fail2022Stolte")}</h3><img src="${F}failop_f.png" alt="Fail-operational: the vehicle continues at a reduced speed, the lane change is no longer ensured" style="width:100%;border-radius:10px">
+            <p style="margin:0;font-size:30px"><b>Drives on</b>, with fewer capabilities</p></div>
+        </div>` },
+
+    { id: "awareness", cite: ["armand2014ontology", "salvi2022fuzzy", "woerter2021enhanced", "schlatow2017selfawareness"], sec: "backup", kicker: "Appendix", time: 70, steps: 2,
+      title: "What must the vehicle know about its context, and about itself?",
+      notes: "What the vehicle must know, in two kinds of awareness. Context awareness: the knowledge associated with the context, semantic, such as road users and crossings, or aggregated, such as a school zone, its speed limit and the time of day; and the risk associated with the context, here a risk map around a vehicle. (1) Self awareness: the impact of actions on oneself, for instance what the vehicle can still see after a lane change, and the dependencies of the system, for instance the capability graph of an ACC, whose behaviors rest on lower-level capabilities. (2) The ODD links both: the capabilities of the system, and a structured representation of the context. Its limits: the perceived context is uncertain, so margins are needed, and the boundaries are discontinuous, so they must be anticipated.",
+      html: `<div class="awr">
+          <div class="card col aw ctx"><h3>The context</h3>
+            <div class="awg">
+              <figure><img src="${F}aw_semantic.png" alt="Road with vehicles and a pedestrian crossing"><figcaption>${R("armand2014ontology")}</figcaption></figure>
+              <figure><img src="${F}aw_aggregated.png" alt="School zone at 30, and the time of day"><figcaption>${R("salvi2022fuzzy")}</figcaption></figure>
+              <figure class="w2"><img src="${F}aw_risk.png" alt="Risk map around a vehicle"><figcaption>${R("woerter2021enhanced")}</figcaption></figure>
+            </div></div>
+          <div class="card col aw self" data-step="1"><h3>Itself ${R("schlatow2017selfawareness")}</h3>
+            <div class="awg">
+              <figure class="w2"><img src="${F}aw_vision.png" alt="What the vehicle can see before and after a lane change"></figure>
+              <figure class="w2"><img src="${F}aw_graph.png" alt="Capability graph of an ACC"></figure>
+            </div></div>
+        </div>
+        <div class="card navy awodd" data-step="2"><b>The ODD links both</b></div>` },
+
+    { id: "assumptions", sec: "backup", c: ["C1"], kicker: "Appendix", time: 50,
+      title: "Which maneuvers can the vehicle ensure, now and after its decisions?",
+      notes: "What we want to analyse. The ODD does not change, but the context and the driving situation do, so the maneuvers the vehicle can ensure change along the journey. And a maneuver ensured now may lead to a state where the next ones are no longer ensured. So the capability must be assessed now, and in the situations the decisions lead to. For that, we first need three things: the maneuvers, and the conditions each one requires, which is the ODD brought down to the maneuvers; the skills that let us assess a maneuver in a given state; and the predicted states, on which the same assessment is repeated. The working assumptions are in the appendix.",
+      backups: ["b-assumptions"],
+      html: `<div class="card tight" style="font-size:28px;padding:20px 32px">The context changes, and so do the <b>ensured maneuvers</b><br>Ensured now can lead to a state where <b>the next ones are not</b></div>
+        <div class="c1need">
+          <div class="cpch"><span>To analyse it, we first need</span></div>
+          <div class="c1steps">
+            <a class="card c1s" data-go="maneuvers"><span class="n">1</span><b>The maneuvers, and what each one requires</b><span class="t">The ODD brought down to the maneuvers</span></a>
+            <span class="c1a">→</span>
+            <a class="card c1s" data-go="skills"><span class="n">2</span><b>Skills to assess a maneuver in a state</b><span class="t">Sense, Think, Act</span></a>
+            <span class="c1a">→</span>
+            <a class="card c1s" data-go="v-mce"><span class="n">3</span><b>The same assessment in the predicted states</b><span class="t">Now, and after each decision</span></a>
+          </div></div>` },
+
+    { id: "sense-zones", cite: ["bussemaker2014SensingRF", "CARDENAS2025162"], sec: "backup", c: ["C1"], kicker: "Appendix", time: 70, steps: 3,
+      title: "Before engaging, does the vehicle see all it needs?",
+      notes: "Take the Sense skills. The question they answer: before engaging in a maneuver, does the vehicle see all it needs? Each maneuver has key zones whose content the vehicle must know first. Entering a roundabout: the part of the ring from which the cars arrive. Crossing an intersection: the crossing road, in both directions. Overtaking a stopped bus: the crossing in front of the bus, where a pedestrian may step out. Changing lane: three zones around the vehicle. A key zone counts only if it is inside what the vehicle perceives, and its perception envelope is reduced in two ways: fog shrinks it, as in the roundabout and the lane change; obstacles occlude it, as the buildings at the intersection, until the vehicle reaches the stop line, or the bus: the vehicle starts to overtake, its sight lines to the crossing stop on the bus, so it holds, sees a pedestrian step out, and creeps until it sees the whole crossing. A key zone that is not perceived: the maneuver is not ensured. Let us now take one of them in detail: the lane change.",
+      html: `<div class="card tight" style="font-size:26px;padding:16px 30px">Each maneuver has <b>key zones</b> ${R("bussemaker2014SensingRF")}, seen only inside the <b>perception envelope</b> ${R("CARDENAS2025162")}, shrunk by fog or occluded</div>
+        <div class="sloops seq">${[["sense_roundabout", "Entering a roundabout", "the ring upstream of the entry", "Fog"],
+          ["sense_intersection", "Crossing an intersection", "the crossing road, both ways", "Occlusion"],
+          ["sense_bus", "Overtaking a stopped bus", "the crossing in front of the bus", "Occlusion"],
+          ["sense_lane", "Changing lane", "zones A, B and C", "Fog"]].map(([v, t, z, c], k) =>
+          `<div class="card sl"><video class="bg" muted playsinline preload="auto" data-src="${A}${v}.mp4?v=4" data-on="${k}" data-rate="1.8" data-still="1.5" aria-label="${t}, key zones, then ${c.toLowerCase()}"></video>
+            <div class="cap"><b><span class="k">${k + 1}</span>${t}</b><span>${z}</span><em class="${c === "Fog" ? "fog" : "occ"}">${c}</em></div></div>`).join("")}</div>
+        <div class="card navy tight" style="font-size:25px;padding:16px 30px">A key zone not perceived, and the maneuver is <b>not ensured</b></div>` },
+
+    { id: "other-skills", cite: ["CARDENAS2025162"], sec: "backup", c: ["C1"], kicker: "Appendix", time: 45,
+      title: "Lane markings, prediction and interaction complete the skill graph",
+      notes: "Three other skills. The density skill is the one used for the congestion before the exit. Degradation is per maneuver: Keep Lane can remain ensured with a reduced performance range.",
+      html: `<div class="g3">
+          <div class="card col"><span class="pill" style="align-self:flex-start">Sense · lane markings</span> ${R("CARDENAS2025162")}<div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>lane</sub>(<i>S</i>) = 1 ⇔ <i>d</i><sub>PE</sub><sup>lane</sup>(<i>S</i>) ≥ <i>D</i><sub>min</sub>(<i>S</i>)</div><p class="small">Markings seen over the stopping distance</p></div>
+          <div class="card col"><span class="pill" style="align-self:flex-start">Think · prediction</span><div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>pred</sub>(<i>S</i>) = 1 ⇔ every perceived vehicle is regular</div><p class="small">No emergency vehicles, no two-wheelers</p></div>
+          <div class="card col"><span class="pill" style="align-self:flex-start">Think · interaction</span><div class="eq" style="margin:18px 0;font-size:29px"><i>f</i><sub>inter</sub>(<i>S</i>) = 1 ⇔ <i>ρ</i>(<i>S</i>) ≤ <i>ρ</i><sub>max</sub></div><p class="small">Fluid traffic only, density announced ahead</p></div>
+        </div>
+        <div class="card ok"><p><b>Keep Lane</b> needs no rear zone, so it stays ensured, slower, when the lane change is lost</p></div>` },
+
+    { id: "margin", cite: ["salvi2022fuzzy", "hullermeier2021aleatoric"], sec: "backup", c: ["C1"], kicker: "Appendix", time: 60, steps: 3,
+      title: "Ensured, but how close to the boundary?",
+      notes: "A plane of states. Each point is a state of the vehicle: its speed, and the perception range it has. Above the blue curve the forward sensing skill is fulfilled; the curve is the boundary. Ensured is binary, but the distance between the point and the boundary tells how close the maneuver is to being lost. We measure it with the ratio of the available range to the required one, 1 on the boundary. Here S, at 110 km/h with 120 m, is far from it. (1) In fog, with 50 m, at 90 km/h, the point is still above the boundary: ensured, but on the edge, a ratio of about 1.02. A little less visibility and it is lost. (2) The strategic margin m, chosen by the designer, defines a preferred region, here m = 1.5, the dashed curve. The normalized margin w goes from 0 on the boundary to 1 in this region, and an action is as close as its most constrained skill. So the planner prefers to slow down, to about 56 km/h. (3) This enters the operability term of the reward. No maneuver is removed: the margin is a preference, not a second boundary.",
+      backups: ["b-margin"],
+      html: `<div class="row grow">
+        <div class="card col mgcard" style="flex:1.3 1 0"><h4>Forward sensing skill, a state and its boundary</h4>
+          <svg class="mgplot" viewBox="0 0 1000 740" role="img" aria-label="State point and capability boundary in the plane of velocity and perception range">
+            <defs><marker id="mg-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#063669"/></marker></defs>
+            <path class="reg" d="M96.0,533.4 L98.2,532.8 L100.4,532.2 L102.6,531.6 L104.8,531.0 L107.0,530.4 L109.3,529.8 L111.5,529.1 L113.7,528.5 L115.9,527.9 L118.1,527.3 L120.3,526.7 L122.5,526.1 L124.7,525.5 L126.9,524.9 L129.2,524.3 L131.4,523.6 L133.6,523.0 L135.8,522.4 L138.0,521.8 L140.2,521.2 L142.4,520.6 L144.6,520.0 L146.8,519.4 L149.0,518.8 L151.2,518.1 L153.5,517.5 L155.7,516.9 L157.9,516.3 L160.1,515.7 L162.3,515.1 L164.5,514.5 L166.7,513.9 L168.9,513.3 L171.1,512.6 L173.3,512.0 L175.6,511.4 L177.8,510.8 L180.0,510.2 L182.2,509.6 L184.4,509.0 L186.6,508.4 L188.8,507.8 L191.0,507.1 L193.2,506.5 L195.4,505.9 L197.7,505.3 L199.9,504.7 L202.1,504.1 L204.3,503.5 L206.5,502.9 L208.7,502.3 L210.9,501.6 L213.1,501.0 L215.3,500.4 L217.6,499.8 L219.8,499.2 L222.0,498.6 L224.2,498.0 L226.4,497.4 L228.6,496.8 L230.8,496.1 L233.0,495.5 L235.2,494.9 L237.4,494.3 L239.7,493.7 L241.9,493.1 L244.1,492.5 L246.3,491.9 L248.5,491.3 L250.7,490.6 L252.9,490.0 L255.1,489.4 L257.3,488.8 L259.5,488.2 L261.8,487.6 L264.0,487.0 L266.2,486.4 L268.4,485.8 L270.6,485.1 L272.8,484.5 L275.0,483.9 L277.2,483.3 L279.4,482.7 L281.6,482.1 L283.9,481.5 L286.1,480.9 L288.3,480.3 L290.5,479.6 L292.7,479.0 L294.9,478.4 L297.1,477.8 L299.3,477.2 L301.5,476.6 L303.7,476.0 L305.9,475.4 L308.2,474.8 L310.4,474.1 L312.6,473.5 L314.8,472.9 L317.0,472.3 L319.2,471.7 L321.4,471.1 L323.6,470.5 L325.8,469.9 L328.1,469.3 L330.3,468.6 L332.5,468.0 L334.7,467.4 L336.9,466.8 L339.1,466.2 L341.3,465.6 L343.5,465.0 L345.7,464.4 L347.9,463.8 L350.1,463.1 L352.4,462.5 L354.6,461.9 L356.8,461.3 L359.0,460.7 L361.2,460.1 L363.4,459.5 L365.6,458.9 L367.8,458.3 L370.0,457.6 L372.2,457.0 L374.5,456.4 L376.7,455.8 L378.9,455.2 L381.1,454.6 L383.3,454.0 L385.5,453.4 L387.7,452.8 L389.9,452.1 L392.1,451.5 L394.4,450.9 L396.6,450.3 L398.8,449.7 L401.0,449.1 L403.2,448.5 L405.4,447.9 L407.6,447.3 L409.8,446.6 L412.0,446.0 L414.2,445.4 L416.4,444.8 L418.7,444.2 L420.9,443.6 L423.1,443.0 L425.3,442.4 L427.5,441.8 L429.7,441.1 L431.9,440.5 L434.1,439.9 L436.3,439.3 L438.6,438.7 L440.8,438.1 L443.0,437.5 L445.2,436.9 L447.4,436.3 L449.6,435.6 L451.8,435.0 L454.0,434.4 L456.2,433.8 L458.4,433.2 L460.6,432.6 L462.9,432.0 L465.1,431.4 L467.3,430.8 L469.5,430.1 L471.7,429.5 L473.9,428.9 L476.1,428.3 L478.3,427.7 L480.5,427.1 L482.8,426.5 L485.0,425.9 L487.2,425.3 L489.4,424.9 L491.6,424.9 L493.8,424.9 L496.0,424.9 L498.2,424.9 L500.4,424.9 L502.6,424.9 L504.9,424.9 L507.1,424.9 L509.3,424.9 L511.5,424.9 L513.7,424.9 L515.9,424.9 L518.1,424.9 L520.3,424.9 L522.5,424.9 L524.7,424.9 L527.0,424.9 L529.2,424.9 L531.4,424.9 L533.6,424.9 L535.8,424.9 L538.0,424.9 L540.2,424.9 L542.4,424.9 L544.6,424.9 L546.8,424.9 L549.0,424.9 L551.3,424.9 L553.5,424.9 L555.7,424.9 L557.9,424.9 L560.1,424.9 L562.3,424.9 L564.5,424.9 L566.7,424.9 L568.9,424.4 L571.1,423.8 L573.4,423.3 L575.6,422.7 L577.8,422.1 L580.0,421.5 L582.2,420.9 L584.4,420.3 L586.6,419.7 L588.8,419.1 L591.0,418.4 L593.2,417.8 L595.5,417.1 L597.7,416.5 L599.9,415.8 L602.1,415.1 L604.3,414.4 L606.5,413.7 L608.7,412.9 L610.9,412.2 L613.1,411.5 L615.4,410.7 L617.6,409.9 L619.8,409.2 L622.0,408.4 L624.2,407.6 L626.4,406.8 L628.6,405.9 L630.8,405.1 L633.0,404.3 L635.2,403.4 L637.5,402.5 L639.7,401.7 L641.9,400.8 L644.1,399.9 L646.3,399.0 L648.5,398.1 L650.7,397.1 L652.9,396.2 L655.1,395.3 L657.3,394.3 L659.5,393.3 L661.8,392.4 L664.0,391.4 L666.2,390.4 L668.4,389.4 L670.6,388.3 L672.8,387.3 L675.0,386.3 L677.2,385.2 L679.4,384.1 L681.6,383.1 L683.9,382.0 L686.1,380.9 L688.3,379.8 L690.5,378.7 L692.7,377.5 L694.9,376.4 L697.1,375.2 L699.3,374.1 L701.5,372.9 L703.8,371.7 L706.0,370.5 L708.2,369.3 L710.4,368.1 L712.6,366.9 L714.8,365.7 L717.0,364.4 L719.2,363.2 L721.4,361.9 L723.6,360.6 L725.9,359.3 L728.1,358.0 L730.3,356.7 L732.5,355.4 L734.7,354.1 L736.9,352.8 L739.1,351.4 L741.3,350.0 L743.5,348.7 L745.7,347.3 L748.0,345.9 L750.2,344.5 L752.4,343.1 L754.6,341.7 L756.8,340.2 L759.0,338.8 L761.2,337.3 L763.4,335.8 L765.6,334.4 L767.8,332.9 L770.0,331.4 L772.3,329.9 L774.5,328.3 L776.7,326.8 L778.9,325.3 L781.1,323.7 L783.3,322.2 L785.5,320.6 L787.7,319.0 L789.9,317.4 L792.1,315.8 L794.4,314.2 L796.6,312.6 L798.8,310.9 L801.0,309.3 L803.2,307.6 L805.4,306.0 L807.6,304.3 L809.8,302.6 L812.0,300.9 L814.2,299.2 L816.5,297.4 L818.7,295.7 L820.9,294.0 L823.1,292.2 L825.3,290.5 L827.5,288.7 L829.7,286.9 L831.9,285.1 L834.1,283.3 L836.4,281.5 L838.6,279.6 L840.8,277.8 L843.0,276.0 L845.2,274.1 L847.4,272.2 L849.6,270.3 L851.8,268.5 L854.0,266.6 L856.2,264.6 L858.5,262.7 L860.7,260.8 L862.9,258.8 L865.1,256.9 L867.3,254.9 L869.5,252.9 L871.7,251.0 L873.9,249.0 L876.1,246.9 L878.3,244.9 L880.5,242.9 L882.8,240.9 L885.0,238.8 L887.2,236.7 L889.4,234.7 L891.6,232.6 L893.8,230.5 L896.0,228.4 L898.2,226.3 L900.4,224.2 L902.6,222.0 L904.9,219.9 L907.1,217.7 L909.3,215.5 L911.5,213.4 L913.7,211.2 L915.9,209.0 L918.1,206.8 L920.3,204.5 L922.5,202.3 L924.8,200.1 L927.0,197.8 L929.2,195.6 L931.4,193.3 L933.6,191.0 L935.8,188.7 L938.0,186.4 L940.2,184.1 L942.4,181.8 L944.6,179.4 L946.9,177.1 L949.1,174.7 L951.3,172.3 L953.5,170.0 L955.7,167.6 L957.9,165.2 L960.1,162.8 L962.3,160.3 L964.5,157.9 L966.7,155.5 L969.0,153.0 L971.2,150.5 L973.4,148.1 L975.6,145.6 L977.8,143.1 L980.0,140.6 L980.0,24.0 L96.0,24.0 Z"/>
+            <g data-step="2"><path class="preg" d="M96.0,480.1 L98.2,479.2 L100.4,478.3 L102.6,477.4 L104.8,476.5 L107.0,475.6 L109.3,474.6 L111.5,473.7 L113.7,472.8 L115.9,471.9 L118.1,471.0 L120.3,470.0 L122.5,469.1 L124.7,468.2 L126.9,467.3 L129.2,466.4 L131.4,465.5 L133.6,464.6 L135.8,463.6 L138.0,462.7 L140.2,461.8 L142.4,460.9 L144.6,460.0 L146.8,459.0 L149.0,458.1 L151.2,457.2 L153.5,456.3 L155.7,455.4 L157.9,454.5 L160.1,453.6 L162.3,452.6 L164.5,451.7 L166.7,450.8 L168.9,449.9 L171.1,449.0 L173.3,448.1 L175.6,447.1 L177.8,446.2 L180.0,445.3 L182.2,444.4 L184.4,443.5 L186.6,442.5 L188.8,441.6 L191.0,440.7 L193.2,439.8 L195.4,438.9 L197.7,438.0 L199.9,437.1 L202.1,436.1 L204.3,435.2 L206.5,434.3 L208.7,433.4 L210.9,432.5 L213.1,431.5 L215.3,430.6 L217.6,429.7 L219.8,428.8 L222.0,427.9 L224.2,427.0 L226.4,426.1 L228.6,425.1 L230.8,424.2 L233.0,423.3 L235.2,422.4 L237.4,421.5 L239.7,420.5 L241.9,419.6 L244.1,418.7 L246.3,417.8 L248.5,416.9 L250.7,416.0 L252.9,415.1 L255.1,414.1 L257.3,413.2 L259.5,412.3 L261.8,411.4 L264.0,410.5 L266.2,409.6 L268.4,408.6 L270.6,407.7 L272.8,406.8 L275.0,405.9 L277.2,405.0 L279.4,404.0 L281.6,403.1 L283.9,402.2 L286.1,401.3 L288.3,400.4 L290.5,399.5 L292.7,398.6 L294.9,397.6 L297.1,396.7 L299.3,395.8 L301.5,394.9 L303.7,394.0 L305.9,393.0 L308.2,392.1 L310.4,391.2 L312.6,390.3 L314.8,389.4 L317.0,388.5 L319.2,387.6 L321.4,386.6 L323.6,385.7 L325.8,384.8 L328.1,383.9 L330.3,383.0 L332.5,382.1 L334.7,381.1 L336.9,380.2 L339.1,379.3 L341.3,378.4 L343.5,377.5 L345.7,376.6 L347.9,375.6 L350.1,374.7 L352.4,373.8 L354.6,372.9 L356.8,372.0 L359.0,371.1 L361.2,370.1 L363.4,369.2 L365.6,368.3 L367.8,367.4 L370.0,366.5 L372.2,365.6 L374.5,364.6 L376.7,363.7 L378.9,362.8 L381.1,361.9 L383.3,361.0 L385.5,360.1 L387.7,359.1 L389.9,358.2 L392.1,357.3 L394.4,356.4 L396.6,355.5 L398.8,354.6 L401.0,353.6 L403.2,352.7 L405.4,351.8 L407.6,350.9 L409.8,350.0 L412.0,349.1 L414.2,348.1 L416.4,347.2 L418.7,346.3 L420.9,345.4 L423.1,344.5 L425.3,343.6 L427.5,342.6 L429.7,341.7 L431.9,340.8 L434.1,339.9 L436.3,339.0 L438.6,338.1 L440.8,337.1 L443.0,336.2 L445.2,335.3 L447.4,334.4 L449.6,333.5 L451.8,332.6 L454.0,331.6 L456.2,330.7 L458.4,329.8 L460.6,328.9 L462.9,328.0 L465.1,327.1 L467.3,326.1 L469.5,325.2 L471.7,324.3 L473.9,323.4 L476.1,322.5 L478.3,321.5 L480.5,320.6 L482.8,319.7 L485.0,318.8 L487.2,317.9 L489.4,317.3 L491.6,317.3 L493.8,317.3 L496.0,317.3 L498.2,317.3 L500.4,317.3 L502.6,317.3 L504.9,317.3 L507.1,317.3 L509.3,317.3 L511.5,317.3 L513.7,317.3 L515.9,317.3 L518.1,317.3 L520.3,317.3 L522.5,317.3 L524.7,317.3 L527.0,317.3 L529.2,317.3 L531.4,317.3 L533.6,317.3 L535.8,317.3 L538.0,317.3 L540.2,317.3 L542.4,317.3 L544.6,317.3 L546.8,317.3 L549.0,317.3 L551.3,317.3 L553.5,317.3 L555.7,317.3 L557.9,317.3 L560.1,317.3 L562.3,317.3 L564.5,317.3 L566.7,317.3 L568.9,316.5 L571.1,315.7 L573.4,314.9 L575.6,314.0 L577.8,313.2 L580.0,312.3 L582.2,311.4 L584.4,310.5 L586.6,309.6 L588.8,308.6 L591.0,307.7 L593.2,306.7 L595.5,305.7 L597.7,304.7 L599.9,303.7 L602.1,302.6 L604.3,301.6 L606.5,300.5 L608.7,299.4 L610.9,298.3 L613.1,297.2 L615.4,296.0 L617.6,294.9 L619.8,293.7 L622.0,292.5 L624.2,291.3 L626.4,290.1 L628.6,288.9 L630.8,287.7 L633.0,286.4 L635.2,285.1 L637.5,283.8 L639.7,282.5 L641.9,281.2 L644.1,279.8 L646.3,278.5 L648.5,277.1 L650.7,275.7 L652.9,274.3 L655.1,272.9 L657.3,271.5 L659.5,270.0 L661.8,268.5 L664.0,267.1 L666.2,265.6 L668.4,264.0 L670.6,262.5 L672.8,261.0 L675.0,259.4 L677.2,257.8 L679.4,256.2 L681.6,254.6 L683.9,253.0 L686.1,251.3 L688.3,249.7 L690.5,248.0 L692.7,246.3 L694.9,244.6 L697.1,242.9 L699.3,241.1 L701.5,239.4 L703.8,237.6 L706.0,235.8 L708.2,234.0 L710.4,232.2 L712.6,230.4 L714.8,228.5 L717.0,226.6 L719.2,224.8 L721.4,222.9 L723.6,220.9 L725.9,219.0 L728.1,217.1 L730.3,215.1 L732.5,213.1 L734.7,211.1 L736.9,209.1 L739.1,207.1 L741.3,205.1 L743.5,203.0 L745.7,200.9 L748.0,198.8 L750.2,196.7 L752.4,194.6 L754.6,192.5 L756.8,190.3 L759.0,188.2 L761.2,186.0 L763.4,183.8 L765.6,181.6 L767.8,179.3 L770.0,177.1 L772.3,174.8 L774.5,172.5 L776.7,170.2 L778.9,167.9 L781.1,165.6 L783.3,163.2 L785.5,160.9 L787.7,158.5 L789.9,156.1 L792.1,153.7 L794.4,151.3 L796.6,148.8 L798.8,146.4 L801.0,143.9 L803.2,141.4 L805.4,138.9 L807.6,136.4 L809.8,133.9 L812.0,131.3 L814.2,128.8 L816.5,126.2 L818.7,123.6 L820.9,121.0 L823.1,118.3 L825.3,115.7 L827.5,113.0 L829.7,110.3 L831.9,107.6 L834.1,104.9 L836.4,102.2 L838.6,99.5 L840.8,96.7 L843.0,93.9 L845.2,91.1 L847.4,88.3 L849.6,85.5 L851.8,82.7 L854.0,79.8 L856.2,77.0 L858.5,74.1 L860.7,71.2 L862.9,68.3 L865.1,65.3 L867.3,62.4 L869.5,59.4 L871.7,56.4 L873.9,53.4 L876.1,50.4 L878.3,47.4 L880.5,44.3 L882.8,41.3 L885.0,38.2 L887.2,35.1 L889.4,32.0 L891.6,28.9 L893.8,25.7 L895.0,24.0 L895.0,24.0 L96.0,24.0 Z"/></g>
+            <g class="grid"><line x1="96.0" y1="24" x2="96.0" y2="640"/><line x1="272.8" y1="24" x2="272.8" y2="640"/><line x1="449.6" y1="24" x2="449.6" y2="640"/><line x1="626.4" y1="24" x2="626.4" y2="640"/><line x1="803.2" y1="24" x2="803.2" y2="640"/><line x1="980.0" y1="24" x2="980.0" y2="640"/><line x1="96" y1="640.0" x2="980" y2="640.0"/><line x1="96" y1="530.0" x2="980" y2="530.0"/><line x1="96" y1="420.0" x2="980" y2="420.0"/><line x1="96" y1="310.0" x2="980" y2="310.0"/><line x1="96" y1="200.0" x2="980" y2="200.0"/><line x1="96" y1="90.0" x2="980" y2="90.0"/></g>
+            <g data-step="2"><path class="pref" d="M96.0,480.1 L98.2,479.2 L100.4,478.3 L102.6,477.4 L104.8,476.5 L107.0,475.6 L109.3,474.6 L111.5,473.7 L113.7,472.8 L115.9,471.9 L118.1,471.0 L120.3,470.0 L122.5,469.1 L124.7,468.2 L126.9,467.3 L129.2,466.4 L131.4,465.5 L133.6,464.6 L135.8,463.6 L138.0,462.7 L140.2,461.8 L142.4,460.9 L144.6,460.0 L146.8,459.0 L149.0,458.1 L151.2,457.2 L153.5,456.3 L155.7,455.4 L157.9,454.5 L160.1,453.6 L162.3,452.6 L164.5,451.7 L166.7,450.8 L168.9,449.9 L171.1,449.0 L173.3,448.1 L175.6,447.1 L177.8,446.2 L180.0,445.3 L182.2,444.4 L184.4,443.5 L186.6,442.5 L188.8,441.6 L191.0,440.7 L193.2,439.8 L195.4,438.9 L197.7,438.0 L199.9,437.1 L202.1,436.1 L204.3,435.2 L206.5,434.3 L208.7,433.4 L210.9,432.5 L213.1,431.5 L215.3,430.6 L217.6,429.7 L219.8,428.8 L222.0,427.9 L224.2,427.0 L226.4,426.1 L228.6,425.1 L230.8,424.2 L233.0,423.3 L235.2,422.4 L237.4,421.5 L239.7,420.5 L241.9,419.6 L244.1,418.7 L246.3,417.8 L248.5,416.9 L250.7,416.0 L252.9,415.1 L255.1,414.1 L257.3,413.2 L259.5,412.3 L261.8,411.4 L264.0,410.5 L266.2,409.6 L268.4,408.6 L270.6,407.7 L272.8,406.8 L275.0,405.9 L277.2,405.0 L279.4,404.0 L281.6,403.1 L283.9,402.2 L286.1,401.3 L288.3,400.4 L290.5,399.5 L292.7,398.6 L294.9,397.6 L297.1,396.7 L299.3,395.8 L301.5,394.9 L303.7,394.0 L305.9,393.0 L308.2,392.1 L310.4,391.2 L312.6,390.3 L314.8,389.4 L317.0,388.5 L319.2,387.6 L321.4,386.6 L323.6,385.7 L325.8,384.8 L328.1,383.9 L330.3,383.0 L332.5,382.1 L334.7,381.1 L336.9,380.2 L339.1,379.3 L341.3,378.4 L343.5,377.5 L345.7,376.6 L347.9,375.6 L350.1,374.7 L352.4,373.8 L354.6,372.9 L356.8,372.0 L359.0,371.1 L361.2,370.1 L363.4,369.2 L365.6,368.3 L367.8,367.4 L370.0,366.5 L372.2,365.6 L374.5,364.6 L376.7,363.7 L378.9,362.8 L381.1,361.9 L383.3,361.0 L385.5,360.1 L387.7,359.1 L389.9,358.2 L392.1,357.3 L394.4,356.4 L396.6,355.5 L398.8,354.6 L401.0,353.6 L403.2,352.7 L405.4,351.8 L407.6,350.9 L409.8,350.0 L412.0,349.1 L414.2,348.1 L416.4,347.2 L418.7,346.3 L420.9,345.4 L423.1,344.5 L425.3,343.6 L427.5,342.6 L429.7,341.7 L431.9,340.8 L434.1,339.9 L436.3,339.0 L438.6,338.1 L440.8,337.1 L443.0,336.2 L445.2,335.3 L447.4,334.4 L449.6,333.5 L451.8,332.6 L454.0,331.6 L456.2,330.7 L458.4,329.8 L460.6,328.9 L462.9,328.0 L465.1,327.1 L467.3,326.1 L469.5,325.2 L471.7,324.3 L473.9,323.4 L476.1,322.5 L478.3,321.5 L480.5,320.6 L482.8,319.7 L485.0,318.8 L487.2,317.9 L489.4,317.3 L491.6,317.3 L493.8,317.3 L496.0,317.3 L498.2,317.3 L500.4,317.3 L502.6,317.3 L504.9,317.3 L507.1,317.3 L509.3,317.3 L511.5,317.3 L513.7,317.3 L515.9,317.3 L518.1,317.3 L520.3,317.3 L522.5,317.3 L524.7,317.3 L527.0,317.3 L529.2,317.3 L531.4,317.3 L533.6,317.3 L535.8,317.3 L538.0,317.3 L540.2,317.3 L542.4,317.3 L544.6,317.3 L546.8,317.3 L549.0,317.3 L551.3,317.3 L553.5,317.3 L555.7,317.3 L557.9,317.3 L560.1,317.3 L562.3,317.3 L564.5,317.3 L566.7,317.3 L568.9,316.5 L571.1,315.7 L573.4,314.9 L575.6,314.0 L577.8,313.2 L580.0,312.3 L582.2,311.4 L584.4,310.5 L586.6,309.6 L588.8,308.6 L591.0,307.7 L593.2,306.7 L595.5,305.7 L597.7,304.7 L599.9,303.7 L602.1,302.6 L604.3,301.6 L606.5,300.5 L608.7,299.4 L610.9,298.3 L613.1,297.2 L615.4,296.0 L617.6,294.9 L619.8,293.7 L622.0,292.5 L624.2,291.3 L626.4,290.1 L628.6,288.9 L630.8,287.7 L633.0,286.4 L635.2,285.1 L637.5,283.8 L639.7,282.5 L641.9,281.2 L644.1,279.8 L646.3,278.5 L648.5,277.1 L650.7,275.7 L652.9,274.3 L655.1,272.9 L657.3,271.5 L659.5,270.0 L661.8,268.5 L664.0,267.1 L666.2,265.6 L668.4,264.0 L670.6,262.5 L672.8,261.0 L675.0,259.4 L677.2,257.8 L679.4,256.2 L681.6,254.6 L683.9,253.0 L686.1,251.3 L688.3,249.7 L690.5,248.0 L692.7,246.3 L694.9,244.6 L697.1,242.9 L699.3,241.1 L701.5,239.4 L703.8,237.6 L706.0,235.8 L708.2,234.0 L710.4,232.2 L712.6,230.4 L714.8,228.5 L717.0,226.6 L719.2,224.8 L721.4,222.9 L723.6,220.9 L725.9,219.0 L728.1,217.1 L730.3,215.1 L732.5,213.1 L734.7,211.1 L736.9,209.1 L739.1,207.1 L741.3,205.1 L743.5,203.0 L745.7,200.9 L748.0,198.8 L750.2,196.7 L752.4,194.6 L754.6,192.5 L756.8,190.3 L759.0,188.2 L761.2,186.0 L763.4,183.8 L765.6,181.6 L767.8,179.3 L770.0,177.1 L772.3,174.8 L774.5,172.5 L776.7,170.2 L778.9,167.9 L781.1,165.6 L783.3,163.2 L785.5,160.9 L787.7,158.5 L789.9,156.1 L792.1,153.7 L794.4,151.3 L796.6,148.8 L798.8,146.4 L801.0,143.9 L803.2,141.4 L805.4,138.9 L807.6,136.4 L809.8,133.9 L812.0,131.3 L814.2,128.8 L816.5,126.2 L818.7,123.6 L820.9,121.0 L823.1,118.3 L825.3,115.7 L827.5,113.0 L829.7,110.3 L831.9,107.6 L834.1,104.9 L836.4,102.2 L838.6,99.5 L840.8,96.7 L843.0,93.9 L845.2,91.1 L847.4,88.3 L849.6,85.5 L851.8,82.7 L854.0,79.8 L856.2,77.0 L858.5,74.1 L860.7,71.2 L862.9,68.3 L865.1,65.3 L867.3,62.4 L869.5,59.4 L871.7,56.4 L873.9,53.4 L876.1,50.4 L878.3,47.4 L880.5,44.3 L882.8,41.3 L885.0,38.2 L887.2,35.1 L889.4,32.0 L891.6,28.9 L893.8,25.7 L895.0,24.0"/>
+              <text class="lab pf" x="122.5" y="76.8">preferred region, <tspan class="mi">m</tspan> = 1.5</text></g>
+            <path class="bnd" d="M96.0,533.4 L98.2,532.8 L100.4,532.2 L102.6,531.6 L104.8,531.0 L107.0,530.4 L109.3,529.8 L111.5,529.1 L113.7,528.5 L115.9,527.9 L118.1,527.3 L120.3,526.7 L122.5,526.1 L124.7,525.5 L126.9,524.9 L129.2,524.3 L131.4,523.6 L133.6,523.0 L135.8,522.4 L138.0,521.8 L140.2,521.2 L142.4,520.6 L144.6,520.0 L146.8,519.4 L149.0,518.8 L151.2,518.1 L153.5,517.5 L155.7,516.9 L157.9,516.3 L160.1,515.7 L162.3,515.1 L164.5,514.5 L166.7,513.9 L168.9,513.3 L171.1,512.6 L173.3,512.0 L175.6,511.4 L177.8,510.8 L180.0,510.2 L182.2,509.6 L184.4,509.0 L186.6,508.4 L188.8,507.8 L191.0,507.1 L193.2,506.5 L195.4,505.9 L197.7,505.3 L199.9,504.7 L202.1,504.1 L204.3,503.5 L206.5,502.9 L208.7,502.3 L210.9,501.6 L213.1,501.0 L215.3,500.4 L217.6,499.8 L219.8,499.2 L222.0,498.6 L224.2,498.0 L226.4,497.4 L228.6,496.8 L230.8,496.1 L233.0,495.5 L235.2,494.9 L237.4,494.3 L239.7,493.7 L241.9,493.1 L244.1,492.5 L246.3,491.9 L248.5,491.3 L250.7,490.6 L252.9,490.0 L255.1,489.4 L257.3,488.8 L259.5,488.2 L261.8,487.6 L264.0,487.0 L266.2,486.4 L268.4,485.8 L270.6,485.1 L272.8,484.5 L275.0,483.9 L277.2,483.3 L279.4,482.7 L281.6,482.1 L283.9,481.5 L286.1,480.9 L288.3,480.3 L290.5,479.6 L292.7,479.0 L294.9,478.4 L297.1,477.8 L299.3,477.2 L301.5,476.6 L303.7,476.0 L305.9,475.4 L308.2,474.8 L310.4,474.1 L312.6,473.5 L314.8,472.9 L317.0,472.3 L319.2,471.7 L321.4,471.1 L323.6,470.5 L325.8,469.9 L328.1,469.3 L330.3,468.6 L332.5,468.0 L334.7,467.4 L336.9,466.8 L339.1,466.2 L341.3,465.6 L343.5,465.0 L345.7,464.4 L347.9,463.8 L350.1,463.1 L352.4,462.5 L354.6,461.9 L356.8,461.3 L359.0,460.7 L361.2,460.1 L363.4,459.5 L365.6,458.9 L367.8,458.3 L370.0,457.6 L372.2,457.0 L374.5,456.4 L376.7,455.8 L378.9,455.2 L381.1,454.6 L383.3,454.0 L385.5,453.4 L387.7,452.8 L389.9,452.1 L392.1,451.5 L394.4,450.9 L396.6,450.3 L398.8,449.7 L401.0,449.1 L403.2,448.5 L405.4,447.9 L407.6,447.3 L409.8,446.6 L412.0,446.0 L414.2,445.4 L416.4,444.8 L418.7,444.2 L420.9,443.6 L423.1,443.0 L425.3,442.4 L427.5,441.8 L429.7,441.1 L431.9,440.5 L434.1,439.9 L436.3,439.3 L438.6,438.7 L440.8,438.1 L443.0,437.5 L445.2,436.9 L447.4,436.3 L449.6,435.6 L451.8,435.0 L454.0,434.4 L456.2,433.8 L458.4,433.2 L460.6,432.6 L462.9,432.0 L465.1,431.4 L467.3,430.8 L469.5,430.1 L471.7,429.5 L473.9,428.9 L476.1,428.3 L478.3,427.7 L480.5,427.1 L482.8,426.5 L485.0,425.9 L487.2,425.3 L489.4,424.9 L491.6,424.9 L493.8,424.9 L496.0,424.9 L498.2,424.9 L500.4,424.9 L502.6,424.9 L504.9,424.9 L507.1,424.9 L509.3,424.9 L511.5,424.9 L513.7,424.9 L515.9,424.9 L518.1,424.9 L520.3,424.9 L522.5,424.9 L524.7,424.9 L527.0,424.9 L529.2,424.9 L531.4,424.9 L533.6,424.9 L535.8,424.9 L538.0,424.9 L540.2,424.9 L542.4,424.9 L544.6,424.9 L546.8,424.9 L549.0,424.9 L551.3,424.9 L553.5,424.9 L555.7,424.9 L557.9,424.9 L560.1,424.9 L562.3,424.9 L564.5,424.9 L566.7,424.9 L568.9,424.4 L571.1,423.8 L573.4,423.3 L575.6,422.7 L577.8,422.1 L580.0,421.5 L582.2,420.9 L584.4,420.3 L586.6,419.7 L588.8,419.1 L591.0,418.4 L593.2,417.8 L595.5,417.1 L597.7,416.5 L599.9,415.8 L602.1,415.1 L604.3,414.4 L606.5,413.7 L608.7,412.9 L610.9,412.2 L613.1,411.5 L615.4,410.7 L617.6,409.9 L619.8,409.2 L622.0,408.4 L624.2,407.6 L626.4,406.8 L628.6,405.9 L630.8,405.1 L633.0,404.3 L635.2,403.4 L637.5,402.5 L639.7,401.7 L641.9,400.8 L644.1,399.9 L646.3,399.0 L648.5,398.1 L650.7,397.1 L652.9,396.2 L655.1,395.3 L657.3,394.3 L659.5,393.3 L661.8,392.4 L664.0,391.4 L666.2,390.4 L668.4,389.4 L670.6,388.3 L672.8,387.3 L675.0,386.3 L677.2,385.2 L679.4,384.1 L681.6,383.1 L683.9,382.0 L686.1,380.9 L688.3,379.8 L690.5,378.7 L692.7,377.5 L694.9,376.4 L697.1,375.2 L699.3,374.1 L701.5,372.9 L703.8,371.7 L706.0,370.5 L708.2,369.3 L710.4,368.1 L712.6,366.9 L714.8,365.7 L717.0,364.4 L719.2,363.2 L721.4,361.9 L723.6,360.6 L725.9,359.3 L728.1,358.0 L730.3,356.7 L732.5,355.4 L734.7,354.1 L736.9,352.8 L739.1,351.4 L741.3,350.0 L743.5,348.7 L745.7,347.3 L748.0,345.9 L750.2,344.5 L752.4,343.1 L754.6,341.7 L756.8,340.2 L759.0,338.8 L761.2,337.3 L763.4,335.8 L765.6,334.4 L767.8,332.9 L770.0,331.4 L772.3,329.9 L774.5,328.3 L776.7,326.8 L778.9,325.3 L781.1,323.7 L783.3,322.2 L785.5,320.6 L787.7,319.0 L789.9,317.4 L792.1,315.8 L794.4,314.2 L796.6,312.6 L798.8,310.9 L801.0,309.3 L803.2,307.6 L805.4,306.0 L807.6,304.3 L809.8,302.6 L812.0,300.9 L814.2,299.2 L816.5,297.4 L818.7,295.7 L820.9,294.0 L823.1,292.2 L825.3,290.5 L827.5,288.7 L829.7,286.9 L831.9,285.1 L834.1,283.3 L836.4,281.5 L838.6,279.6 L840.8,277.8 L843.0,276.0 L845.2,274.1 L847.4,272.2 L849.6,270.3 L851.8,268.5 L854.0,266.6 L856.2,264.6 L858.5,262.7 L860.7,260.8 L862.9,258.8 L865.1,256.9 L867.3,254.9 L869.5,252.9 L871.7,251.0 L873.9,249.0 L876.1,246.9 L878.3,244.9 L880.5,242.9 L882.8,240.9 L885.0,238.8 L887.2,236.7 L889.4,234.7 L891.6,232.6 L893.8,230.5 L896.0,228.4 L898.2,226.3 L900.4,224.2 L902.6,222.0 L904.9,219.9 L907.1,217.7 L909.3,215.5 L911.5,213.4 L913.7,211.2 L915.9,209.0 L918.1,206.8 L920.3,204.5 L922.5,202.3 L924.8,200.1 L927.0,197.8 L929.2,195.6 L931.4,193.3 L933.6,191.0 L935.8,188.7 L938.0,186.4 L940.2,184.1 L942.4,181.8 L944.6,179.4 L946.9,177.1 L949.1,174.7 L951.3,172.3 L953.5,170.0 L955.7,167.6 L957.9,165.2 L960.1,162.8 L962.3,160.3 L964.5,157.9 L966.7,155.5 L969.0,153.0 L971.2,150.5 L973.4,148.1 L975.6,145.6 L977.8,143.1 L980.0,140.6"/>
+            <text class="lab bl" x="741.3" y="384.0">capability boundary</text>
+            
+            <text class="lab fu" x="962.3" y="76.8" text-anchor="end">skill fulfilled</text>
+            <text class="lab nf" x="820.9" y="596.0" text-anchor="middle">not fulfilled</text>
+            <g class="ax"><line x1="96" y1="640" x2="980" y2="640"/><line x1="96" y1="24" x2="96" y2="640"/></g>
+            <g class="tk"><text x="96.0" y="670" text-anchor="middle">40</text><text x="272.8" y="670" text-anchor="middle">60</text><text x="449.6" y="670" text-anchor="middle">80</text><text x="626.4" y="670" text-anchor="middle">100</text><text x="803.2" y="670" text-anchor="middle">120</text><text x="980.0" y="670" text-anchor="middle">140</text><text x="84" y="648.0" text-anchor="end">0</text><text x="84" y="538.0" text-anchor="end">25</text><text x="84" y="428.0" text-anchor="end">50</text><text x="84" y="318.0" text-anchor="end">75</text><text x="84" y="208.0" text-anchor="end">100</text><text x="84" y="98.0" text-anchor="end">125</text></g>
+            <text class="axl" x="538.0" y="732" text-anchor="middle">ego-vehicle velocity <tspan class="mi">v</tspan><tspan class="sb" dy="6">ego</tspan><tspan dy="-6"> [km/h]</tspan></text>
+            <text class="axl" transform="translate(26,332.0) rotate(-90)" text-anchor="middle">available perception range <tspan class="mi">d</tspan><tspan class="sb" dy="6">PE</tspan><tspan dy="-6"> [m]</tspan></text>
+            <line class="gap" x1="714.8" y1="128.0" x2="714.8" y2="363.7" marker-end="url(#mg-ar)"/>
+            <text class="lab sm" x="730.8" y="234.8">far from the boundary</text>
+            <text class="lab sm" x="730.8" y="264.8"><tspan class="mi">ρ</tspan> ≈ 1.9</text>
+            <circle class="pt" cx="714.8" cy="112.0" r="13"/><text class="sl" x="692.8" y="94.0" text-anchor="end"><tspan class="mi">S</tspan></text>
+            <g data-step="1">
+              <line class="fog" x1="96" y1="420.0" x2="980" y2="420.0"/>
+              <text class="lab fg" x="972" y="450.0" text-anchor="end">fog, 50 m</text>
+              <path class="mv" d="M702.8,126.0 C654.8,252.0 628.0,300.0 548.0,404.0" marker-end="url(#mg-ar)"/>
+              <circle class="pt edge" cx="538.0" cy="420.0" r="13"/>
+              <text class="lab" x="530.0" y="486.0">90 km/h, on the edge, <tspan class="mi">ρ</tspan> ≈ 1.02</text>
+              <line class="cross" x1="585.6" y1="406.0" x2="585.6" y2="434.0"/>
+              <text class="lab sm bl" x="593.6" y="452.0">boundary at 95 km/h</text></g>
+            <g data-step="2">
+              <path class="mv" d="M520.0,394.0 L257.4,394.0" marker-end="url(#mg-ar)"/>
+              <text class="lab pf" x="122.5" y="244.0">slow down to 56 km/h</text><text class="lab pf sm" x="122.5" y="274.0"><tspan class="mi">ρ</tspan> = <tspan class="mi">m</tspan> = 1.5, <tspan class="mi">w</tspan> = 1</text>
+              <circle class="pt pr" cx="237.4" cy="420.0" r="13"/></g>
+          </svg>
+          <p class="xs mute" style="margin:0">Required range for zones B and C, traffic ahead at 110 km/h</p></div>
+        <div class="col" style="flex:1 1 0;gap:18px">
+          <div class="card tight col" style="gap:8px"><h4>How far from the boundary ${R("salvi2022fuzzy")}</h4>
+            <div class="eq" style="font-size:30px;text-align:center"><i>ρ<sub>k</sub></i>(<i>s</i>) = <span class="fr"><span><i>g<sub>k</sub></i><sup>av</sup>(<i>s</i>)</span><span><i>g<sub>k</sub></i><sup>req</sup>(<i>s</i>)</span></span> &nbsp;=&nbsp; <span class="fr"><span><i>d</i><sub>PE</sub></span><span><i>d</i><sub>req</sub>(<i>v</i><sub>ego</sub>)</span></span></div>
+            <p class="small" style="margin:0">Available over required, <b>1 on the boundary</b></p></div>
+          <div class="card tight col" data-step="2" style="gap:8px"><h4>Strategic margin ${R("hullermeier2021aleatoric")}</h4>
+            <div class="eq" style="font-size:30px;text-align:center"><i>w<sub>k</sub></i>(<i>s</i>) = min(1, <span class="fr"><span><i>ρ<sub>k</sub></i>(<i>s</i>) − 1</span><span><i>m<sub>k</sub></i> − 1</span></span>)</div>
+            <p class="small" style="margin:0">0 on the boundary, 1 in the preferred region<br><i class="m">w<sub>a</sub></i> = min<sub><i class="m">k</i></sub> <i class="m">w<sub>k</sub></i>, the most constrained skill</p></div>
+          <div class="card tight col grow" data-step="3" style="gap:8px"><h4>In the reward, not a second boundary</h4>
+            <div class="eq" style="font-size:28px;text-align:center"><i>R</i><sub>op</sub>(<i>s</i>) = −( 1 − <sup>1</sup>⁄<sub>|<i>A</i>|</sub> Σ<sub><i>a</i> ∈ ${Aens()}</sub> <i>w<sub>a</sub></i>(<i>s</i>) )</div>
+            <p class="small" style="margin:0">The planner slows down before the boundary<br>No maneuver is removed</p></div>
+        </div></div>` },
+
+    { id: "pomcp", cite: ["auer2002finite", "silver_monte-carlo_2010"], sec: "backup", c: ["C3"], kicker: "Appendix", time: 50,
+      title: "The MCE filters selection, expansion and rollout",
+      notes: "POMCP with the capability filter at the three stages where actions are chosen. The final action is the best ensured action at the root. The particles carry the intentions of the other drivers.",
+      backups: ["b-pomcp", "b-cost"],
+      html: `<div class="g4">
+          ${[["Selection", "UCB1 among ensured actions " + R("auer2002finite"), 1], ["Expansion", "Only ensured actions", 1], ["Rollout", "Random among ensured actions", 1], ["Backpropagation", "Values and visit counts " + R("silver_monte-carlo_2010"), 0]]
+            .map(([t, d, f], j) => `<div class="card col" style="gap:10px"><div class="row" style="align-items:center;gap:12px"><div class="num-badge" style="width:44px;height:44px;font-size:21px">${j + 1}</div><h3 style="margin:0">${t}</h3></div>
+              <p class="small">${d}</p>${f ? '<span class="pill ok" style="align-self:flex-start;margin-top:auto">MCE filter</span>' : ""}</div>`).join("")}
+        </div>
+        <div class="row grow">
+          <div class="card col grow" style="justify-content:center;gap:22px;padding:26px 60px">
+            <div class="eqn"><span class="nm">Selection · UCB1<small>good actions, and rarely tried ones</small></span><div class="eq"><i>a</i> = argmax<sub><i>a</i> ∈ ${Aens("b<sub>h</sub>")}</sub> [ <i>Q</i>(<i>h</i>, <i>a</i>) + <i>c</i> √( ln <i>N</i>(<i>h</i>) / <i>N</i>(<i>h</i>, <i>a</i>) ) ]</div></div>
+            <div class="eqn"><span class="nm">Return of a simulation<small>discounted sum of rewards</small></span><div class="eq"><i>G</i> = Σ<sub><i>k</i>=0</sub><sup><i>H</i></sup> <i>γ</i><sup><i>k</i></sup> <i>R</i>(<i>s<sub>k</sub></i>, <i>a<sub>k</sub></i>)</div></div>
+            <div class="eqn"><span class="nm">Value update<small>running mean of the returns</small></span><div class="eq"><i>Q</i>(<i>h</i>, <i>a</i>) ← <i>Q</i>(<i>h</i>, <i>a</i>) + ( <i>G</i> − <i>Q</i>(<i>h</i>, <i>a</i>) ) / <i>N</i>(<i>h</i>, <i>a</i>)</div></div>
+            <div class="eqn"><span class="nm">Decision<small>the best ensured action at the root</small></span><div class="eq"><i>a<sub>t</sub></i> = argmax<sub><i>a</i> ∈ ${Aens("b<sub>t</sub>")}</sub> <i>Q</i>(<i>h</i><sub>0</sub>, <i>a</i>)</div></div>
+            <div class="lgd" style="margin-top:6px"><span class="s"><i>h</i>, <i>b<sub>h</sub></i></span><span>a node and its particles</span><span class="s"><i>Q</i>, <i>N</i></span><span>value and visit counts</span>
+              <span class="s"><i>c</i></span><span>exploration weight</span><span class="s"><i>γ</i>, <i>H</i></span><span>discount and horizon</span></div></div>
+        </div>` },
+
+    { id: "v-fog", type: "video", sec: "backup", kicker: "Appendix", c: ["C2", "C4"], time: 135,
+      title: "Scenario 1: reduced visibility",
+      notes: "The hypotheses of the fog scenario, then the reference planner with a single decision step against ODD-aptive with four steps, on the same traffic.",
+      video: { src: V + "fog.mp4", parts: [[12.0, "The electronic horizon announces the fog"], [18.5, "Fog reduces the perception envelope"], [29.0, "Keep Lane ensured, lane change not ensured"], [41.0, "The MRM requires the hard shoulder"], [48.5, "Keep the MRM reachable when the capabilities are degraded"], [61.5, "The simulations, and how to read the display"], [81.0, "One decision step against four, up to the fog"]] } },
+
+    { id: "fog-b", sec: "backup", c: ["C2", "C4"], kicker: "Appendix", time: 60,
+      title: "With traffic, more returns in time and more overtaking",
+      notes: "Configuration B. ODD-aptive plans the return in every run. Its remaining failures are mostly returns blocked by a vehicle alongside in the last 300 m. And it overtakes more, so anticipation is not conservative. One run with m = 1.2 is excluded, a simulator artefact.",
+      backups: ["b-outcomes", "b-conf"],
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.1 1 0"><h4>Lane occupied before the fog</h4>${fig("fog_lane_occupancy.png", "Lane occupancy before the fog")}</div>
+        <div class="card grow"><h4>Setup</h4><ul class="list small">
+          <li>Three lanes, slower trucks on the right</li>
+          <li>No lane change ensured in the fog</li>
+          <li>MRM on the hard shoulder, from the right lane</li>
+          <li>100 seeds per planner</li></ul></div>
+        </div>
+        <table class="tbl"><tr><th>Planner</th><th class="c">Right lane at the fog</th><th class="c">Blocked by traffic</th><th class="c">Planned too late</th><th class="c">Never planned</th><th class="c">Runs with overtaking</th><th class="c">Mean speed</th></tr>
+          <tr><td>Reference, one step</td><td class="c">76 / 100</td><td class="c">5</td><td class="c">10</td><td class="c">9</td><td class="c">45</td><td class="c">90.7 km/h</td></tr>
+          <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c"><b>90 / 100</b></td><td class="c">7</td><td class="c">3</td><td class="c"><b>0</b></td><td class="c"><b>82</b></td><td class="c">96.1 km/h</td></tr>
+          <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.2</td><td class="c"><b>92 / 99</b></td><td class="c">6</td><td class="c">1</td><td class="c"><b>0</b></td><td class="c">76</td><td class="c">94.3 km/h</td></tr></table>` },
+
+    { id: "congestion", sec: "backup", c: ["C2", "C4"], kicker: "Appendix", time: 50,
+      title: "Announced congestion brings the return ≈ 400 m earlier",
+      notes: "The planner only models the nearest vehicles, so it cannot see the congestion before reaching it. The announced density is the only way to know that the lane changes will become harder. We frame it as a capability limit.",
+      html: `<div class="row">
+        <div class="card grow small">Density rises over the last 1.5 km, announced ahead</div>
+        <div class="card grow small">Lane change ensured only below a maximum density</div>
+        <div class="card grow small">Same 20 seeds, with and without the announcement</div></div>
+        <div class="card tight grow">${fig("congestion.png", "Returns with and without the announced density")}</div>
+        <div class="g4">
+          <div class="card tight stat"><span class="v" style="font-size:40px">471 → 876 m</span><span class="l">median final return, without then with</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">94 → 218 m</span><span class="l">latest return before the exit</span></div>
+          <div class="card tight stat"><span class="v ok" style="font-size:40px">20 / 20</span><span class="l">exits taken by both</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px">83.4 → 85.0</span><span class="l">km/h mean speed, no loss</span></div>
+        </div>` },
+
+    { id: "r-noisy", sec: "backup", c: ["C3", "C4"], kicker: "Appendix", time: 50,
+      title: "Under noisy perception, the belief keeps a safe gap",
+      notes: "With noise, the ODD-MDP is outside the right lane at the fog entry in 13 runs, the ODD-POMDP in 6. No collision in any run. The gain comes from evaluating each lane change over several hypotheses.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.25 1 0">${fig("noisy_frames.png", "Noisy perception frames, ODD-MDP and ODD-POMDP")}</div>
+        <div class="col grow">
+          <div class="card small">Car behind at 102 km/h, seen at 108<br><b>ODD-MDP</b> rejects the gap<br><b>ODD-POMDP</b> changes lane 430 m before the fog</div>
+          <div class="card tight stat"><span class="v" style="font-size:42px">13 → 6</span><span class="l">runs outside the right lane at the fog, MDP then POMDP</span></div>
+          <div class="card tight stat"><span class="v ok" style="font-size:42px">85 → 94</span><span class="l">runs in the right lane and operable</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:42px">236 → 367 m</span><span class="l">return starts earlier before the fog</span></div>
+          <p class="xs mute" style="margin:0">Same 100 seeds for both planners</p>
+        </div></div>` },
+
+    { id: "r-forecast-tau", sec: "backup", c: ["C3", "C4"], kicker: "Appendix", time: 50,
+      title: "The threshold τ turns a probability into a boundary",
+      notes: "Top: share of hypotheses for which Keep Lane is ensured, in the plane of speed and forecast visibility. The threshold tau turns this probability into a boundary. Bottom: the higher tau, the earlier and smoother the slowdown.",
+      html: `<div class="row grow">
+        <div class="col" style="flex:1.2 1 0">
+          <div class="card tight grow">${fig("capability_plane.png", "Share of hypotheses where Keep Lane is ensured")}</div>
+          <div class="card tight grow">${fig("admissible_speed.png", "Admissible speed for several thresholds")}</div>
+        </div>
+        <div class="col grow">
+          <div class="card small">32 fog hypotheses, corrected on board as the fog nears</div>
+          <div class="card tight stat"><span class="v" style="font-size:42px">75 → 92 m</span><span class="l">visibility needed at 120 km/h, exact forecast then <i class="m">τ</i> = 0.9</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:42px">95 → 165 m</span><span class="l">slowdown starts earlier</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:42px"><i class="m">τ</i> = 0.9</span><span class="l">chosen, <i class="m">τ</i> = 1 too conservative</span></div>
+        </div></div>` },
+
+    { id: "r-forecast", sec: "backup", c: ["C3", "C4"], kicker: "Appendix", time: 50,
+      title: "Despite forecast errors, the ODD-POMDP passes the fog in 19 of 20 runs",
+      notes: "The fog starts up to 150 m before or after the announced point. When it is denser than announced, the ODD-MDP arrives too fast and loses Keep Lane. The ODD-POMDP slows down progressively and passes every dense case. The cost is one precautionary MRM in a lighter fog.",
+      backups: ["b-conf"],
+      html: `<div class="row grow">
+        <div class="col grow">
+          <table class="tbl"><tr><th>Real fog</th><th>Planner</th><th class="c">Passed</th><th class="c">MRM</th></tr>
+            <tr><td rowspan="2"><b>All 20 seeds</b></td><td>ODD-MDP</td><td class="c">10</td><td class="c">10</td></tr>
+            <tr class="hl"><td>ODD-POMDP</td><td class="c"><b>19</b></td><td class="c">1</td></tr>
+            <tr class="sep"><td rowspan="2"><b>Denser (11)</b></td><td>ODD-MDP</td><td class="c">1</td><td class="c">10</td></tr>
+            <tr class="hl"><td>ODD-POMDP</td><td class="c"><b>11</b></td><td class="c">0</td></tr>
+            <tr class="sep"><td rowspan="2"><b>Lighter (9)</b></td><td>ODD-MDP</td><td class="c">9</td><td class="c">0</td></tr>
+            <tr class="hl"><td>ODD-POMDP</td><td class="c">8</td><td class="c">1</td></tr></table>
+          <div class="g2">
+            <div class="card tight stat"><span class="v bad" style="font-size:40px">+27.5 km/h</span><span class="l">ODD-MDP, largest excess over the admissible speed</span></div>
+            <div class="card tight stat"><span class="v ok" style="font-size:40px">0 runs</span><span class="l">ODD-POMDP above the admissible speed · no collision</span></div>
+          </div>
+        </div>
+        <div class="card col" style="flex:0.95 1 0">${fig("forecast_run.png", "Seed 8: real fog after the announced point")}
+          <p class="xs mute">Seed 8, fog later and denser than announced<br>ODD-POMDP enters at 73 km/h · ODD-MDP at 92 km/h, then MRM</p></div>
+        </div>` },
+
+    { id: "v-intentions", type: "video", sec: "backup", kicker: "Appendix", c: ["C3", "C4"], time: 95,
+      title: "Uncertain tactical intentions",
+      notes: "An intention cannot be measured: it is estimated from the kinematics. The particles hold the possible maneuvers, and each future is evaluated with its consequences. Two use cases: a cut-in, and a vehicle entering the highway.",
+      video: { src: V + "intentions.mp4", parts: [[12.0, "An intention cannot be measured"], [19.75, "The tactical state of each vehicle"], [29.25, "The belief: a set of particles"], [38.75, "Each future is evaluated with its consequences"], [52.5, "The simulations, and how to read the display"], [69.75, "A cut-in, and a vehicle entering the highway"]] } },
+
+    { id: "r-cutin", sec: "backup", c: ["C3", "C4"], kicker: "Appendix", time: 45,
+      title: "The ODD-POMDP reacts to a cut-in before the car moves",
+      notes: "Reaction time measured from the start of the lateral motion of the car. The ODD-POMDP evaluates separately the futures with and without the cut-in, which explains its earlier reaction. Illustrative run only.",
+      html: `<p class="small" style="margin:0">Ego at 130 km/h, a car cuts in from behind a truck · same intention estimate for all, <i class="m">P</i> ≈ 0.35 – 0.39</p>
+        <div class="card tight col" style="gap:8px"><h4>ODD-MDP with tactical risk</h4><div class="g3">${fig("cutin_mdp_a.png", "ODD-MDP, a", 210)}${fig("cutin_mdp_b.png", "ODD-MDP, b", 210)}${fig("cutin_mdp_c.png", "ODD-MDP, c", 210)}</div></div>
+        <div class="card tight col" style="gap:8px"><h4>ODD-POMDP</h4><div class="g3">${fig("cutin_pomdp_a.png", "ODD-POMDP, a", 210)}${fig("cutin_pomdp_b.png", "ODD-POMDP, b", 210)}${fig("cutin_pomdp_c.png", "ODD-POMDP, c", 210)}</div></div>
+        <div class="g3">
+          <div class="card tight stat"><span class="v bad" style="font-size:40px">+2.4 s</span><span class="l">ODD-MDP without tactical risk, brakes to 102 km/h</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px;color:var(--deg)">+0.8 s</span><span class="l">ODD-MDP with tactical risk, brakes to 106 km/h</span></div>
+          <div class="card tight stat"><span class="v ok" style="font-size:40px">−2.8 s</span><span class="l">ODD-POMDP, changes lane first, keeps 130 km/h</span></div>
+        </div>` },
   ];
 
   // citations numbered in order of first appearance over the defense, as in an article: the
