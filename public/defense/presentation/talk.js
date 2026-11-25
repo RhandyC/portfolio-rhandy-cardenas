@@ -51,7 +51,7 @@
     const peers = s.sec ? secSlides(s.sec) : [];
     const mini = peers.length > 1 ? `<div class="mini">${peers.map((p) =>
       `<button type="button" data-go="${p.id}" title="${esc(label(p) + " · " + p.title)}" class="${p.i === s.i ? "on" : ""}"></button>`).join("")}</div>` : "";
-    const cs = (s.c || []).map((c) => `<a class="cbadge" data-go="contrib" title="Contribution ${c}">${c}</a>`).join("");
+    const cs = "";   // contributions are named by their part, not numbered (C1 to C4)
     return `<div class="hdr"><div class="contrib">${cs}</div><div class="kicker">${kick}${sub}</div>` +
       `<div class="title">${s.title}</div>${mini}</div>` + thread(s);
   }
@@ -70,7 +70,7 @@
   function footer(s) {
     const secs = T.sections.map((x) =>
       `<button type="button" data-go="${x.page}" class="${x.id === s.sec ? "on" : ""}" title="${esc(x.toc || x.title)}">${esc(x.short || x.n)}</button>`).join("") +
-      `<button type="button" class="part ${s.main ? "" : "on"}" data-go="bindex" title="Appendix">Appendix</button>`;
+      `<button type="button" class="part apx ${s.main ? "" : "on"}" data-go="bindex" title="Appendix" aria-label="Appendix"></button>`;
     const num = s.type === "title" ? "" : fullLabel(s);
     return `<div class="ftr"><div class="secs">${secs}</div>` +
       (s.type === "video" ? "" : `<div class="who">${esc(T.footer)}</div>`) +
@@ -129,7 +129,6 @@
       inner = header(s) + `<div class="body"><div class="agenda">${rows}</div>${s.html || ""}</div>` + footer(s);
     } else if (s.type === "outline") {
       const rows = T.sections.filter((x) => x.c).map((x) => `<a data-go="${x.page}" href="#/${x.page}">` +
-        `<div class="num-badge ${x.c[0].toLowerCase()}">${x.c[0]}</div>` +
         `<div class="t">${esc(x.title)}<small>${esc(x.sub || "")}</small></div>` +
         `<div class="m">${(x.pubs || []).map((p) => `<span class="pill line">${esc(p)}</span>`).join("")}${x.pubk ? `<cite class="cref" data-k="${x.pubk}"></cite>` : ""}</div>` +
         `<span class="arrow">→</span></a>`).join("");
@@ -152,8 +151,13 @@
     } else if (s.type === "thanks" || s.type === "bindex" || s.type === "bridge") {
       inner = (s.type === "bindex" ? header(s) : "") + s.html + footer(s);
     } else {
-      const bk = (s.backups || []).map((b) => `<a data-go="${b}">Appendix ${label(ALL[IDX[b]])} · ${esc(ALL[IDX[b]].title)}</a>`).join("");
-      inner = header(s) + (bk ? `<div class="bk">${bk}</div>` : "") + `<div class="body">${s.html}</div>` + cites(s) + footer(s);
+      // appendix slides, for the questions only: a discreet dot; one appendix opens directly, several open a short list
+      const bks = (s.backups || []).filter((b) => IDX[b] !== undefined);
+      const bk = !bks.length ? "" : bks.length === 1
+        ? `<div class="bk"><a class="bkdot" data-go="${bks[0]}" title="${esc(ALL[IDX[bks[0]]].title)}" aria-label="Appendix"></a></div>`
+        : `<div class="bk"><button type="button" class="bkdot" title="Appendix" aria-label="Appendix"></button><div class="bkpop">` +
+          bks.map((b) => `<a data-go="${b}">${esc(ALL[IDX[b]].title)}</a>`).join("") + `</div></div>`;
+      inner = header(s) + bk + `<div class="body">${s.html}</div>` + cites(s) + footer(s);
     }
     el.innerHTML = inner;
     citeNumbers(el);
@@ -541,6 +545,9 @@
   }
 
   document.addEventListener("click", (e) => {
+    const bd = e.target.closest("button.bkdot");
+    document.querySelectorAll(".bk.open").forEach((b) => { if (!bd || b !== bd.parentElement) b.classList.remove("open"); });
+    if (bd) { bd.blur(); bd.parentElement.classList.toggle("open"); return; }
     const g = e.target.closest("[data-go]");
     if (g) { e.preventDefault(); g.blur && g.blur(); command("go:" + g.dataset.go); return; }
     const c = e.target.closest("[data-cmd]");
