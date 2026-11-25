@@ -188,7 +188,7 @@
       video: { src: A + "problem.mp4?v=5", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a minimal risk condition always within reach"]] } },
 
     { id: "contrib", cite: ["CARDENAS2025162", "11097482"], th: "The contributions", type: "outline", sec: "intro", kicker: "Contributions and outline", time: 60,
-      title: "Four contributions",
+      title: "Outline",
       notes: "How we get there. Four contributions, one principle: capability precedes choice. Each one answers a question. The first three are the method, each illustrated with its animations; the fourth is the validation of all of them, in simulation and on a prototype vehicle. Each line links to its part.",
  },
 
