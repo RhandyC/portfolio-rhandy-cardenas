@@ -73,7 +73,6 @@
       `<button type="button" class="part apx ${s.main ? "" : "on"}" data-go="bindex" title="Appendix" aria-label="Appendix"></button>`;
     const num = s.type === "title" ? "" : fullLabel(s);
     return `<div class="ftr"><div class="secs">${secs}</div>` +
-      (s.type === "video" ? "" : `<div class="who">${esc(T.footer)}</div>`) +
       `<div class="nav"><button type="button" class="ret" data-ret hidden title="Return (R)"></button>` +
       `<button type="button" data-cmd="prev" title="Previous (←)" aria-label="Previous">${ICON.prev}</button>` +
       `<button type="button" data-cmd="overview" title="All slides (O)" aria-label="All slides">${ICON.grid}</button>` +
