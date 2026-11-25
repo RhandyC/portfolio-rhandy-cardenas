@@ -185,10 +185,17 @@ table.tbl td b { color: var(--navy); }
 /* links between slides */
 a.go, button.go { color: var(--navy); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--amber); cursor: pointer; background: none; border-top: 0; border-left: 0; border-right: 0; padding: 0; }
 a.go:hover, button.go:hover { background: #fff3d6; }
-.bk { position: absolute; right: 64px; top: 136px; z-index: 4; display: flex; gap: 10px; }
-.bk a { font-size: 16px; font-weight: 700; color: var(--mute); text-decoration: none; border: 2px solid #cfd5dd; border-radius: 8px; padding: 3px 10px; background: #fff; cursor: pointer; }
-.bk a:hover { color: var(--navy); border-color: var(--navy); }
-.bk + .body { top: 176px; }
+/* appendix links: a discreet dot at the top right, for the presenter only */
+.bk { position: absolute; right: 26px; top: 132px; z-index: 6; }
+.bkdot { display: block; width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; background: #c5ccd5; opacity: 0.45; cursor: pointer; transition: opacity .15s, transform .15s; }
+.bkdot:hover, .bk.open .bkdot { opacity: 1; transform: scale(1.3); background: var(--navy); }
+.bkpop { display: none; position: absolute; right: 0; top: 20px; flex-direction: column; gap: 4px; min-width: 380px; max-width: 560px; background: #fff; border-radius: 12px; padding: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.16); }
+.bk.open .bkpop { display: flex; }
+.bkpop a { font-size: 17px; font-weight: 600; color: var(--ink); text-decoration: none; padding: 7px 12px; border-radius: 8px; cursor: pointer; line-height: 1.3; }
+.bkpop a:hover { background: #eef1f5; color: var(--navy); }
+/* the appendix button of the footer: a small dot too */
+.ftr .secs .part.apx { width: 14px; min-width: 0; height: 14px; padding: 0; border-radius: 50%; opacity: 0.35; align-self: center; }
+.ftr .secs .part.apx:hover, .ftr .secs .part.apx.on { opacity: 1; }
 
 /* build steps */
 .slide [data-step], .slide [data-until] { transition: opacity 260ms ease; }
@@ -205,8 +212,9 @@ a.go:hover, button.go:hover { background: #fff3d6; }
 .ttl .author { font-size: 36px; font-weight: 700; color: var(--ink); }
 .ttl .aff { margin-top: 12px; font-size: 22px; line-height: 1.5; color: var(--mute); font-weight: 500; }
 .ttl .date { margin-top: 26px; font-size: 24px; font-weight: 600; color: var(--navy); }
-.ttl .logos { margin-top: auto; display: flex; align-items: center; gap: 56px; }
-.ttl .logos img { height: 70px; width: auto; }
+.ttl .logos { margin-top: auto; display: flex; align-items: center; gap: 48px; }
+.ttl .logos img { height: 64px; width: auto; }
+.ttl .logos img.rg { height: 50px; }
 .ttl .jury { background: var(--navy); color: #fff; padding: 96px 56px 80px; display: flex; flex-direction: column; gap: 4px; }
 .ttl .jury h2 { margin: 0 0 18px; font-size: 22px; letter-spacing: 0.14em; color: var(--amber); font-weight: 700; }
 .ttl .jury .p { display: grid; grid-template-columns: 170px 1fr; gap: 14px; padding: 9px 0; border-bottom: 1px solid #22497a; }
@@ -481,8 +489,8 @@ table.chkt td.n::before { content: "✗"; background: var(--bad); }
 .cbadge.ink:hover { background: var(--navy); color: #fff; }
 
 /* ------------------------------------------------------------ contributions and outline */
-.outl { display: flex; flex-direction: column; gap: 16px; }
-.outl a { display: grid; grid-template-columns: 72px 1fr 470px 36px; align-items: center; gap: 28px; background: #fff; border-radius: 20px; padding: 18px 30px; text-decoration: none; cursor: pointer; box-shadow: 0 6px 24px rgba(0,0,0,0.055), 0 2px 8px rgba(0,0,0,0.04); }
+.outl { display: flex; flex-direction: column; gap: 18px; flex: 1; }
+.outl a { display: grid; grid-template-columns: 1fr 470px 36px; align-items: center; gap: 28px; flex: 1; background: #fff; border-radius: 20px; padding: 18px 40px; text-decoration: none; cursor: pointer; box-shadow: 0 6px 24px rgba(0,0,0,0.055), 0 2px 8px rgba(0,0,0,0.04); }
 .outl a:hover { outline: 3px solid var(--amber); }
 .outl .num-badge { width: 66px; height: 66px; font-size: 24px; }
 .outl .t { font-size: 33px; font-weight: 700; color: var(--navy); line-height: 1.2; }

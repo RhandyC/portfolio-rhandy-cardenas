@@ -84,21 +84,21 @@
       ch: "Introduction",
       thread: ["The ODD", "Monitored, not decided", "The problem", "The idea", "The aim", "The contributions"],
       sub: "As conditions change, can the vehicle keep deciding safely?" },
-    { id: "sota", short: "SotA", n: 2, page: "sec-sota", kicker: "Fundamentals and state of the art", title: "What exists today?", toc: "Fundamentals",
-      ch: "Fundamentals and state of the art",
+    { id: "sota", short: "State of the art", n: 2, page: "sec-sota", kicker: "State of the art", title: "State of the art", toc: "State of the art",
+      ch: "State of the art",
       sub: "How is the decision taken today, and where is the ODD?" },
-    { id: "c1", short: "C1", n: 3, page: "sec-c1", kicker: "C1 · Decisional capability", title: "What can the vehicle still ensure?", toc: "C1 · What can the vehicle still ensure?",
-      ch: "Contribution 1", c: ["C1"], pubs: ["IFAC IAV 2025"], pubk: "CARDENAS2025162",
-      sub: "Can the vehicle make a correct decision given the current context?" },
-    { id: "c2", short: "C2", n: 4, page: "sec-c2", kicker: "C2 · ODD-constrained MDP", title: "Which sequence of ensured maneuvers to choose?", toc: "C2 · Which sequence of ensured maneuvers to choose?",
-      ch: "Contribution 2", c: ["C2"], pubs: ["IEEE IV 2025"], pubk: "11097482",
-      sub: "The ODD-constrained MDP" },
-    { id: "c3", short: "C3", n: 5, page: "sec-c3", kicker: "C3 · ODD-constrained POMDP", title: "What if the information is uncertain?", toc: "C3 · What if the information is uncertain?",
-      ch: "Contribution 3", c: ["C3"],
-      sub: "The ODD-constrained POMDP" },
-    { id: "c4", short: "C4", n: 6, page: "sec-c4", kicker: "C4 · Validation", title: "Does it hold, in simulation and on a real vehicle?", toc: "C4 · Validation, in simulation and on a real vehicle",
-      ch: "Contribution 4", c: ["C4"],
-      sub: "Validation, from IPG CarMaker to a Mégane E-Tech prototype" },
+    { id: "c1", short: "Capability", n: 3, page: "sec-c1", kicker: "Decisional capability", title: "Decisional capability", toc: "Decisional capability",
+      ch: "Decisional capability", c: ["C1"], pubs: ["IFAC IAV 2025"], pubk: "CARDENAS2025162",
+      sub: "What can the vehicle still ensure?" },
+    { id: "c2", short: "ODD-MDP", n: 4, page: "sec-c2", kicker: "ODD-MDP", title: "ODD-MDP", toc: "ODD-MDP",
+      ch: "ODD-MDP", c: ["C2"], pubs: ["IEEE IV 2025"], pubk: "11097482",
+      sub: "Which sequence of ensured maneuvers to choose?" },
+    { id: "c3", short: "ODD-POMDP", n: 5, page: "sec-c3", kicker: "ODD-POMDP", title: "ODD-POMDP", toc: "ODD-POMDP",
+      ch: "ODD-POMDP", c: ["C3"],
+      sub: "What if the information is uncertain?" },
+    { id: "c4", short: "Validation", n: 6, page: "sec-c4", kicker: "Validation", title: "Validation", toc: "Validation",
+      ch: "Validation", c: ["C4"],
+      sub: "Does it hold, in simulation and on a real vehicle?" },
     { id: "concl", short: "Conclusion", n: 7, page: "sec-concl", kicker: "Conclusion", title: "Conclusions and perspectives", toc: "Conclusions and perspectives",
       ch: "Conclusion",
       sub: "Contributions, evidence, limitations and future directions" },
@@ -124,7 +124,7 @@
         <div class="author">Rhandy Cardenas</div>
         <div class="aff">Université de technologie de Compiègne · Heudiasyc, UMR CNRS 7253<br>Ampere, Renault Group</div>
         <div class="date">1 December 2026</div>
-        <div class="logos"><img src="${F}logo_utc.png" alt="Université de technologie de Compiègne"><img src="${F}logo_heudiasyc.png" alt="Heudiasyc"></div></div>
+        <div class="logos"><img src="${F}logo_heudiasyc.png" alt="Heudiasyc"><img src="${F}logo_utc.png" alt="Université de technologie de Compiègne"><img src="${F}logo_cnrs.png" alt="CNRS"><img class="rg" src="${F}logo_renault.png" alt="Renault Group"></div></div>
         <div class="jury"><h2>JURY</h2>${jury.map(([r, n, a]) => `<div class="p"><div class="r">${r}</div><div><div class="n">${n}</div><div class="a">${a}</div></div></div>`).join("")}</div></div>` },
 
     { id: "agenda", type: "agenda", kicker: "Outline of the defense", time: 40,
@@ -163,9 +163,10 @@
         </div></div>` },
 
     { id: "v-problem-a", th: "The problem", type: "video", sec: "intro", time: 45,
-      title: "A sequence of admissible decisions can leave no fallback",
-      notes: "Why is checking the ODD at each decision not enough? Current systems check the ODD as a monitor: each maneuver is admissible when it is chosen. Yet the sequence narrows operability until no fallback is left, without any single decision being incorrect.",
-      video: { src: A + "problem.mp4?v=4", parts: [[0.0, "Each decision is checked when it is taken"], [9.0, "Yet the sequence leaves no fallback"]], end: 16.0 } },
+      title: "Monitored at every step, yet no fallback is left",
+      notes: "Why is monitoring the ODD not enough? The vehicle plans its maneuvers and the ODD monitor checks every step: each maneuver is admissible when it is taken. But the monitor looks one step ahead only. Without a long-term horizon of possibilities, the sequence narrows the ensured options until the vehicle leaves operability, with no fallback left, although no single decision was wrong.",
+      // one part, no stop: the monitor checks every step, but looks one step ahead only
+      video: { src: A + "problem.mp4?v=5", parts: [[0.0, "Monitored at every step, yet no fallback is left"]], end: 16.0 } },
 
     { id: "question", th: "The idea", sec: "intro", kicker: "Problem statement · our idea", time: 70, steps: 1,
       title: "Our idea is to bring the ODD into the decision",
@@ -184,12 +185,12 @@
     { id: "v-problem-b", th: "The aim", type: "video", sec: "intro", time: 40,
       title: "Anticipate, and keep a minimal risk condition within reach",
       notes: "What we want instead: anticipate the loss of capability. Under the rain the vehicle keeps fewer options, but its policy can always lead it to a minimal risk condition, through a fallback maneuver. This is fail-operational decision-making.",
-      video: { src: A + "problem.mp4?v=4", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a minimal risk condition always within reach"]] } },
+      video: { src: A + "problem.mp4?v=5", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a minimal risk condition always within reach"]] } },
 
     { id: "contrib", cite: ["CARDENAS2025162", "11097482"], th: "The contributions", type: "outline", sec: "intro", kicker: "Contributions and outline", time: 60,
-      title: "Four contributions, one principle, one architecture",
+      title: "Four contributions",
       notes: "How we get there. Four contributions, one principle: capability precedes choice. Each one answers a question. The first three are the method, each illustrated with its animations; the fourth is the validation of all of them, in simulation and on a prototype vehicle. Each line links to its part.",
-      html: `<div class="card navy"><h3 style="margin:0">Capability precedes choice</h3></div>` },
+ },
 
     // ================================================================ 2. fundamentals and state of the art
     { id: "sec-sota", type: "section", sec: "sota", dark: true, title: "Fundamentals and state of the art", time: 10 },
@@ -236,12 +237,12 @@
            ["Situation awareness enriched by the ODD", "ODD monitoring, time to exit", "Scene described, capability not assessed", ["C1"]],
            ["Interdependent ODD dimensions", "Each dimension monitored", "One dimension at a time", ["C1"]]]
           .map(([t, y, n, cs], j) => `<div class="card col" style="gap:28px;padding:30px 44px;justify-content:center"><div class="row" style="align-items:center;gap:22px"><div class="num-badge" style="width:64px;height:64px;font-size:30px;flex:none">${j + 1}</div><h3 style="margin:0;font-size:40px">${t}</h3></div>
-            <div class="row" style="align-items:center;gap:12px;padding-left:86px">${cs.map((c) => `<a class="cbadge ink" data-go="sec-${c.toLowerCase()}" href="#/sec-${c.toLowerCase()}">${c}</a>`).join("")}</div></div>`).join("")}
+            <div class="row" style="align-items:center;gap:12px;padding-left:86px">${cs.map((c) => `<a class="cbadge ink" data-go="sec-${c.toLowerCase()}" href="#/sec-${c.toLowerCase()}">${({ C1: "Decisional capability", C2: "ODD-MDP", C3: "ODD-POMDP", C4: "Validation" })[c]}</a>`).join("")}</div></div>`).join("")}
         </div>
         <p class="xs mute" style="margin:0;text-align:right">Gaps identified in our survey ${R("cardenas2025context_aware")}</p>` },
 
     // ================================================================ 3. C1 · capability: the architecture and the MCE, illustrated by its animations
-    { id: "sec-c1", type: "section", sec: "c1", dark: true, title: "C1 · What can the vehicle still ensure?", time: 10 },
+    { id: "sec-c1", type: "section", sec: "c1", dark: true, title: "Decisional capability", time: 10 },
 
     { id: "architecture", sec: "c1", kicker: "Our answer: ODD-aptive", time: 170, steps: 6,
       title: "The ODD-aptive architecture, and its tactical layer",
@@ -485,10 +486,10 @@
         <div class="q">Ensured now, but what about the states the decision leads to?</div>
         <ul class="chk"><li class="y">The MCE tells which maneuvers are ensured, in any state</li>
           <li class="n">Ensured now can lead to no fallback later, ${go("v-problem-a", "as in the problem")}</li></ul>
-        <a class="next" data-go="sec-c2" href="#/sec-c2"><span class="cbadge solid">C2</span> Which sequence of ensured maneuvers to choose? →</a></div>` },
+        <a class="next" data-go="sec-c2" href="#/sec-c2"><span class="cbadge solid">ODD-MDP</span> Which sequence of ensured maneuvers to choose? →</a></div>` },
 
     // ================================================================ 4. C2 · choice: ODD-constrained MDP
-    { id: "sec-c2", type: "section", sec: "c2", dark: true, title: "C2 · Which sequence of ensured maneuvers to choose?", time: 10 },
+    { id: "sec-c2", type: "section", sec: "c2", dark: true, title: "ODD-MDP", time: 10 },
 
     { id: "odd-mdp", cite: ["bellman1957MDP", "11097482"], sec: "c2", c: ["C2"], kicker: "Formalism", time: 80,
       title: "In the ODD-MDP, capability enters the Bellman equation",
@@ -590,10 +591,10 @@
         <ul class="chk"><li class="y">Choice among ensured maneuvers, a fallback within reach</li>
           <li class="n">The perceived state is taken as exact</li>
           <li class="to">Keep capability before choice when the state is uncertain</li></ul>
-        <a class="next" data-go="sec-c3" href="#/sec-c3"><span class="cbadge solid">C3</span> What if the information is uncertain? →</a></div>` },
+        <a class="next" data-go="sec-c3" href="#/sec-c3"><span class="cbadge solid">ODD-POMDP</span> What if the information is uncertain? →</a></div>` },
 
     // ================================================================ 5. C3 · choice under uncertainty: ODD-constrained POMDP
-    { id: "sec-c3", type: "section", sec: "c3", dark: true, title: "C3 · What if the information is uncertain?", time: 10 },
+    { id: "sec-c3", type: "section", sec: "c3", dark: true, title: "ODD-POMDP", time: 10 },
 
     { id: "rw-c3", cite: ["hubmann2018uncertainty", "chen2025intention", "ulbrich2015pomdp", "zhang2020efficient", "silver_monte-carlo_2010", "hoel2019combiningdeep"], sec: "c3", c: ["C3"], kicker: "Related work · partial observability", time: 60,
       title: "How do POMDP planners handle uncertainty?",
@@ -647,7 +648,7 @@
       video: { src: A + "pomcp.mp4", parts: [[30.6, "Monte Carlo search: one simulation at a time"], [46.0, "Many simulations: the tree grows where it matters"], [59.37, "Execute the best ensured action, rebuild the belief, search again"]] } },
 
     // ================================================================ 6. C4 · validation in simulation and on the vehicle
-    { id: "sec-c4", type: "section", sec: "c4", dark: true, title: "C4 · Does it run on a real vehicle?", time: 10 },
+    { id: "sec-c4", type: "section", sec: "c4", dark: true, title: "Validation", time: 10 },
 
     { id: "setup", cite: ["renault2022cta", "ipgCarMaker"], sec: "c4", c: ["C4"], kicker: "Experimental platform", time: 50,
       title: "The same planner, from simulation to a real prototype",
@@ -717,10 +718,10 @@
       title: "Each contribution, and the evidence behind it",
       notes: "To conclude, the four contributions and the evidence for each. Every line links to the slide that shows it.",
       html: `<table class="tbl" style="font-size:22px"><tr><th style="width:300px">Contribution</th><th>What it makes possible</th><th>Evidence</th></tr>
-          <tr><td><span class="num-badge c1" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C1</span><b>Maneuver Capability Estimator</b></td><td>Ensured maneuvers, now and in predicted states</td><td>${go("fog-a", "Slows down 455 – 478 m before the fog, not 170 m")}</td></tr>
-          <tr><td><span class="num-badge c2" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C2</span><b>ODD-MDP</b></td><td>Choice among ensured maneuvers, MRM within reach</td><td>${go("fog-a", "No MRM in 100 of 100 fog runs, against 0")}<br>${go("exit", "Exit taken in 100 of 100 runs")}</td></tr>
-          <tr><td><span class="num-badge c3" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C3</span><b>ODD-POMDP</b></td><td>The same principle under uncertainty</td><td>${go("r-forecast", "Fog passed in 19 of 20 runs, against 10")}<br>${go("r-noisy", "94 operable runs under noise, against 85")}</td></tr>
-          <tr><td><span class="num-badge c4" style="display:inline-grid;width:40px;height:40px;font-size:18px;vertical-align:middle;margin-right:10px">C4</span><b>Validation</b></td><td>In an industrial prototyping architecture</td><td>${go("v-vil", "Overtaking on a Mégane E-Tech prototype")}</td></tr></table>
+          <tr><td><b>Maneuver Capability Estimator</b></td><td>Ensured maneuvers, now and in predicted states</td><td>${go("fog-a", "Slows down 455 – 478 m before the fog, not 170 m")}</td></tr>
+          <tr><td><b>ODD-MDP</b></td><td>Choice among ensured maneuvers, MRM within reach</td><td>${go("fog-a", "No MRM in 100 of 100 fog runs, against 0")}<br>${go("exit", "Exit taken in 100 of 100 runs")}</td></tr>
+          <tr><td><b>ODD-POMDP</b></td><td>The same principle under uncertainty</td><td>${go("r-forecast", "Fog passed in 19 of 20 runs, against 10")}<br>${go("r-noisy", "94 operable runs under noise, against 85")}</td></tr>
+          <tr><td><b>Validation</b></td><td>In an industrial prototyping architecture</td><td>${go("v-vil", "Overtaking on a Mégane E-Tech prototype")}</td></tr></table>
         <div class="takeaway" style="margin-top:auto"><b>Capability precedes choice</b> keeps the vehicle fail-operational, without making it overly conservative</div>` },
 
     { id: "perspectives", cite: ["alshiekh2018shielding", "krasowski2020safe", "kuhn2021introspective", "rabiee2023introspective", "krajewski2018highd"], sec: "concl", kicker: "Future directions", time: 75,
