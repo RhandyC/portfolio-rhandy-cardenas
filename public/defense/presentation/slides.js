@@ -667,6 +667,11 @@
       notes: "The strongest evidence of the defense: a real vehicle executing the decisions. Let the video run without talking over it for the first seconds.",
       video: { src: V + "vil.mp4", parts: [[12.0, "A real vehicle, with virtual traffic"], [21.25, "Is returning to the right lane worthwhile?"], [33.0, "The run: one overtaking sequence past the whole group"]] } },
 
+    { id: "v-vil-fog", type: "video", sec: "c4", c: ["C2", "C4"], time: 85,
+      title: "Anticipating fog on the prototype vehicle",
+      notes: "The same anticipation, now on the real prototype on the CTA2 track, with a virtual fog zone. The electronic horizon announces the fog; the question is when to slow down. ODD-aptive adapts before reaching the fog, while the lane change is still ensured, instead of reacting at the boundary. The message is qualitative: the decision anticipates the loss of capability on a real vehicle.",
+      video: { src: V + "vil_fog.mp4", parts: [[10.0, "A real vehicle, in a virtual fog"], [20.0, "The test track, with a virtual fog zone"], [30.0, "When should the vehicle slow down?"], [41.0, "ODD-aptive anticipates the fog"]] } },
+
     { id: "fog-a", sec: "c4", c: ["C2", "C4"], kicker: "Scenario 1: reduced visibility · configuration A", time: 60,
       title: "With four steps, no MRM before the fog in 100 of 100 runs",
       notes: "Configuration A. With one step, the set speed stays at 130 km/h until about 170 m before the fog and every run ends with an MRM. With four steps, the deceleration starts before the 300 m ramp: the vehicle reacts to the forecast degradation, not to the observed one. No collision in the 400 runs. The margin lowers the entry speed without a second boundary.",
