@@ -652,16 +652,20 @@
 
     { id: "setup", cite: ["renault2022cta", "ipgCarMaker"], sec: "c4", c: ["C4"], kicker: "Experimental platform", time: 50,
       title: "The same planner, from simulation to a real prototype",
-      notes: "Three loops that progressively replace simulated elements by real ones. The results that follow come from the software-in-the-loop, except the overtaking on the prototype, which is the vehicle-in-the-loop. In both, ODD-aptive runs unchanged.",
+      notes: "Three loops that progressively replace simulated elements by real ones: software-in-the-loop, everything simulated in IPG CarMaker; vehicle-in-the-loop, a real vehicle on a test track with virtual traffic; and the real vehicle. The results that follow come from the software-in-the-loop, except the overtaking and the fog on the prototype, which are vehicle-in-the-loop. In both, ODD-aptive runs unchanged. The prototype is a Mégane E-Tech; it cannot be shown for confidentiality reasons, so this is a reference image of the model. The tests ran on the CTA2 track of the Centre Technique d'Aubevoye, Renault Group, in Normandy.",
       html: `<div class="row grow">
-        <div class="card col" style="flex:1.2 1 0"><h4>From software-in-the-loop to vehicle-in-the-loop</h4>${fig("v_cycle.png", "Validation loops")}
-          <p class="small">Real prototype, virtual traffic, real ADAS features ${R("renault2022cta")}</p></div>
-        <div class="col grow setupr">
-          <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker ${R("ipgCarMaker")}</span><span class="l">road, traffic, weather, dynamics</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">ROS node</span><span class="l">target lane and set speed to the ADAS</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">5 s · 3.5 s</span><span class="l">one lane change · one keep-lane step</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period</span></div>
-        </div></div>` },
+        <div class="card col" style="flex:1.1 1 0">${fig("v_cycle.png", "Validation loops")}
+          <div class="row" style="gap:10px;flex-wrap:wrap;justify-content:center">
+            <span class="pill line"><b>SIL</b> · software-in-the-loop</span><span class="pill line"><b>VIL</b> · vehicle-in-the-loop</span><span class="pill line">Real vehicle</span></div></div>
+        <div class="col grow" style="flex:1 1 0;gap:16px">
+          <div class="g2 grow">
+            <div class="card tight col" style="gap:8px"><img src="${F}prototype_megane.png" alt="Reference image of the Mégane E-Tech" style="width:100%;flex:1;min-height:0;object-fit:cover;border-radius:10px"><p class="xs mute" style="margin:0;text-align:center">Mégane E-Tech prototype · reference image</p></div>
+            <div class="card tight col" style="gap:8px"><img src="${F}cta_test_track.png" alt="Aerial view of the Centre Technique d'Aubevoye" style="width:100%;flex:1;min-height:0;object-fit:cover;border-radius:10px"><p class="xs mute" style="margin:0;text-align:center">CTA test track, Aubevoye ${R("renault2022cta")}</p></div>
+          </div>
+          <div class="g2">
+            <div class="card tight stat"><span class="v" style="font-size:40px">IPG CarMaker ${R("ipgCarMaker")}</span><span class="l">road, traffic, weather, dynamics</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:40px">200–300 ms</span><span class="l">replanning period</span></div>
+          </div></div></div>` },
 
     { id: "v-vil", type: "video", sec: "c4", c: ["C4"], time: 95,
       title: "Long-term overtaking on the prototype vehicle",
