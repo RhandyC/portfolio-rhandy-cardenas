@@ -718,31 +718,31 @@
     // ================================================================ 7. conclusion
     { id: "sec-concl", type: "section", sec: "concl", dark: true, title: "Conclusion and perspectives", time: 10 },
 
-    { id: "evidence", sec: "concl", kicker: "General conclusion", time: 60,
-      title: "Each contribution, and the evidence behind it",
-      notes: "To conclude, the four contributions and the evidence for each. Every line links to the slide that shows it.",
-      html: `<table class="tbl" style="font-size:22px"><tr><th style="width:300px">Contribution</th><th>What it makes possible</th><th>Evidence</th></tr>
-          <tr><td><b>Maneuver Capability Estimator</b></td><td>Ensured maneuvers, now and in predicted states</td><td>${go("fog-a", "Slows down 455 – 478 m before the fog, not 170 m")}</td></tr>
-          <tr><td><b>ODD-MDP</b></td><td>Choice among ensured maneuvers, MRM within reach</td><td>${go("fog-a", "No MRM in 100 of 100 fog runs, against 0")}<br>${go("exit", "Exit taken in 100 of 100 runs")}</td></tr>
-          <tr><td><b>ODD-POMDP</b></td><td>The same principle under uncertainty</td><td>${go("r-forecast", "Fog passed in 19 of 20 runs, against 10")}<br>${go("r-noisy", "94 operable runs under noise, against 85")}</td></tr>
-          <tr><td><b>Validation</b></td><td>In an industrial prototyping architecture</td><td>${go("v-vil", "Overtaking on a Mégane E-Tech prototype")}</td></tr></table>
-        <div class="takeaway" style="margin-top:auto"><b>Capability precedes choice</b> keeps the vehicle fail-operational, without making it overly conservative</div>` },
+    { id: "evidence", sec: "concl", kicker: "General conclusion", time: 70,
+      title: "From declaring the ODD to remaining within it",
+      notes: "The ODD defines where a system is designed to operate, but declaring it does not guarantee that the system remains within it. When ODD compliance is considered, it is a monitor that validates the current action; it does not constrain future decisions, so a sequence of valid decisions can narrow operability until safe operation is no longer ensured. ODD-aptive brings the limits into the decision while it is built. (1) Deciding is treated as a capability in its own right: the driving task is decomposed into maneuvers, each capability through Sense, Think and Act and skill graphs; the loss of a maneuver is always traced to a change of context, the assessment works on predicted contexts, and it is modular, since skills are shared and new behaviors are composed. (2) In the ODD-MDP, the actions are restricted to the ensured maneuvers in every predicted state: the tree has no branch that leaves the ODD, and the operability terms keep margins and an MRM reachable. Both mechanisms are needed jointly. (3) In the ODD-POMDP, the same principle holds with uncertain vehicles, intentions and forecasts; the guarantee becomes probabilistic and its level a design parameter. (4) In simulation, anticipation changes the decisions and keeps the vehicle fail-operational when its capabilities degrade, without making it overly conservative; in nominal conditions, planning a sequence already improves the decisions; and it was shown on a prototype vehicle, in the loop.",
+      html: `<ol class="nums concl grow">
+          <li><b>Deciding is a capability</b><span>assessed now, and in the predicted states</span></li>
+          <li><b>Only ensured maneuvers, over the whole horizon</b><span>no branch leaves the ODD, an MRM stays within reach</span></li>
+          <li><b>The same principle under uncertainty</b><span>a belief, and a confidence threshold</span></li>
+          <li><b>Fail-operational, without being overly conservative</b><span>in simulation, and on a prototype vehicle</span></li>
+        </ol>` },
 
-    { id: "perspectives", cite: ["alshiekh2018shielding", "krasowski2020safe", "kuhn2021introspective", "rabiee2023introspective", "krajewski2018highd"], sec: "concl", kicker: "Future directions", time: 75,
+    { id: "perspectives", cite: ["kuhn2021introspective", "rabiee2023introspective", "krajewski2018highd", "alshiekh2018shielding", "krasowski2020safe"], sec: "concl", kicker: "Limitations and perspectives", time: 75,
       title: "Limitations, and where the work goes next",
-      notes: "The main limitation: the planner acts at the last admissible instant, for instance when it returns to the right lane just before the fog. Monitoring the maneuver during its execution is the first perspective that addresses it.",
+      notes: "Limitations. The anticipation is only as good as the models of the dynamics, the perception and the traffic. The Act skills were assumed fulfilled, to keep the focus on the tactical decision. And the decisional capability needs the relevant ODD information within the horizon, here given by the electronic horizon, whose availability depends on connected infrastructure. Perspectives. First, the approach generalizes: new skills, maneuvers and objectives are added without changing the planner, so another domain, such as urban roads, means defining its skills, what is shared, and its behaviors. Act skills can monitor braking, steering and power. A maneuver can be monitored during its execution, to replan or abort it as soon as a condition changes. The capabilities can be learned from data, with introspective approaches. Richer traffic prediction, and naturalistic data such as highD. And learning the policy while keeping capability before choice, the ensured maneuvers acting as a shield. Beyond this, decisional capability gives a vocabulary that a certification process could examine.",
       html: `<div class="row grow">
-        <div class="card bad grow"><h3>Limitations</h3><ul class="list small">
-          <li>Ensured at its start only, so it acts at the last admissible instant</li>
-          <li>Modeled dynamics, perception and traffic</li>
-          <li>Act skills assumed, future conditions given</li>
-          <li>Real traffic tests still ongoing</li></ul></div>
-        <div class="card ok grow"><h3>Perspectives</h3><ol class="nums small">
-          <li>Urban roads, and Act skills</li>
-          <li>Continuous maneuver parameters ${R("alshiekh2018shielding", "krasowski2020safe")}</li>
-          <li>Monitor the maneuver during its execution</li>
+        <div class="card bad col" style="flex:0.85 1 0"><h3>Limitations</h3><ul class="list">
+          <li>Relies on models of dynamics, perception and traffic</li>
+          <li>Act skills assumed fulfilled</li>
+          <li>Needs the ODD information ahead, within the horizon</li></ul></div>
+        <div class="card ok col" style="flex:1.15 1 0"><h3>Perspectives</h3><ol class="nums">
+          <li><b>Generalizable</b> · new skills, shared skills, new behaviors, same planner</li>
+          <li>Act skills · braking, steering, power</li>
+          <li>Monitor a maneuver during its execution</li>
           <li>Learn where the vehicle is capable ${R("kuhn2021introspective", "rabiee2023introspective")}</li>
-          <li>Richer traffic prediction ${R("krajewski2018highd")}</li></ol></div>
+          <li>Richer traffic prediction, naturalistic data ${R("krajewski2018highd")}</li>
+          <li>Learn the policy under capability constraints ${R("alshiekh2018shielding", "krasowski2020safe")}</li></ol></div>
         </div>` },
 
     { id: "publications", sec: "concl", kicker: "Publications", time: 15,
