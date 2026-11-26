@@ -105,27 +105,27 @@
       sub: "Contributions, evidence, limitations and future directions" },
   ];
 
-  const jury = [
-    ["Reviewer", "Lydie Nouvelière", "Université Jean Monnet, Saint-Étienne"],
-    ["Reviewer", "Fawzi Nashashibi", "Inria, Paris"],
-    ["Examiner", "Jean-Christophe Popieul", "Université Polytechnique Hauts-de-France"],
-    ["Examiner", "David Filliat", "ENSTA, Institut Polytechnique de Paris"],
-    ["Examiner", "Philippe Bonnifait", "Université de technologie de Compiègne"],
-    ["Thesis director", "Lounis Adouane", "Université de technologie de Compiègne"],
-    ["Co-supervisor", "Clément Zinoune", "Ampere, Renault Group"],
-    ["Co-supervisor", "Mohamed-Amir Benloucif", "Ampere, Renault Group"],
+  const jury = [   // as on the official defense poster (Affiche, UTC doctoral school)
+    ["Reviewer", "Lydie Nouvelière", "Université Jean Monnet, Télécom <span class='nw'>Saint-Étienne</span>"],
+    ["Reviewer", "Fawzi Nashashibi", "Inria Paris"],
+    ["Examiner", "Philippe Bonnifait", "Université de technologie de Compiègne, Heudiasyc"],
+    ["Examiner", "David Filliat", "Institut Polytechnique de Paris, AMIAD"],
+    ["Examiner", "Jean-Christophe Popieul", "Université Polytechnique <span class='nw'>Hauts-de-France</span>, LAMIH"],
+    ["Thesis director", "Lounis Adouane", "Université de technologie de Compiègne, Heudiasyc UMR CNRS 7253"],
+    ["Co-supervisor", "Clément Zinoune", "Renault Group, Ampère"],
+    ["Co-supervisor", "Mohamed-Amir Benloucif", "Renault Group, Ampère"],
   ];
 
   const slides = [
     // ================================================================ opening
     { id: "title", type: "title", title: "Fail-operational decision-making for intelligent vehicles", time: 30,
-      notes: "Good morning. Thank you to the members of the jury for being here, and in particular to the two reviewers. This thesis was carried out under a CIFRE agreement between Heudiasyc at UTC and Ampere, Renault Group. Its question: how can a vehicle keep taking correct decisions while its operating conditions change.",
-      html: `<div class="ttl"><div class="left"><div class="lbl">Doctoral thesis defense</div>
+      notes: "Good morning. Thank you to the members of the jury for being here, and in particular to the two reviewers. This thesis was carried out under a CIFRE agreement between Heudiasyc at UTC and Ampère, Renault Group. Its question: how can a vehicle keep taking correct decisions while its operating conditions change.",
+      html: `<div class="ttl"><div class="left"><div class="main"><div class="lbl">Doctoral thesis defense</div>
         <h1>Fail-operational decision-making for intelligent vehicles</h1><div class="rule"></div>
         <div class="author">Rhandy Cardenas</div>
-        <div class="aff">Université de technologie de Compiègne · Heudiasyc, UMR CNRS 7253<br>Ampere, Renault Group</div>
-        <div class="date">1 December 2026</div>
-        <div class="logos"><img src="${F}logo_heudiasyc.png" alt="Heudiasyc"><img src="${F}logo_utc.png" alt="Université de technologie de Compiègne"><img src="${F}logo_cnrs.png" alt="CNRS"><img class="rg" src="${F}logo_renault.png" alt="Renault Group"></div></div>
+        <div class="aff">Heudiasyc, UMR CNRS 7253 · Université de technologie de Compiègne<br>Renault Group, Ampère</div>
+        <div class="date">1 December 2026 · Centre d’innovation, Compiègne</div></div>
+        <div class="logos"><img class="hds" src="${F}logo_heudiasyc.png" alt="Heudiasyc"><img class="utc" src="${F}logo_utc.png" alt="Université de technologie de Compiègne"><img class="cnrs" src="${F}logo_cnrs.png" alt="CNRS"><img class="rg" src="${F}logo_renault.png" alt="Renault Group"></div></div>
         <div class="jury"><h2>JURY</h2>${jury.map(([r, n, a]) => `<div class="p"><div class="r">${r}</div><div><div class="n">${n}</div><div class="a">${a}</div></div></div>`).join("")}</div></div>` },
 
     { id: "agenda", type: "agenda", kicker: "Outline of the defense", time: 40,
