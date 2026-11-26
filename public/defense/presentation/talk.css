@@ -205,19 +205,24 @@ a.go:hover, button.go:hover { background: #fff3d6; }
 
 /* ------------------------------------------------------------ title slide */
 .ttl { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 640px; }
-.ttl .left { padding: 120px 90px 90px 110px; display: flex; flex-direction: column; }
+.ttl .left { padding: 0 100px 0 120px; display: flex; flex-direction: column; }
+.ttl .main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-top: 40px; }
 .ttl .lbl { font-size: 24px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); }
-.ttl h1 { margin: 26px 0 0; font-size: 76px; line-height: 1.12; font-weight: 700; color: var(--navy); }
-.ttl .rule { width: 160px; height: 6px; background: var(--amber); border-radius: 3px; margin: 40px 0 34px; }
-.ttl .author { font-size: 36px; font-weight: 700; color: var(--ink); }
-.ttl .aff { margin-top: 12px; font-size: 22px; line-height: 1.5; color: var(--mute); font-weight: 500; }
+.ttl h1 { margin: 26px 0 0; font-size: 80px; line-height: 1.1; font-weight: 700; color: var(--navy); }
+.ttl .rule { width: 160px; height: 6px; background: var(--amber); border-radius: 3px; margin: 44px 0 36px; }
+.ttl .author { font-size: 40px; font-weight: 700; color: var(--ink); }
+.ttl .aff { margin-top: 14px; font-size: 23px; line-height: 1.55; color: var(--mute); font-weight: 500; }
 .ttl .date { margin-top: 26px; font-size: 24px; font-weight: 600; color: var(--navy); }
-.ttl .logos { margin-top: auto; display: flex; align-items: center; gap: 48px; }
-.ttl .logos img { height: 64px; width: auto; }
-.ttl .logos img.rg { height: 50px; }
-.ttl .jury { background: var(--navy); color: #fff; padding: 96px 56px 80px; display: flex; flex-direction: column; gap: 4px; }
+.ttl .logos { display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 34px 10px 46px; border-top: 1px solid var(--line, #dde3ea); }
+.ttl .logos img { width: auto; display: block; }
+.ttl .logos img.hds { height: 74px; }
+.ttl .logos img.utc { height: 62px; }
+.ttl .logos img.cnrs { height: 92px; }
+.ttl .logos img.rg { height: 64px; }
+.ttl .jury { background: var(--navy); color: #fff; padding: 60px 56px 90px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+.ttl .jury .nw { white-space: nowrap; }
 .ttl .jury h2 { margin: 0 0 18px; font-size: 22px; letter-spacing: 0.14em; color: var(--amber); font-weight: 700; }
-.ttl .jury .p { display: grid; grid-template-columns: 170px 1fr; gap: 14px; padding: 9px 0; border-bottom: 1px solid #22497a; }
+.ttl .jury .p { display: grid; grid-template-columns: 170px 1fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid #22497a; }
 .ttl .jury .p:last-child { border-bottom: 0; }
 .ttl .jury .r { font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: #9fb6d4; font-weight: 600; padding-top: 4px; }
 .ttl .jury .n { font-size: 22px; font-weight: 700; line-height: 1.25; }
