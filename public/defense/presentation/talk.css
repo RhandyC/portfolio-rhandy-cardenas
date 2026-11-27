@@ -930,3 +930,8 @@ ol.nums.concl li span { font-size: 28px; color: var(--mute); font-weight: 600; m
 .outl.oda .ob a .t { font-size: 28px; font-weight: 700; color: var(--navy); }
 .outl.oda .m { flex-direction: row; align-self: flex-start; align-items: center; }
 .outl.oda .ob a .m { align-self: center; }
+
+/* strategic margin: the state slides away from the boundary */
+.slide [data-step]:not(.hidden) .mvpt { transform-box: fill-box; animation: mgslide 1.1s ease-out both; }
+@keyframes mgslide { from { transform: translateX(var(--dx)); } to { transform: translateX(0); } }
+.mgt { font-size: 26px; }
