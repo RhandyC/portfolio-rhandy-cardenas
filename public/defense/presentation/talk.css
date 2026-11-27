@@ -904,3 +904,10 @@ ol.nums.concl li span { font-size: 28px; color: var(--mute); font-weight: 600; m
 .sec .side a.sub span:first-child { width: 10px; height: 10px; border: 0; background: currentColor; }
 .outl.two .t em { display: block; margin-top: 12px; font-style: normal; font-size: 20px; font-weight: 600; color: var(--mute); }
 .outl.two .t em::before { content: "Examples · "; color: var(--amber); font-weight: 700; }
+
+/* state of the art: four methods, one image each */
+.mth { gap: 22px; grid-template-rows: 1fr 1fr; }
+.mth .card { gap: 10px; padding: 16px 22px; min-height: 0; }
+.mth .mimg { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.mth .mimg img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.mth p { margin: 0; text-align: center; font-size: 25px; }
