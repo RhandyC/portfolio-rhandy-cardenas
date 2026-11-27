@@ -584,48 +584,72 @@
             <li><b>ODD-compliant by construction</b></li>
             <li><b>Fast</b>, the MCE prunes the tree</li></ul></div>
         </div>` },
-    { id: "reward", cite: ["WANG2021surrogate", "glaser2010ttctiv"], sec: "c2", c: ["C2"], kicker: "Reward function", time: 70,
+    { id: "reward", sec: "c2", c: ["C2"], kicker: "Reward function", time: 50,
       title: "Among the ensured maneuvers, the reward ranks the options",
-      notes: "Five objectives: safety, legal compliance, progress, the route, and operability. The first terms are classical. The operability terms are what makes the policy anticipate. The first one counts the ensured actions, each weighted by its margin to the boundary of its most constrained skill: the planner prefers states where the remaining maneuvers are comfortably ensured. The second one penalizes predicted states, beyond a time threshold, from which no minimal risk maneuver is reachable, more as they are later. The weights put collision first, then the reachable fallback, then operability. And because the model is explicit and the reward is a sum of named terms, every decision can be explained: compared with simply keeping the lane, term by term, now and over the horizon, which gives its main reason and what it costs. The details are in the appendix.",
-      backups: ["b-reward", "b-fallback"],
-      html: `<div class="card eqbox" style="padding:14px 24px 10px"><div class="eq" style="font-size:29px"><i>R</i>(<i>s</i>) = <span class="grp"><span><i>W</i><sub>col</sub><i>R</i><sub>col</sub> + <i>W</i><sub>risk</sub><i>R</i><sub>risk</sub></span><span class="lab">safety</span></span> + <span class="grp"><span><i>W</i><sub>legal</sub><i>R</i><sub>legal</sub></span><span class="lab">legal</span></span> + <span class="grp"><span><i>W</i><sub>speed</sub><i>R</i><sub>speed</sub></span><span class="lab">progress</span></span> + <span class="grp"><span><i>W</i><sub>route</sub><i>R</i><sub>route</sub></span><span class="lab">route</span></span> + <span class="grp op"><span><i>W</i><sub>op</sub><i>R</i><sub>op</sub> + <i>W</i><sub>time</sub><i>R</i><sub>time</sub></span><span class="lab">operability</span></span></div></div>
-        <div class="row grow">
-          <table class="tbl" style="flex:1 1 0;font-size:21px"><tr><th style="width:150px">Term</th><th>Definition</th></tr>
-            <tr><td><b>Collision</b></td><td><span class="eq" style="font-size:25px"><i>R</i><sub>col</sub>(<i>s</i>) = −𝟙<sub>col</sub>(<i>s</i>)</span></td></tr>
-            <tr><td><b>Risk</b></td><td><span class="eq" style="font-size:25px">TTC<sub><i>i</i></sub> = <i>d<sub>i</sub></i> / (<i>v</i><sub>ego</sub> − <i>v<sub>i</sub></i>), &nbsp;TIV<sub><i>i</i></sub> = <i>d<sub>i</sub></i> / <i>v</i><sub>ego</sub></span> ${R("WANG2021surrogate", "glaser2010ttctiv")}</td></tr>
-            <tr><td><b>Legal</b></td><td>excess over the speed limit</td></tr>
-            <tr><td><b>Progress</b></td><td><span class="eq" style="font-size:25px"><i>R</i><sub>speed</sub>(<i>s</i>) = <i>v</i><sub>ego</sub> / <i>v</i><sub>max</sub></span></td></tr>
-            <tr><td><b>Route</b></td><td>lane of the itinerary, near the next event</td></tr></table>
-          <div class="col" style="flex:1.05 1 0">
-            <div class="card ok tight"><h4>Loss of ensured maneuvers</h4><div class="eq" style="font-size:29px"><i>R</i><sub>op</sub>(<i>s</i>) = −( 1 − <sup>1</sup>⁄<sub>|<i>A</i>|</sub> Σ<sub><i>a</i> ∈ ${Aens()}</sub> <i>w<sub>a</sub></i>(<i>s</i>) )</div>
-              <p class="xs mute" style="margin:0"><i class="m">w<sub>a</sub></i>, the margin of the most constrained skill</p></div>
-            <div class="card ok tight"><h4>Fallback availability</h4><div class="eq" style="font-size:29px"><i>R</i><sub>time</sub>(<i>s</i>) = −[ <i>t</i><sub>pred</sub>(<i>s</i>) − <i>T</i><sub>thr</sub> ]<sub>+</sub> ( 1 − 𝟙<sub>MRM</sub>(<i>s</i>) )</div>
-              <p class="xs mute" style="margin:0">no reachable MRM beyond <i class="m">T</i><sub>thr</sub> is penalized</p></div>
-            <div class="card tight" style="text-align:center"><div class="eq" style="font-size:28px"><i>W</i><sub>col</sub> ≫ <i>W</i><sub>time</sub> &gt; <i>W</i><sub>op</sub> &gt; <i>W</i><sub>risk</sub> &gt; <i>W</i><sub>legal</sub> &gt; <i>W</i><sub>speed</sub></div></div>
-            <div class="card navy tight xhint"><h4>Model-based, so every decision can be explained</h4>
-              <p>Against <b>keep lane</b>, term by term, its <b>main reason</b> and its <b>trade-off</b> ${go("b-explain", "Appendix →")}</p></div>
-          </div></div>` },
-
-    { id: "safe", cite: ["sae2021taxonomy", "iso2020iso4804"], sec: "c2", c: ["C2"], kicker: "Safe states and fail-operational strategies", time: 60,
-      title: "The policy always keeps a minimal risk condition within reach",
-      notes: "The fail-operational property, made explicit. A minimal risk maneuver, MRM, brings the vehicle to a minimal risk condition, such as stopped on the hard shoulder. A state is safe when the MRM is ensured from it. The planner does not fall back by default: it keeps operating, and keeps a way to a minimal risk condition open. The term R_time penalizes the predicted states, beyond a time threshold, from which no MRM can be reached, more and more as they get further. Two mechanisms act together: the filter excludes what is not ensured, and the reward prefers the plans that keep margin and an MRM within reach. On the right, the same idea as in the animation of the introduction: the plan keeps a way to a minimal risk condition.",
-      backups: ["b-mrm", "b-fallback"],
-      html: `<div class="row grow">
-        <div class="col" style="flex:0.95 1 0;gap:16px">
-          <div class="card col" style="gap:8px"><h4>Safe state</h4>
-            <div class="eqbox"><div class="eq" style="font-size:30px"><i>s</i> ∈ <i>S</i><sub>safe</sub> ⇔ MRM ∈ ${Uens("s")}</div></div>
-            <p class="small" style="margin:0">The MRM is ensured, and leads to a <b>minimal risk condition</b> ${R("sae2021taxonomy", "iso2020iso4804")}</p></div>
-          <div class="card col" style="gap:8px"><h4>Kept within reach by the reward</h4>
-            <div class="eqbox"><div class="eq" style="font-size:28px"><i>R</i><sub>time</sub>(<i>s</i>) = −[ <i>t</i><sub>pred</sub>(<i>s</i>) − <i>T</i><sub>thr</sub> ]<sub>+</sub> ( 1 − 𝟙<sub>MRM</sub>(<i>s</i>) )</div></div>
-            <p class="small" style="margin:0">No reachable MRM beyond <i class="m">T</i><sub>thr</sub>, penalized more as it gets further</p></div>
-          <div class="card col grow" style="gap:8px"><h4>Two mechanisms act together</h4><ul class="list small">
-            <li>The <b>filter</b> excludes what is not ensured</li>
-            <li>The <b>reward</b> prefers the plans that keep margin and an MRM within reach</li></ul>
-            <p class="small navyt" style="margin:4px 0 0"><b>The filter alone does not anticipate. The reward alone does not exclude.</b></p></div>
-        </div>
-        <div class="card col" style="flex:1.05 1 0;gap:16px;justify-content:center"><h4>The plan keeps a way to a minimal risk condition</h4>
-          <img src="${F}mrc_policy.jpg" alt="The policy, highlighted in green, can always reach a minimal risk condition" style="width:100%;border-radius:12px"></div>
+      notes: "Among the ensured maneuvers, the reward ranks the options with five objectives: safety, legal compliance, progress, the route, and operability. The first four are classical. Collision: a penalty if a collision occurs during the predicted execution or at the resulting state. Risk: a graded measure that combines the time to collision and the time headway of the most critical vehicle in our lane. Legal: the relative excess over the speed limit. Progress: the speed, normalized. Route: the lane of the itinerary, more important as the next exit approaches. Their formulas are in the appendix. The operability terms are our contribution, and the next two slides explain them: the loss of ensured maneuvers, and the fallback availability.",
+      backups: ["b-reward"],
+      html: `<div class="card eqbox" style="padding:18px 24px 12px"><div class="eq" style="font-size:31px"><i>R</i>(<i>s</i>) = <span class="grp"><span><i>W</i><sub>col</sub><i>R</i><sub>col</sub> + <i>W</i><sub>risk</sub><i>R</i><sub>risk</sub></span><span class="lab">safety</span></span> + <span class="grp"><span><i>W</i><sub>legal</sub><i>R</i><sub>legal</sub></span><span class="lab">legal</span></span> + <span class="grp"><span><i>W</i><sub>speed</sub><i>R</i><sub>speed</sub></span><span class="lab">progress</span></span> + <span class="grp"><span><i>W</i><sub>route</sub><i>R</i><sub>route</sub></span><span class="lab">route</span></span> + <span class="grp op"><span><i>W</i><sub>op</sub><i>R</i><sub>op</sub> + <i>W</i><sub>time</sub><i>R</i><sub>time</sub></span><span class="lab">operability</span></span></div>
+          <p class="small mute" style="margin:6px 0 0;text-align:center"><i class="m">W</i>, the weight of each term, set by the designer</p></div>
+        <div class="row" style="gap:24px;align-items:stretch">
+          <div class="card col" style="flex:1 1 0;gap:10px"><h4>Classical terms ${go("b-reward", "formulas in the appendix →")}</h4>
+            <ul class="list" style="font-size:25px;gap:12px">
+              <li><b>Collision</b>, a collision in the predicted execution</li>
+              <li><b>Risk</b>, time to collision and time headway of the most critical vehicle ahead</li>
+              <li><b>Legal</b>, the relative excess over the speed limit</li>
+              <li><b>Progress</b>, the normalized speed</li>
+              <li><b>Route</b>, the lane of the itinerary, near the next exit</li></ul></div>
+          <div class="card ok col" style="flex:1 1 0;gap:18px"><h4>Operability terms, our contribution</h4>
+            <div class="tprow"><span class="pill ok"><i>R</i><sub>op</sub></span><span><b>Loss of ensured maneuvers</b>, counted with their margin</span></div>
+            <div class="tprow"><span class="pill ok"><i>R</i><sub>time</sub></span><span><b>Fallback availability</b>, a minimal risk maneuver kept within reach</span></div></div>
         </div>` },
+
+    { id: "r-op", sec: "c2", c: ["C2"], kicker: "Operability term", time: 70, steps: 1,
+      title: "Loss of ensured maneuvers, counted with their margin",
+      notes: "The first operability term. It penalizes the share of actions that are lost. Each ensured action counts with its margin, w_a, between 0 and 1. The margin of an action is the one of its most constrained skill: 1 when every skill is in its preferred region, the strategic margin m seen before, and 0 on the capability boundary. So an action about to be lost counts less than one that is comfortably ensured. (1) Three cases. Full operability with margin: every action counts fully, the penalty is 0. Partial operability, or actions close to their boundary: the penalty is between 0 and minus 1. Loss of operability: no ensured action, the penalty is minus 1. With m equal to 1 for every skill, every ensured action counts 1, and the term simply counts the ensured actions. The term makes the planner prefer states where many maneuvers remain ensured, and far from their boundary.",
+      html: `<div class="row grow" style="gap:24px;align-items:stretch">
+        <div class="card col" style="flex:1.15 1 0;gap:18px;justify-content:center">
+          <div class="eq" style="font-size:44px;text-align:center"><i>R</i><sub>op</sub>(<i>s</i>) = −( 1 − <span class="fr"><span>1</span><span>|<i>A</i>|</span></span> Σ<sub><i>a</i> ∈ ${Aens()}</sub> <i>w<sub>a</sub></i>(<i>s</i>) )</div>
+          <div class="mgdef" style="font-size:25px"><em>|<i>A</i>|</em><span>number of actions</span>
+            <em>${Aens()}</em><span>actions ensured in the state <i>s</i></span>
+            <em><i>w<sub>a</sub></i>(<i>s</i>) ∈ [0, 1]</em><span>margin of the action <i>a</i>, from its most constrained skill</span></div>
+          <div class="row" style="gap:16px">
+            <div class="card tight col" style="flex:1;gap:4px;text-align:center"><div class="eq" style="font-size:30px"><i>w<sub>a</sub></i> = 1</div><p class="small" style="margin:0">every skill in its preferred region (${go("smargin", "m")})</p></div>
+            <div class="card tight col" style="flex:1;gap:4px;text-align:center"><div class="eq" style="font-size:30px"><i>w<sub>a</sub></i> → 0</div><p class="small" style="margin:0">a skill close to its boundary</p></div></div></div>
+        <div class="col" data-step="1" style="flex:0.85 1 0;gap:16px;justify-content:center">
+          <div class="card ok col" style="gap:6px"><span class="pill ok" style="align-self:flex-start">Full operability, with margin</span><div class="eq" style="font-size:36px"><i>R</i><sub>op</sub> = 0</div></div>
+          <div class="card deg col" style="gap:6px"><span class="pill deg" style="align-self:flex-start">Partial, or close to the boundary</span><div class="eq" style="font-size:36px">−1 &lt; <i>R</i><sub>op</sub> &lt; 0</div></div>
+          <div class="card bad col" style="gap:6px"><span class="pill bad" style="align-self:flex-start">Loss of operability</span><div class="eq" style="font-size:36px"><i>R</i><sub>op</sub> = −1</div></div>
+        </div></div>` },
+
+    { id: "r-time", sec: "c2", c: ["C2"], kicker: "Operability term", time: 80, steps: 2,
+      title: "Fallback availability, a minimal risk maneuver kept within reach",
+      notes: "The second operability term, the fail-operational property made explicit. Each predicted state s is reached at a time t_pred(s) from now. The indicator 1_MRM(s) equals 1 if a minimal risk maneuver is reachable from s, that is, if the MRM is ensured there. T_thr is the time from which the planner requires an MRM to remain reachable. The bracket plus keeps only the positive part. (1) Read it on the timeline. Before T_thr, no penalty, whatever happens. After T_thr, a state from which an MRM is reachable is not penalized either. A state without a reachable MRM is penalized, and more as it is further beyond T_thr. So the planner prefers the plans that keep a fallback open up to the end of the horizon, before it becomes urgent. (2) This is the idea of the introduction: the vehicle does not fall back by default, it keeps operating and keeps a way to a minimal risk condition open. Two mechanisms act together: the filter excludes what is not ensured, and the reward prefers the plans that keep margin and an MRM within reach.",
+      backups: ["b-fallback", "b-mrm"],
+      html: `<div class="row grow" style="gap:24px;align-items:stretch">
+        <div class="col" style="flex:1.1 1 0;gap:18px">
+          <div class="card col" style="gap:14px">
+            <div class="eq" style="font-size:40px;text-align:center"><i>R</i><sub>time</sub>(<i>s</i>) = −[ <i>t</i><sub>pred</sub>(<i>s</i>) − <i>T</i><sub>thr</sub> ]<sub>+</sub> ( 1 − 𝟙<sub>MRM</sub>(<i>s</i>) )</div>
+            <div class="mgdef" style="font-size:24px"><em><i>t</i><sub>pred</sub>(<i>s</i>)</em><span>time at which the predicted state <i>s</i> is reached</span>
+              <em><i>T</i><sub>thr</sub></em><span>time from which an MRM must stay reachable</span>
+              <em>𝟙<sub>MRM</sub>(<i>s</i>)</em><span>1 if an MRM is reachable from <i>s</i>, 0 otherwise</span>
+              <em>[ <i>x</i> ]<sub>+</sub></em><span>max(0, <i>x</i>)</span></div></div>
+          <div class="card col grow" data-step="1" style="gap:6px;min-height:0"><h4 style="margin:0">Penalty along the horizon</h4>
+            <svg viewBox="0 0 900 300" class="rtplot" role="img" aria-label="No penalty before the threshold; after it, a penalty growing with time only for states without a reachable MRM">
+              <rect x="80" y="20" width="300" height="210" fill="#eef3f8"/>
+              <text x="230" y="140" text-anchor="middle" class="rl mu">no penalty</text>
+              <line x1="80" y1="60" x2="860" y2="60" class="rg"/><text x="600" y="48" class="rl gk">MRM reachable</text>
+              <polyline points="80,60 380,60 860,226" class="rb"/><text x="400" y="205" class="rl bk">no MRM reachable</text>
+              <line x1="380" y1="20" x2="380" y2="236" class="rth"/>
+              <line x1="80" y1="236" x2="870" y2="236" class="rax"/><line x1="80" y1="20" x2="80" y2="236" class="rax"/>
+              <text x="80" y="268" text-anchor="middle" class="rl">now</text><text x="380" y="268" text-anchor="middle" class="rl"><tspan font-style="italic" font-family="Cambria Math, serif">T</tspan><tspan font-size="0.7em" dy="5">thr</tspan></text><text x="860" y="268" text-anchor="middle" class="rl">horizon</text>
+              <text x="480" y="294" text-anchor="middle" class="rl mu"><tspan font-style="italic" font-family="Cambria Math, serif">t</tspan><tspan font-size="0.7em" dy="5">pred</tspan></text>
+              <text x="30" y="130" text-anchor="middle" class="rl mu" transform="rotate(-90 30 130)"><tspan font-style="italic" font-family="Cambria Math, serif">R</tspan><tspan font-size="0.7em" dy="5">time</tspan></text>
+            </svg></div></div>
+        <div class="card col" data-step="2" style="flex:0.9 1 0;gap:14px;justify-content:center"><h4>The plan keeps a way to a minimal risk condition</h4>
+          <img src="${F}mrc_policy.jpg" alt="The policy, highlighted in green, can always reach a minimal risk condition" style="width:100%;border-radius:12px">
+          <p class="small" style="margin:0">The vehicle does not fall back by default, it <b>keeps operating</b> with a fallback open</p></div>
+        </div>` },
+
     { id: "setup", cite: ["renault2022cta", "ipgCarMaker"], sec: "c2", c: ["C4"], kicker: "Experimental platform", time: 50,
       title: "The same planner, from simulation to a real prototype",
       notes: "Three loops that progressively replace simulated elements by real ones: software-in-the-loop, everything simulated in IPG CarMaker; vehicle-in-the-loop, a real vehicle on a test track with virtual traffic; and the real vehicle. The results that follow come from the software-in-the-loop, except the overtaking and the fog on the prototype, which are vehicle-in-the-loop. In both, ODD-aptive runs unchanged. The prototype is a Mégane E-Tech; it cannot be shown for confidentiality reasons, so this is a reference image of the model. The tests ran on the CTA2 track of the Centre Technique d'Aubevoye, Renault Group, in Normandy.",
@@ -647,8 +671,8 @@
 
     { id: "v-vil", type: "video", scrub: true, sec: "c2", c: ["C4"], time: 95,
       title: "Long-term overtaking on the prototype vehicle",
-      notes: "The strongest evidence of the defense: a real vehicle executing the decisions. Let the video run without talking over it for the first seconds.",
-      video: { src: V + "vil.mp4", parts: [[12.0, "A real vehicle, with virtual traffic"], [21.25, "Is returning to the right lane worthwhile?"], [33.0, "The run: one overtaking sequence past the whole group"]] } },
+      notes: "A real vehicle executing the decisions, with virtual traffic. Multiple overtaking: two cars and a truck close to each other. A planner that looks only at the next maneuver would return to the right lane after each vehicle. The long-term plan sees that a return would be followed shortly by a new lane change, so the vehicle keeps the left lane and passes the whole group in one sequence, then returns.",
+      video: { src: V + "vil_multi.mp4", parts: [[0.0, "Multiple overtaking, one sequence past the whole group"]] } },
 
     { id: "v-vil-fog", type: "video", scrub: true, sec: "c2", c: ["C2", "C4"], time: 85,
       title: "Anticipating fog on the prototype vehicle",
@@ -672,29 +696,6 @@
           <div class="card tight grow">${fig("fog_speed_profiles.png", "Speed profiles before the fog")}</div>
         </div></div>` },
 
-    { id: "v-exit", type: "video", scrub: true, sec: "c2", c: ["C2", "C4"], time: 140,
-      title: "Scenario 2: preparing a highway exit",
-      notes: "The hypotheses of the exit scenario, then a run of ODD-aptive: it keeps overtaking after the announcement and prepares the exit during the last kilometre.",
-      video: { src: V + "exit.mp4", parts: [[12.0, "The electronic horizon announces the exit"], [19.0, "Slower traffic invites overtaking"], [27.75, "The exit is a route objective, not a rule"], [38.5, "Level 2: the driver remains the fallback"], [51.5, "Keep overtaking, then return in time"], [63.5, "The simulations, and how to read the display"], [80.75, "A run of ODD-aptive up to the exit"]] } },
-
-    { id: "exit", sec: "c2", c: ["C2", "C4"], kicker: "Scenario 2: preparing a highway exit", time: 50,
-      title: "The exit is taken in 100 of 100 runs, while still overtaking",
-      notes: "The vehicle keeps overtaking after the announcement and prepares the exit during the last kilometre, with no rule imposing a lane at a given distance. The preparation emerges from the exploration of predicted states and from the reward.",
-      backups: ["b-exit", "b-conf"],
-      html: `<div class="row grow">
-        <div class="card col tight" style="flex:0.7 1 0">${fig("exit_scenario.png", "Highway exit scenario")}</div>
-        <div class="col grow">
-          <div class="card small">Exit announced 2 km ahead, dense traffic<br>A <b>route objective</b> in the reward, not a rule</div>
-          <div class="card tight grow">${fig("exit_lane_occupancy.png", "Lane occupancy before the exit")}</div>
-          <div class="g4">
-            <div class="card tight stat"><span class="v ok" style="font-size:30px">100 / 100</span><span class="l">exits taken</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">40</span><span class="l">overtakings after the announcement</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">1230 → 618 m</span><span class="l">first exit decision, then final return</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">84 → 103 km/h</span><span class="l">mean speed, without then with overtaking</span></div>
-          </div>
-        </div></div>` },
-
-    // ================================================================ 7. conclusion
     { id: "bridge-c2", type: "bridge", sec: "c2", dark: true, kicker: "Limitation", time: 30,
       title: "What if the perceived state is wrong?",
       notes: "The ODD-MDP decides among ensured maneuvers and keeps a fallback reachable over the whole horizon. But it takes the perceived state as exact. Positions and speeds are noisy, the fog forecast can be wrong, and the intentions of the other drivers are hidden. The third contribution keeps the same principle under this uncertainty.",
@@ -948,17 +949,47 @@
             <p class="xs mute" style="margin:0">Bars <i class="m">Δ<sub>k</sub></i> drawn to illustrate the reading, not measured values</p></div>
         </div></div>` },
 
-    { id: "b-reward", sec: "backup", kicker: "Appendix", title: "Reward terms in detail",
-      html: `<table class="tbl"><tr><th style="width:260px">Term</th><th>Definition</th></tr>
-          <tr><td><b>Collision</b></td><td>−1 if a collision occurs during the predicted execution or at the resulting state</td></tr>
-          <tr><td><b>Risk</b></td><td>worst vehicle of the ego lane, mixing time to collision (1 to 10 s) and time headway (0.5 to 2 s)</td></tr>
-          <tr><td><b>Legal</b></td><td>relative excess over the speed limit</td></tr>
-          <tr><td><b>Speed</b></td><td>ego speed over the maximum speed considered, in [0, 1]</td></tr>
-          <tr><td><b>Route</b></td><td>lane index, growing as the distance to the next itinerary event decreases</td></tr>
-          <tr class="hl"><td><b>Operability</b></td><td>share of the actions lost, weighted by the margin of each ensured action</td></tr>
-          <tr class="hl"><td><b>Fallback</b></td><td>time beyond the threshold without a reachable MRM</td></tr>
-          <tr><td><b>Minor terms</b></td><td>lane change cost, and a penalty for overtaking on the right</td></tr></table>
-        <p class="small mute">Weights, from collision down to fallback, operability, risk, legal and speed</p>` },
+    { id: "v-exit", type: "video", scrub: true, sec: "backup", kicker: "Appendix", time: 140,
+      title: "Scenario 2: preparing a highway exit",
+      notes: "The hypotheses of the exit scenario, then a run of ODD-aptive: it keeps overtaking after the announcement and prepares the exit during the last kilometre.",
+      video: { src: V + "exit.mp4", parts: [[12.0, "The electronic horizon announces the exit"], [19.0, "Slower traffic invites overtaking"], [27.75, "The exit is a route objective, not a rule"], [38.5, "Level 2: the driver remains the fallback"], [51.5, "Keep overtaking, then return in time"], [63.5, "The simulations, and how to read the display"], [80.75, "A run of ODD-aptive up to the exit"]] } },
+
+    { id: "exit", sec: "backup", kicker: "Appendix", time: 50,
+      title: "The exit is taken in 100 of 100 runs, while still overtaking",
+      notes: "The vehicle keeps overtaking after the announcement and prepares the exit during the last kilometre, with no rule imposing a lane at a given distance. The preparation emerges from the exploration of predicted states and from the reward.",
+      backups: ["b-exit", "b-conf"],
+      html: `<div class="row grow">
+        <div class="card col tight" style="flex:0.7 1 0">${fig("exit_scenario.png", "Highway exit scenario")}</div>
+        <div class="col grow">
+          <div class="card small">Exit announced 2 km ahead, dense traffic<br>A <b>route objective</b> in the reward, not a rule</div>
+          <div class="card tight grow">${fig("exit_lane_occupancy.png", "Lane occupancy before the exit")}</div>
+          <div class="g4">
+            <div class="card tight stat"><span class="v ok" style="font-size:30px">100 / 100</span><span class="l">exits taken</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">40</span><span class="l">overtakings after the announcement</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">1230 → 618 m</span><span class="l">first exit decision, then final return</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">84 → 103 km/h</span><span class="l">mean speed, without then with overtaking</span></div>
+          </div>
+        </div></div>` },
+
+    // ================================================================ 7. conclusion
+    { id: "b-reward", cite: ["WANG2021surrogate", "glaser2010ttctiv"], sec: "backup", kicker: "Appendix", title: "Reward terms in detail",
+      notes: "Collision: minus 1 if a collision occurs during the predicted execution or at the resulting state. Risk: for each vehicle i ahead in the ego lane, time to collision and time headway, each mapped to a risk between 0 and 1 by a piecewise-linear function: TTC from 1 to 10 seconds, TIV from 0.5 to 2 seconds. They are mixed by alpha, which grows with the closing speed: approaching a slower vehicle, TTC matters more; at similar speeds, TIV. The most critical vehicle is kept. Legal: the relative excess over the speed limit. Progress: the speed over the maximum speed. Route: the lane index from the right, amplified as the next itinerary event, an exit, approaches. The weights follow a hierarchy: collision far above all, then the fallback, operability, risk, legal and speed; they were tuned in simulation so that this order holds in the decisions.",
+      html: `<div class="g2 grow" style="gap:20px">
+        <div class="card col" style="gap:10px"><h4>Safety</h4>
+          <div class="eq" style="font-size:24px"><i>R</i><sub>col</sub>(<i>s</i>) = −𝟙<sub>col</sub>(<i>s</i>)</div>
+          <div class="eq" style="font-size:24px">TTC<sub><i>i</i></sub> = <i>d<sub>i</sub></i> / (<i>v</i><sub>ego</sub> − <i>v<sub>i</sub></i>), &nbsp; TIV<sub><i>i</i></sub> = <i>d<sub>i</sub></i> / <i>v</i><sub>ego</sub> ${R("WANG2021surrogate")}</div>
+          <div class="eq" style="font-size:24px"><i>α<sub>i</sub></i> = max(0, min(1, (<i>v</i><sub>ego</sub> − <i>v<sub>i</sub></i>) / <i>v</i><sub>max</sub>))</div>
+          <div class="eq" style="font-size:24px"><i>R<sub>i</sub></i> = <i>α<sub>i</sub></i> <i>r</i><sub>TTC</sub>(TTC<sub><i>i</i></sub>) + (1 − <i>α<sub>i</sub></i>) <i>r</i><sub>TIV</sub>(TIV<sub><i>i</i></sub>), &nbsp; <i>R</i><sub>risk</sub> = −max<sub><i>i</i></sub> <i>R<sub>i</sub></i></div>
+          <p class="xs mute" style="margin:0"><i>d<sub>i</sub></i> gap to vehicle <i>i</i> ahead in the ego lane, <i>r</i><sub>TTC</sub>, <i>r</i><sub>TIV</sub> piecewise-linear risks in [0, 1], TTC from 1 to 10 s, TIV from 0.5 to 2 s ${R("glaser2010ttctiv")}</p></div>
+        <div class="card col" style="gap:10px"><h4>Legal, progress, route</h4>
+          <div class="eq" style="font-size:24px"><i>R</i><sub>legal</sub>(<i>s</i>) = −[ <i>v</i><sub>ego</sub> − <i>v</i><sub>limit</sub>(<i>s</i>) ]<sub>+</sub> / <i>v</i><sub>limit</sub>(<i>s</i>)</div>
+          <div class="eq" style="font-size:24px"><i>R</i><sub>speed</sub>(<i>s</i>) = <i>v</i><sub>ego</sub> / <i>v</i><sub>max</sub></div>
+          <div class="eq" style="font-size:24px"><i>R</i><sub>route</sub>(<i>s</i>) = −<i>ℓ</i>(<i>s</i>) ( 1 + <i>κ</i> e<sup>−<i>θ d<sub>e</sub></i>(<i>s</i>)</sup> )</div>
+          <p class="xs mute" style="margin:0"><i>ℓ</i> lane index from the right, <i>d<sub>e</sub></i> distance to the next itinerary event, <i>κ</i>, <i>θ</i> how strongly and how early it is anticipated</p>
+          <h4 style="margin-top:8px">Weights</h4>
+          <div class="eq" style="font-size:24px"><i>W</i><sub>col</sub> ≫ <i>W</i><sub>time</sub> &gt; <i>W</i><sub>op</sub> &gt; <i>W</i><sub>risk</sub> &gt; <i>W</i><sub>legal</sub> &gt; <i>W</i><sub>speed</sub></div>
+          <p class="xs mute" style="margin:0">Plus a small cost per lane change and a penalty for overtaking on the right</p></div>
+        </div>` },
 
     { id: "b-pomcp", cite: ["auer2002finite", "silver_monte-carlo_2010"], sec: "backup", kicker: "Appendix", title: "ODD-constrained POMCP in practice",
       html: `<div class="g4">
