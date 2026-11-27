@@ -745,12 +745,12 @@
     { id: "v-pomcp-a", type: "video", sec: "c3", c: ["C3"], time: 45,
       title: "The belief, and an action ensured for a share τ of the particles",
       notes: "The current state is only estimated: noisy position and speed, uncertain intentions, an uncertain fog forecast. The belief keeps several possible states, the particles. The MCE checks the action in every particle: it is ensured only if a share τ of the particles ensures it.",
-      video: { src: A + "pomcp.mp4", parts: [[0.0, "Under uncertainty, the current state becomes a belief"], [19.0, "An action is ensured when a share τ of the particles ensures it"]], end: 30.6 } },
+      video: { src: A + "pomcp.mp4?v=2", parts: [[0.0, "Under uncertainty, the state becomes a belief"], [19.0, "An action is ensured for a share τ of the particles"]], end: 30.6 } },
 
     { id: "v-pomcp-b", type: "video", sec: "c3", c: ["C3"], time: 55,
       title: "The ODD-constrained Monte Carlo search",
-      notes: "Each simulation draws one particle and follows ensured actions up to the horizon. Simulation after simulation, the tree grows toward the most promising ensured actions. Only the best ensured action is executed, the belief is rebuilt and the search starts again.",
-      video: { src: A + "pomcp.mp4", parts: [[30.6, "Monte Carlo search: one simulation at a time"], [46.0, "Many simulations: the tree grows where it matters"], [59.37, "Execute the best ensured action, rebuild the belief, search again"]] } },
+      notes: "Each simulation draws one particle and follows ensured actions up to the horizon. Here the first action at the root is pruned: most of its particles fall outside the ODD, its share is below τ. (next) Simulation after simulation, the tree grows toward the most promising ensured actions. A pruned branch shows its particles outside the ODD, then disappears; it is never expanded. Look at this node: one particle out of ten is outside, the share stays above τ, so the action is still ensured. (next) Only the best ensured action is executed, the belief is rebuilt and the search starts again.",
+      video: { src: A + "pomcp.mp4?v=2", parts: [[30.6, "Monte Carlo search, one simulation at a time"], [46.0, "The tree grows where it matters"], [59.37, "Execute, rebuild the belief, search again"]] } },
 
     // ================================================================ 6. C4 · validation in simulation and on the vehicle
     { id: "r-noisy", sec: "c3", c: ["C3", "C4"], kicker: "Example · noisy perception", time: 50,
