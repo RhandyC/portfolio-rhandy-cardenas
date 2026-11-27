@@ -161,39 +161,39 @@
 
     { id: "context", cite: ["cardenas2025context_aware", "charmet2024monitoring"], th: "Monitored, not decided", sec: "intro", kicker: "Motivation · how the ODD is used today", time: 60, steps: 2,
       title: "The ODD is defined, but the context keeps evolving",
-      notes: "Now the ODD is defined, even if it is a demanding task. The difficulty is that the context does not stay fixed. Along one route, the context keeps changing: a highway exit, road works, missing lane markings, a tunnel, a traffic jam, a curve, rain expected ahead. The ODD, fixed by design, does not change. What changes is the operational domain, OD, the current conditions; staying in the ODD means keeping the OD inside it, now and on the route ahead. (1) Today, the ODD is mostly monitored, for instance by estimating the time before leaving it, with isolated condition checks and margins, but it rarely enters the decision process itself: decisions are taken without checking that the vehicle will be able to manage them, and the limit is noticed once it is crossed, with an abrupt deactivation, an emergency stop or, for a fleet, a suspended service. (2) What is needed is the opposite: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation.",
+      notes: "Now the ODD is defined, even if it is a demanding task. The difficulty is that the context does not stay fixed. Along one route, the context keeps changing: a highway exit, road works, missing lane markings, a tunnel, a traffic jam, a curve, rain expected ahead. The ODD, fixed by design, does not change. What changes is the operational domain, OD, the current conditions; staying in the ODD means keeping the OD inside it, now and on the route ahead. (1) Today, the ODD is mostly monitored, for instance by estimating the time before leaving it, with isolated condition checks and margins, but it rarely enters the decision process itself: decisions are taken without checking that the vehicle will be able to manage them, and the limit is noticed once it is crossed, with an abrupt deactivation, an emergency stop or, for a fleet, a suspended service. (2) What is needed is the opposite: anticipate, so that a fallback maneuver always remains ensured. A fallback maneuver is executed to reach a minimal risk condition when the driving task can no longer be continued within the ODD, for instance a controlled stop on the hard shoulder; at Level 3, the fallback can also be a timely request to the driver to take over. So: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation.",
       html: `<div class="row grow">
         <div class="card col" style="flex:0 0 700px;padding:20px 26px"><h4>One route, many context changes ${R("cardenas2025context_aware")}</h4>${fig("context_changes.png", "Target route with context changes: highway exit, road works, missing lane markings, tunnel, traffic jam, curved road, expected rain")}</div>
         <div class="col grow" style="justify-content:center;gap:30px">
           <div class="card accent"><h3 style="margin:0">Context evolves during the whole itinerary</h3></div>
           <div class="card bad" data-step="1"><h3 style="margin:0">Today: Monitor, then react ${R("charmet2024monitoring")}</h3></div>
-          <div class="card ok" data-step="2"><h3 style="margin:0">Needed: Anticipate</h3></div>
+          <div class="card ok" data-step="2"><h3 style="margin:0">Needed: Anticipate, so a fallback maneuver always remains ensured</h3></div>
         </div></div>` },
 
     { id: "v-problem-a", th: "The problem", type: "video", sec: "intro", time: 45,
-      title: "Monitored at every step, yet no fallback is left",
-      notes: "Why is monitoring the ODD not enough? The vehicle plans its maneuvers and the ODD monitor checks every step: each maneuver is admissible when it is taken. But the monitor looks one step ahead only. Without a long-term horizon of possibilities, the sequence narrows the ensured options until the vehicle leaves operability, with no fallback left, although no single decision was wrong.",
-      // one part, no stop: the monitor checks every step, but looks one step ahead only
-      video: { src: A + "problem.mp4?v=5", parts: [[0.0, "Monitored at every step, yet no fallback is left"]], end: 16.0 } },
+      title: "Monitoring is good, but not enough",
+      notes: "Why is monitoring the ODD not enough? Here the band is the ODD, and rain ahead narrows it. The vehicle plans its maneuvers and monitoring checks each one: it is admissible when it is taken. (pause) But monitoring only looks one step ahead. Without anticipation, the ensured options shrink at each step, until the vehicle reaches a state with no fallback left, although no single decision was wrong.",
+      // a short stop after the first step, to point at the rain ahead; then the rest in one go
+      video: { src: A + "problem.mp4?v=6", parts: [[0.0, "Monitoring is good, but not enough"], [3.5, "Without anticipation, no fallback left"]], end: 16.0 } },
 
     { id: "question", th: "The idea", sec: "intro", kicker: "Problem statement · our idea", time: 70, steps: 1,
-      title: "Our idea is to bring the ODD into the decision",
+      title: "From monitoring to deciding",
       notes: "Hence the research question: how can an intelligent vehicle ensure ODD-compliant decision-making as its operational context continuously evolves? ODD-compliant means more than admissible when chosen: the decision keeps the vehicle within its ODD throughout its execution, and leads to states from which it can keep operating. (1) Our idea is to bring the ODD into the decision, with one principle that guides all the contributions: capability precedes choice. First, capability: what can the vehicle still do safely, now and in the situations its decisions lead to. Then, choice: among those options only, which maneuvers, in which order, keeping a minimal risk condition within reach.",
       html: `<div class="card navy rq" style="padding:40px 64px"><div class="quote" style="font-size:42px">How can an intelligent vehicle ensure <b>ODD-compliant</b> decision-making as its operational context <b>continuously evolves</b>?</div></div>
-        <div class="col grow" data-step="1" style="gap:16px">
+        <div class="col grow" data-step="1" style="gap:34px;justify-content:center">
           <div class="cpch"><span>One guiding thread</span><b>Capability precedes choice</b></div>
-          <div class="cpcflow grow">
+          <div class="cpcflow">
             <div class="card ok cpc2"><svg class="cpi" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="none" stroke="currentColor" stroke-width="4.5"/><path d="M23.5 25a8.5 8.5 0 1 1 12.6 7.4c-2.6 1.5-4.1 3.2-4.1 6.1v1.5" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/><circle cx="32" cy="47" r="3" fill="currentColor"/></svg><div><h3>1 · Capability</h3>
-              <p>What can it still do <b>safely</b>?</p></div></div>
+              <p>Knowing what the vehicle is <b>capable of doing</b></p></div></div>
             <div class="arrow-big">→</div>
             <div class="card cpc2 cho"><svg class="cpi" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 58V36M32 36L15 15M32 36l17-21" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 26V13h13M51 26V13H38" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div><h3>2 · Choice</h3>
-              <p>Among <b>those only</b>, which sequence?</p></div></div>
+              <p>Choosing the <b>best decision</b> to execute</p></div></div>
           </div></div>` },
 
     { id: "v-problem-b", th: "The aim", type: "video", sec: "intro", time: 40,
       title: "Anticipate, and keep a minimal risk condition within reach",
       notes: "What we want instead: anticipate the loss of capability. Under the rain the vehicle keeps fewer options, but its policy can always lead it to a minimal risk condition, through a fallback maneuver. This is fail-operational decision-making.",
-      video: { src: A + "problem.mp4?v=5", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a minimal risk condition always within reach"]] } },
+      video: { src: A + "problem.mp4?v=6", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a minimal risk condition always within reach"]] } },
 
     { id: "contrib", cite: ["CARDENAS2025162", "11097482"], th: "The contributions", type: "outline", sec: "intro", kicker: "Contributions and outline", time: 60,
       title: "Outline",
