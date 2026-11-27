@@ -143,8 +143,9 @@
           <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="width:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px">
           <p style="margin:0;text-align:center;font-size:26px"><b>Mercedes-Benz Drive Pilot</b>, the first Level 3 approved in Europe ${R("mercedes2019drivepilot")}</p></div>
         <div class="col grow" style="flex:1 1 0;gap:22px;justify-content:center">
-          <div class="card navy" data-step="1" style="padding:30px 38px"><h3 style="margin:0 0 12px;font-size:40px">Operational Design Domain · ODD</h3>
-            <div class="quote" style="font-size:30px;color:#fff">“Operating conditions under which a […] system is specifically designed to function”</div>
+          <div class="card navy" data-step="1" style="padding:30px 38px"><h3 style="margin:0 0 16px;font-size:36px;white-space:nowrap">Operational Design Domain (ODD)</h3>
+            <div class="quote" style="font-size:30px;color:#fff;line-height:1.35">“Operating conditions under which a given driving automation system or feature thereof is <b style="color:var(--amber)">specifically designed to function</b>,</div>
+            <div style="font-size:21px;line-height:1.45;color:#c7d3e3;margin-top:10px;font-style:italic">including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
             <p class="xs" style="margin:12px 0 0;opacity:.8">SAE J3016 ${R("sae2021taxonomy")}</p></div>
           <div class="card" data-step="2"><h4>Described as a taxonomy</h4><div class="oddtax">
               <div><b>Infrastructure</b></div><div><b>Operational constraints</b></div><div><b>Objects</b></div>
