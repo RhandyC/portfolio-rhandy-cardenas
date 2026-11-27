@@ -90,18 +90,21 @@
       ch: "State of the art",
       sub: "How is the decision taken today, and where is the ODD?" },
     { id: "c1", short: "Capability", n: 3, page: "sec-c1", kicker: "Decisional capability", title: "Decisional capability", toc: "Decisional capability",
-      ch: "Decisional capability", c: ["C1"], pubs: ["IFAC IAV 2025"], pubk: "CARDENAS2025162",
-      sub: "What can the vehicle still ensure?" },
-    { id: "c2", short: "ODD-MDP", n: 4, page: "sec-c2", kicker: "ODD-MDP", title: "ODD-MDP", toc: "ODD-MDP",
-      ch: "ODD-MDP", c: ["C2"], pubs: ["IEEE IV 2025"], pubk: "11097482",
-      sub: "Which sequence of ensured maneuvers to choose?" },
-    { id: "c3", short: "ODD-POMDP", n: 5, page: "sec-c3", kicker: "ODD-POMDP", title: "ODD-POMDP", toc: "ODD-POMDP",
-      ch: "ODD-POMDP", c: ["C3"],
-      sub: "What if the information is uncertain?" },
-    { id: "c4", short: "Validation", n: 6, page: "sec-c4", kicker: "Validation", title: "Validation", toc: "Validation",
-      ch: "Validation", c: ["C4"],
-      sub: "Does it hold, in simulation and on a real vehicle?" },
-    { id: "concl", short: "Conclusion", n: 7, page: "sec-concl", kicker: "Conclusion", title: "Conclusions and perspectives", toc: "Conclusions and perspectives",
+      ch: "Decisional capability", c: ["C1"], pubs: ["IFAC IAV 2025"], pubk: "CARDENAS2025162", blk: "Capability",
+      ex: "A lane change, and the perception it needs",
+      sub: "What is the vehicle capable of doing?" },
+    // the choice: one block, ODD-aptive decision-making, in two parts, each with its examples
+    { id: "c2", short: "ODD-MDP", n: 4, page: "sec-c2", kicker: "ODD-aptive decision-making", title: "ODD-MDP", toc: "ODD-MDP",
+      ch: "ODD-aptive decision-making", c: ["C2"], pubs: ["IEEE IV 2025"], pubk: "11097482", blk: "Choice",
+      grp: "ODD-aptive decision-making", grpSub: "What is the best decision to execute?",
+      ex: "Fog in simulation and on the prototype, a highway exit, an overtaking",
+      sub: "Which sequence of ensured maneuvers?" },
+    { id: "c3", short: "ODD-POMDP", n: 4, page: "sec-c3", kicker: "ODD-aptive decision-making", title: "ODD-POMDP", toc: "ODD-POMDP",
+      ch: "ODD-aptive decision-making", c: ["C3"], blk: "Choice",
+      grp: "ODD-aptive decision-making", grpSub: "What is the best decision to execute?",
+      ex: "Noisy perception, an uncertain fog forecast, a cut-in",
+      sub: "And when the information is uncertain?" },
+    { id: "concl", short: "Conclusion", n: 5, page: "sec-concl", kicker: "Conclusion", title: "Conclusions and perspectives", toc: "Conclusions and perspectives",
       ch: "Conclusion",
       sub: "Contributions, evidence, limitations and future directions" },
   ];
@@ -614,6 +617,75 @@
         <div class="card col" style="flex:1.05 1 0;gap:16px;justify-content:center"><h4>The plan keeps a way to a minimal risk condition</h4>
           <img src="${F}mrc_policy.jpg" alt="The policy, highlighted in green, can always reach a minimal risk condition" style="width:100%;border-radius:12px"></div>
         </div>` },
+    { id: "setup", cite: ["renault2022cta", "ipgCarMaker"], sec: "c2", c: ["C4"], kicker: "Experimental platform", time: 50,
+      title: "The same planner, from simulation to a real prototype",
+      notes: "Three loops that progressively replace simulated elements by real ones: software-in-the-loop, everything simulated in IPG CarMaker; vehicle-in-the-loop, a real vehicle on a test track with virtual traffic; and the real vehicle. The results that follow come from the software-in-the-loop, except the overtaking and the fog on the prototype, which are vehicle-in-the-loop. In both, ODD-aptive runs unchanged. The prototype is a Mégane E-Tech; it cannot be shown for confidentiality reasons, so this is a reference image of the model. The tests ran on the CTA2 track of the Centre Technique d'Aubevoye, Renault Group, in Normandy.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.05 1 0;gap:14px">${fig("v_cycle.png", "Validation loops")}
+          <div class="row" style="gap:10px;flex-wrap:wrap;justify-content:center">
+            <span class="pill line"><b>SIL</b> · software-in-the-loop</span><span class="pill line"><b>VIL</b> · vehicle-in-the-loop</span><span class="pill line">Real vehicle</span></div></div>
+        <div class="col" style="flex:1 1 0;gap:16px">
+          <div class="card tight col" style="flex:1.15 1 0;gap:8px;min-height:0"><div style="flex:1;min-height:0;display:flex;justify-content:center"><img src="${F}cta_test_track.png" alt="Aerial view of the Centre Technique d'Aubevoye" style="height:100%;max-width:100%;object-fit:contain;border-radius:10px"></div>
+            <p class="xs mute" style="margin:0;text-align:center">CTA test track, Aubevoye ${R("renault2022cta")}</p></div>
+          <div class="row" style="flex:1 1 0;gap:16px;min-height:0">
+            <div class="card tight col" style="flex:1 1 0;gap:8px;min-height:0"><div style="flex:1;min-height:0;display:flex;justify-content:center"><img src="${F}prototype_megane.png" alt="Reference image of the Mégane E-Tech" style="height:100%;max-width:100%;object-fit:contain;border-radius:10px"></div>
+              <p class="xs mute" style="margin:0;text-align:center">Mégane E-Tech · reference image</p></div>
+            <div class="col" style="flex:1 1 0;gap:16px">
+              <div class="card tight stat grow" style="justify-content:center"><span class="v" style="font-size:34px">IPG CarMaker ${R("ipgCarMaker")}</span><span class="l">road, traffic, weather</span></div>
+              <div class="card tight stat grow" style="justify-content:center"><span class="v" style="font-size:34px">200–300 ms</span><span class="l">replanning period</span></div>
+            </div></div>
+        </div></div>` },
+
+    { id: "v-vil", type: "video", scrub: true, sec: "c2", c: ["C4"], time: 95,
+      title: "Long-term overtaking on the prototype vehicle",
+      notes: "The strongest evidence of the defense: a real vehicle executing the decisions. Let the video run without talking over it for the first seconds.",
+      video: { src: V + "vil.mp4", parts: [[12.0, "A real vehicle, with virtual traffic"], [21.25, "Is returning to the right lane worthwhile?"], [33.0, "The run: one overtaking sequence past the whole group"]] } },
+
+    { id: "v-vil-fog", type: "video", scrub: true, sec: "c2", c: ["C2", "C4"], time: 85,
+      title: "Anticipating fog on the prototype vehicle",
+      notes: "The same anticipation, now on the real prototype on the CTA2 track, with a virtual fog zone. The electronic horizon announces the fog; the question is when to slow down. ODD-aptive adapts before reaching the fog, while the lane change is still ensured, instead of reacting at the boundary. The message is qualitative: the decision anticipates the loss of capability on a real vehicle.",
+      // v3, without pauses: one part; the presenter pauses it (K or the scene bar) where wanted
+      video: { src: V + "vil_fog.mp4?v=3", parts: [[10.0, "Anticipating fog on the prototype vehicle"]] } },
+
+    { id: "fog-a", sec: "c2", c: ["C2", "C4"], kicker: "Scenario 1: reduced visibility · configuration A", time: 60,
+      title: "With four steps, no MRM before the fog in 100 of 100 runs",
+      notes: "Configuration A. With one step, the set speed stays at 130 km/h until about 170 m before the fog and every run ends with an MRM. With four steps, the deceleration starts before the 300 m ramp: the vehicle reacts to the forecast degradation, not to the observed one. No collision in the 400 runs. The margin lowers the entry speed without a second boundary.",
+      backups: ["b-margin", "b-conf"],
+      html: `<div class="row grow">
+        <div class="card col tight" style="flex:0.42 1 0">${fig("fog_config_a.png", "Fog scenario, configuration A")}</div>
+        <div class="col grow">
+          <div class="card small tight">Fog ≈ 2.5 km ahead, range 200 → 50 m, no traffic<br>Reference <b>one step</b> (3.5 s) · ODD-aptive <b>four steps</b> (14 s)</div>
+          <table class="tbl"><tr><th>Planner</th><th class="c">Runs without MRM</th><th class="c">First deceleration before the fog</th><th class="c">Speed at fog entry</th></tr>
+            <tr><td>Reference, one step</td><td class="c badt"><b style="color:var(--bad)">0 / 100</b></td><td class="c">170 m (139–191)</td><td class="c">MRM at ≈ 115 km/h</td></tr>
+            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">456 m (446–464)</td><td class="c">94.4 km/h (93.7–94.9)</td></tr>
+            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.2</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">455 m (446–466)</td><td class="c">78.7 km/h (77.5–79.4)</td></tr>
+            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.5</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">478 m (470–488)</td><td class="c">70.1 km/h (68.8–72.3)</td></tr></table>
+          <div class="card tight grow">${fig("fog_speed_profiles.png", "Speed profiles before the fog")}</div>
+        </div></div>` },
+
+    { id: "v-exit", type: "video", scrub: true, sec: "c2", c: ["C2", "C4"], time: 140,
+      title: "Scenario 2: preparing a highway exit",
+      notes: "The hypotheses of the exit scenario, then a run of ODD-aptive: it keeps overtaking after the announcement and prepares the exit during the last kilometre.",
+      video: { src: V + "exit.mp4", parts: [[12.0, "The electronic horizon announces the exit"], [19.0, "Slower traffic invites overtaking"], [27.75, "The exit is a route objective, not a rule"], [38.5, "Level 2: the driver remains the fallback"], [51.5, "Keep overtaking, then return in time"], [63.5, "The simulations, and how to read the display"], [80.75, "A run of ODD-aptive up to the exit"]] } },
+
+    { id: "exit", sec: "c2", c: ["C2", "C4"], kicker: "Scenario 2: preparing a highway exit", time: 50,
+      title: "The exit is taken in 100 of 100 runs, while still overtaking",
+      notes: "The vehicle keeps overtaking after the announcement and prepares the exit during the last kilometre, with no rule imposing a lane at a given distance. The preparation emerges from the exploration of predicted states and from the reward.",
+      backups: ["b-exit", "b-conf"],
+      html: `<div class="row grow">
+        <div class="card col tight" style="flex:0.7 1 0">${fig("exit_scenario.png", "Highway exit scenario")}</div>
+        <div class="col grow">
+          <div class="card small">Exit announced 2 km ahead, dense traffic<br>A <b>route objective</b> in the reward, not a rule</div>
+          <div class="card tight grow">${fig("exit_lane_occupancy.png", "Lane occupancy before the exit")}</div>
+          <div class="g4">
+            <div class="card tight stat"><span class="v ok" style="font-size:30px">100 / 100</span><span class="l">exits taken</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">40</span><span class="l">overtakings after the announcement</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">1230 → 618 m</span><span class="l">first exit decision, then final return</span></div>
+            <div class="card tight stat"><span class="v" style="font-size:30px">84 → 103 km/h</span><span class="l">mean speed, without then with overtaking</span></div>
+          </div>
+        </div></div>` },
+
+    // ================================================================ 7. conclusion
     { id: "bridge-c2", type: "bridge", sec: "c2", dark: true, kicker: "Limitation", time: 30,
       title: "What if the perceived state is wrong?",
       notes: "The ODD-MDP decides among ensured maneuvers and keeps a fallback reachable over the whole horizon. But it takes the perceived state as exact. Positions and speeds are noisy, the fog forecast can be wrong, and the intentions of the other drivers are hidden. The third contribution keeps the same principle under this uncertainty.",
@@ -640,7 +712,6 @@
     { id: "pomdp-sources", sec: "c3", c: ["C3"], kicker: "Extension to partial observability", time: 55,
       title: "Three sources of uncertainty",
       notes: "Three sources, which do not play the same role. First, the surrounding vehicles: their position and speed are measured with noise, which grows as the perception envelope degrades, and it changes which gap looks acceptable. Second, the visibility forecast: where the fog starts and how dense it is may differ from what is announced; it enters the skills, so this is where the capability reasoning matters most. Third, the tactical intentions of the other drivers, such as a cut-in: they stay hidden whatever the sensor quality. All three are carried by one belief, represented with particles. The experiments for each are in the appendix.",
-      backups: ["r-noisy", "r-forecast", "r-cutin"],
       html: `<div class="col grow" style="gap:16px">
           ${[["1", "Surrounding vehicles", "unc_noisy.png", "Noisy position and speed"],
              ["2", "Visibility forecast", "unc_forecast.png", "Where the fog starts, how dense"],
@@ -681,77 +752,52 @@
       video: { src: A + "pomcp.mp4", parts: [[30.6, "Monte Carlo search: one simulation at a time"], [46.0, "Many simulations: the tree grows where it matters"], [59.37, "Execute the best ensured action, rebuild the belief, search again"]] } },
 
     // ================================================================ 6. C4 · validation in simulation and on the vehicle
-    { id: "sec-c4", type: "section", sec: "c4", dark: true, title: "Validation", time: 10 },
-
-    { id: "setup", cite: ["renault2022cta", "ipgCarMaker"], sec: "c4", c: ["C4"], kicker: "Experimental platform", time: 50,
-      title: "The same planner, from simulation to a real prototype",
-      notes: "Three loops that progressively replace simulated elements by real ones: software-in-the-loop, everything simulated in IPG CarMaker; vehicle-in-the-loop, a real vehicle on a test track with virtual traffic; and the real vehicle. The results that follow come from the software-in-the-loop, except the overtaking and the fog on the prototype, which are vehicle-in-the-loop. In both, ODD-aptive runs unchanged. The prototype is a Mégane E-Tech; it cannot be shown for confidentiality reasons, so this is a reference image of the model. The tests ran on the CTA2 track of the Centre Technique d'Aubevoye, Renault Group, in Normandy.",
+    { id: "r-noisy", sec: "c3", c: ["C3", "C4"], kicker: "Example · noisy perception", time: 50,
+      title: "Under noisy perception, the belief keeps a safe gap",
+      notes: "With noise, the ODD-MDP is outside the right lane at the fog entry in 13 runs, the ODD-POMDP in 6. No collision in any run. The gain comes from evaluating each lane change over several hypotheses.",
       html: `<div class="row grow">
-        <div class="card col" style="flex:1.05 1 0;gap:14px">${fig("v_cycle.png", "Validation loops")}
-          <div class="row" style="gap:10px;flex-wrap:wrap;justify-content:center">
-            <span class="pill line"><b>SIL</b> · software-in-the-loop</span><span class="pill line"><b>VIL</b> · vehicle-in-the-loop</span><span class="pill line">Real vehicle</span></div></div>
-        <div class="col" style="flex:1 1 0;gap:16px">
-          <div class="card tight col" style="flex:1.15 1 0;gap:8px;min-height:0"><div style="flex:1;min-height:0;display:flex;justify-content:center"><img src="${F}cta_test_track.png" alt="Aerial view of the Centre Technique d'Aubevoye" style="height:100%;max-width:100%;object-fit:contain;border-radius:10px"></div>
-            <p class="xs mute" style="margin:0;text-align:center">CTA test track, Aubevoye ${R("renault2022cta")}</p></div>
-          <div class="row" style="flex:1 1 0;gap:16px;min-height:0">
-            <div class="card tight col" style="flex:1 1 0;gap:8px;min-height:0"><div style="flex:1;min-height:0;display:flex;justify-content:center"><img src="${F}prototype_megane.png" alt="Reference image of the Mégane E-Tech" style="height:100%;max-width:100%;object-fit:contain;border-radius:10px"></div>
-              <p class="xs mute" style="margin:0;text-align:center">Mégane E-Tech · reference image</p></div>
-            <div class="col" style="flex:1 1 0;gap:16px">
-              <div class="card tight stat grow" style="justify-content:center"><span class="v" style="font-size:34px">IPG CarMaker ${R("ipgCarMaker")}</span><span class="l">road, traffic, weather</span></div>
-              <div class="card tight stat grow" style="justify-content:center"><span class="v" style="font-size:34px">200–300 ms</span><span class="l">replanning period</span></div>
-            </div></div>
+        <div class="card col" style="flex:1.25 1 0">${fig("noisy_frames.png", "Noisy perception frames, ODD-MDP and ODD-POMDP")}</div>
+        <div class="col grow">
+          <div class="card small">Car behind at 102 km/h, seen at 108<br><b>ODD-MDP</b> rejects the gap<br><b>ODD-POMDP</b> changes lane 430 m before the fog</div>
+          <div class="card tight stat"><span class="v" style="font-size:42px">13 → 6</span><span class="l">runs outside the right lane at the fog, MDP then POMDP</span></div>
+          <div class="card tight stat"><span class="v ok" style="font-size:42px">85 → 94</span><span class="l">runs in the right lane and operable</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:42px">236 → 367 m</span><span class="l">return starts earlier before the fog</span></div>
+          <p class="xs mute" style="margin:0">Same 100 seeds for both planners</p>
         </div></div>` },
 
-    { id: "v-vil", type: "video", sec: "c4", c: ["C4"], time: 95,
-      title: "Long-term overtaking on the prototype vehicle",
-      notes: "The strongest evidence of the defense: a real vehicle executing the decisions. Let the video run without talking over it for the first seconds.",
-      video: { src: V + "vil.mp4", parts: [[12.0, "A real vehicle, with virtual traffic"], [21.25, "Is returning to the right lane worthwhile?"], [33.0, "The run: one overtaking sequence past the whole group"]] } },
-
-    { id: "v-vil-fog", type: "video", sec: "c4", c: ["C2", "C4"], time: 85,
-      title: "Anticipating fog on the prototype vehicle",
-      notes: "The same anticipation, now on the real prototype on the CTA2 track, with a virtual fog zone. The electronic horizon announces the fog; the question is when to slow down. ODD-aptive adapts before reaching the fog, while the lane change is still ensured, instead of reacting at the boundary. The message is qualitative: the decision anticipates the loss of capability on a real vehicle.",
-      // v3, without pauses: one part; the presenter pauses it (K or the scene bar) where wanted
-      video: { src: V + "vil_fog.mp4?v=3", parts: [[10.0, "Anticipating fog on the prototype vehicle"]] } },
-
-    { id: "fog-a", sec: "c4", c: ["C2", "C4"], kicker: "Scenario 1: reduced visibility · configuration A", time: 60,
-      title: "With four steps, no MRM before the fog in 100 of 100 runs",
-      notes: "Configuration A. With one step, the set speed stays at 130 km/h until about 170 m before the fog and every run ends with an MRM. With four steps, the deceleration starts before the 300 m ramp: the vehicle reacts to the forecast degradation, not to the observed one. No collision in the 400 runs. The margin lowers the entry speed without a second boundary.",
-      backups: ["b-margin", "b-conf"],
+    { id: "r-forecast", sec: "c3", c: ["C3", "C4"], kicker: "Example · uncertain fog forecast", time: 50,
+      title: "Despite forecast errors, the ODD-POMDP passes the fog in 19 of 20 runs",
+      notes: "The fog starts up to 150 m before or after the announced point. When it is denser than announced, the ODD-MDP arrives too fast and loses Keep Lane. The ODD-POMDP slows down progressively and passes every dense case. The cost is one precautionary MRM in a lighter fog.",
+      backups: ["b-conf"],
       html: `<div class="row grow">
-        <div class="card col tight" style="flex:0.42 1 0">${fig("fog_config_a.png", "Fog scenario, configuration A")}</div>
         <div class="col grow">
-          <div class="card small tight">Fog ≈ 2.5 km ahead, range 200 → 50 m, no traffic<br>Reference <b>one step</b> (3.5 s) · ODD-aptive <b>four steps</b> (14 s)</div>
-          <table class="tbl"><tr><th>Planner</th><th class="c">Runs without MRM</th><th class="c">First deceleration before the fog</th><th class="c">Speed at fog entry</th></tr>
-            <tr><td>Reference, one step</td><td class="c badt"><b style="color:var(--bad)">0 / 100</b></td><td class="c">170 m (139–191)</td><td class="c">MRM at ≈ 115 km/h</td></tr>
-            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">456 m (446–464)</td><td class="c">94.4 km/h (93.7–94.9)</td></tr>
-            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.2</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">455 m (446–466)</td><td class="c">78.7 km/h (77.5–79.4)</td></tr>
-            <tr class="hl"><td>ODD-aptive, <i class="m">m</i> = 1.5</td><td class="c"><b style="color:var(--ok)">100 / 100</b></td><td class="c">478 m (470–488)</td><td class="c">70.1 km/h (68.8–72.3)</td></tr></table>
-          <div class="card tight grow">${fig("fog_speed_profiles.png", "Speed profiles before the fog")}</div>
-        </div></div>` },
-
-    { id: "v-exit", type: "video", sec: "c4", c: ["C2", "C4"], time: 140,
-      title: "Scenario 2: preparing a highway exit",
-      notes: "The hypotheses of the exit scenario, then a run of ODD-aptive: it keeps overtaking after the announcement and prepares the exit during the last kilometre.",
-      video: { src: V + "exit.mp4", parts: [[12.0, "The electronic horizon announces the exit"], [19.0, "Slower traffic invites overtaking"], [27.75, "The exit is a route objective, not a rule"], [38.5, "Level 2: the driver remains the fallback"], [51.5, "Keep overtaking, then return in time"], [63.5, "The simulations, and how to read the display"], [80.75, "A run of ODD-aptive up to the exit"]] } },
-
-    { id: "exit", sec: "c4", c: ["C2", "C4"], kicker: "Scenario 2: preparing a highway exit", time: 50,
-      title: "The exit is taken in 100 of 100 runs, while still overtaking",
-      notes: "The vehicle keeps overtaking after the announcement and prepares the exit during the last kilometre, with no rule imposing a lane at a given distance. The preparation emerges from the exploration of predicted states and from the reward.",
-      backups: ["b-exit", "b-conf"],
-      html: `<div class="row grow">
-        <div class="card col tight" style="flex:0.7 1 0">${fig("exit_scenario.png", "Highway exit scenario")}</div>
-        <div class="col grow">
-          <div class="card small">Exit announced 2 km ahead, dense traffic<br>A <b>route objective</b> in the reward, not a rule</div>
-          <div class="card tight grow">${fig("exit_lane_occupancy.png", "Lane occupancy before the exit")}</div>
-          <div class="g4">
-            <div class="card tight stat"><span class="v ok" style="font-size:30px">100 / 100</span><span class="l">exits taken</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">40</span><span class="l">overtakings after the announcement</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">1230 → 618 m</span><span class="l">first exit decision, then final return</span></div>
-            <div class="card tight stat"><span class="v" style="font-size:30px">84 → 103 km/h</span><span class="l">mean speed, without then with overtaking</span></div>
+          <table class="tbl"><tr><th>Real fog</th><th>Planner</th><th class="c">Passed</th><th class="c">MRM</th></tr>
+            <tr><td rowspan="2"><b>All 20 seeds</b></td><td>ODD-MDP</td><td class="c">10</td><td class="c">10</td></tr>
+            <tr class="hl"><td>ODD-POMDP</td><td class="c"><b>19</b></td><td class="c">1</td></tr>
+            <tr class="sep"><td rowspan="2"><b>Denser (11)</b></td><td>ODD-MDP</td><td class="c">1</td><td class="c">10</td></tr>
+            <tr class="hl"><td>ODD-POMDP</td><td class="c"><b>11</b></td><td class="c">0</td></tr>
+            <tr class="sep"><td rowspan="2"><b>Lighter (9)</b></td><td>ODD-MDP</td><td class="c">9</td><td class="c">0</td></tr>
+            <tr class="hl"><td>ODD-POMDP</td><td class="c">8</td><td class="c">1</td></tr></table>
+          <div class="g2">
+            <div class="card tight stat"><span class="v bad" style="font-size:40px">+27.5 km/h</span><span class="l">ODD-MDP, largest excess over the admissible speed</span></div>
+            <div class="card tight stat"><span class="v ok" style="font-size:40px">0 runs</span><span class="l">ODD-POMDP above the admissible speed · no collision</span></div>
           </div>
-        </div></div>` },
+        </div>
+        <div class="card col" style="flex:0.95 1 0">${fig("forecast_run.png", "Seed 8: real fog after the announced point")}
+          <p class="xs mute">Seed 8, fog later and denser than announced<br>ODD-POMDP enters at 73 km/h · ODD-MDP at 92 km/h, then MRM</p></div>
+        </div>` },
 
-    // ================================================================ 7. conclusion
+    { id: "r-cutin", sec: "c3", c: ["C3", "C4"], kicker: "Example · tactical intention", time: 45,
+      title: "The ODD-POMDP reacts to a cut-in before the car moves",
+      notes: "Reaction time measured from the start of the lateral motion of the car. The ODD-POMDP evaluates separately the futures with and without the cut-in, which explains its earlier reaction. Illustrative run only.",
+      html: `<p class="small" style="margin:0">Ego at 130 km/h, a car cuts in from behind a truck · same intention estimate for all, <i class="m">P</i> ≈ 0.35 – 0.39</p>
+        <div class="card tight col" style="gap:8px"><h4>ODD-MDP with tactical risk</h4><div class="g3">${fig("cutin_mdp_a.png", "ODD-MDP, a", 210)}${fig("cutin_mdp_b.png", "ODD-MDP, b", 210)}${fig("cutin_mdp_c.png", "ODD-MDP, c", 210)}</div></div>
+        <div class="card tight col" style="gap:8px"><h4>ODD-POMDP</h4><div class="g3">${fig("cutin_pomdp_a.png", "ODD-POMDP, a", 210)}${fig("cutin_pomdp_b.png", "ODD-POMDP, b", 210)}${fig("cutin_pomdp_c.png", "ODD-POMDP, c", 210)}</div></div>
+        <div class="g3">
+          <div class="card tight stat"><span class="v bad" style="font-size:40px">+2.4 s</span><span class="l">ODD-MDP without tactical risk, brakes to 102 km/h</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px;color:var(--deg)">+0.8 s</span><span class="l">ODD-MDP with tactical risk, brakes to 106 km/h</span></div>
+          <div class="card tight stat"><span class="v ok" style="font-size:40px">−2.8 s</span><span class="l">ODD-POMDP, changes lane first, keeps 130 km/h</span></div>
+        </div>` },
     { id: "sec-concl", type: "section", sec: "concl", dark: true, title: "Conclusion and perspectives", time: 10 },
 
     { id: "evidence", sec: "concl", kicker: "General conclusion", time: 70,
@@ -1184,19 +1230,6 @@
           <div class="card tight stat"><span class="v" style="font-size:40px">83.4 → 85.0</span><span class="l">km/h mean speed, no loss</span></div>
         </div>` },
 
-    { id: "r-noisy", sec: "backup", c: ["C3", "C4"], kicker: "Appendix", time: 50,
-      title: "Under noisy perception, the belief keeps a safe gap",
-      notes: "With noise, the ODD-MDP is outside the right lane at the fog entry in 13 runs, the ODD-POMDP in 6. No collision in any run. The gain comes from evaluating each lane change over several hypotheses.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.25 1 0">${fig("noisy_frames.png", "Noisy perception frames, ODD-MDP and ODD-POMDP")}</div>
-        <div class="col grow">
-          <div class="card small">Car behind at 102 km/h, seen at 108<br><b>ODD-MDP</b> rejects the gap<br><b>ODD-POMDP</b> changes lane 430 m before the fog</div>
-          <div class="card tight stat"><span class="v" style="font-size:42px">13 → 6</span><span class="l">runs outside the right lane at the fog, MDP then POMDP</span></div>
-          <div class="card tight stat"><span class="v ok" style="font-size:42px">85 → 94</span><span class="l">runs in the right lane and operable</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:42px">236 → 367 m</span><span class="l">return starts earlier before the fog</span></div>
-          <p class="xs mute" style="margin:0">Same 100 seeds for both planners</p>
-        </div></div>` },
-
     { id: "r-forecast-tau", sec: "backup", c: ["C3", "C4"], kicker: "Appendix", time: 50,
       title: "The threshold τ turns a probability into a boundary",
       notes: "Top: share of hypotheses for which Keep Lane is ensured, in the plane of speed and forecast visibility. The threshold tau turns this probability into a boundary. Bottom: the higher tau, the earlier and smoother the slowdown.",
@@ -1212,44 +1245,11 @@
           <div class="card tight stat"><span class="v" style="font-size:42px"><i class="m">τ</i> = 0.9</span><span class="l">chosen, <i class="m">τ</i> = 1 too conservative</span></div>
         </div></div>` },
 
-    { id: "r-forecast", sec: "backup", c: ["C3", "C4"], kicker: "Appendix", time: 50,
-      title: "Despite forecast errors, the ODD-POMDP passes the fog in 19 of 20 runs",
-      notes: "The fog starts up to 150 m before or after the announced point. When it is denser than announced, the ODD-MDP arrives too fast and loses Keep Lane. The ODD-POMDP slows down progressively and passes every dense case. The cost is one precautionary MRM in a lighter fog.",
-      backups: ["b-conf"],
-      html: `<div class="row grow">
-        <div class="col grow">
-          <table class="tbl"><tr><th>Real fog</th><th>Planner</th><th class="c">Passed</th><th class="c">MRM</th></tr>
-            <tr><td rowspan="2"><b>All 20 seeds</b></td><td>ODD-MDP</td><td class="c">10</td><td class="c">10</td></tr>
-            <tr class="hl"><td>ODD-POMDP</td><td class="c"><b>19</b></td><td class="c">1</td></tr>
-            <tr class="sep"><td rowspan="2"><b>Denser (11)</b></td><td>ODD-MDP</td><td class="c">1</td><td class="c">10</td></tr>
-            <tr class="hl"><td>ODD-POMDP</td><td class="c"><b>11</b></td><td class="c">0</td></tr>
-            <tr class="sep"><td rowspan="2"><b>Lighter (9)</b></td><td>ODD-MDP</td><td class="c">9</td><td class="c">0</td></tr>
-            <tr class="hl"><td>ODD-POMDP</td><td class="c">8</td><td class="c">1</td></tr></table>
-          <div class="g2">
-            <div class="card tight stat"><span class="v bad" style="font-size:40px">+27.5 km/h</span><span class="l">ODD-MDP, largest excess over the admissible speed</span></div>
-            <div class="card tight stat"><span class="v ok" style="font-size:40px">0 runs</span><span class="l">ODD-POMDP above the admissible speed · no collision</span></div>
-          </div>
-        </div>
-        <div class="card col" style="flex:0.95 1 0">${fig("forecast_run.png", "Seed 8: real fog after the announced point")}
-          <p class="xs mute">Seed 8, fog later and denser than announced<br>ODD-POMDP enters at 73 km/h · ODD-MDP at 92 km/h, then MRM</p></div>
-        </div>` },
-
     { id: "v-intentions", type: "video", sec: "backup", kicker: "Appendix", c: ["C3", "C4"], time: 95,
       title: "Uncertain tactical intentions",
       notes: "An intention cannot be measured: it is estimated from the kinematics. The particles hold the possible maneuvers, and each future is evaluated with its consequences. Two use cases: a cut-in, and a vehicle entering the highway.",
       video: { src: V + "intentions.mp4", parts: [[12.0, "An intention cannot be measured"], [19.75, "The tactical state of each vehicle"], [29.25, "The belief: a set of particles"], [38.75, "Each future is evaluated with its consequences"], [52.5, "The simulations, and how to read the display"], [69.75, "A cut-in, and a vehicle entering the highway"]] } },
 
-    { id: "r-cutin", sec: "backup", c: ["C3", "C4"], kicker: "Appendix", time: 45,
-      title: "The ODD-POMDP reacts to a cut-in before the car moves",
-      notes: "Reaction time measured from the start of the lateral motion of the car. The ODD-POMDP evaluates separately the futures with and without the cut-in, which explains its earlier reaction. Illustrative run only.",
-      html: `<p class="small" style="margin:0">Ego at 130 km/h, a car cuts in from behind a truck · same intention estimate for all, <i class="m">P</i> ≈ 0.35 – 0.39</p>
-        <div class="card tight col" style="gap:8px"><h4>ODD-MDP with tactical risk</h4><div class="g3">${fig("cutin_mdp_a.png", "ODD-MDP, a", 210)}${fig("cutin_mdp_b.png", "ODD-MDP, b", 210)}${fig("cutin_mdp_c.png", "ODD-MDP, c", 210)}</div></div>
-        <div class="card tight col" style="gap:8px"><h4>ODD-POMDP</h4><div class="g3">${fig("cutin_pomdp_a.png", "ODD-POMDP, a", 210)}${fig("cutin_pomdp_b.png", "ODD-POMDP, b", 210)}${fig("cutin_pomdp_c.png", "ODD-POMDP, c", 210)}</div></div>
-        <div class="g3">
-          <div class="card tight stat"><span class="v bad" style="font-size:40px">+2.4 s</span><span class="l">ODD-MDP without tactical risk, brakes to 102 km/h</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px;color:var(--deg)">+0.8 s</span><span class="l">ODD-MDP with tactical risk, brakes to 106 km/h</span></div>
-          <div class="card tight stat"><span class="v ok" style="font-size:40px">−2.8 s</span><span class="l">ODD-POMDP, changes lane first, keeps 130 km/h</span></div>
-        </div>` },
     { id: "v-rss", type: "video", sec: "backup", kicker: "Appendix", c: ["C1"], time: 40,
       title: "What distance to keep behind the front vehicle?",
       notes: "The safe distance of RSS: enough to stop in time, and enough for the ACC to settle in smoothly behind a vehicle that slows down. It builds the required perception range of the Sense skill.",

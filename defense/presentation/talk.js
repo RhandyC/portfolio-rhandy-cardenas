@@ -83,10 +83,21 @@
   }
 
   function tocHTML(onSec) {
-    let html = "";
+    // a group (ODD-aptive decision-making) shows once, its parts below it
+    let html = "", lastG = null;
     T.sections.forEach((x) => {
       const done = onSec && T.sections.findIndex((y) => y.id === onSec) > T.sections.indexOf(x);
-      html += `<a data-go="${x.page}" class="${x.id === onSec ? "on" : (done ? "done" : "")}"><span>${x.n}</span><span>${esc(x.toc || x.title)}</span></a>`;
+      const cls = x.id === onSec ? "on" : (done ? "done" : "");
+      if (x.grp) {
+        if (x.grp !== lastG) {
+          lastG = x.grp;
+          const gOn = T.sections.some((y) => y.grp === x.grp && y.id === onSec);
+          html += `<a data-go="${x.page}" class="${gOn ? "on" : cls}"><span>${x.n}</span><span>${esc(x.grp)}</span></a>`;
+        }
+        html += `<a data-go="${x.page}" class="sub ${cls}"><span></span><span>${esc(x.toc || x.title)}</span></a>`;
+      } else {
+        html += `<a data-go="${x.page}" class="${cls}"><span>${x.n}</span><span>${esc(x.toc || x.title)}</span></a>`;
+      }
     });
     return html;
   }
@@ -116,22 +127,40 @@
     // the scene bar is only for the validation videos (C4), where the jury may ask to stop at a given moment;
     // the animations of the method play part by part without it
     el.className = "slide " + (s.type || "content") + (s.dark ? " dark" : "") + (s.th && !s.dark && s.type !== "video" ? " thr-on" : "") +
-      (cites(s) ? " has-cites" : "") + (s.type === "video" && s.sec !== "c4" && s.sec !== "backup" ? " noscrub" : "");
+      (cites(s) ? " has-cites" : "") + (s.type === "video" && !s.scrub && s.sec !== "backup" ? " noscrub" : "");
     el.dataset.i = s.i;
     let inner = "";
     if (s.type === "title") {
       inner = s.html + footer(s);
     } else if (s.type === "agenda") {
       // the title of every section, nothing else; each row opens its section page
-      const rows = T.sections.map((x) => `<a class="ag-row" data-go="${x.page}" href="#/${x.page}"><span class="n">${x.n}</span>` +
-        `<div class="t">${esc(x.toc || x.title)}</div></a>`).join("");
+      let lastG = null;
+      const rows = T.sections.map((x) => {
+        let pre = "";
+        if (x.grp && x.grp !== lastG) {
+          lastG = x.grp;
+          pre = `<a class="ag-row" data-go="${x.page}" href="#/${x.page}"><span class="n">${x.n}</span><div class="t">${esc(x.grp)}</div></a>`;
+        }
+        if (x.grp) return pre + `<a class="ag-row sub" data-go="${x.page}" href="#/${x.page}"><span></span><div class="t">${esc(x.toc || x.title)}</div></a>`;
+        return `<a class="ag-row" data-go="${x.page}" href="#/${x.page}"><span class="n">${x.n}</span><div class="t">${esc(x.toc || x.title)}</div></a>`;
+      }).join("");
       inner = header(s) + `<div class="body"><div class="agenda">${rows}</div>${s.html || ""}</div>` + footer(s);
     } else if (s.type === "outline") {
-      const rows = T.sections.filter((x) => x.c).map((x) => `<a data-go="${x.page}" href="#/${x.page}">` +
-        `<div class="t">${esc(x.title)}<small>${esc(x.sub || "")}</small></div>` +
+      // two blocks, as on the idea slide: 1 · Capability, then 2 · Choice with its two parts
+      const row = (x) => `<a data-go="${x.page}" href="#/${x.page}">` +
+        `<div class="t">${esc(x.title)}<small>${esc(x.sub || "")}</small>${x.ex ? `<em>${esc(x.ex)}</em>` : ""}</div>` +
         `<div class="m">${(x.pubs || []).map((p) => `<span class="pill line">${esc(p)}</span>`).join("")}${x.pubk ? `<cite class="cref" data-k="${x.pubk}"></cite>` : ""}</div>` +
-        `<span class="arrow">→</span></a>`).join("");
-      inner = header(s) + `<div class="body"><div class="outl">${rows}</div>${s.html || ""}</div>` + cites(s) + footer(s);
+        `<span class="arrow">→</span></a>`;
+      const blocks = [];
+      T.sections.filter((x) => x.c).forEach((x) => {
+        const key = x.grp || x.id;
+        let b = blocks.find((y) => y.key === key);
+        if (!b) { b = { key, x, rows: [] }; blocks.push(b); }
+        b.rows.push(x);
+      });
+      const html = blocks.map((b, i) => `<div class="ob ob${i + 1}"><div class="oh"><span class="k">${i + 1} · ${esc(b.x.blk || "")}</span>` +
+        (b.x.grp ? `<b>${esc(b.x.grp)}</b><small>${esc(b.x.grpSub || "")}</small>` : "") + `</div>${b.rows.map(row).join("")}</div>`).join("");
+      inner = header(s) + `<div class="body"><div class="outl two">${html}</div>${s.html || ""}</div>` + cites(s) + footer(s);
     } else if (s.type === "section") {
       // the part, its question and its publication; nothing repeated (no C badge, no principle strip, no goal line)
       const x = SEC[s.sec];
