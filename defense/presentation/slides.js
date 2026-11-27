@@ -516,7 +516,7 @@
 
     { id: "smargin", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Strategic margin", time: 75, steps: 3,
       title: "Ensured, but how far from the boundary?",
-      notes: "After the window closes, only Keep Lane is ensured: the blue curve is its forward sensing boundary. In fog, with a reduced perception range, the vehicle may drive up to the highest speed for which the skill holds: ensured, but on the edge. (1) Nothing forces it to stay there: by slowing down it moves away from the boundary, horizontally in this plane; the range it has becomes larger than the range it needs, by a factor m1. (2) Slowing down more, by a larger factor m2. (3) This is the strategic margin m. We compare the available range with the required one: rho equals d_PE over d_req of the speed, 1 on the boundary. The preferred region is rho at least m, that is d_PE at least m times d_req. The designer sets m: m equal to 1 drives on the boundary, larger values keep the vehicle further inside, at the cost of a more conservative behavior. The largest possible value is reached when the vehicle is stopped, v_ego equal to 0, where the requirement is minimal. It is a preference used by the planner in the reward, not a second boundary.",
+      notes: "After the window closes, only Keep Lane is ensured: the blue curve is its forward sensing boundary. In fog, with a reduced perception range, the vehicle may drive up to the highest speed for which the skill holds: ensured, but on the edge. (1) Nothing forces it to stay there: by slowing down it moves away from the boundary, horizontally in this plane; the range it has, d_PE, becomes larger than the range it needs at its speed, d_req of v_ego, by a factor m1. (2) Slowing down more, by a larger factor m2. (3) This is the strategic margin m: the preferred region is d_PE at least m times d_req of v_ego. The designer sets m: m equal to 1 drives on the boundary, larger values keep the vehicle further inside, at the cost of a more conservative behavior. The largest possible value is reached when the vehicle is stopped, v_ego equal to 0, where the requirement is minimal. It is a preference used by the planner in the reward, not a second boundary.",
       backups: ["b-margin"],
       html: `<div class="row grow">
         <div class="card col mgcard" style="flex:1.3 1 0"><h4>Keep Lane, forward sensing skill</h4>
@@ -535,23 +535,20 @@
 <text class="axl" x="538" y="732" text-anchor="middle">ego-vehicle velocity <tspan class="mi">v</tspan><tspan class="sb" dy="6">ego</tspan><tspan dy="-6"> [km/h]</tspan></text>
 <text class="axl" transform="translate(26,332) rotate(-90)" text-anchor="middle">available perception range <tspan class="mi">d</tspan><tspan class="sb" dy="6">PE</tspan><tspan dy="-6"> [m]</tspan></text>
 <line class="fog" x1="96" y1="420.0" x2="980" y2="420.0"/><text class="lab fg" x="740" y="406">reduced range in fog</text>
-<circle class="pt edge" cx="585.7" cy="420.0" r="13"/><text class="lab" x="605.7" y="462.0"><tspan class="mi">m</tspan> = 1, on the edge</text>
+<circle class="pt edge" cx="585.7" cy="420.0" r="13"/><text class="lab" x="605.7" y="462.0">on the edge</text>
 <g data-step="1"><path class="mv" d="M567.7,420.0 L391.6,420.0" marker-end="url(#mg-ar)"/><circle class="pt pr mvpt" style="--dx:212.2px" cx="373.6" cy="420.0" r="13"/><text class="lab pf" x="373.6" y="396.0" text-anchor="middle"><tspan class="mi">m</tspan><tspan class="sb" dy="6">1</tspan></text></g>
 <g data-step="2"><path class="mv" d="M355.6,420.0 L259.0,420.0" marker-end="url(#mg-ar)"/><circle class="pt pr mvpt" style="--dx:132.6px" cx="241.0" cy="420.0" r="13"/><text class="lab pf" x="241.0" y="396.0" text-anchor="middle"><tspan class="mi">m</tspan><tspan class="sb" dy="6">2</tspan></text></g>
 </svg>
-          <p class="xs mute" style="margin:0">Required range ahead, for the traffic in front</p></div>
-        <div class="col" style="flex:1 1 0;gap:18px">
-          <div class="card tight col" style="gap:8px"><h4>How far from the boundary</h4>
-            <div class="eq" style="font-size:32px;text-align:center"><i>ρ</i> = <span class="fr"><span><i>d</i><sub>PE</sub></span><span><i>d</i><sub>req</sub>(<i>v</i><sub>ego</sub>)</span></span></div>
-            <p class="small" style="margin:0;text-align:center">Available over required range, <b>1 on the boundary</b></p></div>
-          <div class="card tight col" style="gap:6px"><h4>Same range, a larger margin</h4>
-            <table class="tbl mgt"><tr><th class="c">Margin</th><th class="c">Speed</th></tr>
-              <tr><td class="c"><i class="m">m</i> = 1</td><td class="c">the highest, on the edge</td></tr>
-              <tr data-step="1"><td class="c"><i class="m">m</i><sub>1</sub> &gt; 1</td><td class="c">lower</td></tr>
-              <tr data-step="2"><td class="c"><i class="m">m</i><sub>2</sub> &gt; <i class="m">m</i><sub>1</sub></td><td class="c">lower still</td></tr></table></div>
-          <div class="card ok tight col grow" data-step="3" style="gap:8px"><h4>Strategic margin <i class="m">m</i></h4>
-            <div class="eq" style="font-size:30px;text-align:center"><i>ρ</i> ≥ <i>m</i> &nbsp;⇔&nbsp; <i>d</i><sub>PE</sub> ≥ <i>m</i> · <i>d</i><sub>req</sub>(<i>v</i><sub>ego</sub>)</div>
-            <p class="small" style="margin:0;text-align:center">Set by the designer, from <b><i class="m">m</i> = 1</b>, on the boundary,<br>up to <b><i class="m">d</i><sub>PE</sub> / <i class="m">d</i><sub>req</sub>(0)</b>, stopped at <i class="m">v</i><sub>ego</sub> = 0</p></div>
+</div>
+        <div class="col" style="flex:0.85 1 0;gap:22px;justify-content:center">
+          <div class="card tight col" style="gap:16px"><h4>Strategic margin</h4>
+            <div class="eq" style="font-size:34px;text-align:center"><i>d</i><sub>PE</sub> ≥ <i>m</i> · <i>d</i><sub>req</sub>(<i>v</i><sub>ego</sub>)</div>
+            <div class="mgdef"><em><i>d</i><sub>PE</sub></em><span>available perception range</span>
+              <em><i>d</i><sub>req</sub>(<i>v</i><sub>ego</sub>)</em><span>range required at the speed <i>v</i><sub>ego</sub></span>
+              <em><i>m</i> ≥ 1</em><span>margin, set by the designer</span></div></div>
+          <div class="card ok tight col" data-step="3" style="gap:8px">
+            <p class="small" style="margin:0"><b><i class="m">m</i> = 1</b> drives on the boundary</p>
+            <p class="small" style="margin:0"><b>Larger <i class="m">m</i></b>, slower, further inside, up to stopped</p></div>
         </div></div>` },
 
     { id: "bridge-c1", type: "bridge", sec: "c1", dark: true, kicker: "Limitation", time: 30,
