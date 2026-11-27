@@ -57,6 +57,8 @@
     "mercedes2019drivepilot": ["Mercedes-Benz, “Introducing DRIVE PILOT: An Automated Driving System for the Highway,” 2023.", "Mercedes-Benz, “Introducing DRIVE PILOT: An Automated Driving System for the Highway,” Voluntary Safety Self-Assessment, 2023. [Online]. Available: group.mercedes-benz.com"],
     "michon1985critical": ["J. A. Michon, “A Critical View of Driver Behavior Models: What Do We Know, What Should We Do?,” in <i>Human Behavior and Traffic Safety</i>, 1985.", "J. A. Michon, “A Critical View of Driver Behavior Models: What Do We Know, What Should We Do?,” in <i>Human Behavior and Traffic Safety</i>. Springer US, 1985, pp. 485–524."],
     "murphy2012machine": ["K. P. Murphy, <i>Machine Learning: A Probabilistic Perspective</i>. MIT Press, 2012.", "K. P. Murphy, <i>Machine Learning: A Probabilistic Perspective</i>. MIT Press, 2012."],
+    "yang2021humanlike": ["J. Yang et al., “Human-like Decision-Making System for Overtaking Stationary Vehicles Based on Traffic Scene Interpretation,” <i>Sensors</i>, 2021.", "J. Yang, S. Lee, W. Lim, and M. Sunwoo, “Human-like Decision-Making System for Overtaking Stationary Vehicles Based on Traffic Scene Interpretation,” <i>Sensors</i>, vol. 21, no. 20, Art. no. 6768, 2021."],
+    "xu2022combinedlearning": ["C. Xu et al., “An Integrated Decision-Making Framework for Highway Autonomous Driving Using Combined Learning and Rule-Based Algorithm,” <i>IEEE T-VT</i>, 2022.", "C. Xu, W. Zhao, J. Liu, C. Wang, and C. Lv, “An Integrated Decision-Making Framework for Highway Autonomous Driving Using Combined Learning and Rule-Based Algorithm,” <i>IEEE Transactions on Vehicular Technology</i>, vol. 71, no. 4, pp. 3621–3632, 2022."],
     "olsson2016BT": ["M. Olsson, “Behavior Trees for decision-making in Autonomous Driving,” Master's thesis, KTH Royal Institute of Technology, 2016.", "M. Olsson, “Behavior Trees for decision-making in Autonomous Driving,” Master's thesis, KTH Royal Institute of Technology, 2016."],
     "pior2020behaviorbased": ["P. F. Orzechowski et al., “Decision-Making for Automated Vehicles Using a Hierarchical Behavior-Based Arbitration Scheme,” <i>IEEE IV</i>, 2020.", "P. F. Orzechowski, C. Burger, and M. Lauer, “Decision-Making for Automated Vehicles Using a Hierarchical Behavior-Based Arbitration Scheme,” in <i>Proc. IEEE IV Symposium</i>, 2020, pp. 767–774."],
     "rabiee2023introspective": ["S. Rabiee and J. Biswas, “Introspective Perception for Mobile Robots,” <i>Artif. Intell.</i>, 2023.", "S. Rabiee and J. Biswas, “Introspective Perception for Mobile Robots,” <i>Artificial Intelligence</i>, vol. 324, Art. no. 103999, 2023."],
@@ -217,15 +219,16 @@
           <div class="card tight"><h3 style="margin:0;color:var(--mute)">Operational · the control</h3></div>
         </div></div>` },
 
-    { id: "methods", cite: ["olsson2016BT", "hang2021gametheoric", "ulbrich2015pomdp", "hubmann2018uncertainty", "hoel2019combiningdeep", "fiedler2022hybrid"], sec: "sota", kicker: "State of the art · tactical decision-making", time: 60,
+    { id: "methods", cite: ["olsson2016BT", "hubmann2018uncertainty", "chen2025intention", "yang2021humanlike", "xu2022combinedlearning"], sec: "sota", kicker: "State of the art · tactical decision-making", time: 60,
       title: "How do existing methods decide?",
-      notes: "The state of the art in one table, the synthesis of our survey. Probabilistic methods handle uncertainty and long horizons at a computational cost, which online sampling solvers mitigate. Learning-based methods scale but give no guarantee. In all families, the context describes the scene.",
-      html: `<table class="tbl" style="font-size:30px;margin:auto 0"><tr><th>Method</th><th class="c">Uncert.</th><th class="c">Scal.</th><th class="c">Unseen</th><th class="c">Horizon</th><th class="c">Explain.</th><th class="c">Cost</th><th class="c">Real time</th><th>Main limitation</th></tr>
-        <tr><td><b>Rule-based</b> ${R("olsson2016BT")}</td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">−</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td>Encoded cases only</td></tr>
-        <tr class="hl"><td><b>Probabilistic</b> ${R("hang2021gametheoric", "ulbrich2015pomdp", "hubmann2018uncertainty")}</td><td class="c">++</td><td class="c">+</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−</td><td class="c">+</td><td>Cost grows with the belief</td></tr>
-        <tr><td><b>Learning-based</b> ${R("hoel2019combiningdeep")}</td><td class="c">+</td><td class="c">++</td><td class="c">++</td><td class="c">++</td><td class="c">−</td><td class="c">−</td><td class="c">+</td><td>Black box, no guarantee</td></tr>
-        <tr><td><b>Hybrid</b> ${R("fiedler2022hybrid")}</td><td class="c">++</td><td class="c">−</td><td class="c">+</td><td class="c">++</td><td class="c">+</td><td class="c">−−</td><td class="c">+</td><td>Scalability and cost</td></tr></table>
-        <div class="card bad"><h3 style="margin:0">Missing everywhere · does the vehicle <b>remain capable</b>?</h3></div>`,
+      notes: "Four families, one example each. Rule-based: here a behavior tree, explicit and explainable, but limited to the cases that were encoded. Probabilistic: here POMDPs, which handle uncertainty and long horizons, such as sensor noise and the unknown intentions of others, at a computational cost. Learning-based: here a neural network trained to decide like a human driver; it scales, but it is a black box with no guarantee. Hybrid: learning corrected by rules when it goes wrong. What is missing in all of them: none asks whether the vehicle remains capable of executing its decision, now and ahead.",
+      html: `<div class="g2 grow mth">
+          ${[["sota_rule_bt.png", "Rule-based", "A behavior tree", R("olsson2016BT")],
+             ["sota_prob_pomdp.png", "Probabilistic", "POMDPs under uncertainty", R("hubmann2018uncertainty", "chen2025intention")],
+             ["sota_learn_mlp.png", "Learning-based", "A neural network that decides", R("yang2021humanlike")],
+             ["sota_hybrid_rl_rule.png", "Hybrid", "Learning, corrected by rules", R("xu2022combinedlearning")]]
+            .map(([f, k, t, r]) => `<div class="card tight col"><div class="mimg"><img src="${F}${f}" alt="${k}: ${t}"></div><p><b>${k}</b> · ${t} ${r}</p></div>`).join("")}
+        </div>`,
       backups: ["b-learning"] },
 
     { id: "rw-c1", cite: ["reschka2015ability", "colwell_automated_2018", "pior2020behaviorbased", "ulbrich2015pomdp", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", time: 70,
