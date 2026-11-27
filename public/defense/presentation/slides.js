@@ -19,9 +19,9 @@
 
   // references, IEEE style, from the manuscript's bibliography: [foot of a slide, full reference]
   const BIB = {
-    "11097482": ["R. Cardenas et al., “ODD-Based Long-Term Decision-Making for Intelligent Vehicles,” <i>IEEE IV</i>, 2025.", "R. Cardenas, L. Adouane, C. Zinoune, and M.-A. Benloucif, “ODD-Based Long-Term Decision-Making for Intelligent Vehicles,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, 2025, pp. 1215–1221."],
+    "11097482": ["R. Cardenas et al., “ODD-Based Long-Term Decision-Making for Intelligent Vehicles,” in <i>IEEE Intelligent Vehicles Symposium (IV)</i>, 2025.", "R. Cardenas, L. Adouane, C. Zinoune, and M.-A. Benloucif, “ODD-Based Long-Term Decision-Making for Intelligent Vehicles,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, Cluj-Napoca, Romania, 2025, pp. 1215–1221."],
     "AVSC2021BehavioralCompetencies": ["AVSC, <i>Evaluation of behavioral competencies for ADS-DVs</i>, Best Practice AVSC00008202111, 2021.", "Automated Vehicle Safety Consortium, <i>AVSC Best Practice for Evaluation of Behavioral Competencies for Automated Driving System Dedicated Vehicles (ADS-DVs)</i>, SAE Industry Technologies Consortia, Best Practice AVSC00008202111, 2021."],
-    "CARDENAS2025162": ["R. Cardenas et al., “Assessing the Decisional Capability for an ODD-Compliant Automatic Lane Change System via Sense-Think-Act Paradigm,” <i>IFAC-PapersOnLine</i>, 2025.", "R. Cardenas, L. Adouane, C. Zinoune, and M.-A. Benloucif, “Assessing the Decisional Capability for an ODD-Compliant Automatic Lane Change System via Sense-Think-Act Paradigm,” <i>IFAC-PapersOnLine</i>, vol. 59, no. 3, pp. 162–167, 2025."],
+    "CARDENAS2025162": ["R. Cardenas et al., “Assessing the Decisional Capability for an ODD-Compliant Automatic Lane Change System via Sense-Think-Act Paradigm,” in <i>12th IFAC Symposium on Intelligent Autonomous Vehicles (IAV)</i>, 2025.", "R. Cardenas, L. Adouane, C. Zinoune, and M.-A. Benloucif, “Assessing the Decisional Capability for an ODD-Compliant Automatic Lane Change System via Sense-Think-Act Paradigm,” in <i>12th IFAC Symposium on Intelligent Autonomous Vehicles (IAV 2025)</i>, Phoenix, AZ, USA, <i>IFAC-PapersOnLine</i>, vol. 59, no. 3, pp. 162–167, 2025."],
     "Farah2021Awareness": ["H. Farah et al., “An Empirical Analysis to Assess the Operational Design Domain of Lane Keeping System Equipped Vehicles Combining Objective and Subjective Risk Measures,” <i>IEEE T-ITS</i>, 2021.", "H. Farah et al., “An Empirical Analysis to Assess the Operational Design Domain of Lane Keeping System Equipped Vehicles Combining Objective and Subjective Risk Measures,” <i>IEEE Transactions on Intelligent Transportation Systems</i>, vol. 22, no. 5, pp. 2589–2598, 2021."],
     "WANG2021surrogate": ["C. Wang et al., “A review of surrogate safety measures and their applications in connected and automated vehicles safety modeling,” <i>Accid. Anal. Prev.</i>, 2021.", "C. Wang, Y. Xie, H. Huang, and P. Liu, “A review of surrogate safety measures and their applications in connected and automated vehicles safety modeling,” <i>Accident Analysis & Prevention</i>, vol. 157, Art. no. 106157, 2021."],
     "alshiekh2018shielding": ["M. Alshiekh et al., “Safe Reinforcement Learning via Shielding,” <i>AAAI</i>, 2018.", "M. Alshiekh, R. Bloem, R. Ehlers, B. Könighofer, S. Niekum, and U. Topcu, “Safe Reinforcement Learning via Shielding,” in <i>Proc. AAAI Conference on Artificial Intelligence</i>, 2018, pp. 2669–2678."],
@@ -231,7 +231,7 @@
         </div>`,
       backups: ["b-learning"] },
 
-    { id: "rw-c1", cite: ["reschka2015ability", "colwell_automated_2018", "pior2020behaviorbased", "ulbrich2015pomdp", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", time: 70,
+    { id: "rw-c1", cite: ["cardenas2025context_aware", "reschka2015ability", "colwell_automated_2018", "pior2020behaviorbased", "ulbrich2015pomdp", "charmet2024monitoring", "salvi2022fuzzy"], sec: "sota", c: ["C1"], kicker: "Related work · capability assessment", time: 70,
       title: "How is the capability of the vehicle assessed today?",
       notes: "Three families. Ability and skill graphs decompose a behavior into skills with a level of performance, and have been used to trigger a lane change or not. The restricted operational domain removes the maneuvers that a lost capability no longer supports. The arbitration graph checks every function against the ODD before deciding. Monitoring estimates the time to exit the ODD. All of them assess the current state, and adapt once a condition is detected. The MCE assesses each maneuver, in the predicted states too.",
       html: `<div class="g3 grow">
@@ -239,7 +239,7 @@
           <div class="card tight col" style="gap:6px">${fig("rw_rod.png", "Restricted Operational Domain")}<h4 style="margin:0;text-align:center">Restricted domain ${R("colwell_automated_2018")}</h4></div>
           <div class="card tight col" style="gap:6px">${fig("rw_arbitration_graph.png", "Arbitration graph")}<h4 style="margin:0;text-align:center">Arbitration graph ${R("pior2020behaviorbased")}</h4></div>
         </div>
-        <div class="card bad"><h3 style="margin:0">The current state only, then react ${R("charmet2024monitoring", "salvi2022fuzzy")}</h3></div>` },
+        <div class="card bad"><h3 style="margin:0">The current state only, then react ${R("charmet2024monitoring", "salvi2022fuzzy", "cardenas2025context_aware")}</h3></div>` },
 
     { id: "positioning", cite: ["cardenas2025context_aware"], sec: "sota", kicker: "Positioning", time: 75,
       title: "What is missing in the state of the art?",
