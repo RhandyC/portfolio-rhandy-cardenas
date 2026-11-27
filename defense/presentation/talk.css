@@ -873,3 +873,15 @@ ol.nums.concl li span { font-size: 28px; color: var(--mute); font-weight: 600; m
 .card.rssa { border-top: 6px solid rgba(240, 168, 48, 0.85); }
 .card.rssb { border-top: 6px solid rgba(43, 108, 176, 0.75); }
 .card.rssc { border-top: 6px solid rgba(214, 69, 69, 0.75); }
+
+/* ODD slide: SAE levels as symbols, the step at Level 3 */
+.saestrip { display: flex; align-items: stretch; justify-content: center; gap: 14px; }
+.saestrip .grp { display: grid; grid-template-columns: repeat(3, 64px); gap: 8px; justify-items: center; }
+.saestrip .lv { width: 64px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 22px; }
+.saestrip .drv .lv { background: var(--chip); color: var(--mute); }
+.saestrip .sys .lv { background: var(--navy); color: #fff; }
+.saestrip .sys .lv.on { background: var(--amber); color: var(--navy); box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--amber); }
+.saestrip .who { grid-column: 1 / -1; font-size: 17px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.saestrip .drv .who { color: var(--mute); }
+.saestrip .sys .who { color: var(--navy); }
+.saestrip .step { width: 3px; border-radius: 2px; background: var(--amber); margin: 0 6px; }
