@@ -935,3 +935,6 @@ ol.nums.concl li span { font-size: 28px; color: var(--mute); font-weight: 600; m
 .slide [data-step]:not(.hidden) .mvpt { transform-box: fill-box; animation: mgslide 1.1s ease-out both; }
 @keyframes mgslide { from { transform: translateX(var(--dx)); } to { transform: translateX(0); } }
 .mgt { font-size: 26px; }
+.mgdef { display: grid; grid-template-columns: auto 1fr; gap: 10px 20px; align-items: baseline; font-size: 26px; }
+.mgdef em { font-style: normal; font-family: var(--math); white-space: nowrap; }
+.mgdef span { color: var(--ink, #262626); }
