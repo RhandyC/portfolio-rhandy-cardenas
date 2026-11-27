@@ -733,23 +733,27 @@
         </div>
         <div class="card navy tight" style="text-align:center"><p style="margin:0;font-size:30px">One <b>belief</b>, represented with particles</p></div>` },
 
-    { id: "pomdp", cite: ["silver_monte-carlo_2010", "murphy2012machine"], sec: "c3", c: ["C3"], kicker: "Formalism", time: 60,
+    { id: "arch-belief", sec: "c3", c: ["C3"], kicker: "Back to the architecture", time: 20, steps: 1,
+      title: "The state is no longer known, it is observed",
+      notes: "Back to the architecture. Until now, the tactical layer received the current state s0 from the world model, as if it were known exactly. (1) Now it receives observations, noisy and incomplete, and keeps a belief: a set of possible states. The capability estimator, the horizon builder and the planner work on this belief.",
+      html: `<div class="azm grow"><div class="in"><img src="${F}arch_full.jpg" alt="ODD-aptive architecture"><span class="hl" style="left:0.9%;top:43.3%;width:17.4%;height:38.6%"></span><span class="tg" data-until="1" style="left:0.9%;top:43.3%">Before · the state <i>s</i><sub>0</sub>, known</span><span class="hl b" data-step="1" style="left:18.6%;top:53%;width:9.4%;height:14%"></span><span class="tg b" data-step="1" style="left:18.6%;top:53%">Now · observations <i>o<sub>t</sub></i> and a belief <i>b<sub>t</sub></i></span></div></div>` },
+
+    { id: "pomdp", cite: ["silver_monte-carlo_2010"], sec: "c3", c: ["C3"], kicker: "Formalism", time: 75, steps: 1,
       title: "In the ODD-POMDP, a belief replaces the state",
-      notes: "The POMDP adds the observations and their model to the tuple. The vehicle no longer knows the state: it maintains a belief, represented by particles. The observations are the estimated kinematic states of the surrounding vehicles, Gaussian around the true state, and their intentions, estimated by a Gaussian naive Bayes classifier on four features. Each element of the ODD-MDP has its counterpart. The ensured set is now defined on the belief: an action is kept when the share of particles in which it is ensured reaches the threshold tau, an explicit design parameter; the guarantee becomes probabilistic. Value iteration gives way to Monte Carlo planning. Capability still precedes choice, now in probability.",
-      html: `<div class="row" style="gap:24px">
-          <div class="card defs grow">
-            <span class="pill">Model</span><div class="eq">𝒫 = (<i>S</i>, <i>A</i>, <i>T</i>, <i>R</i>, <i>O</i>, <i>Z</i>, <i>γ</i>)</div>
-            <span class="pill">Belief</span><div class="eq"><i>b<sub>t</sub></i> ≈ {<i>s<sub>t</sub></i><sup>(<i>i</i>)</sup>}<sub><i>i</i>=1</sub><sup><i>N</i></sup> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">particles</span> ${R("silver_monte-carlo_2010")}</div>
-            <span class="pill">Observation</span><div class="eq"><i>o<sub>t</sub></i> = {(<i>p̂<sub>i</sub></i><sup>kin</sup>(<i>t</i>), <i>û<sub>i</sub></i>(<i>t</i>))}<sub><i>i</i>=1</sub><sup><i>N</i><sub>veh</sub></sup>, &nbsp; <i>p̂<sub>i</sub></i><sup>kin</sup> ~ 𝒩(<i>p<sub>i</sub></i><sup>kin</sup>, <i>Σ<sub>i</sub></i>)</div>
-            <span class="pill">Intention</span><div class="eq"><i>P</i>(<i>u</i> | <i>z</i>) ∝ <i>P</i>(<i>u</i>) Π<sub><i>k</i>=1</sub><sup>4</sup> 𝒩(<i>z<sub>k</sub></i> | <i>μ<sub>u,k</sub></i>, <i>σ</i><sup>2</sup><sub><i>u,k</i></sub>) ${R("murphy2012machine")}</div>
-            <span class="pill ok">Ensured</span><div class="eq"><i>P</i>(<i>a</i> ensured | <i>b<sub>t</sub></i>) ≈ <sup>1</sup>⁄<sub><i>N</i></sub> Σ<sub><i>i</i></sub> 𝟙[<i>a</i> ∈ ${Aens("s<sub>t</sub><sup>(i)</sup>")}] ≥ <i>τ</i> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">share of particles</span></div>
-          </div></div>
-        <table class="tbl grow" style="font-size:22px"><tr><th style="width:230px"></th><th>ODD-MDP</th><th>ODD-POMDP</th></tr>
+      notes: "The POMDP keeps the state space, the actions, the reward and the discount of the ODD-MDP, and adds three elements: the transition model T, the probability of reaching s prime from s with a; the observation space O; and the observation model Z, the probability of observing o in state s. The observation o_t gathers, for each surrounding vehicle i, its estimated kinematic state, Gaussian around the true one with a covariance that grows near the limit of the perception envelope, and its estimated intention, a maneuver among keep lane, lane change left and right, estimated by a Gaussian naive Bayes classifier. The ego state is fully observed. The belief b_t is represented by N particles, each one a possible state. (1) The novelty: the capability is checked in every particle. An action is ensured on the belief when the share of particles in which the MCE ensures it reaches the threshold tau, a design parameter. Capability still precedes choice, now in probability.",
+      html: `<div class="row" style="gap:24px;align-items:stretch">
+          <div class="card col" style="flex:1 1 0;gap:10px"><h4>Model ${R("silver_monte-carlo_2010")}</h4>
+            <div class="eq" style="font-size:32px">𝒫 = (𝒮, 𝒜, <i>T</i>, <i>R</i>, 𝒪, <i>Z</i>, <i>γ</i>)</div>
+            <div class="lgd one"><span class="s"><i>T</i>(<i>s′</i> | <i>s</i>, <i>a</i>)</span><span>transition model</span><span class="s">𝒪</span><span>observation space</span><span class="s"><i>Z</i>(<i>o</i> | <i>s</i>)</span><span>probability of observing <i class="m">o</i> in the state <i class="m">s</i></span><span class="s">𝒮, 𝒜, <i>R</i>, <i>γ</i></span><span>as in the ODD-MDP</span></div></div>
+          <div class="card col" style="flex:1.25 1 0;gap:10px"><h4>Observation and belief</h4>
+            <div class="eq" style="font-size:28px"><i>o<sub>t</sub></i> = { ( <i>p̂</i><sub><i>i</i></sub><sup>kin</sup>, <i>û<sub>i</sub></i> ) }<sub><i>i</i> = 1 … <i>N</i><sub>veh</sub></sub> &nbsp;&nbsp; <i>b<sub>t</sub></i> ≈ { <i>s<sub>t</sub></i><sup>(<i>j</i>)</sup> }<sub><i>j</i> = 1 … <i>N</i></sub></div>
+            <div class="lgd one"><span class="s"><i>p̂</i><sub><i>i</i></sub><sup>kin</sup></span><span>estimated position, speed and acceleration of vehicle <i class="m">i</i>, Gaussian around the true ones</span><span class="s"><i>û<sub>i</sub></i></span><span>its estimated intention, in {KL, LCL, LCR}</span><span class="s"><i>s<sub>t</sub></i><sup>(<i>j</i>)</sup></span><span>particle <i class="m">j</i>, one possible state among <i class="m">N</i></span></div></div>
+        </div>
+        <table class="tbl" style="font-size:22px"><tr><th style="width:230px"></th><th>ODD-MDP</th><th>ODD-POMDP</th></tr>
           <tr><td><b>State</b></td><td>fully observed, <i class="m">s</i></td><td>belief over particles, <i class="m">b<sub>t</sub></i></td></tr>
-          <tr class="hl"><td><b>Capability</b></td><td><span class="eq" style="font-size:25px">${Aens()}</span></td><td><span class="eq" style="font-size:25px">${Aens("b<sub>t</sub>")} = {<i>a</i> | <i>P</i>(<i>a</i> ensured | <i>b<sub>t</sub></i>) ≥ <i>τ</i>}</span></td></tr>
-          <tr><td><b>Choice</b></td><td>value iteration</td><td>POMCP among the ensured actions</td></tr>
-          <tr><td><b>Uncertainty</b></td><td>in the transitions</td><td>noise, fog forecast, intentions</td></tr></table>
-        <div class="takeaway"><b>Capability precedes choice</b>, now in probability</div>` },
+          <tr class="hl"><td><b>Capability</b></td><td><span class="eq" style="font-size:25px">${Aens()}</span></td><td><span class="eq" style="font-size:25px">${Aens("b<sub>t</sub>")} = { <i>a</i> | <sup>1</sup>⁄<sub><i>N</i></sub> Σ<sub><i>j</i></sub> 𝟙[ <i>a</i> ∈ ${Aens("s<sub>t</sub><sup>(j)</sup>")} ] ≥ <i>τ</i> }</span></td></tr>
+          <tr><td><b>Choice</b></td><td>value iteration</td><td>Monte Carlo search (POMCP) among the ensured actions</td></tr></table>
+        <div class="card navy tight" data-step="1" style="text-align:center"><p style="margin:0;font-size:28px"><b>Novelty</b> · the capability is checked in <b>every particle</b>, an action is ensured for a share <i class="m">τ</i> of them</p></div>` },
 
     { id: "v-pomcp-a", type: "video", sec: "c3", c: ["C3"], time: 45,
       title: "The belief, and an action ensured for a share τ of the particles",
@@ -762,19 +766,22 @@
       video: { src: A + "pomcp.mp4?v=2", parts: [[30.6, "Monte Carlo search, one simulation at a time"], [46.0, "The tree grows where it matters"], [59.37, "Execute, rebuild the belief, search again"]] } },
 
     // ================================================================ 6. C4 · validation in simulation and on the vehicle
-    { id: "r-noisy", sec: "c3", c: ["C3", "C4"], kicker: "Example · noisy perception", time: 50,
-      title: "Under noisy perception, the belief keeps a safe gap",
-      notes: "With noise, the ODD-MDP is outside the right lane at the fog entry in 13 runs, the ODD-POMDP in 6. No collision in any run. The gain comes from evaluating each lane change over several hypotheses.",
-      html: `<div class="row grow">
-        <div class="card col" style="flex:1.25 1 0">${fig("noisy_frames.png", "Noisy perception frames, ODD-MDP and ODD-POMDP")}</div>
-        <div class="col grow">
-          <div class="card small">Car behind at 102 km/h, seen at 108<br><b>ODD-MDP</b> rejects the gap<br><b>ODD-POMDP</b> changes lane 430 m before the fog</div>
-          <div class="card tight stat"><span class="v" style="font-size:42px">13 → 6</span><span class="l">runs outside the right lane at the fog, MDP then POMDP</span></div>
-          <div class="card tight stat"><span class="v ok" style="font-size:42px">85 → 94</span><span class="l">runs in the right lane and operable</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:42px">236 → 367 m</span><span class="l">return starts earlier before the fog</span></div>
-          <p class="xs mute" style="margin:0">Same 100 seeds for both planners</p>
-        </div></div>` },
+    { id: "v-intent", type: "video", scrub: true, sec: "c3", c: ["C3", "C4"], time: 50,
+      title: "A practical case, the intentions of the other vehicles",
+      notes: "A practical case, in simulation. The vehicle estimates the intention of the others: the arrow shows it. Use case 1, a cut-in: the car behind the truck is about to cut in, but has not moved yet. Some particles hold the cut-in; the planner evaluates each future with its consequences, and changes lane before the car does. Use case 2, a vehicle entering the highway: the ego vehicle leaves room for it.",
+      video: { src: V + "intentions_sim.mp4", parts: [[0.0, "A cut-in, and a vehicle entering the highway"]] } },
 
+    { id: "r-cutin", sec: "c3", c: ["C3", "C4"], kicker: "Example · tactical intention", time: 45,
+      title: "The ODD-POMDP reacts to a cut-in before the car moves",
+      notes: "Reaction time measured from the start of the lateral motion of the car. The ODD-POMDP evaluates separately the futures with and without the cut-in, which explains its earlier reaction. Illustrative run only.",
+      html: `<p class="small" style="margin:0">Ego at 130 km/h, a car cuts in from behind a truck · same intention estimate for all, <i class="m">P</i> ≈ 0.35 – 0.39</p>
+        <div class="card tight col" style="gap:8px"><h4>ODD-MDP with tactical risk</h4><div class="g3">${fig("cutin_mdp_a.png", "ODD-MDP, a", 210)}${fig("cutin_mdp_b.png", "ODD-MDP, b", 210)}${fig("cutin_mdp_c.png", "ODD-MDP, c", 210)}</div></div>
+        <div class="card tight col" style="gap:8px"><h4>ODD-POMDP</h4><div class="g3">${fig("cutin_pomdp_a.png", "ODD-POMDP, a", 210)}${fig("cutin_pomdp_b.png", "ODD-POMDP, b", 210)}${fig("cutin_pomdp_c.png", "ODD-POMDP, c", 210)}</div></div>
+        <div class="g3">
+          <div class="card tight stat"><span class="v bad" style="font-size:40px">+2.4 s</span><span class="l">ODD-MDP without tactical risk, brakes to 102 km/h</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:40px;color:var(--deg)">+0.8 s</span><span class="l">ODD-MDP with tactical risk, brakes to 106 km/h</span></div>
+          <div class="card tight stat"><span class="v ok" style="font-size:40px">−2.8 s</span><span class="l">ODD-POMDP, changes lane first, keeps 130 km/h</span></div>
+        </div>` },
     { id: "r-forecast", sec: "c3", c: ["C3", "C4"], kicker: "Example · uncertain fog forecast", time: 50,
       title: "Despite forecast errors, the ODD-POMDP passes the fog in 19 of 20 runs",
       notes: "The fog starts up to 150 m before or after the announced point. When it is denser than announced, the ODD-MDP arrives too fast and loses Keep Lane. The ODD-POMDP slows down progressively and passes every dense case. The cost is one precautionary MRM in a lighter fog.",
@@ -797,45 +804,28 @@
           <p class="xs mute">Seed 8, fog later and denser than announced<br>ODD-POMDP enters at 73 km/h · ODD-MDP at 92 km/h, then MRM</p></div>
         </div>` },
 
-    { id: "r-cutin", sec: "c3", c: ["C3", "C4"], kicker: "Example · tactical intention", time: 45,
-      title: "The ODD-POMDP reacts to a cut-in before the car moves",
-      notes: "Reaction time measured from the start of the lateral motion of the car. The ODD-POMDP evaluates separately the futures with and without the cut-in, which explains its earlier reaction. Illustrative run only.",
-      html: `<p class="small" style="margin:0">Ego at 130 km/h, a car cuts in from behind a truck · same intention estimate for all, <i class="m">P</i> ≈ 0.35 – 0.39</p>
-        <div class="card tight col" style="gap:8px"><h4>ODD-MDP with tactical risk</h4><div class="g3">${fig("cutin_mdp_a.png", "ODD-MDP, a", 210)}${fig("cutin_mdp_b.png", "ODD-MDP, b", 210)}${fig("cutin_mdp_c.png", "ODD-MDP, c", 210)}</div></div>
-        <div class="card tight col" style="gap:8px"><h4>ODD-POMDP</h4><div class="g3">${fig("cutin_pomdp_a.png", "ODD-POMDP, a", 210)}${fig("cutin_pomdp_b.png", "ODD-POMDP, b", 210)}${fig("cutin_pomdp_c.png", "ODD-POMDP, c", 210)}</div></div>
-        <div class="g3">
-          <div class="card tight stat"><span class="v bad" style="font-size:40px">+2.4 s</span><span class="l">ODD-MDP without tactical risk, brakes to 102 km/h</span></div>
-          <div class="card tight stat"><span class="v" style="font-size:40px;color:var(--deg)">+0.8 s</span><span class="l">ODD-MDP with tactical risk, brakes to 106 km/h</span></div>
-          <div class="card tight stat"><span class="v ok" style="font-size:40px">−2.8 s</span><span class="l">ODD-POMDP, changes lane first, keeps 130 km/h</span></div>
-        </div>` },
     { id: "sec-concl", type: "section", sec: "concl", dark: true, title: "Conclusion and perspectives", time: 10 },
 
-    { id: "evidence", sec: "concl", kicker: "General conclusion", time: 70,
-      title: "From declaring the ODD to remaining within it",
-      notes: "The ODD defines where a system is designed to operate, but declaring it does not guarantee that the system remains within it. When ODD compliance is considered, it is a monitor that validates the current action; it does not constrain future decisions, so a sequence of valid decisions can narrow operability until safe operation is no longer ensured. ODD-aptive brings the limits into the decision while it is built. (1) Deciding is treated as a capability in its own right: the driving task is decomposed into maneuvers, each capability through Sense, Think and Act and skill graphs; the loss of a maneuver is always traced to a change of context, the assessment works on predicted contexts, and it is modular, since skills are shared and new behaviors are composed. (2) In the ODD-MDP, the actions are restricted to the ensured maneuvers in every predicted state: the tree has no branch that leaves the ODD, and the operability terms keep margins and an MRM reachable. Both mechanisms are needed jointly. (3) In the ODD-POMDP, the same principle holds with uncertain vehicles, intentions and forecasts; the guarantee becomes probabilistic and its level a design parameter. (4) In simulation, anticipation changes the decisions and keeps the vehicle fail-operational when its capabilities degrade, without making it overly conservative; in nominal conditions, planning a sequence already improves the decisions; and it was shown on a prototype vehicle, in the loop.",
-      html: `<ol class="nums concl grow">
-          <li><b>Deciding is a capability</b><span>assessed now, and in the predicted states</span></li>
-          <li><b>Only ensured maneuvers, over the whole horizon</b><span>no branch leaves the ODD, an MRM stays within reach</span></li>
-          <li><b>The same principle under uncertainty</b><span>a belief, and a confidence threshold</span></li>
-          <li><b>Fail-operational, without being overly conservative</b><span>in simulation, and on a prototype vehicle</span></li>
+    { id: "evidence", sec: "concl", kicker: "Conclusion", time: 75, steps: 1,
+      title: "From monitoring the ODD to deciding with the vehicle's capability",
+      notes: "The problem. The ODD is defined, but the context keeps evolving, and monitoring only reacts: a sequence of decisions, each one valid, can lead the vehicle to a state where no fallback remains. (1) What this work achieved. First, assessing what the vehicle is capable of doing, with the Maneuver Capability Estimator and its Sense, Think and Act skills, in the current state and in the predicted ones. Second, bringing this capability into the decision, with a model-based approach, the ODD-MDP: only ensured maneuvers are considered, and the reward keeps margins and a fallback within reach. Third, the same principle under uncertainty, with the ODD-POMDP: an action is ensured for a share tau of the particles. And this was validated in simulation and on a prototype vehicle, in the loop.",
+      html: `<div class="card bad col" style="gap:8px;padding:26px 40px"><span class="xs" style="letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:700">The problem</span>
+          <p style="margin:0;font-size:30px">The ODD is defined, but monitoring only <b>reacts</b>, a sequence of valid decisions can leave <b>no fallback</b></p></div>
+        <ol class="nums concl grow" data-step="1">
+          <li><b>Assess what the vehicle can do</b><span>the Maneuver Capability Estimator, with Sense, Think and Act skills</span></li>
+          <li><b>Bring it into the decision</b><span>a model-based ODD-MDP, only ensured maneuvers, a fallback within reach</span></li>
+          <li><b>Under uncertainty</b><span>the ODD-POMDP, ensured for a share <i class="m">τ</i> of the particles</span></li>
+          <li><b>Validated</b><span>in simulation and on a prototype vehicle</span></li>
         </ol>` },
 
-    { id: "perspectives", cite: ["kuhn2021introspective", "rabiee2023introspective", "krajewski2018highd", "alshiekh2018shielding", "krasowski2020safe"], sec: "concl", kicker: "Limitations and perspectives", time: 75,
-      title: "Limitations, and where the work goes next",
-      notes: "Limitations. The anticipation is only as good as the models of the dynamics, the perception and the traffic. The Act skills were assumed fulfilled, to keep the focus on the tactical decision. And the decisional capability needs the relevant ODD information within the horizon, here given by the electronic horizon, whose availability depends on connected infrastructure. Perspectives. First, the approach generalizes: new skills, maneuvers and objectives are added without changing the planner, so another domain, such as urban roads, means defining its skills, what is shared, and its behaviors. Act skills can monitor braking, steering and power. A maneuver can be monitored during its execution, to replan or abort it as soon as a condition changes. The capabilities can be learned from data, with introspective approaches. Richer traffic prediction, and naturalistic data such as highD. And learning the policy while keeping capability before choice, the ensured maneuvers acting as a shield. Beyond this, decisional capability gives a vocabulary that a certification process could examine.",
-      html: `<div class="row grow">
-        <div class="card bad col" style="flex:0.85 1 0"><h3>Limitations</h3><ul class="list">
-          <li>Relies on models of dynamics, perception and traffic</li>
-          <li>Act skills assumed fulfilled</li>
-          <li>Needs the ODD information ahead, within the horizon</li></ul></div>
-        <div class="card ok col" style="flex:1.15 1 0"><h3>Perspectives</h3><ol class="nums">
-          <li><b>Generalizable</b> · new skills, shared skills, new behaviors, same planner</li>
-          <li>Act skills · braking, steering, power</li>
-          <li>Monitor a maneuver during its execution</li>
-          <li>Learn where the vehicle is capable ${R("kuhn2021introspective", "rabiee2023introspective")}</li>
-          <li>Richer traffic prediction, naturalistic data ${R("krajewski2018highd")}</li>
-          <li>Learn the policy under capability constraints ${R("alshiekh2018shielding", "krasowski2020safe")}</li></ol></div>
-        </div>` },
+    { id: "perspectives", sec: "concl", kicker: "Perspectives", time: 50,
+      title: "Perspectives",
+      notes: "Three perspectives. First, the same framework extends to new use cases: another domain, urban roads for instance, means defining new skills and new behaviors, while the planner stays the same. Second, a system able to learn: the capabilities, where the vehicle is capable, can be learned from data, with introspective approaches; and the policy itself can be learned while keeping capability before choice, the ensured maneuvers acting as a shield. Third, the decisions improve with a better prediction of the traffic, which the framework can take as it is.",
+      html: `<div class="col grow" style="justify-content:center"><div class="g3" style="gap:24px">
+          <div class="card ok col" style="gap:14px;justify-content:center"><div class="num-badge">1</div><h3 style="margin:0">New use cases</h3><p style="margin:0;font-size:28px">Extended through <b>new skills</b> and <b>new behaviors</b>, with the same framework</p></div>
+          <div class="card ok col" style="gap:14px;justify-content:center"><div class="num-badge">2</div><h3 style="margin:0">A system able to learn</h3><p style="margin:0;font-size:28px">Learn the <b>capabilities</b>, and the <b>policy</b> under capability constraints</p></div>
+          <div class="card ok col" style="gap:14px;justify-content:center"><div class="num-badge">3</div><h3 style="margin:0">Better prediction</h3><p style="margin:0;font-size:28px">The decisions improve with a better <b>prediction of the traffic</b></p></div>
+        </div></div>` },
 
     { id: "publications", sec: "concl", kicker: "Publications", time: 15,
       title: "Publications",
@@ -972,6 +962,19 @@
         </div></div>` },
 
     // ================================================================ 7. conclusion
+    { id: "r-noisy", sec: "backup", kicker: "Appendix", time: 50,
+      title: "Under noisy perception, the belief keeps a safe gap",
+      notes: "With noise, the ODD-MDP is outside the right lane at the fog entry in 13 runs, the ODD-POMDP in 6. No collision in any run. The gain comes from evaluating each lane change over several hypotheses.",
+      html: `<div class="row grow">
+        <div class="card col" style="flex:1.25 1 0">${fig("noisy_frames.png", "Noisy perception frames, ODD-MDP and ODD-POMDP")}</div>
+        <div class="col grow">
+          <div class="card small">Car behind at 102 km/h, seen at 108<br><b>ODD-MDP</b> rejects the gap<br><b>ODD-POMDP</b> changes lane 430 m before the fog</div>
+          <div class="card tight stat"><span class="v" style="font-size:42px">13 → 6</span><span class="l">runs outside the right lane at the fog, MDP then POMDP</span></div>
+          <div class="card tight stat"><span class="v ok" style="font-size:42px">85 → 94</span><span class="l">runs in the right lane and operable</span></div>
+          <div class="card tight stat"><span class="v" style="font-size:42px">236 → 367 m</span><span class="l">return starts earlier before the fog</span></div>
+          <p class="xs mute" style="margin:0">Same 100 seeds for both planners</p>
+        </div></div>` },
+
     { id: "b-reward", cite: ["WANG2021surrogate", "glaser2010ttctiv"], sec: "backup", kicker: "Appendix", title: "Reward terms in detail",
       notes: "Collision: minus 1 if a collision occurs during the predicted execution or at the resulting state. Risk: for each vehicle i ahead in the ego lane, time to collision and time headway, each mapped to a risk between 0 and 1 by a piecewise-linear function: TTC from 1 to 10 seconds, TIV from 0.5 to 2 seconds. They are mixed by alpha, which grows with the closing speed: approaching a slower vehicle, TTC matters more; at similar speeds, TIV. The most critical vehicle is kept. Legal: the relative excess over the speed limit. Progress: the speed over the maximum speed. Route: the lane index from the right, amplified as the next itinerary event, an exit, approaches. The weights follow a hierarchy: collision far above all, then the fallback, operability, risk, legal and speed; they were tuned in simulation so that this order holds in the decisions.",
       html: `<div class="g2 grow" style="gap:20px">
