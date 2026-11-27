@@ -275,6 +275,7 @@
     whenReady(v, () => {
       stopAt = endOf(s, k, v);
       v.currentTime = t === undefined ? startOf(s, k) + EPS : t;
+      v.playbackRate = s.video.rate || 1;
       v.play().then(() => requestAnimationFrame(watch)).catch(() => { playing = false; });
     });
   }

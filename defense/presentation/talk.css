@@ -938,3 +938,17 @@ ol.nums.concl li span { font-size: 28px; color: var(--mute); font-weight: 600; m
 .mgdef { display: grid; grid-template-columns: auto 1fr; gap: 10px 20px; align-items: baseline; font-size: 26px; }
 .mgdef em { font-style: normal; font-family: var(--math); white-space: nowrap; }
 .mgdef span { color: var(--ink, #262626); }
+/* architecture recap and zoom */
+.azm { position: relative; overflow: hidden; border-radius: 18px; background: #f2f2f2; display: flex; align-items: center; justify-content: center; min-height: 0; }
+.azm .zk { display: none; }
+.azm .in { position: relative; height: 100%; aspect-ratio: 3590 / 1718; max-width: 100%; transition: transform 1s ease-in-out; transform-origin: var(--ox, 50%) var(--oy, 50%); }
+.azm .in img { width: 100%; height: 100%; display: block; }
+.azm .zk:not(.hidden) ~ .in[style*="--zs"] { transform: scale(var(--zs)); }
+.azm .hl { position: absolute; border: 5px solid var(--ok); border-radius: 10px; box-shadow: 0 0 0 4000px rgba(255,255,255,0); transition: box-shadow .6s; }
+.azm .hl.b { border-color: var(--mg, #a8237e); }
+.azm .tg { position: absolute; transform: translateY(-100%); background: var(--ok); color: #fff; font-weight: 700; font-size: 22px; padding: 4px 12px; border-radius: 8px; white-space: nowrap; }
+.azm .tg.b { background: var(--mg, #a8237e); }
+.hrw { position: relative; z-index: 0; }
+.hrwon { position: absolute; inset: -6px -8px; background: #d3ecd9; border: 3px solid var(--ok); border-radius: 10px; z-index: -1; transition: opacity .5s; }
+.cases { display: inline-flex; flex-direction: column; gap: 6px; border-left: 3px solid currentColor; padding-left: 12px; vertical-align: middle; border-radius: 6px; }
+.cases > span small { font-size: 0.62em; margin-left: 14px; color: var(--mute); font-family: "Montserrat", sans-serif; }
