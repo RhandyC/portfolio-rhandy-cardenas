@@ -402,26 +402,22 @@
         </div>
       </div>` },
 
-    { id: "maneuvers", cite: ["AVSC2021BehavioralCompetencies", "iso2023iso34503", "colwell_automated_2018"], sec: "c1", c: ["C1"], kicker: "Mapping the ODD to the behavioral level", time: 55,
+    { id: "maneuvers", cite: ["AVSC2021BehavioralCompetencies"], sec: "c1", c: ["C1"], kicker: "Maneuvers and operability", time: 90, steps: 1,
       title: "The driving task splits into maneuvers, each with its own limits",
-      notes: "Asking whether the whole vehicle is within its ODD is too coarse. The task is decomposed into maneuvers, and the question is asked for each of them. Each maneuver has its own boundaries in the space of the operational constraints.",
-      html: `<div class="card col" style="flex:1.3 1 0">${fig("decomposition.jpg", "Decomposition of the driving task into maneuvers")}</div>
-        <div class="g3">
-          <div class="card"><h4>Maneuvers ${R("AVSC2021BehavioralCompetencies")}</h4><div class="eq"><i>U</i> = {KL, LCL, LCR, MRM}</div><p class="small">Each activates an existing feature, with its parameters</p></div>
-          <div class="card"><h4>Operational domain ${R("iso2023iso34503", "colwell_automated_2018")}</h4><div class="eq"><i>X</i><sub>ODD</sub> = <i>C</i><sub>1</sub> × <i>C</i><sub>2</sub> × … × <i>C<sub>n</sub></i></div><p class="small">The OD, a point moving in this space</p></div>
-          <div class="card"><h4>Constraints</h4><p class="small"><b>Continuous</b>, visibility or density, with margins<br><b>Discrete</b>, road type or works, to predict</p></div>
-        </div>` },
-
-    { id: "operability", cite: ["colwell_automated_2018", "charmet2024monitoring"], sec: "c1", c: ["C1"], kicker: "Ensured maneuvers and levels of operability", time: 45,
-      title: "Three levels of operability, from the set of ensured maneuvers",
-      notes: "Three levels of operability. Degradation is per maneuver, not an intermediate level: a maneuver can remain ensured with a reduced performance range. The same assessment runs on predicted states, fed by the electronic horizon.",
-      html: `<div class="g3">
-          <div class="card ok col" style="gap:22px;padding:34px 36px"><span class="pill ok" style="align-self:flex-start;font-size:24px">Full operability</span><div class="eq" style="font-size:44px">${Uens()} = <i>U</i></div><p style="font-size:28px">Every maneuver ensured</p></div>
-          <div class="card deg col" style="gap:22px;padding:34px 36px"><span class="pill deg" style="align-self:flex-start;font-size:24px">Partial operability</span><div class="eq" style="font-size:44px">∅ ⊊ ${Uens()} ⊊ <i>U</i></div><p style="font-size:28px">Some maneuvers remain ${R("colwell_automated_2018")}</p></div>
-          <div class="card bad col" style="gap:22px;padding:34px 36px"><span class="pill bad" style="align-self:flex-start;font-size:24px">Loss of operability</span><div class="eq" style="font-size:44px">${Uens()} = ∅</div><p style="font-size:28px">A fallback is required ${R("charmet2024monitoring")}</p></div>
-        </div>
-        <div class="card amber"><p>Degradation is <b>per maneuver</b>, with a reduced performance range</p></div>
-        <div class="takeaway">Assessed on <b>predicted states</b> too, which makes anticipation possible</div>` },
+      notes: "Asking whether the whole vehicle is within its ODD is too coarse. The driving task is decomposed into maneuvers, following the behavioral competencies, and the question is asked for each of them. Keep Lane includes following the vehicle ahead and adapting the speed to it. Each maneuver has its own limits in the space of the operational conditions. This is the operational domain: the product of the conditions, and the current situation is a point moving in this space. The conditions are continuous, such as visibility or traffic density, or discrete, such as the road type or road works, depending on the chosen taxonomy. (1) From the set of ensured maneuvers come three levels of operability. Full: every maneuver is ensured. Partial: some maneuvers remain ensured, possibly with a reduced performance range, so degradation is per maneuver. Loss: no maneuver is ensured and a fallback is required.",
+      html: `<div class="row grow" style="gap:24px;align-items:stretch">
+        <div class="col" style="flex:1.75 1 0;gap:20px">
+          <div class="card col grow">${fig("decomposition.jpg?v=2", "Decomposition of the driving task into maneuvers")}</div>
+          <div class="g2">
+            <div class="card"><h4>Maneuvers ${R("AVSC2021BehavioralCompetencies")}</h4><div class="eq"><i>U</i> = {KL, LCL, LCR, MRM}</div></div>
+            <div class="card"><h4>Operational domain</h4><div class="eq"><i>X</i><sub>ODD</sub> = <i>C</i><sub>1</sub> × <i>C</i><sub>2</sub> × … × <i>C<sub>n</sub></i></div><p class="small" style="margin:0"><i>C<sub>i</sub></i> a condition, continuous or discrete</p></div>
+          </div></div>
+        <div class="col" data-step="1" style="flex:1 1 0;gap:18px;justify-content:center">
+          <div class="card ok col" style="gap:10px"><span class="pill ok" style="align-self:flex-start">Full operability</span><div class="eq" style="font-size:36px">${Uens()} = <i>U</i></div><p class="small" style="margin:0">Every maneuver ensured</p></div>
+          <div class="card deg col" style="gap:10px"><span class="pill deg" style="align-self:flex-start">Partial operability</span><div class="eq" style="font-size:36px">∅ ⊊ ${Uens()} ⊊ <i>U</i></div><p class="small" style="margin:0">Some maneuvers remain ensured</p></div>
+          <div class="card bad col" style="gap:10px"><span class="pill bad" style="align-self:flex-start">Loss of operability</span><div class="eq" style="font-size:36px">${Uens()} = ∅</div><p class="small" style="margin:0">A fallback is required</p></div>
+          <p class="small mute" style="margin:0"><i>U</i><sub>ens</sub>(<i>S</i>), the maneuvers ensured in the state <i>S</i></p>
+        </div></div>` },
 
     { id: "dcap", sec: "c1", c: ["C1"], kicker: "Assessing the decisional capability", time: 60, steps: 2,
       title: "How do the conditions affect what the vehicle can do?",
