@@ -911,3 +911,22 @@ ol.nums.concl li span { font-size: 28px; color: var(--mute); font-weight: 600; m
 .mth .mimg { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
 .mth .mimg img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .mth p { margin: 0; text-align: center; font-size: 25px; }
+
+/* outline: ODD-aptive on top, its two parts below */
+.outl.oda { display: flex; flex-direction: column; gap: 26px; justify-content: center; }
+.outl.oda .oa { align-self: center; display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--navy); color: #fff; border-radius: 22px; padding: 22px 70px; }
+.outl.oda .oa b { font-size: 50px; font-weight: 800; letter-spacing: 0.01em; }
+.outl.oda .oa span { font-size: 24px; color: var(--amber); font-weight: 600; }
+.outl.oda .obs { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; }
+.outl.oda .ob { display: flex; flex-direction: column; gap: 14px; background: #fff; border-radius: 24px; padding: 30px 34px; box-shadow: 0 6px 24px rgba(0,0,0,0.055), 0 2px 8px rgba(0,0,0,0.04); border-top: 10px solid var(--ok); cursor: pointer; }
+.outl.oda .ob2 { border-top-color: var(--blue); }
+.outl.oda .oh { display: flex; flex-direction: column; gap: 6px; }
+.outl.oda .oh .k { font-size: 21px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ok); }
+.outl.oda .ob2 .oh .k { color: var(--blue); }
+.outl.oda .oh b { font-size: 40px; font-weight: 800; color: var(--navy); line-height: 1.15; }
+.outl.oda .oh small { font-size: 26px; font-weight: 500; color: var(--ink); }
+.outl.oda .m { display: flex; align-items: center; gap: 10px; font-size: 18px; color: var(--mute); font-weight: 600; }
+.outl.oda .ob a { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 22px; background: var(--chip); border-radius: 14px; box-shadow: none; text-decoration: none; }
+.outl.oda .ob a .t { font-size: 28px; font-weight: 700; color: var(--navy); }
+.outl.oda .m { flex-direction: row; align-self: flex-start; align-items: center; }
+.outl.oda .ob a .m { align-self: center; }
