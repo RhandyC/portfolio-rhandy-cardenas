@@ -174,7 +174,7 @@
       title: "Monitoring is good, but not enough",
       notes: "Why is monitoring the ODD not enough? Here the band is the ODD, and rain ahead narrows it. The vehicle plans its maneuvers and monitoring checks each one: it is admissible when it is taken. (pause) But monitoring only looks one step ahead. Without anticipation, the ensured options shrink at each step, until the vehicle reaches a state with no fallback left, although no single decision was wrong.",
       // a short stop after the first step, to point at the rain ahead; then the rest in one go
-      video: { src: A + "problem.mp4?v=6", parts: [[0.0, "Monitoring is good, but not enough"], [3.5, "Without anticipation, no fallback left"]], end: 16.0 } },
+      video: { src: A + "problem.mp4?v=7", parts: [[0.0, "Monitoring is good, but not enough"], [3.5, "Without anticipation, no fallback left"]], end: 16.0 } },
 
     { id: "question", th: "The idea", sec: "intro", kicker: "Problem statement · our idea", time: 70, steps: 1,
       title: "From monitoring to deciding",
@@ -191,9 +191,9 @@
           </div></div>` },
 
     { id: "v-problem-b", th: "The aim", type: "video", sec: "intro", time: 40,
-      title: "Anticipate, and keep a minimal risk condition within reach",
-      notes: "What we want instead: anticipate the loss of capability. Under the rain the vehicle keeps fewer options, but its policy can always lead it to a minimal risk condition, through a fallback maneuver. This is fail-operational decision-making.",
-      video: { src: A + "problem.mp4?v=6", parts: [[16.0, "Anticipate the loss of capability"], [25.5, "Fail-operational: a minimal risk condition always within reach"]] } },
+      title: "Fail-operational decision-making",
+      notes: "What we want instead: anticipate, then decide. The vehicle looks further ahead and avoids the future states that lead to an ODD exit. (next) This is fail-operational decision-making: the vehicle foresees the changes of its context and adapts proactively, before the rain, instead of reacting once it is there. It stays operational, keeping safety and comfort, avoids a disengagement, and a fallback maneuver always remains ensured.",
+      video: { src: A + "problem.mp4?v=7", parts: [[16.0, "Anticipate, then decide"], [22.8, "Fail-operational decision-making"]] } },
 
     { id: "contrib", cite: ["CARDENAS2025162", "11097482"], th: "The contributions", type: "outline", sec: "intro", kicker: "Contributions and outline", time: 60,
       title: "Outline",
