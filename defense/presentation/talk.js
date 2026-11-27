@@ -85,6 +85,7 @@
   function tocHTML(onSec) {
     // a group (ODD-aptive decision-making) shows once, its parts below it
     let html = "", lastG = null;
+    const seenP = new Set();
     T.sections.forEach((x) => {
       const done = onSec && T.sections.findIndex((y) => y.id === onSec) > T.sections.indexOf(x);
       const cls = x.id === onSec ? "on" : (done ? "done" : "");
@@ -94,7 +95,11 @@
           const gOn = T.sections.some((y) => y.grp === x.grp && y.id === onSec);
           html += `<a data-go="${x.page}" class="${gOn ? "on" : cls}"><span>${x.n}</span><span>${esc(x.grp)}</span></a>`;
         }
-        html += `<a data-go="${x.page}" class="sub ${cls}"><span></span><span>${esc(x.toc || x.title)}</span></a>`;
+        if (!seenP.has(x.part)) {
+          seenP.add(x.part);
+          const pOn = T.sections.some((y) => y.part === x.part && y.id === onSec);
+          html += `<a data-go="${x.page}" class="sub ${pOn ? "on" : cls}"><span></span><span>${esc(x.part || x.title)}</span></a>`;
+        }
       } else {
         html += `<a data-go="${x.page}" class="${cls}"><span>${x.n}</span><span>${esc(x.toc || x.title)}</span></a>`;
       }
@@ -135,13 +140,18 @@
     } else if (s.type === "agenda") {
       // the title of every section, nothing else; each row opens its section page
       let lastG = null;
+      const seenP = new Set();
       const rows = T.sections.map((x) => {
         let pre = "";
         if (x.grp && x.grp !== lastG) {
           lastG = x.grp;
           pre = `<a class="ag-row" data-go="${x.page}" href="#/${x.page}"><span class="n">${x.n}</span><div class="t">${esc(x.grp)}</div></a>`;
         }
-        if (x.grp) return pre + `<a class="ag-row sub" data-go="${x.page}" href="#/${x.page}"><span></span><div class="t">${esc(x.toc || x.title)}</div></a>`;
+        if (x.grp) {
+          if (seenP.has(x.part)) return pre;
+          seenP.add(x.part);
+          return pre + `<a class="ag-row sub" data-go="${x.page}" href="#/${x.page}"><span></span><div class="t">${esc(x.part || x.title)}</div></a>`;
+        }
         return `<a class="ag-row" data-go="${x.page}" href="#/${x.page}"><span class="n">${x.n}</span><div class="t">${esc(x.toc || x.title)}</div></a>`;
       }).join("");
       inner = header(s) + `<div class="body"><div class="agenda">${rows}</div>${s.html || ""}</div>` + footer(s);
