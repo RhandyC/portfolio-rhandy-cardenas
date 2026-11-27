@@ -156,15 +156,15 @@
         </div>
       </div>` },
 
-    { id: "context", cite: ["sun2022operational", "cardenas2025context_aware"], th: "Monitored, not decided", sec: "intro", kicker: "Motivation · how the ODD is used today", time: 60, steps: 2,
-      title: "The ODD is defined, but the context keeps changing",
-      notes: "Now the ODD is defined, even if it is a demanding task. The difficulty is that the context does not stay fixed. Along one route, the context keeps changing: a highway exit, road works, missing lane markings, a tunnel, a traffic jam, a curve, rain expected ahead. The ODD, fixed by design, does not change. What changes is the operational domain, OD, the current conditions; staying in the ODD means keeping the OD inside it, now and on the route ahead. (1) Today, the ODD is mostly monitored, with isolated condition checks and margins, but it rarely enters the decision process itself: decisions are taken without checking that the vehicle will be able to manage them, and the limit is noticed once it is crossed, with an abrupt deactivation, an emergency stop or, for a fleet, a suspended service. (2) What is needed is the opposite: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation.",
+    { id: "context", cite: ["cardenas2025context_aware", "charmet2024monitoring"], th: "Monitored, not decided", sec: "intro", kicker: "Motivation · how the ODD is used today", time: 60, steps: 2,
+      title: "The ODD is defined, but the context keeps evolving",
+      notes: "Now the ODD is defined, even if it is a demanding task. The difficulty is that the context does not stay fixed. Along one route, the context keeps changing: a highway exit, road works, missing lane markings, a tunnel, a traffic jam, a curve, rain expected ahead. The ODD, fixed by design, does not change. What changes is the operational domain, OD, the current conditions; staying in the ODD means keeping the OD inside it, now and on the route ahead. (1) Today, the ODD is mostly monitored, for instance by estimating the time before leaving it, with isolated condition checks and margins, but it rarely enters the decision process itself: decisions are taken without checking that the vehicle will be able to manage them, and the limit is noticed once it is crossed, with an abrupt deactivation, an emergency stop or, for a fleet, a suspended service. (2) What is needed is the opposite: anticipate the limits inside the decision, keep operating with fewer capabilities while it is safe, and start the fallback while it is still feasible. That is graceful degradation.",
       html: `<div class="row grow">
-        <div class="card col" style="flex:0 0 700px;padding:20px 26px"><h4>One route, many context changes</h4>${fig("context_changes.png", "Target route with context changes: highway exit, road works, missing lane markings, tunnel, traffic jam, curved road, expected rain")}</div>
+        <div class="card col" style="flex:0 0 700px;padding:20px 26px"><h4>One route, many context changes ${R("cardenas2025context_aware")}</h4>${fig("context_changes.png", "Target route with context changes: highway exit, road works, missing lane markings, tunnel, traffic jam, curved road, expected rain")}</div>
         <div class="col grow" style="justify-content:center;gap:30px">
-          <div class="card accent"><h3 style="margin:0">The context keeps changing</h3></div>
-          <div class="card bad" data-step="1"><h3 style="margin:0">Today · monitor, then react ${R("sun2022operational", "cardenas2025context_aware")}</h3></div>
-          <div class="card ok" data-step="2"><h3 style="margin:0">Needed · anticipate</h3></div>
+          <div class="card accent"><h3 style="margin:0">It evolves during the whole itinerary</h3></div>
+          <div class="card bad" data-step="1"><h3 style="margin:0">Today: Monitor, then react ${R("charmet2024monitoring")}</h3></div>
+          <div class="card ok" data-step="2"><h3 style="margin:0">Needed: Anticipate</h3></div>
         </div></div>` },
 
     { id: "v-problem-a", th: "The problem", type: "video", sec: "intro", time: 45,
