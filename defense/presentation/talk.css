@@ -952,3 +952,12 @@ ol.nums.concl li span { font-size: 28px; color: var(--mute); font-weight: 600; m
 .hrwon { position: absolute; inset: -6px -8px; background: #d3ecd9; border: 3px solid var(--ok); border-radius: 10px; z-index: -1; transition: opacity .5s; }
 .cases { display: inline-flex; flex-direction: column; gap: 6px; border-left: 3px solid currentColor; padding-left: 12px; vertical-align: middle; border-radius: 6px; }
 .cases > span small { font-size: 0.62em; margin-left: 14px; color: var(--mute); font-family: "Montserrat", sans-serif; }
+.rtplot { width: 100%; flex: 1 1 0; min-height: 0; font-family: "Montserrat", sans-serif; }
+.rtplot .rl { font-size: 22px; font-weight: 600; fill: #262626; }
+.rtplot .rl.mu { fill: var(--mute); }
+.rtplot .rl.gk { fill: var(--ok); }
+.rtplot .rl.bk { fill: var(--bad); }
+.rtplot .rg { stroke: var(--ok); stroke-width: 6; }
+.rtplot .rb { fill: none; stroke: var(--bad); stroke-width: 6; stroke-dasharray: 14 8; }
+.rtplot .rth { stroke: var(--navy); stroke-width: 3; stroke-dasharray: 6 6; }
+.rtplot .rax { stroke: #262626; stroke-width: 2.5; }
