@@ -65,6 +65,7 @@
     "ref_claim_toyota": ["“Toyota Aims to Make Self-Driving Cars by 2020,” <i>The Wall Street Journal</i>, 2015.", "“Toyota Aims to Make Self-Driving Cars by 2020,” <i>The Wall Street Journal</i>, 2015."],
     "renault2022cta": ["F. Deca and D. Rosain-Boussiquet, “Centre technique d'Aubevoye : 40 ans d'histoire(s) et de passion automobile,” <i>Renault Group Magazine</i>, 2022.", "F. Deca and D. Rosain-Boussiquet, “Centre technique d'Aubevoye : 40 ans d'histoire(s) et de passion automobile,” <i>Renault Group Magazine</i>, 2022."],
     "reschka2015ability": ["A. Reschka et al., “Ability and skill graphs for system modeling, online monitoring, and decision support for vehicle guidance systems,” <i>IEEE IV</i>, 2015.", "A. Reschka, G. Bagschik, S. Ulbrich, M. Nolte, and M. Maurer, “Ability and skill graphs for system modeling, online monitoring, and decision support for vehicle guidance systems,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, 2015, pp. 933–939."],
+    "nhtsa2021odd": ["E. Thorn et al., “A Framework for Automated Driving System Testable Cases and Scenarios,” <i>NHTSA</i>, 2018.", "E. Thorn, S. C. Kimmel and M. Chaka, “A Framework for Automated Driving System Testable Cases and Scenarios,” <i>National Highway Traffic Safety Administration (NHTSA)</i>, DOT HS 812 623, 2018."],
     "sae2021taxonomy": ["SAE International, <i>SAE J3016</i>, 2021.", "SAE International, <i>Taxonomy and Definitions for Terms Related to Driving Automation Systems for On-Road Motor Vehicles</i>, SAE Standard J3016_202104, 2021."],
     "salvi2022fuzzy": ["A. Salvi et al., “Fuzzy Interpretation of Operational Design Domains in Autonomous Driving,” <i>IEEE IV</i>, 2022.", "A. Salvi, G. Weiss, M. Trapp, F. Oboril, and C. Buerkle, “Fuzzy Interpretation of Operational Design Domains in Autonomous Driving,” in <i>Proc. IEEE Intelligent Vehicles Symposium (IV)</i>, 2022, pp. 1261–1267."],
     "schlatow2017selfawareness": ["J. Schlatow et al., “Self-awareness in autonomous automotive systems,” <i>DATE</i>, 2017.", "J. Schlatow et al., “Self-awareness in autonomous automotive systems,” in <i>Proc. Design, Automation & Test in Europe Conference & Exhibition (DATE)</i>, 2017, pp. 1050–1055."],
@@ -135,23 +136,25 @@
     // ================================================================ 1. introduction: the ODD, monitored but not decided, the problem, the idea and the question, the aim, the contributions
     { id: "sec-intro", type: "section", sec: "intro", dark: true, title: "Introduction", time: 10 },
 
-    { id: "odd", cite: ["mercedes2019drivepilot", "sae2021taxonomy", "czarnecki2018operational", "iso2023iso34503"], th: "The ODD", sec: "intro", kicker: "Motivation · what is the ODD?", time: 75, steps: 2,
+    { id: "odd", cite: ["mercedes2019drivepilot", "sae2021taxonomy", "nhtsa2021odd"], th: "The ODD", sec: "intro", kicker: "Motivation · what is the ODD?", time: 75, steps: 2,
       title: "Where is an automated vehicle designed to operate?",
-      notes: "Let us start with a system on the road today: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe. To say where it may drive, Mercedes describes a driving scene with five conditions: a highway with lane markings, dense traffic, a route covered by the HD map, and suitable weather. (1) This description has a name: the Operational Design Domain, the ODD. SAE J3016 defines it as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function. The designer knows the performance of the system and states the contexts in which it works correctly and safely; outside the ODD, the system is beyond its limits. (2) How is it described in general? As a taxonomy: here the six top levels proposed by the NHTSA, each broken down into sublevels, and ISO 34503 sets the requirements for such a taxonomy. Defining it is already a demanding task. But once it is defined, the question becomes: the context keeps changing, so how does the vehicle decide with respect to it?",
+      notes: "Let us start with a system on the road today: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe. To say where it may drive, Mercedes describes a driving scene with five conditions: a highway with lane markings, dense traffic, a route covered by the HD map, and suitable weather. (1) This description has a name: the Operational Design Domain, the ODD. SAE J3016 defines it as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function. The designer knows the performance of the system and states the contexts in which it works correctly and safely; outside the ODD, the system is beyond its limits. (2) How is it described in general? As a taxonomy: here the one proposed by the NHTSA, six top-level categories, from the physical infrastructure to the zones, each broken down into attributes. Defining it is already a demanding task. But once it is defined, the question becomes: the context keeps changing, so how does the vehicle decide with respect to it?",
       html: `<div class="row grow">
-        <div class="card col" style="flex:1.15 1 0;gap:12px">
-          <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="width:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px">
-          <p style="margin:0;text-align:center;font-size:26px"><b>Mercedes-Benz Drive Pilot</b>, the first Level 3 approved in Europe ${R("mercedes2019drivepilot")}</p></div>
-        <div class="col grow" style="flex:1 1 0;gap:22px;justify-content:center">
-          <div class="card navy" data-step="1" style="padding:30px 38px"><h3 style="margin:0 0 16px;font-size:36px;white-space:nowrap">Operational Design Domain (ODD)</h3>
-            <div class="quote" style="font-size:30px;color:#fff;line-height:1.35">“Operating conditions under which a given driving automation system or feature thereof is <b style="color:var(--amber)">specifically designed to function</b>,</div>
-            <div style="font-size:21px;line-height:1.45;color:#c7d3e3;margin-top:10px;font-style:italic">including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
-            <p class="xs" style="margin:12px 0 0;opacity:.8">SAE J3016 ${R("sae2021taxonomy")}</p></div>
-          <div class="card" data-step="2"><h4>Described as a taxonomy</h4><div class="oddtax">
-              <div><b>Infrastructure</b></div><div><b>Operational constraints</b></div><div><b>Objects</b></div>
-              <div><b>Connectivity</b></div><div><b>Environment</b></div><div><b>Zones</b></div>
-            </div><p class="xs mute" style="margin:10px 0 0">${R("czarnecki2018operational", "iso2023iso34503")}</p></div>
-        </div></div>` },
+        <div class="card" style="order:1;flex:1.15 1 0;display:grid;padding:26px 30px">
+          <div class="col" data-until="2" style="grid-area:1/1;gap:14px;min-height:0">
+            <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="width:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px">
+            <p style="margin:0;text-align:center;font-size:26px"><b>Mercedes-Benz Drive Pilot</b>, the first Level 3 approved in Europe ${R("mercedes2019drivepilot")}</p><span hidden>${R("sae2021taxonomy")}</span></div>
+          <div class="col" data-step="2" style="grid-area:1/1;gap:14px;min-height:0">
+            <img src="${F}odd_taxonomy_nhtsa.png" alt="ODD taxonomy proposed by the NHTSA" style="width:100%;flex:1;min-height:0;object-fit:contain">
+            <p style="margin:0;text-align:center;font-size:26px">Described as a <b>taxonomy</b>, here the one proposed by the NHTSA ${R("nhtsa2021odd")}</p></div>
+        </div>
+        <div class="col" style="flex:1 1 0;justify-content:center;order:2">
+          <div class="card navy" data-step="1" style="padding:40px 44px;text-align:center"><h3 style="margin:0 0 22px;font-size:36px;white-space:nowrap;text-align:center">Operational Design Domain (ODD)</h3>
+            <div style="font-size:30px;color:#fff;line-height:1.4;font-style:italic">“Operating conditions under which a given driving automation system or feature thereof is <b style="color:var(--amber)">specifically designed to function</b>,</div>
+            <div style="font-size:21px;line-height:1.5;color:#c7d3e3;margin-top:14px;font-style:italic">including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
+            <p class="xs" style="margin:18px 0 0;opacity:.8">SAE J3016 ${R("sae2021taxonomy")}</p></div>
+        </div>
+      </div>` },
 
     { id: "context", cite: ["sun2022operational", "cardenas2025context_aware"], th: "Monitored, not decided", sec: "intro", kicker: "Motivation · how the ODD is used today", time: 60, steps: 2,
       title: "The ODD is defined, but the context keeps changing",
