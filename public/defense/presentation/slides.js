@@ -419,96 +419,69 @@
           <p class="small mute" style="margin:0"><i>U</i><sub>ens</sub>(<i>S</i>), the maneuvers ensured in the state <i>S</i></p>
         </div></div>` },
 
-    { id: "dcap", sec: "c1", c: ["C1"], kicker: "Assessing the decisional capability", time: 60, steps: 2,
-      title: "How do the conditions affect what the vehicle can do?",
-      notes: "We know that the operational domain changes along the journey, and that each maneuver has its own limits. The missing link is how a condition translates into what the vehicle can still do. Some conditions are discrete, true or false, such as road works or the road type; others are continuous, such as visibility or traffic density, and their effect depends on the speed and the traffic. (1) Our proposal to build this link is the decisional capability: is the vehicle still able to decide correctly, for this maneuver, in this operational domain? It is assessed before the choice, and it decides which maneuvers may enter the decision. (2) To answer it, each maneuver is decomposed after the Sense, Think, Act paradigm. Sense: does the vehicle acquire the information the decision needs? Think: can it process and interpret that information, for instance can its predictor handle the vehicles involved? Act: can it execute the maneuver once selected, with its braking, steering and power?",
-      html: `<div class="row" style="gap:22px;align-items:stretch">
-          <div class="card col" style="flex:1 1 0;gap:10px"><h4>The operational domain changes</h4>
-            <p style="margin:0;font-size:28px"><b>Discrete</b> · road works, road type</p>
-            <p style="margin:0;font-size:28px"><b>Continuous</b> · visibility, traffic density</p></div>
-          <div class="arrow-big" style="align-self:center">→</div>
-          <div class="card col" style="flex:1 1 0;gap:10px;justify-content:center"><h4>What can it still do?</h4>
-            <p style="margin:0;font-size:28px">Which maneuvers remain <b>ensured</b></p></div>
+    { id: "dcap", sec: "c1", c: ["C1"], kicker: "Decisional capability", time: 60, steps: 2,
+      title: "How are the conditions evaluated?",
+      notes: "We have maneuvers, and an operational domain made of conditions. How are these conditions evaluated? A discrete condition is a binary evaluation, true or false. A continuous one needs more detail: whether it is acceptable depends on the state of the vehicle and of the traffic. (1) Our proposal is the decisional capability: is the vehicle able to decide correctly, for a maneuver, in a given operational domain? It is assessed before the choice. (2) To answer it, we use the Sense, Think, Act paradigm, and each maneuver is split into skills. Sense skills: do I perceive everything I need? Think skills: can I interpret everything I need? Act skills: do I have everything I need to execute the action?",
+      html: `<div class="g2">
+          <div class="card col" style="gap:10px"><h4>Discrete conditions</h4><p style="margin:0;font-size:30px">A <b>binary</b> evaluation, true or false</p></div>
+          <div class="card col" style="gap:10px"><h4>Continuous conditions</h4><p style="margin:0;font-size:30px">Need <b>more detail</b>, they depend on the vehicle and the traffic</p></div>
         </div>
-        <div class="card navy rq" data-step="1" style="padding:28px 54px"><span class="xs" style="opacity:.8;letter-spacing:.08em;text-transform:uppercase">Decisional capability</span>
-          <div class="quote" style="font-size:38px;margin-top:6px">Is the vehicle still able to <b>decide correctly</b> in this operational domain?</div></div>
-        <div class="g3 grow" data-step="2">
-          <div class="card col" style="justify-content:center;gap:8px"><span class="pill" style="align-self:flex-start;font-size:22px">Sense</span><p style="margin:0;font-size:28px">Does it <b>perceive</b> what the decision needs?</p></div>
-          <div class="card col" style="justify-content:center;gap:8px"><span class="pill" style="align-self:flex-start;font-size:22px">Think</span><p style="margin:0;font-size:28px">Can it <b>interpret</b> it?</p></div>
-          <div class="card col" style="justify-content:center;gap:8px"><span class="pill gray" style="align-self:flex-start;font-size:22px">Act</span><p style="margin:0;font-size:28px">Can it <b>execute</b> it?</p></div>
-        </div>` },
-
-    { id: "skills", cite: ["reschka2015ability", "jatzkowski2021knowledge"], sec: "c1", c: ["C1"], kicker: "Assessing the decisional capability", time: 60,
-      title: "A maneuver is ensured when all its skills are fulfilled",
-      notes: "We decomposed the driving behavior into maneuvers; now each maneuver is decomposed into skills. A maneuver can only be performed if the vehicle can perceive, interpret and act as it requires: these are its skills. They are organized after the Sense, Think, Act paradigm of Pfeifer. Sense: the acquisition of the information required to assess and support the maneuver. Think: the ability to process and interpret this information for decision-making. Act: the ability to execute the maneuver once selected. Each skill k has an evaluation function f_k of the state, equal to 1 when it is fulfilled; it is expressed on the operational domain, so it can be evaluated on a predicted state, which is what makes anticipation possible. A maneuver is ensured when all its skills are fulfilled.",
-      html: `<div class="hier"><a class="h" data-go="maneuvers">Driving behavior</a><i>→</i><a class="h" data-go="maneuvers">Maneuvers <small>KL · LCL · LCR · MRM</small></a><i>→</i><span class="h on">Skills <small>Sense · Think · Act</small></span></div>
-        <div class="row grow">
-        <div class="card col" style="flex:1.25 1 0"><h4>Maneuver Capability Estimator (MCE)</h4>${fig("skills.png", "Skills of the Maneuver Capability Estimator")}</div>
-        <div class="col grow">
-          <div class="card eqbox"><div class="eq"><i>u<sub>i</sub></i> ∈ ${Uens()} ⇔ ∀<i>k</i> ∈ 𝒦(<i>u<sub>i</sub></i>), <i>f<sub>k</sub></i>(<i>S</i>) = 1</div><div class="lgd one" style="margin-top:6px"><span class="s">𝒦(<i>u</i>)</span><span>skills required by <i class="m">u</i></span><span class="s"><i>f<sub>k</sub></i>(<i>S</i>)</span><span>skill <i class="m">k</i> fulfilled in state <i class="m">S</i>, current or predicted</span></div></div>
-          <div class="card tight"><p class="small" style="margin:0">Each skill is expressed on the <b>operational domain</b>, so it can be evaluated on a <b>predicted</b> state</p></div>
-          <p class="small" style="margin:0">Skill graphs, shared between maneuvers ${R("reschka2015ability", "jatzkowski2021knowledge")}</p>
+        <div class="card navy rq" data-step="1" style="padding:28px 54px"><span class="xs" style="opacity:.8;letter-spacing:.08em;text-transform:uppercase">Our proposal · decisional capability</span>
+          <div class="quote" style="font-size:38px;margin-top:6px">Is the vehicle able to <b>decide correctly</b> in this operational domain?</div></div>
+        <div class="col" data-step="2" style="gap:14px"><h4 style="margin:0">Sense, Think, Act · each maneuver splits into skills</h4>
+          <div class="g3">
+          <div class="card col" style="justify-content:center;gap:8px"><span class="pill" style="align-self:flex-start;font-size:22px">Sense</span><p style="margin:0;font-size:28px">Do I <b>perceive</b> everything needed?</p></div>
+          <div class="card col" style="justify-content:center;gap:8px"><span class="pill" style="align-self:flex-start;font-size:22px">Think</span><p style="margin:0;font-size:28px">Can I <b>interpret</b> everything needed?</p></div>
+          <div class="card col" style="justify-content:center;gap:8px"><span class="pill" style="align-self:flex-start;font-size:22px">Act</span><p style="margin:0;font-size:28px">Do I have everything needed to <b>execute</b>?</p></div>
         </div></div>` },
+
+    { id: "arch-mce", sec: "c1", c: ["C1"], kicker: "In the architecture", time: 15, steps: 1,
+      title: "The Maneuver Capability Estimator",
+      notes: "Where does this happen? Back to the architecture: (1) the Maneuver Capability Estimator, in the tactical layer. A maneuver is made of several skills, which the following animation shows.",
+      html: `<div class="azm grow"><i class="zk" data-step="1"></i><div class="in" style="--ox:35.4%;--oy:44%;--zs:2.4"><img src="${F}arch_full.jpg" alt="ODD-aptive architecture"><span class="hl" style="left:27.3%;top:36.7%;width:16.2%;height:14.7%"></span></div></div>` },
 
     { id: "v-mce", type: "video", sec: "c1", c: ["C1"], time: 60,
       title: "The Maneuver Capability Estimator",
       notes: "Skill graphs per maneuver, evaluation in S_i, one skill lost (partial operability), a shared skill lost (MRM required), traceability back to the context.",
       video: { src: A + "mce.mp4", parts: [[0.0, "Each maneuver relies on its own skill graph"], [12.5, "A maneuver is ensured when all its skills are fulfilled"], [21.0, "A change of context affects only the maneuvers that need the skill"], [32.5, "A shared skill is lost: every maneuver that needs it is lost"], [44.5, "Every loss is traced back to a change of context"]] } },
 
-    { id: "lc-example", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Application to a lane change", time: 50,
-      title: "The skills of a lane change",
-      notes: "From the general estimator to one example: the lane change. It is ensured when all its skills hold. Sense: the vehicles in three zones, A behind us in the target lane, B ahead in the target lane, C ahead in our lane, and the lane markings of the target lane. Think: the predictor models every perceived vehicle, and the traffic is fluid enough for the function. Act is assumed fulfilled in this work. We develop the first skill: how much perception range does each zone need? The answer comes from a safe distance, RSS.",
+    { id: "lc-example", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Practical case", time: 50,
+      title: "Let's apply it to a practical case, the lane change",
+      notes: "From the general method to a practical case, an instantiation: the lane change. It has several skills, Sense, Think and Act. We focus on one of them to understand how a skill is evaluated and how it follows the changing conditions: a Sense skill. What must the vehicle perceive to change lane correctly? The vehicles in three zones: A, behind us in the target lane; B, ahead in the target lane; C, ahead in our lane. The other skills: the lane markings of the target lane; the prediction of every vehicle; the interaction in fluid traffic; Act is assumed fulfilled in this work.",
       html: `<div class="row grow">
-        <div class="card col" style="flex:0.82 1 0"><h4>Zones of a lane change to the left ${R("CARDENAS2025162")}</h4>${fig("zones.jpg", "Zones A, B and C of the lane change")}
+        <div class="card col" style="flex:0.9 1 0"><h4>Zones of a lane change to the left ${R("CARDENAS2025162")}</h4>${fig("zones.jpg", "Zones A, B and C of the lane change")}
           <p class="small" style="margin:0"><b>A</b> behind and <b>B</b> ahead in the target lane, <b>C</b> ahead in the ego lane</p></div>
         <div class="col grow" style="gap:14px;justify-content:center">
-          <div class="card eqbox"><div class="eq" style="font-size:29px">LC ∈ ${Uens()} ⇔ <i>f</i><sub>veh</sub>(<i>S</i>) = <i>f</i><sub>lane</sub>(<i>S</i>) = <i>f</i><sub>pred</sub>(<i>S</i>) = <i>f</i><sub>inter</sub>(<i>S</i>) = 1</div></div>
-          <div class="card tight lcsk on"><span class="pill">Sense</span><span><b>Vehicles</b> in zones A, B and C</span><span class="pill amber nx">developed next</span></div>
+          <div class="card navy tight"><p style="margin:0;font-size:28px">What must be <b>perceived</b> to change lane correctly?</p></div>
+          <div class="card tight lcsk on"><span class="pill">Sense</span><span><b>Vehicles</b> in zones A, B and C</span><span class="pill amber nx">in focus</span></div>
           <div class="card tight lcsk"><span class="pill">Sense</span><span><b>Lane markings</b> of the target lane</span></div>
           <div class="card tight lcsk"><span class="pill">Think</span><span><b>Prediction</b> of every vehicle</span></div>
           <div class="card tight lcsk"><span class="pill">Think</span><span><b>Interaction</b> in fluid traffic</span></div>
-          <div class="card tight lcsk"><span class="pill gray">Act</span><span>Assumed fulfilled</span></div>
+          <div class="card tight lcsk"><span class="pill">Act</span><span>Assumed fulfilled</span></div>
         </div></div>` },
 
 
-    { id: "rss", cite: ["shwartz2017RSS", "hasuo2022rss"], sec: "c1", c: ["C1"], kicker: "Sense skill · a safe distance", time: 60, steps: 3,
-      title: "Inspired by RSS, the distance needed to stop in time",
-      notes: "To assess the Sense skill we need a model of how far the vehicle must see in each zone. We start from a well-known one: RSS, Responsibility-Sensitive Safety, proposed by Mobileye, an Intel company, in 2017. It gives the minimum distance between a rear and a front vehicle so that the rear one never hits the front one, even if the front vehicle brakes as hard as it can until it stops. (1) First, the response: during its response time rho, the rear vehicle keeps driving and may even accelerate at a_max. (2) Then it brakes at least at b_min, from the speed it reached. (3) Minus the distance the front vehicle needs to stop, braking at b_max at most. The bracket plus means the distance is never negative. It is a worst case: at 130 km/h it asks for about 300 m of perception, an emergency that the minimal risk maneuver handles, and far too restrictive for a regulation such as Keep Lane with its ACC, or for a lane change.",
+    { id: "rss", cite: ["shwartz2017RSS", "CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Sense skill · required perception range", time: 90, steps: 2,
+      title: "How far must the vehicle see?",
+      notes: "To evaluate this Sense skill, we need how far the vehicle must see in each zone. Why RSS, Responsibility-Sensitive Safety, from Mobileye: it is a measure, a formal and interpretable safe distance between a rear and a front vehicle, whose parameters can follow the context. It guarantees that the rear vehicle never hits the front one, even if the front one brakes as hard as it can until it stops. v_r and v_f are the speeds of the rear and front vehicles, rho the response time of the rear vehicle, a_max its maximum acceleration during that time, b_min its minimum braking afterwards, b_max the maximum braking of the front vehicle. It is a worst case, an emergency handled by the minimal risk maneuver, too restrictive to regulate or to change lane. (1) Our adaptation, from the IFAC paper: the front vehicle does not stop, it slows down to a fraction R of its speed; the rear vehicle reacts as in RSS and then keeps a time gap T_IV, 2 seconds as in the French road code. If the rear vehicle never closes in, only its own time gap remains. The braking parameters can follow the OD, with rain or road friction. (2) In zones B and C the ego vehicle is the rear vehicle; in zone A, the car behind is. The skill holds when the available perception range covers the required one in the three zones.",
       backups: ["v-rss", "b-rss"],
-      html: `<div class="card col" style="gap:6px;padding:24px 40px"><h4 style="margin:0">RSS · Responsibility-Sensitive Safety, Mobileye (Intel) ${R("shwartz2017RSS")}</h4>
-          <p style="margin:0;font-size:28px">The rear vehicle never hits the front one, even if it <b>brakes as hard as possible until it stops</b></p></div>
-        <div class="card eqbox" style="padding:26px 30px"><div class="eq" style="font-size:44px;text-align:center"><i>d</i><sub>min</sub><sup>RSS</sup> = [ <span class="rssa"><i>v<sub>r</sub> ρ</i> + ½ <i>a</i><sub>max</sub><i>ρ</i><sup>2</sup></span> + <span class="rssb"><span class="fr"><span>(<i>v<sub>r</sub></i> + <i>ρ a</i><sub>max</sub>)<sup>2</sup></span><span>2 <i>b</i><sub>min</sub></span></span></span> − <span class="rssc"><span class="fr"><span><i>v<sub>f</sub></i><sup>2</sup></span><span>2 <i>b</i><sub>max</sub></span></span></span> ]<sub>+</sub></div></div>
-        <div class="g3 grow">
-          <div class="card col rssa" data-step="1" style="gap:8px;justify-content:center"><h4 style="margin:0">1 · The response</h4><p style="margin:0;font-size:25px">During its response time <i class="m">ρ</i>, the rear vehicle at <i class="m">v<sub>r</sub></i> may still accelerate at <i class="m">a</i><sub>max</sub></p></div>
-          <div class="card col rssb" data-step="2" style="gap:8px;justify-content:center"><h4 style="margin:0">2 · The rear vehicle brakes</h4><p style="margin:0;font-size:25px">From the speed it reached, braking at least at <i class="m">b</i><sub>min</sub></p></div>
-          <div class="card col rssc" data-step="3" style="gap:8px;justify-content:center"><h4 style="margin:0">3 · Minus the front vehicle</h4><p style="margin:0;font-size:25px">Its stopping distance from <i class="m">v<sub>f</sub></i>, braking at most at <i class="m">b</i><sub>max</sub></p></div>
-        </div>
-        <div class="card bad tight" data-step="3"><p style="margin:0;font-size:26px">A worst case · ≈ 300 m at 130 km/h, too restrictive to <b>regulate</b> or to change lane</p></div>` },
-
-    { id: "dreq", cite: ["CARDENAS2025162", "bussemaker2014SensingRF"], sec: "c1", c: ["C1"], kicker: "Sense skill · the required perception range", time: 70, steps: 2,
-      title: "From stopping to settling in, how far must the vehicle see?",
-      notes: "We keep the RSS principle with two changes, from our IFAC paper. First, the front vehicle does not stop: it slows down to a fraction R of its speed, for instance 80 percent. The rear vehicle reacts as in RSS, then decelerates comfortably until it reaches the same speed. Second, once both drive at that speed, the rear vehicle still keeps a time gap T, 2 seconds as in the French road code. This is a regulation, what Keep Lane with its ACC does, and a smooth insertion for a lane change. The result is the perception range required, d_req. (1) The same rule gives each zone its boundary, with the roles swapped. Ahead, in zones B and C, the ego vehicle is the rear vehicle: the first boundary, how far we must see ahead. Behind, in zone A, the car approaching in the target lane is the rear vehicle: the second boundary, how far we must see behind. (2) The Sense skill holds when the perception envelope covers the requirement in every zone. And the parameters can follow the OD too: braking capabilities change with rain or friction.",
-      backups: ["b-rss"],
-      html: `<div class="row grow">
-        <div class="col" style="flex:1.15 1 0;gap:26px;justify-content:center">
-          <div class="g2">
-            <div class="card tight col" style="gap:4px"><h4 style="margin:0">The front vehicle slows down</h4><p style="margin:0;font-size:25px">to a fraction <i class="m">R</i> of its speed, it does not stop</p></div>
-            <div class="card tight col" style="gap:4px"><h4 style="margin:0">Then a time gap</h4><p style="margin:0;font-size:25px">the rear vehicle keeps <i class="m">T</i> behind it</p></div></div>
-          <div class="card eqbox" style="padding:22px 26px"><div class="eq" style="font-size:40px;text-align:center"><i>d</i><sub>req</sub> = <i>T R v<sub>f</sub></i> + <i>d</i><sub>min</sub><sup>RSS</sup>( <i>v<sub>r</sub></i> − <i>R v<sub>f</sub></i> , (1 − <i>R</i>) <i>v<sub>f</sub></i> )</div>
-            <div class="lgd" style="margin-top:10px"><span class="s"><i>T R v<sub>f</sub></i></span><span>the time gap, at the final speed</span><span class="s"><i>d</i><sub>min</sub><sup>RSS</sup>(…)</span><span>RSS, relative to the final speed <i class="m">R v<sub>f</sub></i></span></div></div>
-          <div class="card navy tight" style="text-align:center"><p style="margin:0;font-size:28px">A <b>regulation</b>, as Keep Lane with its ACC, and a <b>smooth insertion</b></p></div>
-        </div>
-        <div class="col" style="flex:0.85 1 0;gap:16px">
-          <div class="card col grow" data-step="1" style="gap:8px">${fig("zones.jpg", "Zones A, B and C of the lane change")}
-            <p style="margin:0;font-size:24px"><b>Ahead</b>, B and C · the ego vehicle is the rear one<br><b>Behind</b>, A · the car behind is the rear one</p></div>
-          <div class="card eqbox" data-step="2"><div class="eq" style="font-size:27px;text-align:center"><i>f</i><sub>veh</sub>(<i>S</i>) = 1 ⇔ <i>d</i><sub>PE</sub><sup><i>z</i></sup> ≥ <i>d</i><sub>req</sub><sup><i>z</i></sup>, ∀<i>z</i> ∈ {A, B, C}</div>
-            <div class="xs mute" style="text-align:center">The perception envelope covers every zone ${R("bussemaker2014SensingRF")}</div></div>
-        </div></div>` },
+      html: `<div class="row grow" style="gap:22px;align-items:stretch">
+        <div class="card col" style="flex:1 1 0;gap:12px"><h4 style="margin:0">RSS, a measure of a safe distance ${R("shwartz2017RSS")}</h4>
+          <p style="margin:0;font-size:25px">The rear vehicle never hits the front one, even if it <b>brakes until it stops</b></p>
+          <div class="eq" style="font-size:34px;text-align:center;margin:6px 0"><i>d</i><sub>min</sub><sup>RSS</sup> = [ <i>v<sub>r</sub> ρ</i> + ½ <i>a</i><sub>max</sub><i>ρ</i><sup>2</sup> + <span class="fr"><span>(<i>v<sub>r</sub></i> + <i>ρ a</i><sub>max</sub>)<sup>2</sup></span><span>2 <i>b</i><sub>min</sub></span></span> − <span class="fr"><span><i>v<sub>f</sub></i><sup>2</sup></span><span>2 <i>b</i><sub>max</sub></span></span> ]<sub>+</sub></div>
+          <div class="lgd one"><span class="s"><i>v<sub>r</sub></i>, <i>v<sub>f</sub></i></span><span>speeds of the rear and front vehicles</span><span class="s"><i>ρ</i></span><span>response time of the rear vehicle</span><span class="s"><i>a</i><sub>max</sub></span><span>its maximum acceleration while responding</span><span class="s"><i>b</i><sub>min</sub></span><span>its minimum braking afterwards</span><span class="s"><i>b</i><sub>max</sub></span><span>maximum braking of the front vehicle</span><span class="s">[ · ]<sub>+</sub></span><span>never negative</span></div>
+          <p class="small" style="margin:auto 0 0;color:var(--bad)">A worst case, too restrictive to regulate or to change lane</p></div>
+        <div class="card ok col" data-step="1" style="flex:1.1 1 0;gap:12px"><h4 style="margin:0">Our adaptation, the required range ${R("CARDENAS2025162")}</h4>
+          <p style="margin:0;font-size:25px">The front vehicle <b>slows down</b>, then a <b>time gap</b> remains</p>
+          <div class="eq" style="font-size:28px;margin:6px 0"><i>d</i><sub>req</sub> = <span class="cases"><span><i>T</i><sub>IV</sub> <i>R v<sub>f</sub></i> + <i>d</i><sub>min</sub><sup>RSS</sup>(<i>v<sub>r</sub></i> − <i>R v<sub>f</sub></i>, (1 − <i>R</i>) <i>v<sub>f</sub></i>)<small>if <i>v<sub>r</sub></i> + <i>ρ a</i><sub>max</sub> ≥ <i>R v<sub>f</sub></i></small></span><span><i>T</i><sub>IV</sub> (<i>v<sub>r</sub></i> + <i>ρ a</i><sub>max</sub>)<small>otherwise</small></span></span></div>
+          <div class="lgd one"><span class="s"><i>R</i></span><span>fraction of its speed the front vehicle keeps</span><span class="s"><i>T</i><sub>IV</sub></span><span>time gap kept at the end</span></div>
+          <div class="card navy tight" data-step="2" style="margin-top:auto"><p style="margin:0;font-size:25px">The skill holds when the <b>available</b> perception range covers <i class="m">d</i><sub>req</sub> in zones A, B and C</p></div></div>
+        </div>` },
 
     { id: "v-window", type: "video", sec: "c1", c: ["C1"], time: 65,
       title: "The lane change window closes in the fog",
       notes: "Now we know the boundaries; how can the vehicle move with respect to them? The perception range required in the three zones defines a window of speeds for the lane change: going faster asks more ahead and less behind, going slower the opposite. Fog shrinks the perception envelope, so the window narrows until it closes. Then the lane change is no longer ensured, but Keep Lane, which only needs the zone ahead, remains ensured at a lower speed: partial operability. What matters is to stay, in degraded mode, with the largest number of ensured maneuvers. An uncertainty margin on the traffic speed raises the limit.",
-      video: { src: A + "window.mp4?v=2", parts: [[0.0, "Required perception range: one RSS rule, three zones"], [6.0, "Speed trades the rear zone against the front zones"], [14.5, "Above both curves, the lane change is ensured"], [18.5, "Fog shrinks the envelope: the speed window narrows"], [27.0, "Too slow or too fast: a zone is no longer covered"], [36.0, "Below a visibility limit: Keep Lane ensured, lane change not ensured"], [46.5, "Uncertainty on the traffic speed: the limit rises"]] } },
+      video: { src: A + "window.mp4?v=2", rate: 1.35, parts: [[0.0, "Required perception range: one RSS rule, three zones"], [6.0, "Speed trades the rear zone against the front zones"], [14.5, "Above both curves, the lane change is ensured"], [18.5, "Fog shrinks the envelope: the speed window narrows"], [27.0, "Too slow or too fast: a zone is no longer covered"], [36.0, "Below a visibility limit: Keep Lane ensured, lane change not ensured"], [46.5, "Uncertainty on the traffic speed: the limit rises"]] } },
 
     { id: "smargin", cite: ["CARDENAS2025162"], sec: "c1", c: ["C1"], kicker: "Strategic margin", time: 75, steps: 2,
       title: "Ensured, but how far from the boundary?",
@@ -556,26 +529,31 @@
     // ================================================================ 4. C2 · choice: ODD-constrained MDP
     { id: "sec-c2", type: "section", sec: "c2", dark: true, title: "ODD-MDP", time: 10 },
 
-    { id: "odd-mdp", cite: ["bellman1957MDP", "11097482"], sec: "c2", c: ["C2"], kicker: "Formalism", time: 80,
+    { id: "arch-recap", sec: "c2", c: ["C2"], kicker: "Recap", time: 20, steps: 1,
+      title: "From capability to decision",
+      notes: "A recap of the architecture before the decision. We have the Maneuver Capability Estimator, which tells which maneuvers are ensured in any state. (1) Now we use it to take a decision: the planning horizon, the model and the policy planner. For that, we use a Markov decision process.",
+      html: `<div class="azm grow"><i class="zk" data-step="1"></i><div class="in"><img src="${F}arch_full.jpg" alt="ODD-aptive architecture"><span class="hl" style="left:27.3%;top:36.7%;width:16.2%;height:14.7%"></span><span class="hl b" data-step="1" style="left:45.6%;top:35.8%;width:31%;height:34%"></span><span class="tg" style="left:27.3%;top:31.2%">Done · ensured maneuvers</span><span class="tg b" data-step="1" style="left:46.2%;top:31.2%">Next · decide, with an MDP</span></div></div>` },
+
+    { id: "odd-mdp", cite: ["bellman1957MDP", "11097482"], sec: "c2", c: ["C2"], kicker: "Formalism", time: 80, steps: 1,
       title: "In the ODD-MDP, capability enters the Bellman equation",
-      notes: "Why an MDP. It represents sequential decisions over a horizon. It handles uncertainty in the transitions and extends to partial observability, which the third contribution uses. Tactical maneuvers form a discrete set of actions. And its elements can be tuned from data, as in reinforcement learning. The state joins the operational domain, the ego vehicle and the surrounding vehicles: including the OD is what lets the filter and the reward depend on the context. An action pairs a maneuver with a set speed change. The MCE returns the ensured actions of a state, in every predicted state. The only change to the Bellman equation: the maximum runs over the ensured actions. Capability precedes choice is written into the equation, and the policy is ODD-compliant by construction, not by verification.",
+      notes: "Why an MDP. It represents sequential decisions over a horizon. It handles uncertainty in the transitions and extends to partial observability, which the third contribution uses. Tactical maneuvers form a discrete set of actions. The state joins the operational domain, the ego vehicle and the surrounding vehicles: including the OD is what lets the filter and the reward depend on the context. An action pairs a maneuver with a set speed change. The MCE returns the ensured actions of a state, in every predicted state. The only change to the Bellman equation: the maximum runs over the ensured actions. Capability precedes choice is written into the equation, and the policy is ODD-compliant by construction. (1) Capability appears twice: in the actions, only the ensured ones, and in the reward, which includes the operability terms.",
       html: `<div class="row" style="gap:24px">
           <div class="card col" style="flex:0.78 1 0;gap:10px"><h4>Why an MDP ${R("bellman1957MDP")}</h4><ul class="chk small" style="gap:10px">
             <li class="y">Sequential decisions over a horizon</li>
             <li class="y">Uncertain transitions, extends to partial observability (${go("sec-c3", "C3")})</li>
             <li class="y">Maneuvers form a discrete set of actions</li>
-            <li class="y">Elements tunable from data, as in reinforcement learning</li></ul></div>
+</ul></div>
           <div class="card grow defs">
-            <span class="pill">Model</span><div class="eq"><i>M</i> = (<i>S</i>, <i>A</i>, <i>P</i>, <i>R</i>, <i>γ</i>)</div>
+            <span class="pill">Model</span><div class="eq"><i>M</i> = (<i>S</i>, <i>A</i>, <i>P</i>, <span class="hrw"><i>R</i><span class="hrwon" data-step="1"></span></span>, <i>γ</i>)</div>
             <span class="pill">State</span><div class="eq"><i>S</i> = OD × <i>p</i><sub>ego</sub> × {<i>p<sub>i</sub></i>}<sub><i>i</i>=1</sub><sup><i>N</i></sup>, &nbsp; <i>p<sub>i</sub></i> = (<i>x<sub>i</sub></i>, <i>ẋ<sub>i</sub></i>, <i>ẍ<sub>i</sub></i>, <i>y<sub>i</sub></i>, <i>ẏ<sub>i</sub></i>, <i>ÿ<sub>i</sub></i>)</div>
-            <span class="pill">Actions</span><div class="eq"><i>A</i> = {KL, INC, DEC, LCL, LCR, MRM}</div>
-            <span class="pill ok">Capability</span><div class="eq"><i>g</i>(<i>s</i>) = ${Aens()} ⊆ <i>A</i> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">the MCE, in every predicted state</span></div>
+            <span class="pill">Actions</span><div class="eq"><i>A</i> = {KL, INC, DEC, LCL, LCR, MRM}<div class="xs mute" style="font-family:Montserrat,sans-serif;margin-top:2px">Keep Lane, Increase and Decrease speed, Lane Change Left and Right, Minimal Risk Maneuver</div></div>
+            <span class="pill ok">Capability</span><div class="eq"><span class="hrw"><i>g</i>(<i>s</i>)<span class="hrwon" data-step="1"></span></span> = ${Aens()} ⊆ <i>A</i> &nbsp;<span class="xs mute" style="font-family:Montserrat,sans-serif">the MCE, in every predicted state</span></div>
           </div></div>
         <div class="card bellman">
-          <div class="eq big"><i>V</i>*(<i>s</i>) = <span class="lim"><span class="o hcho">max</span><span class="u hcap"><i>a</i> ∈ ${Aens()}</span></span> [ <i>R</i>(<i>s</i>, <i>a</i>) + <i>γ</i> Σ<sub><i>s</i>′</sub> <i>P</i>(<i>s</i>′ | <i>s</i>, <i>a</i>) <i>V</i>*(<i>s</i>′) ]
+          <div class="eq big"><i>V</i>*(<i>s</i>) = <span class="lim"><span class="o hcho">max</span><span class="u hcap"><i>a</i> ∈ ${Aens()}</span></span> [ <span class="hrw"><i>R</i>(<i>s</i>, <i>a</i>)<span class="hrwon" data-step="1"></span></span> + <i>γ</i> Σ<sub><i>s</i>′</sub> <i>P</i>(<i>s</i>′ | <i>s</i>, <i>a</i>) <i>V</i>*(<i>s</i>′) ]
             <span style="display:inline-block;width:60px"></span><i>π</i>*(<i>s</i>) = <span class="lim"><span class="o hcho">argmax</span><span class="u hcap"><i>a</i> ∈ ${Aens()}</span></span> <i>Q</i>*(<i>s</i>, <i>a</i>)</div>
           <div class="legend"><span><i class="sw cho"></i><b>Choice</b> over the whole horizon</span><span><i class="sw cap"></i><b>Capability</b>, only ensured maneuvers</span></div></div>
-        <div class="takeaway"><b>ODD-compliant by construction</b>, not by verification ${R("11097482")}</div>` },
+        <div class="takeaway"><b>ODD-compliant by construction</b> ${R("11097482")}</div>` },
 
     { id: "v-search", type: "video", sec: "c2", c: ["C2"], time: 55,
       title: "The search tree of the ODD-MDP",
@@ -949,7 +927,7 @@
             <li>The question a person asks, <b>why this rather than carrying on?</b></li>
             <li>Same model, same horizon, same terms</li></ul></div>
           <div class="card tight grow"><h4>Two levels</h4><ul class="list small">
-            <li><span class="pill ok">Capability</span> Keep lane no longer ensured, the MCE names the skill lost and its cause (${go("skills", "C1")})</li>
+            <li><span class="pill ok">Capability</span> Keep lane no longer ensured, the MCE names the skill lost and its cause (${go("dcap", "C1")})</li>
             <li><span class="pill">Choice</span> Keep lane still ensured, the terms say what the plan gains and pays (${go("reward", "C2")})</li></ul></div>
         </div>
         <div class="col" style="flex:1.08 1 0">
@@ -1126,7 +1104,7 @@
           <div class="c1steps">
             <a class="card c1s" data-go="maneuvers"><span class="n">1</span><b>The maneuvers, and what each one requires</b><span class="t">The ODD brought down to the maneuvers</span></a>
             <span class="c1a">→</span>
-            <a class="card c1s" data-go="skills"><span class="n">2</span><b>Skills to assess a maneuver in a state</b><span class="t">Sense, Think, Act</span></a>
+            <a class="card c1s" data-go="dcap"><span class="n">2</span><b>Skills to assess a maneuver in a state</b><span class="t">Sense, Think, Act</span></a>
             <span class="c1a">→</span>
             <a class="card c1s" data-go="v-mce"><span class="n">3</span><b>The same assessment in the predicted states</b><span class="t">Now, and after each decision</span></a>
           </div></div>` },
