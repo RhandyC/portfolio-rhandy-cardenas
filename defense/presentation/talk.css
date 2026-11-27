@@ -387,7 +387,7 @@ a.go:hover, button.go:hover { background: #fff3d6; }
 
 /* introduction */
 .oddtax { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.oddtax > div { background: var(--chip); border-radius: 10px; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px; }
+.oddtax > div { background: var(--chip); border-radius: 10px; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px; align-items: center; justify-content: center; text-align: center; min-height: 72px; }
 .oddtax b { color: var(--navy); font-size: 19px; line-height: 1.2; }
 .oddtax span { font-size: 16px; color: var(--mute); line-height: 1.3; }
 .chain { display: flex; align-items: stretch; }

@@ -138,23 +138,21 @@
 
     { id: "odd", cite: ["mercedes2019drivepilot", "sae2021taxonomy", "nhtsa2021odd"], th: "The ODD", sec: "intro", kicker: "Motivation · what is the ODD?", time: 75, steps: 2,
       title: "Where is an automated vehicle designed to operate?",
-      notes: "Let us start with a system on the road today: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe. To say where it may drive, Mercedes describes a driving scene with five conditions: a highway with lane markings, dense traffic, a route covered by the HD map, and suitable weather. (1) This description has a name: the Operational Design Domain, the ODD. SAE J3016 defines it as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function. The designer knows the performance of the system and states the contexts in which it works correctly and safely; outside the ODD, the system is beyond its limits. (2) How is it described in general? As a taxonomy: here the one proposed by the NHTSA, six top-level categories, from the physical infrastructure to the zones, each broken down into attributes. Defining it is already a demanding task. But once it is defined, the question becomes: the context keeps changing, so how does the vehicle decide with respect to it?",
+      notes: "Let us start with a system on the road today: Mercedes-Benz Drive Pilot, the first Level 3 system approved in Europe. To say where it may drive, Mercedes describes a driving scene with five conditions: a highway with lane markings, dense traffic, a route covered by the HD map, and suitable weather. (1) This description has a name: the Operational Design Domain, the ODD. SAE J3016 defines it as the operating conditions under which a driving automation system, or a feature of it, is specifically designed to function. The designer knows the performance of the system and states the contexts in which it works correctly and safely; outside the ODD, the system is beyond its limits. (2) How is it described in general? As a taxonomy: here the one proposed by the NHTSA, six top-level dimensions, each broken down into sub-attributes. Physical infrastructure: roadway types, such as divided highways or urban streets, roadway surfaces, edges such as lane markings or barriers, and geometry, such as curves and slopes. Operational constraints: speed limits and traffic conditions. Objects: signage, other road users such as vehicles, pedestrians and cyclists, and non-road-user obstacles. Connectivity: vehicle-to-vehicle communication, traffic density information, remote fleet management, infrastructure sensors. Environmental conditions: weather such as rain, snow or fog, weather-induced road conditions, particulate matter, illumination such as night or sun glare. Zones: geofencing, traffic management zones, school or construction zones, regions or states, interference zones such as tunnels. Defining it is already a demanding task. But once it is defined, the question becomes: the context keeps changing, so how does the vehicle decide with respect to it?",
       html: `<div class="row grow">
-        <div class="card" style="order:1;flex:1.15 1 0;display:grid;padding:26px 30px">
-          <div class="col" data-until="2" style="grid-area:1/1;gap:14px;min-height:0">
-            <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="width:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px">
-            <p style="margin:0;text-align:center;font-size:26px"><b>Mercedes-Benz Drive Pilot</b>, the first Level 3 approved in Europe ${R("mercedes2019drivepilot")}</p><span hidden>${R("sae2021taxonomy")}</span></div>
-          <div class="col" data-step="2" style="grid-area:1/1;gap:14px;min-height:0">
-            <img src="${F}odd_taxonomy_nhtsa.png" alt="ODD taxonomy proposed by the NHTSA" style="width:100%;flex:1;min-height:0;object-fit:contain">
-            <p style="margin:0;text-align:center;font-size:26px">Described as a <b>taxonomy</b>, here the one proposed by the NHTSA ${R("nhtsa2021odd")}</p></div>
-        </div>
-        <div class="col" style="flex:1 1 0;justify-content:center;order:2">
-          <div class="card navy" data-step="1" style="padding:40px 44px;text-align:center"><h3 style="margin:0 0 22px;font-size:36px;white-space:nowrap;text-align:center">Operational Design Domain (ODD)</h3>
-            <div style="font-size:30px;color:#fff;line-height:1.4;font-style:italic">“Operating conditions under which a given driving automation system or feature thereof is <b style="color:var(--amber)">specifically designed to function</b>,</div>
-            <div style="font-size:21px;line-height:1.5;color:#c7d3e3;margin-top:14px;font-style:italic">including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
-            <p class="xs" style="margin:18px 0 0;opacity:.8">SAE J3016 ${R("sae2021taxonomy")}</p></div>
-        </div>
-      </div>` },
+        <div class="card col" style="flex:1.15 1 0;gap:12px">
+          <img src="${F}odd_mercedes.jpg" alt="Mercedes-Benz Drive Pilot ODD shown as a driving scene" style="width:100%;flex:1;min-height:0;object-fit:contain;border-radius:10px">
+          <p style="margin:0;text-align:center;font-size:26px"><b>Mercedes-Benz Drive Pilot</b>, the first Level 3 approved in Europe ${R("mercedes2019drivepilot")}</p></div>
+        <div class="col grow" style="flex:1 1 0;gap:22px;justify-content:center">
+          <div class="card navy" data-step="1" style="padding:30px 38px"><h3 style="margin:0 0 16px;font-size:36px;white-space:nowrap">Operational Design Domain (ODD)</h3>
+            <div class="quote" style="font-size:30px;color:#fff;line-height:1.35">“Operating conditions under which a given driving automation system or feature thereof is <b style="color:var(--amber)">specifically designed to function</b>,</div>
+            <div style="font-size:21px;line-height:1.45;color:#c7d3e3;margin-top:10px;font-style:italic">including, but not limited to, environmental, geographical, and time-of-day restrictions, and/or the requisite presence or absence of certain traffic or roadway characteristics.”</div>
+            <p class="xs" style="margin:12px 0 0;opacity:.8">SAE J3016 ${R("sae2021taxonomy")}</p></div>
+          <div class="card" data-step="2"><h4>Described as a taxonomy</h4><div class="oddtax">
+              <div><b>Physical infrastructure</b></div><div><b>Operational constraints</b></div><div><b>Objects</b></div>
+              <div><b>Connectivity</b></div><div><b>Environmental conditions</b></div><div><b>Zones</b></div>
+            </div><p class="xs mute" style="margin:10px 0 0">NHTSA ${R("nhtsa2021odd")}</p></div>
+        </div></div>` },
 
     { id: "context", cite: ["cardenas2025context_aware", "charmet2024monitoring"], th: "Monitored, not decided", sec: "intro", kicker: "Motivation · how the ODD is used today", time: 60, steps: 2,
       title: "The ODD is defined, but the context keeps evolving",
@@ -162,7 +160,7 @@
       html: `<div class="row grow">
         <div class="card col" style="flex:0 0 700px;padding:20px 26px"><h4>One route, many context changes ${R("cardenas2025context_aware")}</h4>${fig("context_changes.png", "Target route with context changes: highway exit, road works, missing lane markings, tunnel, traffic jam, curved road, expected rain")}</div>
         <div class="col grow" style="justify-content:center;gap:30px">
-          <div class="card accent"><h3 style="margin:0">It evolves during the whole itinerary</h3></div>
+          <div class="card accent"><h3 style="margin:0">Context evolves during the whole itinerary</h3></div>
           <div class="card bad" data-step="1"><h3 style="margin:0">Today: Monitor, then react ${R("charmet2024monitoring")}</h3></div>
           <div class="card ok" data-step="2"><h3 style="margin:0">Needed: Anticipate</h3></div>
         </div></div>` },
